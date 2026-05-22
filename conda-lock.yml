@@ -943,27 +943,27 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.1.3
+  version: 7.1.4
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.3-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.4-pyhd8ed1ab_0.conda
   hash:
-    md5: 4ca076dae9307efdc1b99d5f41749082
-    sha256: 6ced1798a0fe7017771fa3a789bb17c4f5e6a74eb06e290caa9d1d2776ea40d3
+    md5: fbaa0445bcf8ba9e808c90cbc1235090
+    sha256: de5e4deaa31b748502339ed2d725233af94f6db2fe1b414608bcb34581e8dd6b
   category: main
   optional: false
 - name: cachetools
-  version: 7.1.3
+  version: 7.1.4
   manager: conda
   platform: osx-arm64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.3-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.4-pyhd8ed1ab_0.conda
   hash:
-    md5: 4ca076dae9307efdc1b99d5f41749082
-    sha256: 6ced1798a0fe7017771fa3a789bb17c4f5e6a74eb06e290caa9d1d2776ea40d3
+    md5: fbaa0445bcf8ba9e808c90cbc1235090
+    sha256: de5e4deaa31b748502339ed2d725233af94f6db2fe1b414608bcb34581e8dd6b
   category: main
   optional: false
 - name: cachy
@@ -3180,37 +3180,38 @@ package:
   category: main
   optional: false
 - name: fontconfig
-  version: 2.17.1
+  version: 2.18.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libexpat: '>=2.7.4,<3.0a0'
-    libfreetype: '>=2.14.1'
-    libfreetype6: '>=2.14.1'
+    libexpat: '>=2.8.1,<3.0a0'
+    libfreetype: '>=2.14.3'
+    libfreetype6: '>=2.14.3'
     libgcc: '>=14'
-    libuuid: '>=2.41.3,<3.0a0'
-    libzlib: '>=1.3.1,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/fontconfig-2.17.1-h27c8c51_0.conda
+    libuuid: '>=2.42.1,<3.0a0'
+    libzlib: '>=1.3.2,<2.0a0'
+  url: https://conda.anaconda.org/conda-forge/linux-64/fontconfig-2.18.0-h27c8c51_0.conda
   hash:
-    md5: 867127763fbe935bab59815b6e0b7b5c
-    sha256: aa4a44dba97151221100a637c7f4bde619567afade9c0265f8e1c8eed8d7bd8c
+    md5: 06965b2f9854d0b15e0443ee81fe83dc
+    sha256: e798086d8a65d55dc4c51f5746705639c9a5f2eeb0b8fc50e6152cfc0d69a4e8
   category: main
   optional: false
 - name: fontconfig
-  version: 2.17.1
+  version: 2.18.0
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
-    libexpat: '>=2.7.4,<3.0a0'
-    libfreetype: '>=2.14.1'
-    libfreetype6: '>=2.14.1'
-    libzlib: '>=1.3.1,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/fontconfig-2.17.1-h2b252f5_0.conda
+    libexpat: '>=2.8.1,<3.0a0'
+    libfreetype: '>=2.14.3'
+    libfreetype6: '>=2.14.3'
+    libintl: '>=0.25.1,<1.0a0'
+    libzlib: '>=1.3.2,<2.0a0'
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/fontconfig-2.18.0-h2b252f5_0.conda
   hash:
-    md5: d06ae1a11b46cc4c74177ecd28de7c7a
-    sha256: 851e9c778bfc54645dcab7038c0383445cbebf16f6bb2d3f62ce422b1605385a
+    md5: cf31c25b5770548a394478bb6180ddbc
+    sha256: 938d18fca474d5a7ed716b88dbc4f962f9a44ac9f2fe29393d7d9d04ac6cbf15
   category: main
   optional: false
 - name: fonts-conda-ecosystem
@@ -10143,31 +10144,31 @@ package:
   category: main
   optional: false
 - name: starlette
-  version: 1.0.0
+  version: 1.0.1
   manager: conda
   platform: linux-64
   dependencies:
     anyio: '>=3.6.2,<5'
     python: ''
     typing_extensions: '>=4.10.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/starlette-1.0.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/starlette-1.0.1-pyhcf101f3_0.conda
   hash:
-    md5: 8fbd5b6879350f1b5303c1a652d4b781
-    sha256: 1a1dc376e95491f4b2003f4428e6f7caf4a3de0ef9869248b29dcc9704c34b39
+    md5: 635faa8ce3a592deb2a12d71e891f697
+    sha256: 056337f0e1242f87bf6bc3737c232c9252d29d658bc65d518a255b7cbc443394
   category: main
   optional: false
 - name: starlette
-  version: 1.0.0
+  version: 1.0.1
   manager: conda
   platform: osx-arm64
   dependencies:
     anyio: '>=3.6.2,<5'
     python: ''
     typing_extensions: '>=4.10.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/starlette-1.0.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/starlette-1.0.1-pyhcf101f3_0.conda
   hash:
-    md5: 8fbd5b6879350f1b5303c1a652d4b781
-    sha256: 1a1dc376e95491f4b2003f4428e6f7caf4a3de0ef9869248b29dcc9704c34b39
+    md5: 635faa8ce3a592deb2a12d71e891f697
+    sha256: 056337f0e1242f87bf6bc3737c232c9252d29d658bc65d518a255b7cbc443394
   category: main
   optional: false
 - name: stdlib-list
