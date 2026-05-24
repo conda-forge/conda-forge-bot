@@ -1463,7 +1463,7 @@ package:
   category: main
   optional: false
 - name: conda-build
-  version: 26.3.0
+  version: 26.5.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -1485,6 +1485,7 @@ package:
     pkginfo: ''
     psutil: ''
     py-lief: ''
+    py-rattler-build: '>=0.61.4'
     python: '>=3.11'
     python-libarchive-c: ''
     pyyaml: ''
@@ -1492,14 +1493,14 @@ package:
     requests: ''
     ripgrep: ''
     tqdm: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.3.0-pyh31ec981_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.5.0-pyh31ec981_0.conda
   hash:
-    md5: 47c7f3c52fb50f7699147ff3b9a2d987
-    sha256: 584ea91cfede78020876f75c864726fb96743e1424461b0ff86fa2a49f37d15d
+    md5: 306da8702472faa705f0a39374fd3b9f
+    sha256: a09a81d816623502b447e1514e9faf5aa45832e6f6cbcf1165cbd504e69b36f6
   category: main
   optional: false
 - name: conda-build
-  version: 26.3.0
+  version: 26.5.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -1521,6 +1522,7 @@ package:
     pkginfo: ''
     psutil: ''
     py-lief: ''
+    py-rattler-build: '>=0.61.4'
     python: '>=3.11'
     python-libarchive-c: ''
     pyyaml: ''
@@ -1528,10 +1530,10 @@ package:
     requests: ''
     ripgrep: ''
     tqdm: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.3.0-pyha39d2d0_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.5.0-pyha39d2d0_0.conda
   hash:
-    md5: 2bc62ebb89a4bd7c9f173ef6497ba429
-    sha256: 021e0c2c26ecae3a024615948f094fd4044ab1762cbc670d1741d162556600cd
+    md5: 19bea462086979013f1f04754fdbcda0
+    sha256: a1a034fee39d61ea97a91e944c3e6f72c39632906cae9eedc11668b34aa8b47a
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
@@ -7853,6 +7855,39 @@ package:
   hash:
     md5: 9cd2290d0b4ebf713b83cb943cd17d07
     sha256: 8fd8733772d61b47ff43de89dbe59e2077335c25a16a1bf227dfe2ef04d028fc
+  category: main
+  optional: false
+- name: py-rattler-build
+  version: 0.65.0
+  manager: conda
+  platform: linux-64
+  dependencies:
+    __glibc: '>=2.17,<3.0.a0'
+    _python_abi3_support: 1.*
+    cpython: '>=3.10'
+    libgcc: '>=14'
+    openssl: '>=3.5.6,<4.0a0'
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-build-0.65.0-py310hb823017_0.conda
+  hash:
+    md5: 815a50af74d6a973dd7350e96de7abd6
+    sha256: bb68264d588b321e8a20f331caac5709555925a13b97c9f9b7904646f32bd093
+  category: main
+  optional: false
+- name: py-rattler-build
+  version: 0.65.0
+  manager: conda
+  platform: osx-arm64
+  dependencies:
+    __osx: '>=11.0'
+    _python_abi3_support: 1.*
+    cpython: '>=3.10'
+    openssl: '>=3.5.6,<4.0a0'
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/py-rattler-build-0.65.0-py310he76dbf2_0.conda
+  hash:
+    md5: 6efaaff2f264fa2af757c435f9ff0693
+    sha256: 10516ac2f223a146e3eb82869dee14b1466a327c81d7ea07056dda7e1cf86151
   category: main
   optional: false
 - name: pyasn1
