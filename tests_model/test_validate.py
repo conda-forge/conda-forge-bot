@@ -115,7 +115,7 @@ def pytest_generate_tests(metafunc):
     if not packages:
         warnings.warn(
             "No packages found. Make sure these tests are run "
-            "from within the cf-graph-countyfair repository in order to do full "
+            "from within the autotick-bot-graph repository in order to do full "
             "schema validation."
         )
 

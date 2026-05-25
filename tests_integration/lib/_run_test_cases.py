@@ -31,7 +31,7 @@ def reset_cf_graph():
     with resources.as_file(EMPTY_GRAPH_DIR) as empty_graph_dir:
         IntegrationTestHelper().overwrite_github_repository(
             GitHubAccount.REGRO_ORG,
-            "cf-graph-countyfair",
+            "autotick-bot-graph",
             empty_graph_dir,
             branch=settings().graph_repo_default_branch,
         )

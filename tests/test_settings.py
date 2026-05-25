@@ -39,8 +39,8 @@ class TestBotSettings:
         bot_settings = BotSettings()
 
         assert bot_settings.conda_forge_org == "conda-forge"
-        assert bot_settings.graph_github_backend_repo == "regro/cf-graph-countyfair"
-        assert bot_settings.graph_repo_default_branch == "master"
+        assert bot_settings.graph_github_backend_repo == "conda-forge/autotick-bot-graph"
+        assert bot_settings.graph_repo_default_branch == "main"
         assert bot_settings.github_runner_debug is False
         assert 0 <= bot_settings.frac_update_upstream_versions <= 1
         assert 0 <= bot_settings.frac_make_graph <= 1

@@ -138,13 +138,13 @@ def test_make_migrators_initialize_migrators():
                 "git",
                 "clone",
                 "--depth=1",
-                "https://github.com/regro/cf-graph-countyfair.git",
+                "https://github.com/conda-forge/autotick-bot-graph.git",
             ],
             cwd=tmpdir,
             check=True,
         )
         with (
-            pushd(os.path.join(tmpdir, "cf-graph-countyfair")),
+            pushd(os.path.join(tmpdir, "autotick-bot-graph")),
             lazy_json_override_backends(["file"], use_file_cache=True),
         ):
             gx = load_graph()

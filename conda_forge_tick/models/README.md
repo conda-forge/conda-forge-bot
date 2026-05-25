@@ -6,7 +6,7 @@ Refer to the [main README](../../README.md) for an explanation of what this is a
 
 The most important parts of the graph repository looks like this:
 ```
-cf-graph-countyfair
+autotick-bot-graph
 ├── import_to_pkg_maps
 │   └── ...
 ├── mappings/pypi

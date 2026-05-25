@@ -85,7 +85,7 @@ Base class: `Migration` in `core.py`. Migrators handle automated changes:
 
 ### Data Model
 
-The bot uses `cf-graph-countyfair` repository as its database. Key structures:
+The bot uses `autotick-bot-graph repository as its database. Key structures:
 - `graph.json`: NetworkX dependency graph
 - `node_attrs/`: Package metadata (one JSON per package, sharded paths)
 - `versions/`: Upstream version information
@@ -97,7 +97,7 @@ Pydantic models in `conda_forge_tick/models/` document the schema.
 ### LazyJson System
 
 Data is loaded lazily via `LazyJson` class. Backends configured via `CF_TICK_GRAPH_DATA_BACKENDS`:
-- `file`: Local filesystem (default, requires cf-graph-countyfair clone)
+- `file`: Local filesystem (default, requires autotick-bot-graph clone)
 - `github`: Read-only from GitHub raw URLs (good for debugging)
 - `mongodb`: MongoDB database
 
@@ -137,7 +137,7 @@ Located in `tests_integration/`. Tests the full bot pipeline against real GitHub
 The integration tests require three GitHub entities that mimic production:
 - **Conda-forge org** (`GITHUB_ACCOUNT_CONDA_FORGE_ORG`): Contains test feedstocks
 - **Bot user** (`GITHUB_ACCOUNT_BOT_USER`): Creates forks and PRs
-- **Regro org** (`GITHUB_ACCOUNT_REGRO_ORG`): Contains a test `cf-graph-countyfair` repository
+- **Regro org** (`GITHUB_ACCOUNT_REGRO_ORG`): Contains a test `autotick-bot-graph` repository
 
 Default staging accounts are `conda-forge-bot-staging`, `regro-cf-autotick-bot-staging`, and `regro-staging`. You can use your own accounts by setting environment variables.
 
@@ -217,4 +217,4 @@ Tests run the full bot pipeline in sequence:
 6. `auto-tick`
 7. (repeat migrators and auto-tick for state propagation)
 
-Each step deploys to the staging `cf-graph-countyfair` repo.
+Each step deploys to the staging `autotick-bot-graph` repo.

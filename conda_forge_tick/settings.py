@@ -47,14 +47,14 @@ class BotSettings(BaseSettings):
     """
 
     graph_github_backend_repo: str = Field(
-        "regro/cf-graph-countyfair", pattern=r"^[\w\.-]+/[\w\.-]+$"
+        "conda-forge/autotick-bot-graph", pattern=r"^[\w\.-]+/[\w\.-]+$"
     )
     """
-    The GitHub repository to deploy to. Default: "regro/cf-graph-countyfair".
+    The GitHub repository to deploy to. Default: "conda-forge/autotick-bot-graph".
     If you change the field name, you must also update the `ENV_GRAPH_GITHUB_BACKEND_REPO` constant.
     """
 
-    graph_repo_default_branch: str = "master"
+    graph_repo_default_branch: str = "main"
     """
     The default branch of the graph_github_backend_repo repository.
     """
@@ -63,7 +63,7 @@ class BotSettings(BaseSettings):
     def graph_github_backend_raw_base_url(self) -> str:
         """
         The base URL for the GitHub raw view of the graph_github_backend_repo repository.
-        Example: https://github.com/regro/cf-graph-countyfair/raw/master.
+        Example: https://github.com/conda-forge/autotick-bot-graph/raw/main.
         """
         return f"https://github.com/{self.graph_github_backend_repo}/raw/{self.graph_repo_default_branch}/"
 
