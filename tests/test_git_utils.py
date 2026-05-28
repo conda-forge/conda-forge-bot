@@ -1808,7 +1808,7 @@ def test_git_utils_push_and_delete_file_via_gh_api():
     node = f"test_file_h{uid}"
     fname = node + ".json"
 
-    repo_name = "conda-forge/autotick-bot-graph"
+    repo_name = "conda-forge/conda-forge-bot-data"
     gh = github_client()
     repo = gh.get_repo(repo_name)
 

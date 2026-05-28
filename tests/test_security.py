@@ -65,7 +65,7 @@ def test_env_is_protected_against_malicious_recipes(tmpdir, caplog, env_setup):
 
     pmy = populate_feedstock_attributes("blah", {}, in_yaml, None, "{}")
 
-    # This url gets saved in https://github.com/conda-forge/autotick-bot-graph
+    # This url gets saved in https://github.com/conda-forge/conda-forge-bot-data
     pswd = os.environ.get("TEST_BOT_TOKEN_VAL", "unpassword")
     tst_url = f"https://{pswd[0]}/{pswd[1:]}"
     assert pmy["url"][0] != tst_url

@@ -3,7 +3,7 @@
 # Environment Variables:
 # - CF_FEEDSTOCK_OPS_CONTAINER_NAME: The name of the container image to use for the bot (optional, not used but left intact)
 # - CF_FEEDSTOCK_OPS_CONTAINER_TAG: The tag of the container image to use for the bot (optional).
-# - CF_TICK_GRAPH_GITHUB_BACKEND_REPO: The GitHub repository to clone cf-graph from. Default: conda-forge/autotick-bot-graph
+# - CF_TICK_GRAPH_GITHUB_BACKEND_REPO: The GitHub repository to clone cf-graph from. Default: conda-forge/conda-forge-bot-data
 
 # Sets the following environment variables via GITHUB_ENV:
 # - CF_FEEDSTOCK_OPS_CONTAINER_NAME (see above)
@@ -41,7 +41,7 @@ for arg in "$@"; do
   fi
 done
 if [[ "${clone_graph}" == "true" ]]; then
-  cf_graph_repo=${CF_TICK_GRAPH_GITHUB_BACKEND_REPO:-"conda-forge/autotick-bot-graph"}
+  cf_graph_repo=${CF_TICK_GRAPH_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data"}
   cf_graph_remote="https://github.com/${cf_graph_repo}.git"
   # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
   git clone --depth=5 "${cf_graph_remote}" cf-graph

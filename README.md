@@ -292,7 +292,7 @@ conda-forge-tick --help
 
 For debugging, use the `--debug` flag. This enables debug logging and disables multiprocessing.
 
-Note that the bot expects the [conda-forge dependency graph](https://github.com/conda-forge/autotick-bot-graph) to be
+Note that the bot expects the [conda-forge dependency graph](https://github.com/conda-forge/conda-forge-bot-data) to be
 present in the current working directory by default, unless the `--online` flag is used.
 
 > [!TIP]
@@ -350,14 +350,14 @@ Many of these jobs could be converted to a more event-driven model, especially t
 The next few sections provide information about how to use the `conda_forge_tick` package to
 interact with the `autotick-bot-graph` repo.
 
-You will need a copy of `conda-forge/autotick-bot-graph` and need to be at the root level of the `autotick-bot-graph` repo
+You will need a copy of `conda-forge/conda-forge-bot-data` and need to be at the root level of the `autotick-bot-graph` repo
 for these code snippets to work properly. You can clone the repo with the following command:
 
 ```bash
-git clone --depth=1 https://github.com/conda-forge/autotick-bot-graph.git
+git clone --depth=1 https://github.com/conda-forge/conda-forge-bot-data.git
 ```
 
-The `autotick-bot-graph` repo also has a [notebook](https://github.com/conda-forge/autotick-bot-graph/blob/main/example.ipynb) with some code examples.
+The `autotick-bot-graph` repo also has a [notebook](https://github.com/conda-forge/conda-forge-bot-data/blob/main/example.ipynb) with some code examples.
 
 #### Loading the graph
 
@@ -405,7 +405,7 @@ See the [run_bot_task.py](docker/run_bot_task.py) script for more information.
 
 ### Data Model
 
-The bot uses the [conda-forge dependency graph](https://github.com/conda-forge/autotick-bot-graph) to remember metadata
+The bot uses the [conda-forge dependency graph](https://github.com/conda-forge/conda-forge-bot-data) to remember metadata
 about feedstocks, their versions, and their dependencies. Some of the information
 (e.g. the contents of `recipe/meta.yaml` file of the corresponding feedstock) is redundant but stored in the
 graph for performance reasons. In an attempt to document the data model, we have created a
@@ -423,9 +423,9 @@ ideal.
 
 The backend(s) can be set by using the `CF_TICK_GRAPH_DATA_BACKENDS` environment variable to a colon-separated list of backends (e.g., `export CF_TICK_GRAPH_DATA_BACKENDS=file:mongodb`). The possible backends are:
 
-- `file` (default): Use the local file system to store data. In order to properly use this backend, you must clone the `conda-forge/autotick-bot-graph` repository and run the bot from `conda-forge/autotick-bot-graph`'s root directory. You can use the `deploy` command from the bot CLI to commit any changes and push them to the remote repository.
+- `file` (default): Use the local file system to store data. In order to properly use this backend, you must clone the `conda-forge/conda-forge-bot-data` repository and run the bot from `conda-forge/conda-forge-bot-data`'s root directory. You can use the `deploy` command from the bot CLI to commit any changes and push them to the remote repository.
 - `mongodb`: Use a MongoDB database to store data. In order to use this backend, you need to set the `MONGODB_CONNECTION_STRING` environment variable to the connection string of the MongoDB database you want to use. **WARNING: The bot will typically read almost all of its data in the backend during its runs, so be careful when using this backend without a pre-cached local copy of the data.**
-- `github`: Read-only backend that uses the `conda-forge/autotick-bot-graph` repository as a data source. This backend reads data on-the-fly using GitHub's "raw" URLs (e.g, `https://raw.githubusercontent.com/conda-forge/autotick-bot-graph/main/all_feedstocks.json`). This backend is ideal for debugging when you only want to touch a fraction of the data.
+- `github`: Read-only backend that uses the `conda-forge/conda-forge-bot-data` repository as a data source. This backend reads data on-the-fly using GitHub's "raw" URLs (e.g, `https://raw.githubusercontent.com/conda-forge/conda-forge-bot-data/main/all_feedstocks.json`). This backend is ideal for debugging when you only want to touch a fraction of the data.
 
 The bot uses the first backend in the list as the primary backend and syncs any changed data to the other backends as needed. The bot will also cache data to disk upon first use to speed up subsequent reads. To turn off this caching, set the `CF_TICK_GRAPH_DATA_USE_FILE_CACHE` environment variable to `false`.
 

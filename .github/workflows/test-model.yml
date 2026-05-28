@@ -41,7 +41,7 @@ jobs:
         if: ${{ ! env.CI_SKIP }}
         run: |
           pip install --no-deps --no-build-isolation -e .
-          git clone --depth=1 https://github.com/conda-forge/autotick-bot-graph.git cf-graph
+          git clone --depth=1 https://github.com/conda-forge/conda-forge-bot-data.git cf-graph
 
       - name: conda info and env
         if: ${{ ! env.CI_SKIP }}

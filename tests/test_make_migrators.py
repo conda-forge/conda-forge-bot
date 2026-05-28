@@ -138,7 +138,7 @@ def test_make_migrators_initialize_migrators():
                 "git",
                 "clone",
                 "--depth=1",
-                "https://github.com/conda-forge/autotick-bot-graph.git",
+                "https://github.com/conda-forge/conda-forge-bot-data.git",
             ],
             cwd=tmpdir,
             check=True,

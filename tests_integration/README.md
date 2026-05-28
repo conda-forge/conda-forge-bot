@@ -14,7 +14,7 @@ The integration tests operate in a testing environment consisting of three real 
 [regro-cf-autotick-bot](https://github.com/regro-cf-autotick-bot) account and is a test environment in which the bot
 will create forks of the conda-forge-bot-staging repositories
 - [regro-staging](https://github.com/regro-staging) (organization) (named after the [regro](https://github.com/regro)
-account) contains a special version of the [autotick-bot-graph](https://github.com/conda-forge/autotick-bot-graph) which
+account) contains a special version of the [autotick-bot-graph](https://github.com/conda-forge/conda-forge-bot-data) which
 the bot uses during testing.
 
 ## Test Cases Definition

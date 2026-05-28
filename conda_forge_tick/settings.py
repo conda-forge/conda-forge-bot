@@ -47,10 +47,10 @@ class BotSettings(BaseSettings):
     """
 
     graph_github_backend_repo: str = Field(
-        "conda-forge/autotick-bot-graph", pattern=r"^[\w\.-]+/[\w\.-]+$"
+        "conda-forge/conda-forge-bot-data", pattern=r"^[\w\.-]+/[\w\.-]+$"
     )
     """
-    The GitHub repository to deploy to. Default: "conda-forge/autotick-bot-graph".
+    The GitHub repository to deploy to. Default: "conda-forge/conda-forge-bot-data".
     If you change the field name, you must also update the `ENV_GRAPH_GITHUB_BACKEND_REPO` constant.
     """
 
@@ -63,7 +63,7 @@ class BotSettings(BaseSettings):
     def graph_github_backend_raw_base_url(self) -> str:
         """
         The base URL for the GitHub raw view of the graph_github_backend_repo repository.
-        Example: https://github.com/conda-forge/autotick-bot-graph/raw/main.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
         """
         return f"https://github.com/{self.graph_github_backend_repo}/raw/{self.graph_repo_default_branch}/"
 

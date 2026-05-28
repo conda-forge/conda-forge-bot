@@ -942,7 +942,7 @@ def test_lazy_json_backends_github_api():
             assert not backend.hexists("lazy_json", node)
     finally:
         gh = github_client()
-        repo = gh.get_repo("conda-forge/autotick-bot-graph")
+        repo = gh.get_repo("conda-forge/conda-forge-bot-data")
         message = f"remove files {fname} from testing"
         for tr in range(10):
             try:
@@ -972,7 +972,7 @@ def test_lazy_json_backends_github_api_nopush():
     try:
         with lazy_json_override_backends(["github_api"], use_file_cache=False):
             gh = github_client()
-            repo = gh.get_repo("conda-forge/autotick-bot-graph")
+            repo = gh.get_repo("conda-forge/conda-forge-bot-data")
 
             lzj = LazyJson(fname)
             with lzj:
