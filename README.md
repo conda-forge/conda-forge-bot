@@ -323,23 +323,23 @@ As `conda-forge` grew, the "single job + global data access" model became increa
 
 In this section, we list the collection of jobs that comprise the bot. Each job touches a distinct part of the bot's data structure and is run in parallel with the other jobs. We have also specified the GitHub Actions workflow that runs each job. See those files for further details on which commands are run.
 
-**bot** / `bot-bot.yml`: The main job that runs the bot, making PRs to feedstocks, etc. This job writes data on the PRs it makes to `autotick-bot-graph/pr_info` and `autotick-bot-graph/version_pr_info`. It also writes new PR JSON blobs to `autotick-bot-graph/pr_json` for each PR to track their statuses on GitHub.
+**bot** / `bot-bot.yml`: The main job that runs the bot, making PRs to feedstocks, etc. This job writes data on the PRs it makes to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`. It also writes new PR JSON blobs to `conda-forge-bot-data/pr_json` for each PR to track their statuses on GitHub.
 
-**feedstocks** / `bot-feedstocks.yml`: Updates the list of valid and archived feedstocks in `conda-forge` located at `autotick-bot-graph/all_feedstocks.json`.
+**feedstocks** / `bot-feedstocks.yml`: Updates the list of valid and archived feedstocks in `conda-forge` located at `conda-forge-bot-data/all_feedstocks.json`.
 
-**versions** / `bot-versions.yml`: Fetches the latest version for each feedstock in `conda-forge`, writing the data to `autotick-bot-graph/versions/`.
+**versions** / `bot-versions.yml`: Fetches the latest version for each feedstock in `conda-forge`, writing the data to `conda-forge-bot-data/versions/`.
 
-**prs** / `bot-prs.yml`: Fetches the latest PR statuses from GitHub for all of the PRs that bot has made, writing the data to`autotick-bot-graph/pr_json`.
+**prs** / `bot-prs.yml`: Fetches the latest PR statuses from GitHub for all of the PRs that bot has made, writing the data to`conda-forge-bot-data/pr_json`.
 
-**pypi-mapping** / `bot-pypi-mapping.yml`: Builds a mapping of packages between PyPI and `conda-forge`, and a mapping of python imports to packages using the bot's metadata. The PyPI mapping is written to `autotick-bot-graph/mappings` and the import mapping is written to `autotick-bot-graph/import_to_pkg_maps`. This job also generates some internal data stored at `autotick-bot-graph/ranked_hubs_authorities.json`.
+**pypi-mapping** / `bot-pypi-mapping.yml`: Builds a mapping of packages between PyPI and `conda-forge`, and a mapping of python imports to packages using the bot's metadata. The PyPI mapping is written to `conda-forge-bot-data/mappings` and the import mapping is written to `conda-forge-bot-data/import_to_pkg_maps`. This job also generates some internal data stored at `conda-forge-bot-data/ranked_hubs_authorities.json`.
 
-**make-graph** / `bot-make-graph.yml`: Builds the `conda-forge` dependency graph from the feedstocks in `autotick-bot-graph/all_feedstocks.json`. The graph is written to `autotick-bot-graph/graph.json` and specific attributes for each node are written to `autotick-bot-graph/node_attrs`. This job also performs some schema migrations and might add new files to `autotick-bot-graph/pr_info` and `autotick-bot-graph/version_pr_info`.
+**make-graph** / `bot-make-graph.yml`: Builds the `conda-forge` dependency graph from the feedstocks in `conda-forge-bot-data/all_feedstocks.json`. The graph is written to `conda-forge-bot-data/graph.json` and specific attributes for each node are written to `conda-forge-bot-data/node_attrs`. This job also performs some schema migrations and might add new files to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`.
 
-**make-migrators** / `bot-make-migrators.yml`: Builds the migrations the bot will run, writing them as JSON to `autotick-bot-graph/migrators`.
+**make-migrators** / `bot-make-migrators.yml`: Builds the migrations the bot will run, writing them as JSON to `conda-forge-bot-data/migrators`.
 
-**update-status-page** / `bot-update-status-page.yml`: Updates the status page at `conda-forge.org/status` with the latest migration information. The status data is written to `autotick-bot-graph/status`.
+**update-status-page** / `bot-update-status-page.yml`: Updates the status page at `conda-forge.org/status` with the latest migration information. The status data is written to `conda-forge-bot-data/status`.
 
-**[NOT CURRENTLY USED] cache** / `bot-cache.yml`: Caches the data in `autotick-bot-graph` to GitHub Actions.
+**[NOT CURRENTLY USED] cache** / `bot-cache.yml`: Caches the data in `conda-forge-bot-data` to GitHub Actions.
 
 **keepalive** / `bot-keepalive.yml`: This job runs every 15 minutes and ensures that the bot is still running. If the bot is not running, it will restart it.
 
@@ -348,16 +348,16 @@ Many of these jobs could be converted to a more event-driven model, especially t
 ### Using the `conda_forge_tick` Module to Interact with the Bot Data
 
 The next few sections provide information about how to use the `conda_forge_tick` package to
-interact with the `autotick-bot-graph` repo.
+interact with the `conda-forge-bot-data` repo.
 
-You will need a copy of `conda-forge/conda-forge-bot-data` and need to be at the root level of the `autotick-bot-graph` repo
+You will need a copy of `conda-forge/conda-forge-bot-data` and need to be at the root level of the `conda-forge-bot-data` repo
 for these code snippets to work properly. You can clone the repo with the following command:
 
 ```bash
 git clone --depth=1 https://github.com/conda-forge/conda-forge-bot-data.git
 ```
 
-The `autotick-bot-graph` repo also has a [notebook](https://github.com/conda-forge/conda-forge-bot-data/blob/main/example.ipynb) with some code examples.
+The `conda-forge-bot-data` repo also has a [notebook](https://github.com/conda-forge/conda-forge-bot-data/blob/main/example.ipynb) with some code examples.
 
 #### Loading the graph
 

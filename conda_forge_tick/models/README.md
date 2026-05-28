@@ -6,7 +6,7 @@ Refer to the [main README](../../README.md) for an explanation of what this is a
 
 The most important parts of the graph repository looks like this:
 ```
-autotick-bot-graph
+conda-forge-bot-data
 ├── import_to_pkg_maps
 │   └── ...
 ├── mappings/pypi

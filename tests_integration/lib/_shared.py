@@ -19,7 +19,7 @@ IS_USER_ACCOUNT: dict[GitHubAccount, bool] = {
     GitHubAccount.REGRO_ORG: False,
 }
 
-REGRO_ACCOUNT_REPOS = {"autotick-bot-graph"}
+REGRO_ACCOUNT_REPOS = {"conda-forge-bot-data"}
 
 ENV_GITHUB_RUN_ID = "GITHUB_RUN_ID"
 """

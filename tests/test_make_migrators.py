@@ -144,7 +144,7 @@ def test_make_migrators_initialize_migrators():
             check=True,
         )
         with (
-            pushd(os.path.join(tmpdir, "autotick-bot-graph")),
+            pushd(os.path.join(tmpdir, "conda-forge-bot-data")),
             lazy_json_override_backends(["file"], use_file_cache=True),
         ):
             gx = load_graph()
