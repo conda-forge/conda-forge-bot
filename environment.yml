@@ -19,7 +19,7 @@ dependencies:
   - conda-libmamba-solver
   - conda-forge-metadata >=0.15.0
   - conda-package-handling
-  - conda-smithy >=3.61.2
+  - conda-smithy >=2026.5.29
   - conda-build >=3.24.0
   - conda-recipe-manager >=0.6.1
   - curl
