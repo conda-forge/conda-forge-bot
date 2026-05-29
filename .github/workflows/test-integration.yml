@@ -53,7 +53,7 @@ jobs:
           if [[ ${GITHUB_EVENT_NAME} == "workflow_dispatch" ]]; then
             pr_is_fork=false
           else
-            pr_is_fork=$(gh pr view ${PR_NUMBER} --json headRepositoryOwner | jq '.headRepositoryOwner.login != "regro"')
+            pr_is_fork=$(gh pr view ${PR_NUMBER} --json headRepositoryOwner | jq '.headRepositoryOwner.login != "condaforge"')
           fi
 
           if [[ ${pr_is_fork} == "true" ]]; then

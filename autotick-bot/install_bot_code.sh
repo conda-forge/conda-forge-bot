@@ -49,7 +49,7 @@ else
   echo "Skipping cloning of cf-graph"
 fi
 
-docker_name=${CF_FEEDSTOCK_OPS_CONTAINER_NAME:-"ghcr.io/regro/conda-forge-tick"}
+docker_name=${CF_FEEDSTOCK_OPS_CONTAINER_NAME:-"quay.io/condaforge/conda-forge-tick"}
 bot_tag=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
 docker_tag=${CF_FEEDSTOCK_OPS_CONTAINER_TAG:-${bot_tag}}
 

@@ -8,8 +8,8 @@ on:
 
 env:
   PY_COLORS: "1"
-  REGISTRY: ghcr.io
-  IMAGE_NAME: regro/conda-forge-tick
+  REGISTRY: quay.io
+  IMAGE_NAME: condaforge/conda-forge-tick
 
 concurrency:
   group: release
@@ -56,34 +56,26 @@ jobs:
           echo "next version: ${NEXT}"
           echo "NEXT=${NEXT}" >> "$GITHUB_OUTPUT"
 
-      - name: log into ghcr.io
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+      - name: build docker image
         if: ${{ ! env.CI_SKIP }}
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          image: conda-forge-tick
+          tags: latest ${{ steps.version.outputs.NEXT }}
+          containerfiles: |
+            ./Dockerfile
+          build-args: |
+            --no-cache
 
-      - name: build docker metadata
-        id: meta
-        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+      - name: push docker image to quay.io
         if: ${{ ! env.CI_SKIP }}
+        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=false
-          tags: |
-            type=raw,value=${{ steps.version.outputs.NEXT }}
-            type=raw,value=latest
-
-      - name: build and push image
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
-        if: ${{ ! env.CI_SKIP }}
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          image: conda-forge-tick
+          tags: latest ${{ steps.version.outputs.NEXT }}
+          registry: quay.io/condaforge
+          username: conda_forge_daemon
+          password: ${{ secrets.CF_DAEMON_QUAY_PASSWORD }}
 
       - name: tag and release
         if: ${{ ! env.CI_SKIP }}

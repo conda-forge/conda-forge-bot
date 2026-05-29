@@ -1,11 +1,13 @@
 # GitHub Runner Allocation
 
-Last Updated: 2024-12-23
+Last Updated: 2025-05-29
 
-We have a
-[concurrency of 20 runners available](https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits) in the entire `regro` account.
+The bot has moved to `conda-forge` which has many more runners available than the `regro` GitHub org.
+Thus, we could increase these runner counts. For now, we have left them the same until the bot has
+stabilized.
 
 These are split across our workflows as follows:
+
 - `bot-bot` - 1 runner
 - `bot-cache` - currently disabled
 - `bot-events` (on demand, responds to GitHub webhook events) - any available runner

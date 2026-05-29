@@ -27,7 +27,7 @@ if issue is None:
     body = (
         textwrap.dedent(
             """\
-        Hey @regro/auto-tick-triage!
+        Hey @conda-forge/bot!
 
         It appears that the bot `%s` job(s) below failed! :(
 
