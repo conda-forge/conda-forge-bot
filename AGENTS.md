@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## Project Overview
 
-This is **autotick-bot** (conda-forge-tick), the automated maintenance bot for the conda-forge ecosystem. It creates PRs to update packages, run migrations, and maintain the conda-forge dependency graph across thousands of feedstocks.
+This is **conda-forge-bot** (conda-forge-tick), the automated maintenance bot for the conda-forge ecosystem. It creates PRs to update packages, run migrations, and maintain the conda-forge dependency graph across thousands of feedstocks.
 
 ## Common Commands
 

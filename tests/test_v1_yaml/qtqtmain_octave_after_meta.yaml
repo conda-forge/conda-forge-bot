@@ -8,7 +8,7 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/regro/cf-scripts/archive/refs/tags/${{ version }}.tar.gz
+  url: https://github.com/conda-forge/conda-forge-bot/archive/refs/tags/${{ version }}.tar.gz
   sha256: c77f9b4a22abda3b3b3d5887ccc716d0f99d2cc0f434110f83f3b128f392439a
 
 build:

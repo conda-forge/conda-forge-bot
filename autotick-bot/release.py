@@ -5,7 +5,7 @@ import github
 
 tag = sys.argv[1]
 gh = github.Github(auth=github.Auth.Token(os.environ["GITHUB_TOKEN"]))
-repo = gh.get_repo("regro/cf-scripts")
+repo = gh.get_repo("conda-forge/conda-forge-bot")
 
 repo.create_git_release(
     tag=tag,

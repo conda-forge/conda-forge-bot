@@ -1674,7 +1674,7 @@ def refresh_pr(
         else:
             # Check if we should distrust Last-Modified for old PRs
             # GitHub API bug: returns 304 even when PR now has conflicts
-            # See https://github.com/regro/cf-scripts/issues/5150
+            # See https://github.com/conda-forge/conda-forge-bot/issues/5150
             # we could only do so for "clean" PR, but as the 304 anyway consume API
             # might as well do it.
             # This also ensure all the json will soon get the 'last_fetched' key

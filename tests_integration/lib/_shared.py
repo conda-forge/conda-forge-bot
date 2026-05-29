@@ -63,7 +63,7 @@ def get_transparent_urls() -> set[str]:
     transparent_urls = {
         f"https://raw.githubusercontent.com/conda-forge/conda-forge-bot-data/{graph_repo_default_branch}/mappings/pypi/name_mapping.yaml",
         f"https://raw.githubusercontent.com/conda-forge/conda-forge-bot-data/{graph_repo_default_branch}/mappings/pypi/grayskull_pypi_mapping.json",
-        "https://raw.githubusercontent.com/regro/cf-scripts/refs/heads/main/conda_forge_tick/cf_tick_schema.json",
+        "https://raw.githubusercontent.com/conda-forge/conda-forge-bot/refs/heads/main/conda_forge_tick/cf_tick_schema.json",
         "https://raw.githubusercontent.com/conda-forge/conda-smithy/refs/heads/main/conda_smithy/data/conda-forge.json",
         "https://api.github.com/*",
         "https://github.com/*/archive/refs/tags/*",

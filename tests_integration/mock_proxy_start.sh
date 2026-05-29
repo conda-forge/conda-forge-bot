@@ -17,7 +17,7 @@ if [[ -z "$MITMPROXY_CONFDIR" ]]; then
   exit 1
 fi
 
-# You might need to set PYTHONPATH to the root of cf-scripts
+# You might need to set PYTHONPATH to the root of conda-forge-bot
 mitmdump -s ./mock_server_addon.py \
   --flow-detail "$flow_detail" \
   --set confdir="$MITMPROXY_CONFDIR" \

@@ -34,7 +34,7 @@ else
 fi
 
 openssl genrsa -out mitmproxy-ca.key 4096
-openssl req -x509 -new -nodes -key mitmproxy-ca.key -sha256 -days 365 -out mitmproxy-ca.crt -addext keyUsage=critical,keyCertSign -subj "/C=US/ST=cf-scripts/L=cf-scripts/O=cf-scripts/OU=cf-scripts/CN=cf-scripts"
+openssl req -x509 -new -nodes -key mitmproxy-ca.key -sha256 -days 365 -out mitmproxy-ca.crt -addext keyUsage=critical,keyCertSign -subj "/C=US/ST=conda-forge-bot/L=conda-forge-bot/O=conda-forge-bot/OU=conda-forge-bot/CN=conda-forge-bot"
 cat mitmproxy-ca.key mitmproxy-ca.crt > mitmproxy-ca.pem
 
 echo "The mitmproxy certificates have been generated successfully."
@@ -66,7 +66,7 @@ cp "$(python -m certifi)" mitmproxy-cert-bundle.pem
 
 {
   echo ""
-  echo "# cf-scripts self-signed certificate"
+  echo "# conda-forge-bot self-signed certificate"
   cat mitmproxy-ca.crt
 } >> mitmproxy-cert-bundle.pem
 

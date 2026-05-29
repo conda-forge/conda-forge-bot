@@ -37,7 +37,7 @@ jobs:
       - name: get latest release
         id: latest_release
         run: |
-          tag_name=$(gh api repos/regro/cf-scripts/releases/latest --jq '.tag_name')
+          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
           echo "latest release: ${tag_name}"
           echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
         env:
@@ -46,23 +46,23 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ steps.latest_release.outputs.tag_name }}
-          path: cf-scripts
+          path: conda-forge-bot
 
       - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
         with:
-          environment-file: cf-scripts/conda-lock.yml
-          environment-name: cf-scripts
-          condarc-file: cf-scripts/autotick-bot/condarc
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
       - name: do local setup and stop me if needed
         run: |
-          cd cf-scripts
+          cd conda-forge-bot
           python autotick-bot/stop_me_if_needed.py
 
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source cf-scripts/autotick-bot/install_bot_code.sh --no-clean-disk-space
+          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
@@ -71,7 +71,7 @@ jobs:
         run: |
           pushd cf-graph
 
-          export RUN_URL="https://github.com/regro/cf-scripts/actions/runs/${RUN_ID}"
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           conda-forge-tick update-prs --job=${BOT_JOB} --n-jobs=${NUM_BOT_JOBS}
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
@@ -85,7 +85,7 @@ jobs:
         run: |
           pushd cf-graph
 
-          export RUN_URL="https://github.com/regro/cf-scripts/actions/runs/${RUN_ID}"
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           conda-forge-tick deploy-to-github --no-pull
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
@@ -94,8 +94,8 @@ jobs:
       - name: bump on fail
         if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
         run: |
-          export ACTION_URL="https://github.com/regro/cf-scripts/actions/runs/${RUN_ID}"
-          python cf-scripts/autotick-bot/bump_bot_team.py
+          export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          python conda-forge-bot/autotick-bot/bump_bot_team.py
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
           RUN_ID: ${{ github.run_id }}
@@ -121,7 +121,7 @@ jobs:
       - name: get latest release
         id: latest_release
         run: |
-          tag_name=$(gh api repos/regro/cf-scripts/releases/latest --jq '.tag_name')
+          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
           echo "latest release: ${tag_name}"
           echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
         env:
@@ -130,24 +130,24 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ steps.latest_release.outputs.tag_name }}
-          path: cf-scripts
+          path: conda-forge-bot
 
       - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
         with:
-          environment-file: cf-scripts/conda-lock.yml
-          environment-name: cf-scripts
-          condarc-file: cf-scripts/autotick-bot/condarc
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
       - name: do local setup and stop me if needed
         run: |
-          cd cf-scripts
+          cd conda-forge-bot
           python autotick-bot/stop_me_if_needed.py
 
       - name: bump on fail
         if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
         run: |
-          export ACTION_URL="https://github.com/regro/cf-scripts/actions/runs/${RUN_ID}"
-          python cf-scripts/autotick-bot/bump_bot_team.py
+          export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          python conda-forge-bot/autotick-bot/bump_bot_team.py
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
           RUN_ID: ${{ github.run_id }}

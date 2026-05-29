@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: ${{ inputs.skip != 'true' }}
         with:
-          repository: "regro/cf-scripts"
+          repository: "conda-forge/conda-forge-bot"
 
       - name: prep the lockfile
         if:  ${{ inputs.skip != 'true' && !inputs.lockfile-is-artifact }}
@@ -85,7 +85,7 @@ jobs:
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
-          environment-name: cf-scripts
+          environment-name: conda-forge-bot
           condarc-file: autotick-bot/condarc
 
       - name: configure conda and install code
@@ -222,7 +222,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: ${{ inputs.skip != 'true' }}
         with:
-          repository: "regro/cf-scripts"
+          repository: "conda-forge/conda-forge-bot"
 
       - name: prep the lockfile
         if:  ${{ inputs.skip != 'true' && !inputs.lockfile-is-artifact }}
@@ -247,7 +247,7 @@ jobs:
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
-          environment-name: cf-scripts
+          environment-name: conda-forge-bot
           condarc-file: autotick-bot/condarc
 
       - name: configure conda and install code
@@ -361,7 +361,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: ${{ inputs.skip != 'true' }}
         with:
-          repository: "regro/cf-scripts"
+          repository: "conda-forge/conda-forge-bot"
 
       - name: prep the lockfile
         if:  ${{ inputs.skip != 'true' && !inputs.lockfile-is-artifact }}
@@ -386,7 +386,7 @@ jobs:
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
-          environment-name: cf-scripts
+          environment-name: conda-forge-bot
           condarc-file: autotick-bot/condarc
 
       - name: download coverage artifacts

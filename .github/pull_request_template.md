@@ -1,5 +1,5 @@
 <!--
-Thanks for contributing to cf-scripts!
+Thanks for contributing to conda-forge-bot!
 
 We are currently transitioning to a Pydantic-based model documenting the format of the conda-forge dependency graph
 data that this bot internally uses (see README).

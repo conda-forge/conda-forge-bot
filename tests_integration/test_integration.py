@@ -50,7 +50,7 @@ def global_environment_setup():
 
     github_run_id = os.environ.get("GITHUB_RUN_ID", "GITHUB_RUN_ID_NOT_SET")
     os.environ["RUN_URL"] = (
-        f"https://github.com/regro/cf-scripts/actions/runs/{github_run_id}"
+        f"https://github.com/conda-forge/conda-forge-bot/actions/runs/{github_run_id}"
     )
 
     # by default, we enable container mode because it is the default in the bot

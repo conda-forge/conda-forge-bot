@@ -155,7 +155,7 @@ class NodeAttributesValid(ValidatedBaseModel):
         """
         Validate the `platform_info` field.
 
-        The current autotick-bot implementation makes use of `PLATFORM_meta_yaml` and `PLATFORM_requirements` fields
+        The current conda-forge-bot implementation makes use of `PLATFORM_meta_yaml` and `PLATFORM_requirements` fields
         that are present in this model, where PLATFORM is a build platform present in `platforms`.
         This data model is a bit too complex for what it does, so we transform it into a simpler model that is easier to
         work with. See platform_info above for the new model.

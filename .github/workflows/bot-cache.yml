@@ -44,7 +44,7 @@ jobs:
       - name: get latest release
         id: latest_release
         run: |
-          tag_name=$(gh api repos/regro/cf-scripts/releases/latest --jq '.tag_name')
+          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
           echo "latest release: ${tag_name}"
           echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
         env:
@@ -53,23 +53,23 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ steps.latest_release.outputs.tag_name }}
-          path: cf-scripts
+          path: conda-forge-bot
 
       - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
         with:
-          environment-file: cf-scripts/conda-lock.yml
-          environment-name: cf-scripts
-          condarc-file: cf-scripts/autotick-bot/condarc
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
       - name: do local setup and stop me if needed
         run: |
-          cd cf-scripts
+          cd conda-forge-bot
           python autotick-bot/stop_me_if_needed.py
 
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source cf-scripts/autotick-bot/install_bot_code.sh --no-clone-graph
+          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
 
       - name: run sync
         if: success() && ! env.CI_SKIP
@@ -105,7 +105,7 @@ jobs:
       - name: get latest release
         id: latest_release
         run: |
-          tag_name=$(gh api repos/regro/cf-scripts/releases/latest --jq '.tag_name')
+          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
           echo "latest release: ${tag_name}"
           echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
         env:
@@ -114,23 +114,23 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ steps.latest_release.outputs.tag_name }}
-          path: cf-scripts
+          path: conda-forge-bot
 
       - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
         with:
-          environment-file: cf-scripts/conda-lock.yml
-          environment-name: cf-scripts
-          condarc-file: cf-scripts/autotick-bot/condarc
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
       - name: do local setup and stop me if needed
         run: |
-          cd cf-scripts
+          cd conda-forge-bot
           python autotick-bot/stop_me_if_needed.py
 
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source cf-scripts/autotick-bot/install_bot_code.sh --no-clone-graph
+          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
 
       - name: trigger next job
         uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1

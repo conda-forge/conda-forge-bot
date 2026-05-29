@@ -382,7 +382,7 @@ def test_latest_version_npm(
     requests_mock,
     tmpdir,
 ):
-    pmy = LazyJson(os.path.join(str(tmpdir), "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(str(tmpdir), "conda-forge-bot-test.json"))
     with pmy as _pmy:
         _pmy.update(parse_meta_yaml(inp)["source"])
         _pmy.update(
@@ -410,7 +410,7 @@ def test_latest_version_npm(
     latest_url_rawurl_test_list,
 )
 def test_latest_version_rawurl(name, inp, curr_ver, ver, source, urls, tmpdir):
-    pmy = LazyJson(os.path.join(tmpdir, "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(tmpdir, "conda-forge-bot-test.json"))
     with pmy as _pmy:
         _pmy.update(parse_meta_yaml(inp)["source"])
         _pmy.update(
@@ -1368,7 +1368,7 @@ latest_url_nvidia_test_list = [
 def test_latest_version_nvidia(
     name, inp, curr_ver, ver, source, urls, conda_forge, tmpdir
 ):
-    pmy = LazyJson(os.path.join(tmpdir, "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(tmpdir, "conda-forge-bot-test.json"))
     with pmy as _pmy:
         _pmy.update(parse_meta_yaml(inp)["source"])
         _pmy.update(
@@ -1996,7 +1996,7 @@ def test_main(
 )
 def test_github_version_prefix(url, version, version_prefix, tmpdir):
     gh = Github()
-    meta_yaml = LazyJson(os.path.join(tmpdir, "cf-scripts-test.json"))
+    meta_yaml = LazyJson(os.path.join(tmpdir, "conda-forge-bot-test.json"))
     with meta_yaml as _meta_yaml:
         _meta_yaml.update(
             {
@@ -2053,7 +2053,7 @@ def test_github_release_tag_with_slash_respects_allowed_tag_globs(
     ],
 )
 def test_github_releases(tmpdir, url, feedstock_version):
-    meta_yaml = LazyJson(os.path.join(tmpdir, "cf-scripts-test.json"))
+    meta_yaml = LazyJson(os.path.join(tmpdir, "conda-forge-bot-test.json"))
     with meta_yaml as _meta_yaml:
         _meta_yaml.update(
             {
@@ -2083,7 +2083,7 @@ def test_github_releases_unusual_version(
     tmp_path: Path, url: str, feedstock_version: str, regex: str
 ):
     """Tests that the GitHubReleases source can handle unusual version strings such as timestamps."""
-    meta_yaml = LazyJson(str(tmp_path / "cf-scripts-test.json"))
+    meta_yaml = LazyJson(str(tmp_path / "conda-forge-bot-test.json"))
     with meta_yaml as _meta_yaml:
         _meta_yaml.update(
             {
@@ -2111,7 +2111,7 @@ def test_latest_version_cratesio(tmpdir):
     with open(recipe_path) as fd:
         inp = fd.read()
 
-    pmy = LazyJson(os.path.join(str(tmpdir), "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(str(tmpdir), "conda-forge-bot-test.json"))
     with pmy as _pmy:
         yml = parse_meta_yaml(inp)
         _pmy.update(yml["source"])
@@ -2152,7 +2152,7 @@ def test_latest_version_gittags(tmpdir, yaml_path):
     with open(recipe_path) as fd:
         inp = fd.read()
 
-    pmy = LazyJson(os.path.join(str(tmpdir), "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(str(tmpdir), "conda-forge-bot-test.json"))
     with pmy as _pmy:
         yml = (
             parse_recipe_yaml(inp, use_container=False)
@@ -2179,7 +2179,7 @@ def test_latest_version_pypi_files_pythonhost_url(tmpdir):
     ver = "0.4.0"
     source = PyPI()
 
-    pmy = LazyJson(os.path.join(str(tmpdir), "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(str(tmpdir), "conda-forge-bot-test.json"))
     with pmy as _pmy:
         _pmy.update(
             {
@@ -2203,7 +2203,7 @@ def test_latest_version_pypi_canonical_url(tmpdir):
     ver = "0.9.0"
     source = PyPI()
 
-    pmy = LazyJson(os.path.join(str(tmpdir), "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(str(tmpdir), "conda-forge-bot-test.json"))
     with pmy as _pmy:
         _pmy.update(
             {
@@ -2221,7 +2221,7 @@ def test_latest_version_pypi_canonical_url(tmpdir):
 
 
 def test_latest_version_stackvana_v1(tmpdir):
-    tmp_node_attrs = os.path.join(str(tmpdir), "cf-scripts-test.json")
+    tmp_node_attrs = os.path.join(str(tmpdir), "conda-forge-bot-test.json")
     with open(os.path.join(NODE_ATTRS_PATH, "stackvana-core.json")) as fp:
         na = load(fp)
     pmy = LazyJson(tmp_node_attrs)
@@ -2445,7 +2445,7 @@ extra:
     - sblauth
 """
 
-    pmy = LazyJson(os.path.join(str(tmpdir), "cf-scripts-test.json"))
+    pmy = LazyJson(os.path.join(str(tmpdir), "conda-forge-bot-test.json"))
     with pmy as _pmy:
         _pmy.update(
             {

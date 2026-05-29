@@ -17,11 +17,16 @@ def pushd(new_dir):
 
 with tempfile.TemporaryDirectory() as tmpdir, pushd(tmpdir):
     subprocess.run(
-        ["git", "clone", "--depth=1", "https://github.com/regro/cf-scripts.git"],
+        [
+            "git",
+            "clone",
+            "--depth=1",
+            "https://github.com/conda-forge/conda-forge-bot.git",
+        ],
         check=True,
     )
 
-    if os.path.exists(os.path.join("cf-scripts", "autotick-bot", "please.go")):
+    if os.path.exists(os.path.join("conda-forge-bot", "autotick-bot", "please.go")):
         go = True
     else:
         go = False

@@ -9,7 +9,7 @@ today = datetime.today().strftime("%Y-%m-%d")
 issue_title = f"[{today}] failed job {os.environ['ACTION_NAME']}"
 
 gh = github.Github(auth=github.Auth.Token(os.environ["BOT_TOKEN"]))
-repo = gh.get_repo("regro/cf-scripts")
+repo = gh.get_repo("conda-forge/conda-forge-bot")
 
 # find any issues from today, if any
 max_try = 50

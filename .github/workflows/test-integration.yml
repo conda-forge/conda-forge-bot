@@ -9,7 +9,7 @@ on:
 # Integration tests interact with GitHub resources in the integration test infrastructure and therefore
 # cannot run concurrently with other integration tests.
 concurrency:
-  group: cf-scripts-integration-tests
+  group: conda-forge-bot-integration-tests
   cancel-in-progress: false
 
 env:
@@ -95,14 +95,14 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         with:
-          path: cf-scripts
+          path: conda-forge-bot
           submodules: 'true'
 
       - name: Build Docker Image
         uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         with:
-          context: cf-scripts
+          context: conda-forge-bot
           push: false
           load: true
           tags: conda-forge-tick:test
@@ -111,13 +111,13 @@ jobs:
         uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         with:
-          environment-file: cf-scripts/conda-lock.yml
-          environment-name: cf-scripts
-          condarc-file: cf-scripts/autotick-bot/condarc
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
       - name: Run pip install
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
-        working-directory: cf-scripts
+        working-directory: conda-forge-bot
         run: |
           # put pinnings at old version for testing
           micromamba install conda-forge-pinning==2025.02.25.13.14.53
@@ -125,7 +125,7 @@ jobs:
 
       - name: Run mitmproxy certificate setup wizard
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
-        working-directory: cf-scripts
+        working-directory: conda-forge-bot
         run: |
           # place a script in the mitmproxy directory that will be run by the setup wizard
           # to trust the mitmproxy certificate
@@ -149,7 +149,7 @@ jobs:
 
       - name: Run Integration Tests with pytest
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
-        working-directory: cf-scripts
+        working-directory: conda-forge-bot
         run: |
           pytest -s -v \
           --dist=no \

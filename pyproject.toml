@@ -11,14 +11,14 @@ name = "conda-forge-tick"
 authors = [
     {name = "conda-forge-tick development team", email = "condaforge@gmail.com"},
 ]
-description = "Flagship repo for cf-regro-autotick-bot"
+description = "bot for conda-forge version updates and pinning migrations"
 dynamic = ["version"]
 license = {file = "License"}
 readme = "README.md"
 requires-python = ">=3.12"
 
 [project.urls]
-home = "https://github.com/regro/cf-scripts"
+home = "https://github.com/conda-forge/conda-forge-bot"
 
 [project.scripts]
 conda-forge-tick = "conda_forge_tick.cli:main"

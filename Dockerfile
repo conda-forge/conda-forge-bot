@@ -2,7 +2,7 @@ FROM quay.io/condaforge/linux-anvil-cos7-x86_64:latest
 
 # baseline env
 ENV TMPDIR=/tmp
-ENV AUTOTICK_BOT_DIR=/opt/autotick-bot
+ENV AUTOTICK_BOT_DIR=/opt/conda-forge-bot
 
 # use bash for a while to make conda manipulations easier
 SHELL ["/bin/bash", "-l", "-c"]
@@ -11,7 +11,7 @@ SHELL ["/bin/bash", "-l", "-c"]
 COPY conda-lock.yml $AUTOTICK_BOT_DIR/conda-lock.yml
 RUN conda activate base && \
     conda install conda-lock --yes && \
-    conda-lock install -n cf-scripts $AUTOTICK_BOT_DIR/conda-lock.yml && \
+    conda-lock install -n conda-forge-bot $AUTOTICK_BOT_DIR/conda-lock.yml && \
     conda clean --all --yes && \
     # Lucky group gets permission to write in the conda dir
     chown -R root /opt/conda && \
@@ -25,7 +25,7 @@ RUN chmod +x /opt/docker/bin/entrypoint
 # now install the bot code
 COPY . $AUTOTICK_BOT_DIR
 RUN conda activate base && \
-    conda activate cf-scripts && \
+    conda activate conda-forge-bot && \
     cd $AUTOTICK_BOT_DIR && \
     pip install --no-deps --no-build-isolation -e . && \
     cd - && \
@@ -45,7 +45,7 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/cond
 # see https://github.com/conda-forge/conda-forge-feedstock-ops/pull/59
 RUN ln -s $TMPDIR/conda_user_conda_build_locks $HOME/.conda_build_locks
 RUN chown conda:conda $HOME && \
-    chown -R conda:conda /opt/autotick-bot && \
+    chown -R conda:conda /opt/conda-forge-bot && \
     cp -R /etc/skel $HOME && \
     chown -R conda:conda $HOME/skel && \
     (ls -A1 $HOME/skel | xargs -I {} mv -n $HOME/skel/{} $HOME) && \
@@ -54,7 +54,7 @@ RUN chown conda:conda $HOME && \
 USER conda
 
 # deal with git config for user and mounted directory
-RUN conda activate cf-scripts && \
+RUN conda activate conda-forge-bot && \
     git config --global --add safe.directory /cf_feedstock_ops_dir && \
     git config --global init.defaultBranch main && \
     git config --global user.email "conda@conda.conda" && \

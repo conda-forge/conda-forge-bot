@@ -18,7 +18,7 @@ git config --global pull.rebase false
 # we pin everything now so no need to update this
 # conda update conda-forge-pinning --yes
 
-cd cf-scripts
+cd conda-forge-bot
 
 pip install --no-deps --no-build-isolation -e .
 
