@@ -32,6 +32,7 @@ jobs:
           condarc-file: autotick-bot/condarc
 
       - name: stop me if needed
+        if: ${{ github.event_name == 'schedule' }}
         run: |
           python autotick-bot/stop_me_if_needed.py
 
