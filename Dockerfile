@@ -12,6 +12,20 @@ SHELL ["/bin/bash", "-l", "-c"]
 COPY conda-lock.yml $AUTOTICK_BOT_DIR/conda-lock.yml
 RUN conda activate base && \
     conda create --name conda-forge-bot --file $AUTOTICK_BOT_DIR/conda-lock.yml --yes --quiet && \
+    conda uninstall \
+        pytest \
+        pytest-xprocess \
+        codecov \
+        requests-mock \
+        pre-commit \
+        pytest-xdist \
+        pytest-cov \
+        pytest-env \
+        pytest-retry \
+        pytest-split \
+        python-build \
+        mypy \
+        --force --yes && \
     conda clean --all --yes && \
     conda list && \
     # Lucky group gets permission to write in the conda dir
@@ -32,6 +46,7 @@ RUN conda activate base && \
     cd $AUTOTICK_BOT_DIR && \
     pip install --no-deps --no-build-isolation -e . && \
     cd - && \
+    conda clean --all --yes && \
     conda deactivate && \
     conda deactivate && \
     # remove .git dir once installed and version is set
