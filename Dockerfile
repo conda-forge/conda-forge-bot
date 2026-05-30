@@ -1,4 +1,4 @@
-FROM quay.io/condaforge/linux-anvil-cos7-x86_64:latest
+FROM quay.io/condaforge/linux-anvil-x86_64:latest
 
 # baseline env
 ENV TMPDIR=/tmp
@@ -10,8 +10,7 @@ SHELL ["/bin/bash", "-l", "-c"]
 # build the conda env first
 COPY conda-lock.yml $AUTOTICK_BOT_DIR/conda-lock.yml
 RUN conda activate base && \
-    conda install conda-lock --yes && \
-    conda-lock install -n conda-forge-bot $AUTOTICK_BOT_DIR/conda-lock.yml && \
+    conda create --name conda-forge-bot --file $AUTOTICK_BOT_DIR/conda-lock.yml --yes && \
     conda clean --all --yes && \
     # Lucky group gets permission to write in the conda dir
     chown -R root /opt/conda && \
