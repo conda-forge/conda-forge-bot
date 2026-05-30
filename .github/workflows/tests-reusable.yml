@@ -125,18 +125,17 @@ jobs:
           ver=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
           echo "version=${ver}" >> "$GITHUB_OUTPUT"
 
-      - name: set up docker buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
-        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
-
       - name: build docker image
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
         with:
-          context: .
-          push: false
-          load: true
-          tags: ${{ env.IMAGE_NAME }}:test
+          image: ${{ env.IMAGE_NAME }}
+          tags: test
+          containerfiles: |
+            ./Dockerfile
+          extra-args: |
+            --no-cache
+            --squash
           build-args: |
             SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.version }}
 
