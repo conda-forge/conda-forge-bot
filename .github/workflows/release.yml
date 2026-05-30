@@ -68,7 +68,7 @@ jobs:
             ./Dockerfile
           extra-args: |
             --no-cache
-            --squash-all
+            --squash
           build-args: |
             SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.NEXT }}
 
