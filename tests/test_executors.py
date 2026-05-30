@@ -1,7 +1,7 @@
+import random
 import time
 from concurrent.futures import as_completed
 
-import numpy as np
 import pytest
 
 from conda_forge_tick.executors import executor
@@ -46,9 +46,9 @@ def _square(x):
 )
 def test_executor(kind):
     seed = 10
-    rng = np.random.RandomState(seed=seed)
-    nums = rng.uniform(size=1000)
-    tot = np.sum(nums * nums)
+    rng = random.Random(seed=seed)
+    nums = [rng.uniform(0, 1) for _ in range(1000)]
+    tot = sum([num * num for num in nums])
 
     par_tot = 0
     with executor(kind, max_workers=4) as exe:
@@ -56,7 +56,7 @@ def test_executor(kind):
         for fut in as_completed(futs):
             par_tot += fut.result()
 
-    assert np.allclose(tot, par_tot)
+    assert abs(tot - par_tot) <= 1e-6
 
 
 @pytest.mark.parametrize(
@@ -75,9 +75,9 @@ def test_executor(kind):
 )
 def test_executor_locking(kind, locked_square_function):
     seed = 10
-    rng = np.random.RandomState(seed=seed)
-    nums = rng.uniform(size=100)
-    tot = np.sum(nums * nums)
+    rng = random.Random(seed=seed)
+    nums = [rng.uniform(0, 1) for _ in range(1000)]
+    tot = sum([num * num for num in nums])
 
     par_tot = 0
     t0 = time.time()
@@ -86,7 +86,7 @@ def test_executor_locking(kind, locked_square_function):
         for fut in as_completed(futs):
             par_tot += fut.result()
     t0 = time.time() - t0
-    assert np.allclose(tot, par_tot)
+    assert abs(tot - par_tot) <= 1e-6
 
     par_tot = 0
     t0lock = time.time()
@@ -95,7 +95,7 @@ def test_executor_locking(kind, locked_square_function):
         for fut in as_completed(futs):
             par_tot += fut.result()
     t0lock = time.time() - t0lock
-    assert np.allclose(tot, par_tot)
+    assert abs(tot - par_tot) <= 1e-6
 
     print(f"{kind} times:", t0, t0lock, flush=True)
     assert t0lock > t0
