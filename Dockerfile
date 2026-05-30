@@ -1,4 +1,4 @@
-FROM quay.io/condaforge/linux-anvil-x86_64:latest
+FROM quay.io/condaforge/linux-anvil-x86_64:alma10
 
 # baseline env
 ENV TMPDIR=/tmp
