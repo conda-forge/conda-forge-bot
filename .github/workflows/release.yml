@@ -51,7 +51,7 @@ jobs:
 
       - name: compute next version
         id: version
-        if: ${{ ! env.CI_SKIP }}
+        if: ${{ (! env.CI_SKIP) || github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
         run: |
           echo "recent version tags: "$(git tag --sort=committerdate | tail -4)
           NEXT=$(python autotick-bot/compute_next_version.py)
@@ -59,7 +59,7 @@ jobs:
           echo "NEXT=${NEXT}" >> "$GITHUB_OUTPUT"
 
       - name: build docker image
-        if: ${{ ! env.CI_SKIP }}
+        if: ${{ (! env.CI_SKIP) || github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
         with:
           image: conda-forge-tick

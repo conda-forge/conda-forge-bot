@@ -45,7 +45,7 @@ COPY docker/entrypoint /opt/docker/bin/
 RUN chmod +x /opt/docker/bin/entrypoint
 
 # now install the bot code
-COPY --exclude=.git/* . $AUTOTICK_BOT_DIR
+COPY . $AUTOTICK_BOT_DIR
 RUN conda activate base && \
     conda activate conda-forge-bot && \
     cd $AUTOTICK_BOT_DIR && \
