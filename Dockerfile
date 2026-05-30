@@ -11,8 +11,9 @@ SHELL ["/bin/bash", "-l", "-c"]
 # build the conda env first
 COPY conda-lock.yml $AUTOTICK_BOT_DIR/conda-lock.yml
 RUN conda activate base && \
-    conda create --name conda-forge-bot --file $AUTOTICK_BOT_DIR/conda-lock.yml --yes && \
+    conda create --name conda-forge-bot --file $AUTOTICK_BOT_DIR/conda-lock.yml --yes --quiet && \
     conda clean --all --yes && \
+    conda list && \
     # Lucky group gets permission to write in the conda dir
     chown -R root /opt/conda && \
     chgrp -R lucky /opt/conda && chmod -R g=u /opt/conda && \
