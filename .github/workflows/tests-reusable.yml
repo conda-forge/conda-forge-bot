@@ -139,6 +139,19 @@ jobs:
           build-args: |
             SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.version }}
 
+      - name: push image to docker
+        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
+        with:
+          image: conda-forge-tick
+          tags: test
+          registry: "docker-daemon:"
+
+      - name: run pytest
+        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        run: |
+          docker images
+
       - name: restore test durations
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5.0.5
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
