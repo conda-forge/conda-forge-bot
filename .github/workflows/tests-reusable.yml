@@ -145,7 +145,7 @@ jobs:
         with:
           image: conda-forge-tick
           tags: test
-          registry: "docker-daemon:"
+          registry: "docker-daemon:docker.io/library"
 
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
