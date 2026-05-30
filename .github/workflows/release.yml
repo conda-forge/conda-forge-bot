@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+  pull_request: null
+  merge_group: null
 
 env:
   PY_COLORS: "1"
@@ -49,7 +51,7 @@ jobs:
 
       - name: compute next version
         id: version
-        if: ${{ ! env.CI_SKIP }}
+        if: ${{ (! env.CI_SKIP) || github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
         run: |
           echo "recent version tags: "$(git tag --sort=committerdate | tail -4)
           NEXT=$(python autotick-bot/compute_next_version.py)
@@ -57,18 +59,21 @@ jobs:
           echo "NEXT=${NEXT}" >> "$GITHUB_OUTPUT"
 
       - name: build docker image
-        if: ${{ ! env.CI_SKIP }}
+        if: ${{ (! env.CI_SKIP) || github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
         with:
           image: conda-forge-tick
           tags: latest ${{ steps.version.outputs.NEXT }}
           containerfiles: |
             ./Dockerfile
-          build-args: |
+          extra-args: |
             --no-cache
+            --squash
+          build-args: |
+            SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.NEXT }}
 
       - name: push docker image to quay.io
-        if: ${{ ! env.CI_SKIP }}
+        if: ${{ (! env.CI_SKIP) && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
         with:
           image: conda-forge-tick
@@ -78,7 +83,7 @@ jobs:
           password: ${{ secrets.CF_DAEMON_QUAY_PASSWORD }}
 
       - name: tag and release
-        if: ${{ ! env.CI_SKIP }}
+        if: ${{ (! env.CI_SKIP) && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
         run: |
           python autotick-bot/release.py "${{ steps.version.outputs.NEXT }}"
         env:

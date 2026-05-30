@@ -1,8 +1,11 @@
 FROM quay.io/condaforge/linux-anvil-x86_64:alma10
+ARG SETUPTOOLS_SCM_PRETEND_VERSION
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=${SETUPTOOLS_SCM_PRETEND_VERSION}
 
 # baseline env
 ENV TMPDIR=/tmp
 ENV AUTOTICK_BOT_DIR=/opt/conda-forge-bot
+ENV CONDA_DIR=/opt/conda
 
 # use bash for a while to make conda manipulations easier
 SHELL ["/bin/bash", "-l", "-c"]
@@ -10,12 +13,32 @@ SHELL ["/bin/bash", "-l", "-c"]
 # build the conda env first
 COPY conda-lock.yml $AUTOTICK_BOT_DIR/conda-lock.yml
 RUN conda activate base && \
-    conda create --name conda-forge-bot --file $AUTOTICK_BOT_DIR/conda-lock.yml --yes && \
-    conda clean --all --yes && \
+    conda create --name conda-forge-bot --file $AUTOTICK_BOT_DIR/conda-lock.yml --yes --quiet && \
+    conda activate conda-forge-bot && \
+    conda uninstall \
+        pytest \
+        pytest-xprocess \
+        codecov \
+        requests-mock \
+        pre-commit \
+        pytest-xdist \
+        pytest-cov \
+        pytest-env \
+        pytest-retry \
+        pytest-split \
+        python-build \
+        mitmproxy \
+        mypy \
+        --force --yes && \
+    conda list && \
     # Lucky group gets permission to write in the conda dir
     chown -R root /opt/conda && \
     chgrp -R lucky /opt/conda && chmod -R g=u /opt/conda && \
-    conda deactivate
+    conda clean --all --yes && \
+    conda deactivate && \
+    conda deactivate && \
+    find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
+    find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
 # deal with entrypoint
 COPY docker/entrypoint /opt/docker/bin/
@@ -28,10 +51,13 @@ RUN conda activate base && \
     cd $AUTOTICK_BOT_DIR && \
     pip install --no-deps --no-build-isolation -e . && \
     cd - && \
+    conda clean --all --yes && \
     conda deactivate && \
     conda deactivate && \
     # remove .git dir once installed and version is set
-    rm -rf $AUTOTICK_BOT_DIR/.git
+    rm -rf $AUTOTICK_BOT_DIR/.git  && \
+    find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
+    find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
 # now make the conda user for running tasks and set the user
 RUN useradd --shell /bin/bash -c "" -m conda
@@ -59,7 +85,9 @@ RUN conda activate conda-forge-bot && \
     git config --global user.email "conda@conda.conda" && \
     git config --global user.name "conda conda" && \
     conda deactivate && \
-    conda init --all --user
+    conda init --all --user && \
+    find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
+    find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
 # put the shell back
 SHELL ["/bin/sh", "-c"]

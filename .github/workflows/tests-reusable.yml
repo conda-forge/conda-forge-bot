@@ -36,13 +36,13 @@ jobs:
       actions: write  # for deleting cache entries
       contents: read
     env:
-      NUM_SPLITS: 8
+      NUM_SPLITS: 4
     strategy:
       # continue running the tests even if one of the groups fails
       fail-fast: false
       matrix:
         # if change the number of groups here, also change number of splits env var
-        group: [1, 2, 3, 4, 5, 6, 7, 8]
+        group: [1, 2, 3, 4]
     defaults:
       run:
         shell: bash -leo pipefail {0}
@@ -118,18 +118,34 @@ jobs:
 
           python -m pip install -v --no-deps --no-build-isolation -e .
 
-      - name: set up docker buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+      - name: get version
+        id: version
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        run: |
+          ver=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
+          echo "version=${ver}" >> "$GITHUB_OUTPUT"
 
       - name: build docker image
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
         with:
-          context: .
-          push: false
-          load: true
-          tags: ${{ env.IMAGE_NAME }}:test
+          image: ${{ env.IMAGE_NAME }}
+          tags: test
+          containerfiles: |
+            ./Dockerfile
+          extra-args: |
+            --no-cache
+            --squash
+          build-args: |
+            SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.version }}
+
+      - name: push image to docker
+        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
+        with:
+          image: conda-forge-tick
+          tags: test
+          registry: "docker-daemon:docker.io/library"
 
       - name: restore test durations
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5.0.5

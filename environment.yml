@@ -29,7 +29,7 @@ dependencies:
   - fastapi
   - feedparser
   - frozendict
-  - git <2.50
+  - git !=2.50
   - github3.py
   - grayskull >=3.1.1
   - jinja2
@@ -38,7 +38,6 @@ dependencies:
   - mitmproxy
   - msgpack-python
   - networkx !=2.8.1
-  - numpy
   - orjson
   - packaging
   - psutil
@@ -56,7 +55,6 @@ dependencies:
   - requests
   - ruamel.yaml
   - ruamel.yaml.jinja2
-  - scipy
   - setuptools
   - stopit
   - streamz

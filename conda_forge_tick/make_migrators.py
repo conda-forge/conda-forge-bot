@@ -4,6 +4,7 @@ import glob
 import logging
 import os
 import pprint
+import random
 import re
 import secrets
 import sys
@@ -19,7 +20,6 @@ from typing import (
 )
 
 import networkx as nx
-import numpy as np
 import tqdm
 from conda.models.version import VersionOrder
 from conda_build.config import Config
@@ -418,10 +418,10 @@ def migration_factory(
         ]
 
     if _testing_frac is not None:
-        rng = np.random.default_rng(seed=10)
+        rng = random.Random(10)
 
     for yaml_file, yaml_contents in migration_yamls:
-        if _testing_frac is not None and rng.uniform() >= _testing_frac:
+        if _testing_frac is not None and rng.uniform(0, 1) >= _testing_frac:
             continue
 
         loaded_yaml = yaml_safe_load(yaml_contents)
@@ -741,9 +741,9 @@ def create_migration_yaml_creator(
 
     pinning_names = sorted(list(pinnings.keys()))
     if _testing_frac is not None:
-        rng = np.random.default_rng(seed=10)
+        rng = random.Random(10)
         pinning_names = sorted(
-            [on for on in pinning_names if rng.uniform() < _testing_frac]
+            [on for on in pinning_names if rng.uniform(0, 1) < _testing_frac]
         )
 
     pinning_migration_sizes = _compute_approximate_pinning_migration_sizes(

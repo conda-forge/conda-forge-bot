@@ -87,25 +87,12 @@ jobs:
           remove_haskell: true
           rm_cmd: "rmz"
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
-        if: ${{ steps.should-run.outputs.should-run == 'true' }}
-
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         with:
           path: conda-forge-bot
           submodules: 'true'
-
-      - name: Build Docker Image
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
-        if: ${{ steps.should-run.outputs.should-run == 'true' }}
-        with:
-          context: conda-forge-bot
-          push: false
-          load: true
-          tags: conda-forge-tick:test
 
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
@@ -122,6 +109,37 @@ jobs:
           # put pinnings at old version for testing
           micromamba install conda-forge-pinning==2025.02.25.13.14.53
           pip install --no-deps --no-build-isolation -e .
+
+      - name: get version
+        id: version
+        if: ${{ steps.should-run.outputs.should-run == 'true' }}
+        working-directory: conda-forge-bot
+        run: |
+          ver=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
+          echo "version=${ver}" >> "$GITHUB_OUTPUT"
+
+      - name: build docker image
+        if: ${{ steps.should-run.outputs.should-run == 'true' }}
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
+        with:
+          context: conda-forge-bot
+          image: conda-forge-tick
+          tags: test
+          containerfiles: |
+            ./Dockerfile
+          extra-args: |
+            --no-cache
+            --squash
+          build-args: |
+            SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.version }}
+
+      - name: push image to docker
+        if: ${{ steps.should-run.outputs.should-run == 'true' }}
+        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
+        with:
+          image: conda-forge-tick
+          tags: test
+          registry: "docker-daemon:docker.io/library"
 
       - name: Run mitmproxy certificate setup wizard
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
