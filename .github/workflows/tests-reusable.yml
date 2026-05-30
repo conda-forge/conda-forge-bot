@@ -121,7 +121,6 @@ jobs:
       - name: get version
         id: version
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
-        working-directory: conda-forge-bot
         run: |
           ver=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
           echo "version=${ver}" >> "$GITHUB_OUTPUT"
