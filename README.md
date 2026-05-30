@@ -319,8 +319,6 @@ As `conda-forge` grew, the "single job + global data access" model became increa
 
 #### Current Bot Jobs and Structure
 
-[**Current GitHub Runner Allocation**](docs/runner_allocation.md)
-
 In this section, we list the collection of jobs that comprise the bot. Each job touches a distinct part of the bot's data structure and is run in parallel with the other jobs. We have also specified the GitHub Actions workflow that runs each job. See those files for further details on which commands are run.
 
 **bot** / `bot-bot.yml`: The main job that runs the bot, making PRs to feedstocks, etc. This job writes data on the PRs it makes to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`. It also writes new PR JSON blobs to `conda-forge-bot-data/pr_json` for each PR to track their statuses on GitHub.
@@ -329,11 +327,13 @@ In this section, we list the collection of jobs that comprise the bot. Each job 
 
 **versions** / `bot-versions.yml`: Fetches the latest version for each feedstock in `conda-forge`, writing the data to `conda-forge-bot-data/versions/`.
 
-**prs** / `bot-prs.yml`: Fetches the latest PR statuses from GitHub for all of the PRs that bot has made, writing the data to`conda-forge-bot-data/pr_json`.
+**prs** / `bot-prs.yml`: Fetches the latest PR statuses from GitHub for all of the PRs that bot has made, writing the data to `conda-forge-bot-data/pr_json`.
 
 **pypi-mapping** / `bot-pypi-mapping.yml`: Builds a mapping of packages between PyPI and `conda-forge`, and a mapping of python imports to packages using the bot's metadata. The PyPI mapping is written to `conda-forge-bot-data/mappings` and the import mapping is written to `conda-forge-bot-data/import_to_pkg_maps`. This job also generates some internal data stored at `conda-forge-bot-data/ranked_hubs_authorities.json`.
 
-**make-graph** / `bot-make-graph.yml`: Builds the `conda-forge` dependency graph from the feedstocks in `conda-forge-bot-data/all_feedstocks.json`. The graph is written to `conda-forge-bot-data/graph.json` and specific attributes for each node are written to `conda-forge-bot-data/node_attrs`. This job also performs some schema migrations and might add new files to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`.
+**make-graph** / `bot-make-graph.yml`: Builds the `conda-forge` dependency graph from the feedstocks in `conda-forge-bot-data/all_feedstocks.json`. The graph is written to `conda-forge-bot-data/graph.json`. and specific attributes for each node are written to `conda-forge-bot-data/node_attrs`. This job also performs some schema migrations and might add new files to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`.
+
+**update-nodes** / `bot-update-nodes.yml`: Updates the feedstock attributes for each graph node in `conda-forge-bot-data/node_attrs`. This job also performs some schema migrations and might add new files to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`.
 
 **make-migrators** / `bot-make-migrators.yml`: Builds the migrations the bot will run, writing them as JSON to `conda-forge-bot-data/migrators`.
 
@@ -343,7 +343,9 @@ In this section, we list the collection of jobs that comprise the bot. Each job 
 
 **keepalive** / `bot-keepalive.yml`: This job runs every 15 minutes and ensures that the bot is still running. If the bot is not running, it will restart it.
 
-Many of these jobs could be converted to a more event-driven model, especially the job that updates the status of PRs (**prs**) and the parts of the jobs that update attributes of the graph nodes (**make-graph**). However, there are some caveats. Even with event-driven updates, the bot would still need cron jobs for these tasks to ensure that data eventually gets updated if events are missed. Further, the main limit on the bot making PRs is the **bot** job itself. Making this job respond to events is a non-trivial task due to many reasons, including the fact that once a given a PR is merged on a feedstock, there is a few-hour delay before the next PR can be made.
+**events** / `bot-events.yml`: Real-time jobs triggered by the `conda-forge-webservices` app in response to GitHub webhook events. These jobs update the status of the PR JSON in `conda-forge-bot-data/pr_json` and the feedstock node attributes in `conda-forge-bot-data/node_attrs` in near real-time.
+
+The **events** jobs enable the bot to be more responsive to changes in the state of `feedstocks`. Even with these event-driven updates, the bot still needs cron jobs for these tasks to ensure that data eventually gets updated if events are missed. Implementing further event driven bot actions is unlikely to yield significant performance gains, because the main limit on the bot making PRs is the **bot** job itself. Making this job respond to events is a non-trivial task for many reasons, including the fact that once a given a PR is merged on a feedstock, there is a few-hour delay before the next PR can be made.
 
 ### Using the `conda_forge_tick` Module to Interact with the Bot Data
 
