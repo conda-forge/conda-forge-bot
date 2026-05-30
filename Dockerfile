@@ -1,4 +1,6 @@
 FROM quay.io/condaforge/linux-anvil-x86_64:alma10
+ARG SETUPTOOLS_SCM_PRETEND_VERSION
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=${SETUPTOOLS_SCM_PRETEND_VERSION}
 
 # baseline env
 ENV TMPDIR=/tmp
@@ -40,7 +42,7 @@ COPY docker/entrypoint /opt/docker/bin/
 RUN chmod +x /opt/docker/bin/entrypoint
 
 # now install the bot code
-COPY . $AUTOTICK_BOT_DIR
+COPY --exclude=.git/* . $AUTOTICK_BOT_DIR
 RUN conda activate base && \
     conda activate conda-forge-bot && \
     cd $AUTOTICK_BOT_DIR && \

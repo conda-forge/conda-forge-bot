@@ -98,15 +98,6 @@ jobs:
           path: conda-forge-bot
           submodules: 'true'
 
-      - name: Build Docker Image
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
-        if: ${{ steps.should-run.outputs.should-run == 'true' }}
-        with:
-          context: conda-forge-bot
-          push: false
-          load: true
-          tags: conda-forge-tick:test
-
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
@@ -122,6 +113,25 @@ jobs:
           # put pinnings at old version for testing
           micromamba install conda-forge-pinning==2025.02.25.13.14.53
           pip install --no-deps --no-build-isolation -e .
+
+      - name: get version
+        id: version
+        if: ${{ steps.should-run.outputs.should-run == 'true' }}
+        working-directory: conda-forge-bot
+        run: |
+          ver=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
+          echo "version=${ver}" >> "$GITHUB_OUTPUT"
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        if: ${{ steps.should-run.outputs.should-run == 'true' }}
+        with:
+          context: conda-forge-bot
+          push: false
+          load: true
+          tags: conda-forge-tick:test
+          build-args: |
+            SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.version }}
 
       - name: Run mitmproxy certificate setup wizard
         if: ${{ steps.should-run.outputs.should-run == 'true' }}

@@ -64,8 +64,10 @@ jobs:
           tags: latest ${{ steps.version.outputs.NEXT }}
           containerfiles: |
             ./Dockerfile
-          build-args: |
+          extra-args: |
             --no-cache
+          build-args: |
+            SETUPTOOLS_SCM_PRETEND_VERSION=${{ steps.version.outputs.NEXT }}
 
       - name: push docker image to quay.io
         if: ${{ ! env.CI_SKIP }}
