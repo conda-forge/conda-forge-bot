@@ -46,7 +46,7 @@ def _square(x):
 )
 def test_executor(kind):
     seed = 10
-    rng = random.Random(seed=seed)
+    rng = random.Random(seed)
     nums = [rng.uniform(0, 1) for _ in range(1000)]
     tot = sum([num * num for num in nums])
 
@@ -75,7 +75,7 @@ def test_executor(kind):
 )
 def test_executor_locking(kind, locked_square_function):
     seed = 10
-    rng = random.Random(seed=seed)
+    rng = random.Random(seed)
     nums = [rng.uniform(0, 1) for _ in range(1000)]
     tot = sum([num * num for num in nums])
 

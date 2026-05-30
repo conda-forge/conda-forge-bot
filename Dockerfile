@@ -27,6 +27,7 @@ RUN conda activate base && \
         pytest-retry \
         pytest-split \
         python-build \
+        mitmproxy \
         mypy \
         --force --yes && \
     conda list && \
