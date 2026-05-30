@@ -14,6 +14,7 @@ SHELL ["/bin/bash", "-l", "-c"]
 COPY conda-lock.yml $AUTOTICK_BOT_DIR/conda-lock.yml
 RUN conda activate base && \
     conda create --name conda-forge-bot --file $AUTOTICK_BOT_DIR/conda-lock.yml --yes --quiet && \
+    conda activate conda-forge-bot && \
     conda uninstall \
         pytest \
         pytest-xprocess \
@@ -28,11 +29,12 @@ RUN conda activate base && \
         python-build \
         mypy \
         --force --yes && \
-    conda clean --all --yes && \
     conda list && \
     # Lucky group gets permission to write in the conda dir
     chown -R root /opt/conda && \
     chgrp -R lucky /opt/conda && chmod -R g=u /opt/conda && \
+    conda clean --all --yes && \
+    conda deactivate && \
     conda deactivate && \
     find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
     find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
