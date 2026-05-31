@@ -8,16 +8,7 @@ ENV SETUPTOOLS_SCM_PRETEND_VERSION=${SETUPTOOLS_SCM_PRETEND_VERSION} \
 
 COPY --chown=$MAMBA_USER:$MAMBA_USER . $AUTOTICK_BOT_DIR
 RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml && \
-    # make symlink for conda-build locks (actual directory gets made at run time in the entrypoint)
-    # see https://github.com/conda-forge/conda-forge-feedstock-ops/pull/59
-    ln -s $TMPDIR/conda_user_conda_build_locks $HOME/.conda_build_locks && \
-    # deal with entrypoint
-    chmod +x $AUTOTICK_BOT_DIR/docker/entrypoint && \
-    # this eval is needed to run activate, but won't be needed later
-    eval "$(micromamba shell hook --shell bash)" && \
-    micromamba activate base && \
-    # remove some testing deps
-    mircomamba uninstall \
+    mircomamba uninstall --name base --force --yes \
         pytest \
         pytest-xprocess \
         codecov \
@@ -30,8 +21,16 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
         pytest-split \
         python-build \
         mitmproxy \
-        mypy \
-        --force --yes && \
+        mypy && \
+    # make symlink for conda-build locks (actual directory gets made at run time in the entrypoint)
+    # see https://github.com/conda-forge/conda-forge-feedstock-ops/pull/59
+    ln -s $TMPDIR/conda_user_conda_build_locks $HOME/.conda_build_locks && \
+    # deal with entrypoint
+    chmod +x $AUTOTICK_BOT_DIR/docker/entrypoint && \
+    # this eval is needed to run activate, but won't be needed later
+    eval "$(micromamba shell hook --shell bash)" && \
+    micromamba activate base && \
+    # remove some testing deps
     # install package
     cd $AUTOTICK_BOT_DIR && \
     pip install --no-deps --no-build-isolation -e . && \
