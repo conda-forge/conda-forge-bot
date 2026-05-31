@@ -50,4 +50,3 @@ ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/opt/conda-forge-bot/docker/entryp
 #     mitmproxy \
 #     mypy \
 #     --force --yes && \
-
