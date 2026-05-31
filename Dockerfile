@@ -26,14 +26,13 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
     micromamba deactivate && \
     # deal with entry point
     chmod +x $AUTOTICK_BOT_DIR/docker/entrypoint && \
-    mv $AUTOTICK_BOT_DIR/docker/entrypoint /opt/entrypoint && \
     # clean out data we do not need
     micromamba clean --all --yes && \
     rm -rf $AUTOTICK_BOT_DIR/.git  && \
     find ${MAMBA_ROOT_PREFIX} -follow -type f -name '*.a' -delete && \
     find ${MAMBA_ROOT_PREFIX} -follow -type f -name '*.pyc' -delete
 
-ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/opt/entrypoint"]
+ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/opt/conda-forge-bot/docker/entrypoint"]
 
 # TODO: uninstall these?
 # mircomamba uninstall \
