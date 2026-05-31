@@ -8,7 +8,7 @@ ENV SETUPTOOLS_SCM_PRETEND_VERSION=${SETUPTOOLS_SCM_PRETEND_VERSION} \
 
 COPY --chown=$MAMBA_USER:$MAMBA_USER . $AUTOTICK_BOT_DIR
 RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml && \
-    mircomamba uninstall --name base --force --yes \
+    micromamba uninstall --name base --force --yes \
         pytest \
         pytest-xprocess \
         codecov \
