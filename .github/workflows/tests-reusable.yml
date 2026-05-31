@@ -147,6 +147,11 @@ jobs:
           tags: test
           registry: "docker-daemon:docker.io/library"
 
+      - name: checkout docker image sizes
+        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        run: |
+          docker images
+
       - name: restore test durations
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5.0.5
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
