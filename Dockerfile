@@ -10,7 +10,7 @@ COPY --chown=$MAMBA_USER:$MAMBA_USER . $AUTOTICK_BOT_DIR
 RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml && \
     # make symlink for conda-build locks (actual directory gets made at run time in the entrypoint)
     # see https://github.com/conda-forge/conda-forge-feedstock-ops/pull/59
-    ln -s $TMPDIR/conda_user_conda_build_locks $HOME/.conda_build_locks && \
+    # ln -s $TMPDIR/conda_user_conda_build_locks $HOME/.conda_build_locks && \
     micromamba activate base && \
     # install package
     cd $AUTOTICK_BOT_DIR && \
