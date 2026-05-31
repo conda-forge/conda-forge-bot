@@ -13,7 +13,6 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
     ln -s $TMPDIR/conda_user_conda_build_locks $HOME/.conda_build_locks && \
     # deal with entrypoint
     chmod +x $AUTOTICK_BOT_DIR/docker/entrypoint && \
-    cp $AUTOTICK_BOT_DIR/docker/entrypoint /usr/local/bin/conda_forge_bot_entrypoint.sh && \
     # this eval is needed to run activate, but won't be needed later
     eval "$(micromamba shell hook --shell bash)" && \
     micromamba activate base && \
@@ -49,4 +48,4 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
     find ${MAMBA_ROOT_PREFIX} -follow -type f -name '*.a' -delete && \
     find ${MAMBA_ROOT_PREFIX} -follow -type f -name '*.pyc' -delete
 
-ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/usr/local/bin/conda_forge_bot_entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/opt/conda-forge-bot/docker/entrypoint"]
