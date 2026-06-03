@@ -37,7 +37,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           ref: ${{ steps.latest_release.outputs.tag_name }}
           path: conda-forge-bot
@@ -95,7 +95,7 @@ jobs:
           ACTION_NAME: ${{ github.workflow }}
 
       - name: trigger next job
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2
         if: github.ref == 'refs/heads/main' && ! cancelled() && ! failure() && ! env.CI_SKIP
         with:
           workflow: bot-make-graph
