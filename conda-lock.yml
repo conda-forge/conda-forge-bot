@@ -2429,11 +2429,10 @@ package:
   category: main
   optional: false
 - name: conda-forge-metadata
-  version: 0.15.0
+  version: 0.16.0
   manager: conda
   platform: linux-64
   dependencies:
-    beautifulsoup4: ''
     conda-oci-mirror: ''
     conda-package-streaming: '>=0.12.0'
     deprecated: ''
@@ -2441,18 +2440,17 @@ package:
     requests: ''
     ruamel.yaml: ''
     typing-extensions: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-0.15.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-0.16.0-pyhcf101f3_0.conda
   hash:
-    md5: b85c6a3a50edf987dcf27b1b2f7e6f4d
-    sha256: 541f1c3cd43da86b8f6ccd06acf1e645f45c284e7e33894a6cd2f67c6859e512
+    md5: 3559f8a0507b39845dd2efc82ca4c37a
+    sha256: b14dfc679567056799ddf941bbb813a9321f3e03c6d8cc587f545f06146e4115
   category: main
   optional: false
 - name: conda-forge-metadata
-  version: 0.15.0
+  version: 0.16.0
   manager: conda
   platform: linux-aarch64
   dependencies:
-    beautifulsoup4: ''
     conda-oci-mirror: ''
     conda-package-streaming: '>=0.12.0'
     deprecated: ''
@@ -2460,18 +2458,17 @@ package:
     requests: ''
     ruamel.yaml: ''
     typing-extensions: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-0.15.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-0.16.0-pyhcf101f3_0.conda
   hash:
-    md5: b85c6a3a50edf987dcf27b1b2f7e6f4d
-    sha256: 541f1c3cd43da86b8f6ccd06acf1e645f45c284e7e33894a6cd2f67c6859e512
+    md5: 3559f8a0507b39845dd2efc82ca4c37a
+    sha256: b14dfc679567056799ddf941bbb813a9321f3e03c6d8cc587f545f06146e4115
   category: main
   optional: false
 - name: conda-forge-metadata
-  version: 0.15.0
+  version: 0.16.0
   manager: conda
   platform: osx-arm64
   dependencies:
-    beautifulsoup4: ''
     conda-oci-mirror: ''
     conda-package-streaming: '>=0.12.0'
     deprecated: ''
@@ -2479,10 +2476,10 @@ package:
     requests: ''
     ruamel.yaml: ''
     typing-extensions: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-0.15.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-0.16.0-pyhcf101f3_0.conda
   hash:
-    md5: b85c6a3a50edf987dcf27b1b2f7e6f4d
-    sha256: 541f1c3cd43da86b8f6ccd06acf1e645f45c284e7e33894a6cd2f67c6859e512
+    md5: 3559f8a0507b39845dd2efc82ca4c37a
+    sha256: b14dfc679567056799ddf941bbb813a9321f3e03c6d8cc587f545f06146e4115
   category: main
   optional: false
 - name: conda-forge-pinning
@@ -8705,7 +8702,7 @@ package:
   category: main
   optional: false
 - name: libmamba
-  version: 2.7.0
+  version: 2.8.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -8725,10 +8722,10 @@ package:
     spdlog: '>=1.17.0,<1.18.0a0'
     yaml-cpp: '>=0.8.0,<0.9.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libmamba-2.7.0-h7950639_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libmamba-2.8.0-h7950639_0.conda
   hash:
-    md5: 1b0ab010e2cf0ce92ce74c1f50ea73ef
-    sha256: bd0a831c1e072afe119917f084392d1befedb208b94c01fbdae6c806edcecfe5
+    md5: 705446085506fd8cd01744b0b1987506
+    sha256: aa99c9103f20124f8ae3d8470f813815e895fd3175ea124f1423fa6edf12b7e8
   category: main
   optional: false
 - name: libmamba-spdlog
@@ -8761,17 +8758,17 @@ package:
   category: main
   optional: false
 - name: libmamba-spdlog
-  version: 2.7.0
+  version: 2.8.0
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
     libcxx: '>=19'
-    libmamba: '>=2.7.0,<2.8.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libmamba-spdlog-2.7.0-h90c8a1f_0.conda
+    libmamba: '>=2.8.0,<2.9.0a0'
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libmamba-spdlog-2.8.0-h848b29c_0.conda
   hash:
-    md5: 26799f697019df188e69b8468d6fc599
-    sha256: 3a6c724ad2af6885cbab8ac54aef6402a666e1fe59e79e690e7311a1cdc87ee3
+    md5: d5ec9ee1a72f9c5ba61642e2e8b277f9
+    sha256: 24c44f629763211098637d64db42e3cd01301355c95edf5dae75834af2870939
   category: main
   optional: false
 - name: libmambapy
@@ -8824,15 +8821,15 @@ package:
   category: main
   optional: false
 - name: libmambapy
-  version: 2.7.0
+  version: 2.8.0
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
     fmt: '>=12.1.0,<12.2.0a0'
     libcxx: '>=19'
-    libmamba: '>=2.7.0,<2.8.0a0'
-    libmamba-spdlog: ==2.7.0
+    libmamba: '>=2.8.0,<2.9.0a0'
+    libmamba-spdlog: ==2.8.0
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.6,<4.0a0'
     pybind11-abi: '11'
@@ -8841,10 +8838,10 @@ package:
     spdlog: '>=1.17.0,<1.18.0a0'
     yaml-cpp: '>=0.8.0,<0.9.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libmambapy-2.7.0-py312hc36d538_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libmambapy-2.8.0-py312h97cafc2_0.conda
   hash:
-    md5: f7f0831d8755c10f72c9fc6b896171df
-    sha256: 8e6f0a63ac9903c5b43d68b42bbbafce13c006164c59f9502e7525bafe5517d2
+    md5: 918fef70187678c7e20b6582b9a90ad5
+    sha256: 4f8971ed73fbc7920b0e6c931dce88f04462e83533fabafcf03c0efabb6cef47
   category: main
   optional: false
 - name: libmsgpack-c
@@ -10045,20 +10042,20 @@ package:
   category: main
   optional: false
 - name: mamba
-  version: 2.7.0
+  version: 2.8.0
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
     libcxx: '>=19'
-    libmamba: '>=2.7.0,<2.8.0a0'
+    libmamba: '>=2.8.0,<2.9.0a0'
     reproc: '>=14.2,<15.0a0'
     reproc-cpp: '>=14.2,<15.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/mamba-2.7.0-h38e1213_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/mamba-2.8.0-h2a4676e_0.conda
   hash:
-    md5: 7a9218a7cb985aa55a0ffcbb2ac7e20d
-    sha256: d058b572a3cf0515d78c1bb7b2b35922723298965ddf184c103c6e9219b8f64a
+    md5: 8880bf050a82870ff5e033153c5fa3f6
+    sha256: 48f5bdf1926a379cfdaa346c231a53f7e9d9f6808cb1fa46c61666f01b5c81d1
   category: main
   optional: false
 - name: markdown-it-py
