@@ -2483,36 +2483,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.05.09.12.35
+  version: 2026.06.05.11.25.48
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.05.09.12.35-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.05.11.25.48-hd8ed1ab_0.conda
   hash:
-    md5: 48f7769f47a4decc03e6383ea335b8bb
-    sha256: b49af1acebae12ef7f3a980041433ba2f7246949613a98e8e64a04a2a6a83855
+    md5: a9b33c304e65cc8e5139eca996b26804
+    sha256: 4bc466d2afc2caefafcab4b824b14f1df107d9063ebbde042a7003f6863d1fe0
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.05.09.12.35
+  version: 2026.06.05.11.25.48
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.05.09.12.35-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.05.11.25.48-hd8ed1ab_0.conda
   hash:
-    md5: 48f7769f47a4decc03e6383ea335b8bb
-    sha256: b49af1acebae12ef7f3a980041433ba2f7246949613a98e8e64a04a2a6a83855
+    md5: a9b33c304e65cc8e5139eca996b26804
+    sha256: 4bc466d2afc2caefafcab4b824b14f1df107d9063ebbde042a7003f6863d1fe0
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.05.09.12.35
+  version: 2026.06.05.11.25.48
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.05.09.12.35-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.05.11.25.48-hd8ed1ab_0.conda
   hash:
-    md5: 48f7769f47a4decc03e6383ea335b8bb
-    sha256: b49af1acebae12ef7f3a980041433ba2f7246949613a98e8e64a04a2a6a83855
+    md5: a9b33c304e65cc8e5139eca996b26804
+    sha256: 4bc466d2afc2caefafcab4b824b14f1df107d9063ebbde042a7003f6863d1fe0
   category: main
   optional: false
 - name: conda-index
@@ -14604,7 +14604,7 @@ package:
   category: main
   optional: false
 - name: rich-toolkit
-  version: 0.19.10
+  version: 0.20.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -14612,14 +14612,14 @@ package:
     python: ''
     rich: '>=13.7.1'
     typing_extensions: '>=4.12.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/rich-toolkit-0.19.10-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rich-toolkit-0.20.1-pyhcf101f3_0.conda
   hash:
-    md5: fd9ec071b2bae8eb470220b00d33b276
-    sha256: d0ccb0aa600854a524de1b3610c2bf223727614e0562fabb41355d213ee4be71
+    md5: e7cc7bf579daf5fa80338c1efe41b62b
+    sha256: e29d6b7138aca5e0773462c07bbafd707f8fe9763f95d811ccd4394ac0f262ff
   category: main
   optional: false
 - name: rich-toolkit
-  version: 0.19.10
+  version: 0.20.1
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -14627,14 +14627,14 @@ package:
     python: ''
     rich: '>=13.7.1'
     typing_extensions: '>=4.12.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/rich-toolkit-0.19.10-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rich-toolkit-0.20.1-pyhcf101f3_0.conda
   hash:
-    md5: fd9ec071b2bae8eb470220b00d33b276
-    sha256: d0ccb0aa600854a524de1b3610c2bf223727614e0562fabb41355d213ee4be71
+    md5: e7cc7bf579daf5fa80338c1efe41b62b
+    sha256: e29d6b7138aca5e0773462c07bbafd707f8fe9763f95d811ccd4394ac0f262ff
   category: main
   optional: false
 - name: rich-toolkit
-  version: 0.19.10
+  version: 0.20.1
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -14642,10 +14642,10 @@ package:
     python: ''
     rich: '>=13.7.1'
     typing_extensions: '>=4.12.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/rich-toolkit-0.19.10-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rich-toolkit-0.20.1-pyhcf101f3_0.conda
   hash:
-    md5: fd9ec071b2bae8eb470220b00d33b276
-    sha256: d0ccb0aa600854a524de1b3610c2bf223727614e0562fabb41355d213ee4be71
+    md5: e7cc7bf579daf5fa80338c1efe41b62b
+    sha256: e29d6b7138aca5e0773462c07bbafd707f8fe9763f95d811ccd4394ac0f262ff
   category: main
   optional: false
 - name: ripgrep
