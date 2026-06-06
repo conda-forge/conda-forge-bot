@@ -793,7 +793,7 @@ class Github(VersionFromFeed):
         self.version_prefix = self.get_version_prefix(version, split_url)
         if self.version_prefix is None:
             return
-        logger.debug("Found version prefix from url: %s", self.version_prefix)
+        logger.debug("Found version prefix from url: %s", self.version_prefix)  # type: ignore[unreachable]
         self.ver_prefix_remove = [self.version_prefix] + self.ver_prefix_remove
 
     def get_version_prefix(self, version: str, split_url: list[str]):

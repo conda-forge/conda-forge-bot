@@ -319,7 +319,7 @@ def _get_new_url_tmpl_and_hash(
         url = None
         pass
 
-    if url != url_tmpl:
+    if url != url_tmpl and url is not None:
         new_hash = _try_url_and_hash_it(url, hash_type)
         if new_hash is not None:
             return url_tmpl, new_hash

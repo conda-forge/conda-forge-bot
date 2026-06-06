@@ -449,7 +449,7 @@ def parse_recipe_yaml_local(
         rendered_recipes = _process_recipe_for_pinning(rendered_recipes)
     else:
         rendered_recipes = _flatten_requirement_pin_dicts(rendered_recipes)  # type: ignore
-    parsed_recipes = _parse_recipes(rendered_recipes)
+    parsed_recipes = _parse_recipes(rendered_recipes)  # type: ignore[arg-type]
     return parsed_recipes
 
 
@@ -1456,7 +1456,7 @@ def get_keys_default(
     defaults = [default] * (len(keys) - 1) + [final_default]
     val = dlike
     for k, _d in zip(keys, defaults):
-        val = val.get(k, _d) or _d  # type: ignore[assignment]
+        val = val.get(k, _d) or _d  # type: ignore[assignment, union-attr]
     return val
 
 
