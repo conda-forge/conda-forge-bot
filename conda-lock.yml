@@ -2483,36 +2483,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.06.20.04.06
+  version: 2026.06.07.05.41.48
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.06.20.04.06-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.07.05.41.48-hd8ed1ab_0.conda
   hash:
-    md5: 1e4668a1e86fd1858b506ede1eb10cdb
-    sha256: b5f74a2aca90c67646fa1f2e3a78f2447df9d757b1b02826bb9909df77f5226b
+    md5: 7b97ca6e13d0ea376a0dc4c52648bd3f
+    sha256: a3b676001f76431c6d48a78057b59ef4c158cbb414114cd5ae29c334c7fdfd18
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.06.20.04.06
+  version: 2026.06.07.05.41.48
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.06.20.04.06-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.07.05.41.48-hd8ed1ab_0.conda
   hash:
-    md5: 1e4668a1e86fd1858b506ede1eb10cdb
-    sha256: b5f74a2aca90c67646fa1f2e3a78f2447df9d757b1b02826bb9909df77f5226b
+    md5: 7b97ca6e13d0ea376a0dc4c52648bd3f
+    sha256: a3b676001f76431c6d48a78057b59ef4c158cbb414114cd5ae29c334c7fdfd18
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.06.20.04.06
+  version: 2026.06.07.05.41.48
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.06.20.04.06-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.07.05.41.48-hd8ed1ab_0.conda
   hash:
-    md5: 1e4668a1e86fd1858b506ede1eb10cdb
-    sha256: b5f74a2aca90c67646fa1f2e3a78f2447df9d757b1b02826bb9909df77f5226b
+    md5: 7b97ca6e13d0ea376a0dc4c52648bd3f
+    sha256: a3b676001f76431c6d48a78057b59ef4c158cbb414114cd5ae29c334c7fdfd18
   category: main
   optional: false
 - name: conda-index
