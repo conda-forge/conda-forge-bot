@@ -12400,42 +12400,42 @@ package:
   category: main
   optional: false
 - name: pydantic-extra-types
-  version: 2.11.2
+  version: 2.11.1
   manager: conda
   platform: linux-64
   dependencies:
     pydantic: '>=2.5.2'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-extra-types-2.11.2-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-extra-types-2.11.1-pyhcf101f3_0.conda
   hash:
-    md5: f9acfec2bcfcf6f43594674389da835e
-    sha256: 0e86d31f300abe09d958d8a02c164e742b4cfe7403955a24ca02b498d50251c7
+    md5: 96513760035d70917819a2840155d23a
+    sha256: 385a900cf5d1d39dafab6088537c58a32d572fd237d7c4598def92c4c1120cb8
   category: main
   optional: false
 - name: pydantic-extra-types
-  version: 2.11.2
+  version: 2.11.1
   manager: conda
   platform: linux-aarch64
   dependencies:
     pydantic: '>=2.5.2'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-extra-types-2.11.2-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-extra-types-2.11.1-pyhcf101f3_0.conda
   hash:
-    md5: f9acfec2bcfcf6f43594674389da835e
-    sha256: 0e86d31f300abe09d958d8a02c164e742b4cfe7403955a24ca02b498d50251c7
+    md5: 96513760035d70917819a2840155d23a
+    sha256: 385a900cf5d1d39dafab6088537c58a32d572fd237d7c4598def92c4c1120cb8
   category: main
   optional: false
 - name: pydantic-extra-types
-  version: 2.11.2
+  version: 2.11.1
   manager: conda
   platform: osx-arm64
   dependencies:
     pydantic: '>=2.5.2'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-extra-types-2.11.2-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-extra-types-2.11.1-pyhcf101f3_0.conda
   hash:
-    md5: f9acfec2bcfcf6f43594674389da835e
-    sha256: 0e86d31f300abe09d958d8a02c164e742b4cfe7403955a24ca02b498d50251c7
+    md5: 96513760035d70917819a2840155d23a
+    sha256: 385a900cf5d1d39dafab6088537c58a32d572fd237d7c4598def92c4c1120cb8
   category: main
   optional: false
 - name: pydantic-settings
