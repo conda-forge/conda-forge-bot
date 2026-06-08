@@ -2483,36 +2483,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.08.07.09.01
+  version: 2026.06.08.09.22.55
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.07.09.01-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.09.22.55-hd8ed1ab_0.conda
   hash:
-    md5: f0f57290d46b2cffef0251eb84803293
-    sha256: 5a8f206e414f9e0eabbe882ed2d122b7bd1d7d0c7c964399031a182dd08b1f8c
+    md5: 8354e34cfbd48de365679796765552fc
+    sha256: a1befb9f1edb338a80b123f5de663120ce492ffc46620e7d6ef89ccfbd08adac
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.08.07.09.01
+  version: 2026.06.08.09.22.55
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.07.09.01-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.09.22.55-hd8ed1ab_0.conda
   hash:
-    md5: f0f57290d46b2cffef0251eb84803293
-    sha256: 5a8f206e414f9e0eabbe882ed2d122b7bd1d7d0c7c964399031a182dd08b1f8c
+    md5: 8354e34cfbd48de365679796765552fc
+    sha256: a1befb9f1edb338a80b123f5de663120ce492ffc46620e7d6ef89ccfbd08adac
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.08.07.09.01
+  version: 2026.06.08.09.22.55
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.07.09.01-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.09.22.55-hd8ed1ab_0.conda
   hash:
-    md5: f0f57290d46b2cffef0251eb84803293
-    sha256: 5a8f206e414f9e0eabbe882ed2d122b7bd1d7d0c7c964399031a182dd08b1f8c
+    md5: 8354e34cfbd48de365679796765552fc
+    sha256: a1befb9f1edb338a80b123f5de663120ce492ffc46620e7d6ef89ccfbd08adac
   category: main
   optional: false
 - name: conda-index
@@ -4990,14 +4990,11 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-    python: '>=3.12,<3.13.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/frozendict-2.4.7-py312h4c3975b_0.conda
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/noarch/frozendict-2.4.7-pyhcf101f3_1.conda
   hash:
-    md5: cad799088b9d29e2bc6f1611c4994322
-    sha256: 4de838b791b6e9c8de38513cbdd1f88bff05e17d0da909e07b3b5415969cae77
+    md5: b1885a10ae09fa09b59fc1d86bc2f78d
+    sha256: f833414c1a40f0443dcd279cf8245e4851e0968ddcab5d311889ea7d7971e9f1
   category: main
   optional: false
 - name: frozendict
@@ -5005,13 +5002,11 @@ package:
   manager: conda
   platform: linux-aarch64
   dependencies:
-    libgcc: '>=14'
-    python: '>=3.12,<3.13.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/frozendict-2.4.7-py312hcd1a082_0.conda
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/noarch/frozendict-2.4.7-pyhcf101f3_1.conda
   hash:
-    md5: 35643851ef90e6d64cbdb50dda8a273f
-    sha256: f80e8bdc85ba55fb5bca115a9d93c5142c79098a7d04c31d5922221e11254d7d
+    md5: b1885a10ae09fa09b59fc1d86bc2f78d
+    sha256: f833414c1a40f0443dcd279cf8245e4851e0968ddcab5d311889ea7d7971e9f1
   category: main
   optional: false
 - name: frozendict
@@ -5019,13 +5014,11 @@ package:
   manager: conda
   platform: osx-arm64
   dependencies:
-    __osx: '>=11.0'
-    python: '>=3.12,<3.13.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/frozendict-2.4.7-py312h4409184_0.conda
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/noarch/frozendict-2.4.7-pyhcf101f3_1.conda
   hash:
-    md5: 6a6f7794843c151f539dbbac9f8193d0
-    sha256: f67aa4071a283af3e8f2ed72bf973dd3b3ac0df5ba350662fca9e8d9b001bad2
+    md5: b1885a10ae09fa09b59fc1d86bc2f78d
+    sha256: f833414c1a40f0443dcd279cf8245e4851e0968ddcab5d311889ea7d7971e9f1
   category: main
   optional: false
 - name: fsspec
