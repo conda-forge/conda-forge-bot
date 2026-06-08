@@ -2483,36 +2483,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.07.20.13.55
+  version: 2026.06.08.07.09.01
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.07.20.13.55-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.07.09.01-hd8ed1ab_0.conda
   hash:
-    md5: 561967edd5591f494ce51999d0314d3d
-    sha256: f8fb9e0e71929d61173828c775770cdde6c71c0024ab7f5f32e7f6842d2b087e
+    md5: f0f57290d46b2cffef0251eb84803293
+    sha256: 5a8f206e414f9e0eabbe882ed2d122b7bd1d7d0c7c964399031a182dd08b1f8c
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.07.20.13.55
+  version: 2026.06.08.07.09.01
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.07.20.13.55-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.07.09.01-hd8ed1ab_0.conda
   hash:
-    md5: 561967edd5591f494ce51999d0314d3d
-    sha256: f8fb9e0e71929d61173828c775770cdde6c71c0024ab7f5f32e7f6842d2b087e
+    md5: f0f57290d46b2cffef0251eb84803293
+    sha256: 5a8f206e414f9e0eabbe882ed2d122b7bd1d7d0c7c964399031a182dd08b1f8c
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.07.20.13.55
+  version: 2026.06.08.07.09.01
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.07.20.13.55-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.08.07.09.01-hd8ed1ab_0.conda
   hash:
-    md5: 561967edd5591f494ce51999d0314d3d
-    sha256: f8fb9e0e71929d61173828c775770cdde6c71c0024ab7f5f32e7f6842d2b087e
+    md5: f0f57290d46b2cffef0251eb84803293
+    sha256: 5a8f206e414f9e0eabbe882ed2d122b7bd1d7d0c7c964399031a182dd08b1f8c
   category: main
   optional: false
 - name: conda-index
@@ -10217,42 +10217,45 @@ package:
   category: main
   optional: false
 - name: menuinst
-  version: 2.4.2
+  version: 2.5.0
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/menuinst-2.4.2-py312h7900ff3_0.conda
+    tomli-w: ''
+  url: https://conda.anaconda.org/conda-forge/linux-64/menuinst-2.5.0-py312h7900ff3_0.conda
   hash:
-    md5: 0aa1dc4a44cdecfab6ffc40894c8f00b
-    sha256: 7ca3df15b6b23a1b444d768e01a592ae7caa1a5614ba0d6bd909cedc00615e5b
+    md5: 9e87f27171bfb29319ee6b5aff0e5157
+    sha256: 09af0917a156152b5996a829f66b252b491bbde8d2fb84fcd53c7ca77bc7629a
   category: main
   optional: false
 - name: menuinst
-  version: 2.4.2
+  version: 2.5.0
   manager: conda
   platform: linux-aarch64
   dependencies:
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/menuinst-2.4.2-py312h996f985_0.conda
+    tomli-w: ''
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/menuinst-2.5.0-py312h996f985_0.conda
   hash:
-    md5: 39551695368cc48b7df761b19a44957d
-    sha256: 0fbcc562c6fd5cdf0b8bde908a2ef6e99361da4b72e187efb91669e8579857c7
+    md5: 79d80192b5d9d2e765b117ba43a4d8ae
+    sha256: 945657c04bf384ff33ad7104df77aa77717ff9887ee53e11698fde4dce5df4d4
   category: main
   optional: false
 - name: menuinst
-  version: 2.4.2
+  version: 2.5.0
   manager: conda
   platform: osx-arm64
   dependencies:
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/menuinst-2.4.2-py312h81bd7bf_0.conda
+    tomli-w: ''
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/menuinst-2.5.0-py312h81bd7bf_0.conda
   hash:
-    md5: 7d666dc2cce47d16951ac1ed60fd9b3d
-    sha256: 65ddb286fa1cf918379362a418f37f8b3e6bdaf06b1c4d179d8e30c2f8b8f33f
+    md5: 20b7a93730d1474d8e9d9c93e4df87ab
+    sha256: 7c5f07dad81baf5a98f217344a51aa72436d137acae9f5da0a53f90f095ffacd
   category: main
   optional: false
 - name: mitmproxy
