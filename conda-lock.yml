@@ -2483,36 +2483,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.09.09.01.25
+  version: 2026.06.09.19.17.01
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.09.09.01.25-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.09.19.17.01-hd8ed1ab_0.conda
   hash:
-    md5: 70863f8fc80a2bb6bcd6bab7f6e5880e
-    sha256: 60ecc9e614c38e32e03926ab3a48887807d3047c354ae0dc59a0572729a577f2
+    md5: f76e92bef669fc3b9ffaaae61ef79a75
+    sha256: ea1409fe1acfe5bbdb5ae1fca9722f893cfa117c990e0586399165d09d39d249
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.09.09.01.25
+  version: 2026.06.09.19.17.01
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.09.09.01.25-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.09.19.17.01-hd8ed1ab_0.conda
   hash:
-    md5: 70863f8fc80a2bb6bcd6bab7f6e5880e
-    sha256: 60ecc9e614c38e32e03926ab3a48887807d3047c354ae0dc59a0572729a577f2
+    md5: f76e92bef669fc3b9ffaaae61ef79a75
+    sha256: ea1409fe1acfe5bbdb5ae1fca9722f893cfa117c990e0586399165d09d39d249
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.06.09.09.01.25
+  version: 2026.06.09.19.17.01
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.09.09.01.25-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.06.09.19.17.01-hd8ed1ab_0.conda
   hash:
-    md5: 70863f8fc80a2bb6bcd6bab7f6e5880e
-    sha256: 60ecc9e614c38e32e03926ab3a48887807d3047c354ae0dc59a0572729a577f2
+    md5: f76e92bef669fc3b9ffaaae61ef79a75
+    sha256: ea1409fe1acfe5bbdb5ae1fca9722f893cfa117c990e0586399165d09d39d249
   category: main
   optional: false
 - name: conda-index
@@ -15335,11 +15335,11 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/smmap-5.0.3-pyhd8ed1ab_0.conda
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/noarch/smmap-5.0.3-pyhcf101f3_1.conda
   hash:
-    md5: 69db183edbe5b7c3e6c157980057a9d0
-    sha256: ae723ba6ab7b1998a04ef16b357c1e0043ffd4f4ac9b0da71e393680343a3c86
+    md5: b899f1195be56d8215ed1973a8f409c3
+    sha256: bc86861086db65c9b56dd6a1605755f41a9875b94fc3b69e137f686700d91aa1
   category: main
   optional: false
 - name: smmap
@@ -15347,11 +15347,11 @@ package:
   manager: conda
   platform: linux-aarch64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/smmap-5.0.3-pyhd8ed1ab_0.conda
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/noarch/smmap-5.0.3-pyhcf101f3_1.conda
   hash:
-    md5: 69db183edbe5b7c3e6c157980057a9d0
-    sha256: ae723ba6ab7b1998a04ef16b357c1e0043ffd4f4ac9b0da71e393680343a3c86
+    md5: b899f1195be56d8215ed1973a8f409c3
+    sha256: bc86861086db65c9b56dd6a1605755f41a9875b94fc3b69e137f686700d91aa1
   category: main
   optional: false
 - name: smmap
@@ -15359,11 +15359,11 @@ package:
   manager: conda
   platform: osx-arm64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/smmap-5.0.3-pyhd8ed1ab_0.conda
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/noarch/smmap-5.0.3-pyhcf101f3_1.conda
   hash:
-    md5: 69db183edbe5b7c3e6c157980057a9d0
-    sha256: ae723ba6ab7b1998a04ef16b357c1e0043ffd4f4ac9b0da71e393680343a3c86
+    md5: b899f1195be56d8215ed1973a8f409c3
+    sha256: bc86861086db65c9b56dd6a1605755f41a9875b94fc3b69e137f686700d91aa1
   category: main
   optional: false
 - name: sniffio
