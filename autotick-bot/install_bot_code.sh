@@ -47,8 +47,12 @@ if [[ "${clone_graph}" == "true" ]]; then
   failed="true"
   for itr in {1..5}; do
     echo "clone iteration ${itr}"
+
+    set +e
     # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
     git clone --depth=5 "${cf_graph_remote}" cf-graph || false
+    set -e
+
     if [[ "$?" == 0 ]]; then
       failed="false"
       break
@@ -79,7 +83,11 @@ if [[ "${pull_cont}" == "true" ]]; then
   failed="true"
   for itr in {1..5}; do
     echo "docker pull iteration ${itr}"
+
+    set +e
     docker pull "${docker_name}:${docker_tag}" || false
+    set -e
+
     if [[ "$?" == 0 ]]; then
       failed="false"
       break
