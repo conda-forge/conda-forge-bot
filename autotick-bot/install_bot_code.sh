@@ -43,8 +43,24 @@ done
 if [[ "${clone_graph}" == "true" ]]; then
   cf_graph_repo=${CF_TICK_GRAPH_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data"}
   cf_graph_remote="https://github.com/${cf_graph_repo}.git"
-  # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
-  git clone --depth=5 "${cf_graph_remote}" cf-graph
+
+  failed="true"
+  for itr in {1..5}; do
+    echo "clone iteration ${itr}"
+    # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
+    git clone --depth=5 "${cf_graph_remote}" cf-graph || false
+    if [[ "$?" == 0 ]]; then
+      failed="false"
+      break
+    else
+      rm -rf cf-graph
+    fi
+  done
+
+  if [[ "${failed}" == "true" ]]; then
+    echo "graph clone failed!"
+    exit 1
+  fi
 else
   echo "Skipping cloning of cf-graph"
 fi
@@ -60,7 +76,20 @@ for arg in "$@"; do
   fi
 done
 if [[ "${pull_cont}" == "true" ]]; then
-  docker pull "${docker_name}:${docker_tag}"
+  failed="true"
+  for itr in {1..5}; do
+    echo "docker pull iteration ${itr}"
+    docker pull "${docker_name}:${docker_tag}" || false
+    if [[ "$?" == 0 ]]; then
+      failed="false"
+      break
+    fi
+  done
+
+  if [[ "${failed}" == "true" ]]; then
+    echo "docker pull failed!"
+    exit 1
+  fi
 fi
 
 # left intact if already set
