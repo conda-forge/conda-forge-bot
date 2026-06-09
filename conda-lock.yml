@@ -2834,48 +2834,48 @@ package:
   category: main
   optional: false
 - name: conda-package-handling
-  version: 2.4.0
+  version: 2.5.0
   manager: conda
   platform: linux-64
   dependencies:
-    conda-package-streaming: '>=0.9.0'
-    python: '>=3.9'
+    conda-package-streaming: '>=0.12.0'
+    python: ''
     requests: ''
     zstandard: '>=0.15'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-package-handling-2.4.0-pyh7900ff3_2.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-package-handling-2.5.0-pyhcf101f3_0.conda
   hash:
-    md5: 32c158f481b4fd7630c565030f7bc482
-    sha256: 8b2b1c235b7cbfa8488ad88ff934bdad25bac6a4c035714681fbff85b602f3f0
+    md5: 3f1854f1ec2090538fb49b7078dbb9de
+    sha256: 63d5b510644a01b4c93738304cb0dc8a336542fc335b0b77f3b355ba7d119260
   category: main
   optional: false
 - name: conda-package-handling
-  version: 2.4.0
+  version: 2.5.0
   manager: conda
   platform: linux-aarch64
   dependencies:
-    conda-package-streaming: '>=0.9.0'
-    python: '>=3.9'
+    conda-package-streaming: '>=0.12.0'
+    python: ''
     requests: ''
     zstandard: '>=0.15'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-package-handling-2.4.0-pyh7900ff3_2.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-package-handling-2.5.0-pyhcf101f3_0.conda
   hash:
-    md5: 32c158f481b4fd7630c565030f7bc482
-    sha256: 8b2b1c235b7cbfa8488ad88ff934bdad25bac6a4c035714681fbff85b602f3f0
+    md5: 3f1854f1ec2090538fb49b7078dbb9de
+    sha256: 63d5b510644a01b4c93738304cb0dc8a336542fc335b0b77f3b355ba7d119260
   category: main
   optional: false
 - name: conda-package-handling
-  version: 2.4.0
+  version: 2.5.0
   manager: conda
   platform: osx-arm64
   dependencies:
-    conda-package-streaming: '>=0.9.0'
-    python: '>=3.9'
+    conda-package-streaming: '>=0.12.0'
+    python: ''
     requests: ''
     zstandard: '>=0.15'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-package-handling-2.4.0-pyh7900ff3_2.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-package-handling-2.5.0-pyhcf101f3_0.conda
   hash:
-    md5: 32c158f481b4fd7630c565030f7bc482
-    sha256: 8b2b1c235b7cbfa8488ad88ff934bdad25bac6a4c035714681fbff85b602f3f0
+    md5: 3f1854f1ec2090538fb49b7078dbb9de
+    sha256: 63d5b510644a01b4c93738304cb0dc8a336542fc335b0b77f3b355ba7d119260
   category: main
   optional: false
 - name: conda-package-streaming
