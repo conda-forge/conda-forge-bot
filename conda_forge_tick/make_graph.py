@@ -96,6 +96,7 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
         for key in [
             "new_version_attempts",
             "new_version_errors",
+            "new_version_error_payloads",
             "new_version_attempt_ts",
         ]:
             if key not in vpri:
@@ -105,6 +106,7 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
     with lzj_pri as pri:
         for key in [
             "pre_pr_migrator_status",
+            "pre_pr_migrator_status_payload",
             "pre_pr_migrator_attempts",
             "pre_pr_migrator_attempt_ts",
         ]:
@@ -199,7 +201,7 @@ def _migrate_schema(name, sub_graph):
                     )
 
         with sub_graph["version_pr_info"] as vpri:
-            for mn in vpri["new_version_errors"].keys():
+            for mn in vpri["new_version_error_payloads"].keys():
                 if mn not in vpri["new_version_attempts"]:
                     vpri["new_version_attempts"][mn] = 1
                 if mn not in vpri["new_version_attempt_ts"]:

@@ -263,6 +263,26 @@ class PrInfoValid(StrictBaseModel):
 
     If a migration is eventually successful, the corresponding key is removed from the dictionary.
     """
+    pre_pr_migrator_status_payload: NoneIsEmptyDict[
+        str, dict[str, str | list[str]]
+    ] = {}
+    """
+    A dictionary (migration name -> error payload) of the error status of the migrations.
+    Errors are added here if a non-version migration fails before a migration PR is created.
+
+    This field contains structured data as the value, precisely to avoid having to send HTML strings.
+    These are meant to be handled by the frontend to target whatever style they see fit. The
+    dataclass backing these values can be found at `conda_forge_tick.auto_tick._BotJobError`.
+
+    The same thing for version migrations is part of the `version_pr_info` object.
+
+    There are implicit assumptions about the contents of this field, but they are not documented.
+    Refer to status_report.graph_migrator_status, for example.
+
+    Note: The names of migrators appear here without spaces and in lowercase. This is not always the case.
+
+    If a migration is eventually successful, the corresponding key is removed from the dictionary.
+    """
 
     pre_pr_migrator_attempts: NoneIsEmptyDict[str, int] = {}
     """
@@ -286,13 +306,23 @@ class PrInfoValid(StrictBaseModel):
 
     @model_validator(mode="after")
     def check_pre_pr_migrations(self) -> Self:
-        if self.pre_pr_migrator_status.keys() != self.pre_pr_migrator_attempts.keys():
+        if (
+            self.pre_pr_migrator_status.keys()
+            != self.pre_pr_migrator_attempts.keys()
+            != self.pre_pr_migrator_status_payload.keys()
+        ):
             raise ValueError(
-                "The keys (migration names) of pre_pr_migrator_status and pre_pr_migrator_attempts must match."
+                "The keys (migration names) of pre_pr_migrator_status, "
+                "pre_pr_migrator_status_payloads and pre_pr_migrator_attempts must match."
             )
-        if self.pre_pr_migrator_status.keys() != self.pre_pr_migrator_attempt_ts.keys():
+        if (
+            self.pre_pr_migrator_status.keys()
+            != self.pre_pr_migrator_attempt_ts.keys()
+            != self.pre_pr_migrator_status_payload.keys()
+        ):
             raise ValueError(
-                "The keys (migration names) of pre_pr_migrator_status and pre_pr_migrator_attempt_ts must match."
+                "The keys (migration names) of pre_pr_migrator_status, "
+                "pre_pr_migrator_status_payloads and pre_pr_migrator_attempt_ts must match."
             )
         return self
 

@@ -36,26 +36,40 @@ class VersionPrInfo(StrictBaseModel):
     PR.
     """
 
+    new_version_error_payloads: NoneIsEmptyDict[str, dict[str, str | list[str]]] = {}
+    """
+    Mapping (version -> error payload) to describe the errors that occurred when trying to update the versions in the
+    PR. The error payload is backed up by the `conda_forge_tick.auto_tick._BotJobError` dataclass.
+    """
+
     @model_validator(mode="after")
     def check_new_version_error_keys(self):
         wrong_versions = [
             version
-            for version in self.new_version_errors
+            for version in (
+                *self.new_version_errors,
+                *self.self.new_version_error_payloads,
+            )
             if version not in self.new_version_attempts
         ]
 
         if wrong_versions:
             raise ValueError(
-                f"new_version_errors contains at least one version not in new_version_attempts: {wrong_versions}"
+                "new_version_errors or new_version_error_payloads contains "
+                f"at least one version not in new_version_attempts: {wrong_versions}"
             )
 
         wrong_versions = [
             version
-            for version in self.new_version_errors
+            for version in (
+                *self.new_version_errors,
+                *self.self.new_version_error_payloads,
+            )
             if version not in self.new_version_attempt_ts
         ]
 
         if wrong_versions:
             raise ValueError(
-                f"new_version_errors contains at least one version not in new_version_attempt_ts: {wrong_versions}"
+                "new_version_errors or new_version_error_payloads contains "
+                f"at least one version not in new_version_attempt_ts: {wrong_versions}"
             )

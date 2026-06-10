@@ -83,9 +83,10 @@ def _ok_version(ver):
 
 def write_version_migrator_status(migrator, mctx):
     """Write the status of the version migrator."""
-    out: dict[str, dict[str, str]] = {
+    out: dict[str, dict[str, str | list[str]]] = {
         "queued": {},  # name -> pending version
         "errors": {},  # name -> error
+        "error_payloads": {},  # name -> structured data about errors
     }
 
     gx = mctx.graph
@@ -149,10 +150,24 @@ def write_version_migrator_status(migrator, mctx):
                             "No error information available for version '%s'."
                             % new_version,
                         )
+                        out["error_payloads"][node] = {
+                            "attempts": attempts,
+                            # type: ignore
+                            **vpri.get("new_version_error_payloads", {}).get(
+                                new_version,
+                                {
+                                    # Follows schema in .autotick._BotJobError
+                                    "kind": "bot-error",
+                                    "messages": [
+                                        f"No error information available for version '{new_version}'"
+                                    ],
+                                },
+                            ),
+                        }
 
     with open("./status/version_status.json", "wb") as f:
-        old_out: dict[str, dict[str, str] | set[str]] = {}
-        old_out.update(out)
+        old_out: dict[str, dict[str, str | list[str]] | set[str]] = {}
+        old_out.update({k: v for k, v in out.items() if k != "error_payloads"})
         old_out["queued"] = set(out["queued"].keys())
         old_out["errored"] = set(out["errors"].keys())
         f.write(
@@ -166,7 +181,16 @@ def write_version_migrator_status(migrator, mctx):
     with open("./status/version_status.v2.json", "wb") as f:
         f.write(
             orjson.dumps(
-                out,
+                {k: v for k, v in out.items() if k != "error_payloads"},
+                option=orjson.OPT_SORT_KEYS | orjson.OPT_INDENT_2,
+                default=_sorted_set_json,
+            )
+        )
+
+    with open("./status/version_status.v3.json", "wb") as f:
+        f.write(
+            orjson.dumps(
+                {k: v for k, v in out.items() if k != "errors"},
                 option=orjson.OPT_SORT_KEYS | orjson.OPT_INDENT_2,
                 default=_sorted_set_json,
             )
@@ -262,19 +286,17 @@ def graph_migrator_status(
             fc = "#440154"
             fntc = "white"
         elif pr_json is None:
+            kind = (
+                attrs.get("pr_info", {})
+                .get("pre_pr_migrator_status_payload", {})
+                .get(migrator_name, {})
+                .get("kind")
+            )
             if buildable:
-                if "not solvable" in (
-                    attrs.get("pr_info", {})
-                    .get("pre_pr_migrator_status", {})
-                    .get(migrator_name, "")
-                ):
+                if kind == "not-solvable":
                     out["not-solvable"].add(node)
                     fc = "#ff8c00"
-                elif "bot error" in (
-                    attrs.get("pr_info", {})
-                    .get("pre_pr_migrator_status", {})
-                    .get(migrator_name, "")
-                ) or attrs.get("parsing_error", ""):
+                elif kind == "bot-error" or attrs.get("parsing_error", ""):
                     out["bot-error"].add(node)
                     fc = "#000000"
                     fntc = "white"
@@ -282,11 +304,7 @@ def graph_migrator_status(
                     out["awaiting-pr"].add(node)
                     fc = "#35b779"
             else:
-                if "bot error" in (
-                    attrs.get("pr_info", {})
-                    .get("pre_pr_migrator_status", {})
-                    .get(migrator_name, "")
-                ) or attrs.get("parsing_error", ""):
+                if kind == "bot-error" or attrs.get("parsing_error", ""):
                     out["bot-error"].add(node)
                     fc = "#000000"
                     fntc = "white"
@@ -342,8 +360,17 @@ def graph_migrator_status(
                 )
                 .get(migrator_name, "")
             ) or attrs.get("parsing_error", "")
+            node_metadata["pre_pr_migrator_status_payload"] = (
+                attrs.get("pr_info", {})
+                .get(
+                    "pre_pr_migrator_status_payload",
+                    {},
+                )
+                .get(migrator_name, {})
+            ) or {"kind": "bot-error", "messages": [attrs.get("parsing_error", "")]}
         else:
             node_metadata["pre_pr_migrator_status"] = ""
+            node_metadata["pre_pr_migrator_status_payload"] = {}
 
         if pr_json and "PR" in pr_json:
             # I needed to fake some PRs they don't have html_urls though
