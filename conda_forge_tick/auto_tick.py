@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import gc
 import glob
+import html
 import logging
 import os
 import textwrap
@@ -302,7 +303,7 @@ class _RerenderInfo:
     """
 
 
-@dataclass(frozen=True)
+@dataclass
 class _BotJobError:
     """
     Details about errors handled by the job and reported to status JSON.
@@ -320,7 +321,9 @@ class _BotJobError:
     "Feedstock branch where the bot is running on, if applicable"
 
     def __post_init__(self):
-        self.messages[:] = [sanitize_string(msg) for msg in self.messages]
+        self.messages = [html.escape(sanitize_string(msg)) for msg in self.messages]
+        if self.base_branch:
+            self.base_branch = html.escape(self.base_branch)
 
 
 def _run_rerender(
