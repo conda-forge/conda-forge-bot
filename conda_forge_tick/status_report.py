@@ -38,6 +38,7 @@ from conda_forge_tick.utils import (
     frozen_to_json_friendly,
     load_existing_graph,
     pr_can_be_archived,
+    sanitize_string,
 )
 from conda_forge_tick.version_filters import filter_version
 
@@ -155,7 +156,7 @@ def write_version_migrator_status(migrator, mctx):
                         if isinstance(previous_payload, str):
                             previous_payload = {
                                 "kind": "plain",
-                                "messages": [previous_payload],
+                                "messages": [sanitize_string(previous_payload)],
                             }
                         out["errors"][node] = {
                             # type: ignore
@@ -344,7 +345,10 @@ def graph_migrator_status(
             ) or {"kind": "bot-error", "messages": [attrs.get("parsing_error", "")]}
             # FUTURE: Remove once all JSON documents have migrated from str to dict
             if isinstance(previous_status, str):
-                previous_status = {"kind": "plain", "messages": [previous_status]}
+                previous_status = {
+                    "kind": "plain",
+                    "messages": [sanitize_string(previous_status)],
+                }
             node_metadata["pre_pr_migrator_status"] = previous_status
         else:
             node_metadata["pre_pr_migrator_status"] = {}
