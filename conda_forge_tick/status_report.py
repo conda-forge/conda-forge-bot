@@ -334,7 +334,7 @@ def graph_migrator_status(
             if not gx2[k].get("payload", {}).get("archived", False)
         ]
         if node in out["not-solvable"] or node in out["bot-error"]:
-            node_metadata["pre_pr_migrator_status"] = (
+            previous_status = (
                 attrs.get("pr_info", {})
                 .get(
                     "pre_pr_migrator_status",
@@ -342,6 +342,10 @@ def graph_migrator_status(
                 )
                 .get(migrator_name, {})
             ) or {"kind": "bot-error", "messages": [attrs.get("parsing_error", "")]}
+            # FUTURE: Remove once all JSON documents have migrated from str to dict
+            if isinstance(previous_status, str):
+                previous_status = {"kind": "plain", "messages": [previous_status]}
+            node_metadata["pre_pr_migrator_status"] = previous_status
         else:
             node_metadata["pre_pr_migrator_status"] = {}
 
