@@ -30,46 +30,34 @@ class VersionPrInfo(StrictBaseModel):
     attempt to make the version PR.
     """
 
-    new_version_errors: NoneIsEmptyDict[str, str] = {}
-    """
-    Mapping (version -> error message) to describe the errors that occurred when trying to update the versions in the
-    PR.
-    """
-
-    new_version_error_payloads: NoneIsEmptyDict[str, dict[str, str | list[str]]] = {}
+    new_version_errors: NoneIsEmptyDict[str, dict[str, str | list[str]]] = {}
     """
     Mapping (version -> error payload) to describe the errors that occurred when trying to update the versions in the
     PR. The error payload is backed up by the `conda_forge_tick.auto_tick._BotJobError` dataclass.
+
+    Previous iterations of the model only included a preformatted string with the error details.
     """
 
     @model_validator(mode="after")
     def check_new_version_error_keys(self):
         wrong_versions = [
             version
-            for version in (
-                *self.new_version_errors,
-                *self.self.new_version_error_payloads,
-            )
+            for version in self.new_version_errors
             if version not in self.new_version_attempts
         ]
 
         if wrong_versions:
             raise ValueError(
-                "new_version_errors or new_version_error_payloads contains "
-                f"at least one version not in new_version_attempts: {wrong_versions}"
+                f"new_version_errors contains at least one version not in new_version_attempts: {wrong_versions}"
             )
 
         wrong_versions = [
             version
-            for version in (
-                *self.new_version_errors,
-                *self.self.new_version_error_payloads,
-            )
+            for version in self.new_version_errors
             if version not in self.new_version_attempt_ts
         ]
 
         if wrong_versions:
             raise ValueError(
-                "new_version_errors or new_version_error_payloads contains "
-                f"at least one version not in new_version_attempt_ts: {wrong_versions}"
+                f"new_version_errors contains at least one version not in new_version_attempt_ts: {wrong_versions}"
             )

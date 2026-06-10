@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import gc
 import glob
-import html
 import logging
 import os
 import textwrap
@@ -85,32 +84,19 @@ TIMEOUT = int(os.environ.get("TIMEOUT", 600))
 def _set_pre_pr_migrator_error(
     attrs,
     migrator_name,
-    error_str,
+    error_payload: _BotJobError,
     *,
     is_version,
-    error_payload: _BotJobError | None = None,
 ):
     if is_version:
         with attrs["version_pr_info"] as vpri:
             version = vpri["new_version"]
-            if error_str:
-                vpri.setdefault("new_version_errors", {})[version] = sanitize_string(
-                    error_str
-                )
-            if error_payload:
-                vpri.setdefault("new_version_error_payloads", {})[version] = asdict(
-                    error_payload
-                )
+            vpri.setdefault("new_version_errors", {})[version] = asdict(error_payload)
     else:
         with attrs["pr_info"] as pri:
-            if error_str:
-                pri.setdefault("pre_pr_migrator_status", {})[migrator_name] = (
-                    sanitize_string(error_str)
-                )
-            if error_payload:
-                pri.setdefault("pre_pr_migrator_status_payload", {})[migrator_name] = (
-                    asdict(error_payload)
-                )
+            pri.setdefault("pre_pr_migrator_status", {})[migrator_name] = asdict(
+                error_payload
+            )
 
 
 def _increment_pre_pr_migrator_attempt(attrs, migrator_name, *, is_version):
@@ -147,7 +133,6 @@ def _reset_version_pre_pr_migrator_fields(vpri, version=None):
         version = vpri["new_version"]
     for _key in [
         "new_version_errors",
-        "new_version_error_payloads",
         "new_version_attempts",
         "new_version_attempt_ts",
     ]:
@@ -158,7 +143,6 @@ def _reset_version_pre_pr_migrator_fields(vpri, version=None):
 def _reset_migrator_pre_pr_migrator_fields(pri, migrator_name):
     for _key in [
         "pre_pr_migrator_status",
-        "pre_pr_migrator_status_payload",
         "pre_pr_migrator_attempts",
         "pre_pr_migrator_attempt_ts",
     ]:
@@ -303,7 +287,7 @@ class _RerenderInfo:
     """
 
 
-@dataclass
+@dataclass(kw_only=True)
 class _BotJobError:
     """
     Details about errors handled by the job and reported to status JSON.
@@ -321,9 +305,9 @@ class _BotJobError:
     "Feedstock branch where the bot is running on, if applicable"
 
     def __post_init__(self):
-        self.messages = [html.escape(sanitize_string(msg)) for msg in self.messages]
+        self.messages = [sanitize_string(msg) for msg in self.messages]
         if self.base_branch:
-            self.base_branch = html.escape(self.base_branch)
+            self.base_branch = sanitize_string(self.base_branch)
 
 
 def _run_rerender(
@@ -450,29 +434,17 @@ def _handle_solvability_error(
 ) -> None:
     ci_url = get_bot_run_url()
     ci_url = f"(<a href='{ci_url}'>bot CI job</a>)" if ci_url else ""
-    _solver_err_str = textwrap.dedent(
-        f"""
-        not solvable {ci_url} @ {base_branch}
-        <details>
-        <div align="left">
-        <pre>
-        {"</pre><pre>".join(sorted(set(errors)))}
-        </pre>
-        </div>
-        </details>
-        """,
-    ).strip()
+
     _set_pre_pr_migrator_error(
         context.attrs,
         migrator.report_name,
-        _solver_err_str,
-        is_version=isinstance(migrator, Version),
-        error_payload=_BotJobError(
+        _BotJobError(
             kind="not-solvable",
             url=ci_url,
             base_branch=base_branch,
             messages=sorted(set(errors)),
         ),
+        is_version=isinstance(migrator, Version),
     )
 
     # remove part of a try for solver errors to make those slightly
@@ -936,10 +908,8 @@ def _run_migrator_on_feedstock_branch(
         _set_pre_pr_migrator_error(
             attrs,
             migrator_name,
-            # we do not use any HTML formats here since at one point status page had them
-            str(e),
+            _BotJobError(kind="bot-error", messages=[str(e)]),
             is_version=is_version,
-            error_payload=_BotJobError(kind="bot-error", messages=[str(e)]),
         )
 
     except URLError as e:
@@ -958,21 +928,13 @@ def _run_migrator_on_feedstock_branch(
         _set_pre_pr_migrator_error(
             attrs,
             migrator_name,
-            sanitize_string(
-                "bot error (%s): %s: %s"
-                % (
-                    '<a href="' + _job_url + '">bot CI job</a>',
-                    base_branch,
-                    formatted_traceback,
-                ),
-            ),
-            is_version=is_version,
-            error_payload=_BotJobError(
+            _BotJobError(
                 kind="bot-error",
                 url=_job_url,
                 base_branch=base_branch,
                 messages=[formatted_traceback],
             ),
+            is_version=is_version,
         )
 
     except Exception as e:
@@ -1004,21 +966,13 @@ def _run_migrator_on_feedstock_branch(
         _set_pre_pr_migrator_error(
             attrs,
             migrator_name,
-            sanitize_string(
-                "bot error (%s): %s:\n%s"
-                % (
-                    '<a href="' + _bot_run_url + '">bot CI job</a>',
-                    base_branch,
-                    _err_tb,
-                ),
-            ),
-            is_version=is_version,
-            error_payload=_BotJobError(
+            _BotJobError(
                 kind="bot-error",
                 url=_bot_run_url,
                 base_branch=base_branch,
                 messages=[_err_tb],
             ),
+            is_version=is_version,
         )
 
     else:

@@ -1,6 +1,7 @@
 import contextlib
 import copy
 import datetime
+import html
 import io
 import itertools
 import logging
@@ -1416,6 +1417,7 @@ def as_iterable(iterable_or_scalar: Any) -> Iterable:
 
 
 def sanitize_string(instr: str) -> str:
+    """Masks secrets/tokens and escapes HTML."""
     from conda_forge_tick.env_management import SensitiveEnv
 
     with sensitive_env() as env:
@@ -1425,7 +1427,7 @@ def sanitize_string(instr: str) -> str:
         if token is not None:
             instr = instr.replace(token, "~" * len(token))
 
-    return instr
+    return html.escape(instr)
 
 
 def get_keys_default(
