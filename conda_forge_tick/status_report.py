@@ -141,19 +141,26 @@ def write_version_migrator_status(migrator, mctx):
                     if attempts == 0:
                         out["queued"][node] = new_version  # type: ignore[assignment]
                     else:
+                        previous_payload = vpri.get("new_version_errors", {}).get(
+                            new_version,
+                            {
+                                # Follows schema in .autotick._BotJobError
+                                "kind": "bot-error",
+                                "messages": [
+                                    f"No error information available for version '{new_version}'"
+                                ],
+                            },
+                        )
+                        # FUTURE: Remove once all JSON documents have migrated from str to dict
+                        if isinstance(previous_payload, str):
+                            previous_payload = {
+                                "kind": "plain",
+                                "messages": [previous_payload],
+                            }
                         out["errors"][node] = {
-                            "attempts": attempts,
                             # type: ignore
-                            **vpri.get("new_version_errors", {}).get(
-                                new_version,
-                                {
-                                    # Follows schema in .autotick._BotJobError
-                                    "kind": "bot-error",
-                                    "messages": [
-                                        f"No error information available for version '{new_version}'"
-                                    ],
-                                },
-                            ),
+                            **previous_payload,
+                            "attempts": attempts,
                         }
 
     with open("./status/version_status.v2.json", "wb") as f:
