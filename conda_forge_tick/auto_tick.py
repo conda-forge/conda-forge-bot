@@ -921,8 +921,12 @@ def _run_migrator_on_feedstock_branch(
                 "traceback": formatted_traceback.split(
                     "\n",
                 ),
-                "code": sanitize_string(getattr(e, "code")) if getattr(e, "code") is not None else None,
-                "url": sanitize_string(getattr(e, "url")) if getattr(e, "url") is not None else None,
+                "code": sanitize_string(getattr(e, "code"))
+                if getattr(e, "code") is not None
+                else None,
+                "url": sanitize_string(getattr(e, "url"))
+                if getattr(e, "url") is not None
+                else None,
             }
         _job_url = get_bot_run_url()
         _set_pre_pr_migrator_error(
