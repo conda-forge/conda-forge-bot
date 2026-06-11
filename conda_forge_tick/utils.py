@@ -1,7 +1,6 @@
 import contextlib
 import copy
 import datetime
-import html
 import io
 import itertools
 import logging
@@ -223,7 +222,7 @@ def _render_meta_yaml(text: str, for_pinning: bool = False, **kwargs) -> str:
     except Exception:
         import traceback
 
-        logger.debug("render failure:\n%s", traceback.format_exc())
+        logger.debug("render failure:\n%s", sanitize_string(traceback.format_exc()))
         logger.debug("render template: %s", text)
         logger.debug("render context:\n%s", pprint.pformat(cfg))
         raise
@@ -1065,8 +1064,8 @@ def parse_meta_yaml_local(
             raise RuntimeError(
                 "conda build error: %s\n%s"
                 % (
-                    repr(e),
-                    traceback.format_exc(),
+                    sanitize_string(repr(e)),
+                    sanitize_string(traceback.format_exc()),
                 ),
             )
 
@@ -1417,7 +1416,7 @@ def as_iterable(iterable_or_scalar: Any) -> Iterable:
 
 
 def sanitize_string(instr: str) -> str:
-    """Masks secrets/tokens and escapes HTML."""
+    """Masks secrets/tokens."""
     from conda_forge_tick.env_management import SensitiveEnv
 
     with sensitive_env() as env:
@@ -1427,7 +1426,7 @@ def sanitize_string(instr: str) -> str:
         if token is not None:
             instr = instr.replace(token, "~" * len(token))
 
-    return html.escape(instr)
+    return instr
 
 
 def get_keys_default(

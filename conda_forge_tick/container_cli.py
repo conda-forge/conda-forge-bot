@@ -124,9 +124,11 @@ def _run_bot_task(func, *, log_level: str, existing_feedstock_node_attrs, **kwar
             ret["data"] = data
 
         except Exception as e:
+            from conda_forge_tick.utils import sanitize_string
+
             ret["data"] = data
-            ret["error"] = repr(e)
-            ret["traceback"] = traceback.format_exc()
+            ret["error"] = sanitize_string(repr(e))
+            ret["traceback"] = sanitize_string(traceback.format_exc())
 
         print(dumps(ret))
 

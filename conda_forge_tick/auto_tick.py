@@ -914,15 +914,19 @@ def _run_migrator_on_feedstock_branch(
 
     except URLError as e:
         logger.exception("URLError ERROR", exc_info=e)
-        formatted_traceback = str(traceback.format_exc())
+        formatted_traceback = sanitize_string(str(traceback.format_exc()))
         with attrs["pr_info"] as pri:
             pri["bad"] = {
-                "exception": str(e),
+                "exception": sanitize_string(str(e)),
                 "traceback": formatted_traceback.split(
                     "\n",
                 ),
-                "code": getattr(e, "code"),
-                "url": getattr(e, "url"),
+                "code": sanitize_string(getattr(e, "code"))
+                if getattr(e, "code") is not None
+                else None,
+                "url": sanitize_string(getattr(e, "url"))
+                if getattr(e, "url") is not None
+                else None,
             }
         _job_url = get_bot_run_url()
         _set_pre_pr_migrator_error(
@@ -945,9 +949,9 @@ def _run_migrator_on_feedstock_branch(
             and hasattr(e, "traceback")
             and e.traceback
         ):
-            _err_tb = str(e.traceback)
+            _err_tb = sanitize_string(str(e.traceback))
         else:
-            _err_tb = str(traceback.format_exc())
+            _err_tb = sanitize_string(str(traceback.format_exc()))
 
         # we don't set bad for rerendering errors
         if (
@@ -957,7 +961,7 @@ def _run_migrator_on_feedstock_branch(
         ):
             with attrs["pr_info"] as pri:
                 pri["bad"] = {
-                    "exception": str(e),
+                    "exception": sanitize_string(str(e)),
                     "traceback": _err_tb.split(
                         "\n",
                     ),
