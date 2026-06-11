@@ -223,7 +223,7 @@ def _render_meta_yaml(text: str, for_pinning: bool = False, **kwargs) -> str:
     except Exception:
         import traceback
 
-        logger.debug("render failure:\n%s", traceback.format_exc())
+        logger.debug("render failure:\n%s", sanitize_string(traceback.format_exc()))
         logger.debug("render template: %s", text)
         logger.debug("render context:\n%s", pprint.pformat(cfg))
         raise
@@ -1065,8 +1065,8 @@ def parse_meta_yaml_local(
             raise RuntimeError(
                 "conda build error: %s\n%s"
                 % (
-                    repr(e),
-                    traceback.format_exc(),
+                    sanitize_string(repr(e)),
+                    sanitize_string(traceback.format_exc()),
                 ),
             )
 
