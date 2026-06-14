@@ -14161,7 +14161,7 @@ package:
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.14
+  version: 1.4.15
   manager: conda
   platform: linux-64
   dependencies:
@@ -14173,14 +14173,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.14-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.15-pyhd8ed1ab_0.conda
   hash:
-    md5: 7bc92efc4ae77caab0d324c41f99b521
-    sha256: 5578174b46442513090d70ccbbb4f2ec9b0e76324ddbeea6bb0c0ec39dab9862
+    md5: bf0ab2e7a5e04c52e9a6b3e9f49576d0
+    sha256: 73781301e41d33ff6de1c38a471795df6882909343216774b087938f040f1d8f
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.14
+  version: 1.4.15
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -14192,14 +14192,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.14-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.15-pyhd8ed1ab_0.conda
   hash:
-    md5: 7bc92efc4ae77caab0d324c41f99b521
-    sha256: 5578174b46442513090d70ccbbb4f2ec9b0e76324ddbeea6bb0c0ec39dab9862
+    md5: bf0ab2e7a5e04c52e9a6b3e9f49576d0
+    sha256: 73781301e41d33ff6de1c38a471795df6882909343216774b087938f040f1d8f
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.14
+  version: 1.4.15
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -14211,10 +14211,10 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.14-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.15-pyhd8ed1ab_0.conda
   hash:
-    md5: 7bc92efc4ae77caab0d324c41f99b521
-    sha256: 5578174b46442513090d70ccbbb4f2ec9b0e76324ddbeea6bb0c0ec39dab9862
+    md5: bf0ab2e7a5e04c52e9a6b3e9f49576d0
+    sha256: 73781301e41d33ff6de1c38a471795df6882909343216774b087938f040f1d8f
   category: main
   optional: false
 - name: readline
@@ -16845,7 +16845,7 @@ package:
   category: main
   optional: false
 - name: virtualenv
-  version: 21.4.3
+  version: 21.5.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -16856,14 +16856,14 @@ package:
     python: ''
     python-discovery: '>=1.4.2'
     typing_extensions: '>=4.13.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/virtualenv-21.4.3-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/virtualenv-21.5.0-pyhcf101f3_0.conda
   hash:
-    md5: 84270b1d45569be1f9d2c8fe674993a4
-    sha256: 72ac3da92b6417ad9667009b881ee75e0ca06ef5850f8781df54b27bd6f8be3d
+    md5: ae6c3161f863cba63c9dbd18efd819ad
+    sha256: 7d2656432734025a1337aa0fc35b047743eafea8b54c18dda8bda0dea4c0c28d
   category: main
   optional: false
 - name: virtualenv
-  version: 21.4.3
+  version: 21.5.0
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -16874,14 +16874,14 @@ package:
     python: ''
     python-discovery: '>=1.4.2'
     typing_extensions: '>=4.13.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/virtualenv-21.4.3-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/virtualenv-21.5.0-pyhcf101f3_0.conda
   hash:
-    md5: 84270b1d45569be1f9d2c8fe674993a4
-    sha256: 72ac3da92b6417ad9667009b881ee75e0ca06ef5850f8781df54b27bd6f8be3d
+    md5: ae6c3161f863cba63c9dbd18efd819ad
+    sha256: 7d2656432734025a1337aa0fc35b047743eafea8b54c18dda8bda0dea4c0c28d
   category: main
   optional: false
 - name: virtualenv
-  version: 21.4.3
+  version: 21.5.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -16892,10 +16892,10 @@ package:
     python: ''
     python-discovery: '>=1.4.2'
     typing_extensions: '>=4.13.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/virtualenv-21.4.3-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/virtualenv-21.5.0-pyhcf101f3_0.conda
   hash:
-    md5: 84270b1d45569be1f9d2c8fe674993a4
-    sha256: 72ac3da92b6417ad9667009b881ee75e0ca06ef5850f8781df54b27bd6f8be3d
+    md5: ae6c3161f863cba63c9dbd18efd819ad
+    sha256: 7d2656432734025a1337aa0fc35b047743eafea8b54c18dda8bda0dea4c0c28d
   category: main
   optional: false
 - name: vsts-python-api
