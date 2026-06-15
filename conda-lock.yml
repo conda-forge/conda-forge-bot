@@ -3083,7 +3083,7 @@ package:
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.5.29
+  version: 2026.6.14
   manager: conda
   platform: linux-64
   dependencies:
@@ -3106,7 +3106,7 @@ package:
     pygit2: ''
     pygithub: '>=2,<3'
     python: '>=3.11'
-    rattler-build-conda-compat: '>=1.4.12,<2.0.0a0'
+    rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
     requests: ''
     ruamel.yaml: '>=0.16'
     scrypt: ''
@@ -3114,14 +3114,14 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.5.29-unix_pyh9ac5cc3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.6.14-unix_pyh9ac5cc3_0.conda
   hash:
-    md5: d50af3ccb63d3cb64b2314c61a4c4a5f
-    sha256: f0a75885e428cf075e3c54c68ac8c21c0ab1b061fc09105ceb760f7bbf0bac47
+    md5: 601876c2a338f768784306c60dbf5845
+    sha256: bd7ccc8aeea227b11512b9fbb3453543f4609c16d49bb1cf44d74860faa41930
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.5.29
+  version: 2026.6.14
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -3144,7 +3144,7 @@ package:
     pygit2: ''
     pygithub: '>=2,<3'
     python: '>=3.11'
-    rattler-build-conda-compat: '>=1.4.12,<2.0.0a0'
+    rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
     requests: ''
     ruamel.yaml: '>=0.16'
     scrypt: ''
@@ -3152,14 +3152,14 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.5.29-unix_pyh9ac5cc3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.6.14-unix_pyh9ac5cc3_0.conda
   hash:
-    md5: d50af3ccb63d3cb64b2314c61a4c4a5f
-    sha256: f0a75885e428cf075e3c54c68ac8c21c0ab1b061fc09105ceb760f7bbf0bac47
+    md5: 601876c2a338f768784306c60dbf5845
+    sha256: bd7ccc8aeea227b11512b9fbb3453543f4609c16d49bb1cf44d74860faa41930
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.5.29
+  version: 2026.6.14
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -3182,7 +3182,7 @@ package:
     pygit2: ''
     pygithub: '>=2,<3'
     python: '>=3.11'
-    rattler-build-conda-compat: '>=1.4.12,<2.0.0a0'
+    rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
     requests: ''
     ruamel.yaml: '>=0.16'
     scrypt: ''
@@ -3190,10 +3190,10 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.5.29-unix_pyh9ac5cc3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.6.14-unix_pyh9ac5cc3_0.conda
   hash:
-    md5: d50af3ccb63d3cb64b2314c61a4c4a5f
-    sha256: f0a75885e428cf075e3c54c68ac8c21c0ab1b061fc09105ceb760f7bbf0bac47
+    md5: 601876c2a338f768784306c60dbf5845
+    sha256: bd7ccc8aeea227b11512b9fbb3453543f4609c16d49bb1cf44d74860faa41930
   category: main
   optional: false
 - name: conda-souschef
@@ -17420,10 +17420,10 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=14'
     xorg-libx11: '>=1.8.13,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/xkeyboard-config-2.47-hb03c661_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/xkeyboard-config-2.47-h280c20c_1.conda
   hash:
-    md5: b56e0c8432b56decafae7e78c5f29ba5
-    sha256: 19c2bb14bec84b0e995b56b752369775c75f1589314b43733948bb5f471a6915
+    md5: bb1e548a92b0efa12c3e2385ae2d4529
+    sha256: 2bd7452f68c39bfff954385b062aca9389262369e318739af270d23af47580a5
   category: main
   optional: false
 - name: xkeyboard-config
@@ -17433,10 +17433,10 @@ package:
   dependencies:
     libgcc: '>=14'
     xorg-libx11: '>=1.8.13,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/xkeyboard-config-2.47-he30d5cf_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/xkeyboard-config-2.47-h80f16a2_1.conda
   hash:
-    md5: 4ac707a4279972357712af099cd1ae50
-    sha256: ec7ff9dffbd41faa31a30fa0724699f05bca000d57c745a195ecdb56888a8605
+    md5: 81ae02fc22dcd8d56dc197851c95e2f8
+    sha256: 70070c1bd0c8f6af2640fa6302c06c29ad5740c80e290a6b287c8a6498290207
   category: main
   optional: false
 - name: xorg-libice
