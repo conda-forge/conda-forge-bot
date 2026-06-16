@@ -5,7 +5,7 @@ azure:
     swapfile_size: 0GiB
   settings_win:
     variables:
-      SET_PAGEFILE: False
+      SET_PAGEFILE: "False"
       MINIFORGE_HOME: C:\miniforge3
       CONDA_BLD_PATH: D:\bld
 github_actions:

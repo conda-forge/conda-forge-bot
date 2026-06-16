@@ -9,7 +9,7 @@ azure:
     variables:
       MINIFORGE_HOME: D:\miniforge3
       CONDA_BLD_PATH: C:\bld
-      SET_PAGEFILE: False
+      SET_PAGEFILE: "False"
 docker:
   run_args: --cap-add SYS_ADMIN
 github_actions:

@@ -1,6 +1,6 @@
 import os
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Literal, get_args
 
 from conda_smithy.utils import get_yaml as smithy_get_yaml
 from ruamel.yaml import YAML
@@ -8,22 +8,29 @@ from ruamel.yaml import YAML
 from conda_forge_tick.migrators.core import MiniMigrator
 from conda_forge_tick.os_utils import pushd
 
-from ..migrators_types import AttrsTypedDict
+from ..migrators_types import (
+    AttrsTypedDict,
+    CondaForgeYamlAzure,
+    CondaForgeYamlContents,
+    CondaForgeYamlGitHubActions,
+    CondaForgeYamlWorkflowSetting,
+)
 
 
 class CondaForgeYAMLCleanup(MiniMigrator):
     allowed_schema_versions = {0, 1}
-    keys_to_remove = [
+    _keys_type = Literal[
         "min_r_ver",
         "max_r_ver",
         "min_py_ver",
         "max_py_ver",
         "compiler_stack",
     ]
-    keys_to_change = [
+    keys_to_remove: tuple[_keys_type] = get_args(_keys_type)
+    keys_to_change = (
         "test_on_native_only",
         "abi_migration_branches",
-    ]
+    )
 
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         """Remove recipes without a conda-forge.yml file that has the keys to remove or change."""
@@ -62,7 +69,7 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             # just like smithy does
             smithy_yaml = smithy_get_yaml(allow_duplicate_keys=True)
             with open(cfg_path) as fp:
-                cfg = smithy_yaml.load(fp.read())
+                cfg: CondaForgeYamlContents = smithy_yaml.load(fp.read())
             with open(cfg_path, "w") as fp:
                 smithy_yaml.dump(cfg, fp)
 
@@ -167,10 +174,10 @@ class CondaForgeYAMLCleanup(MiniMigrator):
 
     @staticmethod
     def _migrate_workflow_setting(
-        azure_dict: dict[str, Any],
-        gha_dict: dict[str, Any],
-        cfg: dict[str, Any],
-        name: str,
+        azure_dict: CondaForgeYamlAzure,
+        gha_dict: CondaForgeYamlGitHubActions,
+        cfg: CondaForgeYamlContents,
+        name: Literal["store_build_artifacts", "free_disk_space"],
         convert: Callable[[Any], Any] = lambda x: x,
     ) -> None:
         # Always remove old values.
@@ -210,8 +217,8 @@ class CondaForgeYAMLCleanup(MiniMigrator):
     @staticmethod
     def _migrate_pagefile_size(
         linux_swapfile_size: str | None,
-        win_set_pagefile: bool | None,
-        cfg: dict[str, Any],
+        win_set_pagefile: str | None,
+        cfg: CondaForgeYamlContents,
     ) -> None:
         # Don't migrate the old value if a new one is provided already.
         if "pagefile_size" in cfg.get("workflow_settings", {}):
@@ -219,7 +226,7 @@ class CondaForgeYAMLCleanup(MiniMigrator):
 
         # Pagefile used to be supported on Azure only, with separate
         # keys for Linux and Windows. Extend it to GHA.
-        pagefile_list = []
+        pagefile_list: list[CondaForgeYamlWorkflowSetting] = []
         # swapfile_size is "{size}GiB"
         if linux_swapfile_size is not None:
             try:
@@ -233,13 +240,18 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 pass
         # SET_PAGEFILE is True for 16 GiB
         if win_set_pagefile is not None:
-            pagefile_list.append({"os": "win", "value": 16 if win_set_pagefile else 0})
+            pagefile_list.append(
+                {"os": "win", "value": 16 if win_set_pagefile == "True" else 0}
+            )
         if pagefile_list:
             cfg.setdefault("workflow_settings", {})["pagefile_size"] = pagefile_list
 
     @staticmethod
     def _migrate_setting(
-        value: Any | None, cfg: dict[str, Any], name: str, params: dict[str, str]
+        value: Any | None,
+        cfg: CondaForgeYamlContents,
+        name: Literal["build_workspace_dir", "tools_install_dir", "resize_partitions"],
+        params: CondaForgeYamlWorkflowSetting,
     ) -> None:
         # Don't migrate the old value if a new one is provided already.
         if name in cfg.get("workflow_settings", {}):
