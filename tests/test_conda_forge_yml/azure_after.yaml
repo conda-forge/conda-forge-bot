@@ -6,3 +6,11 @@ workflow_settings:
       value: 8
     - os: win
       value: 16
+  build_workspace_dir:
+    - provider: azure
+      os: win
+      value: C:\bld
+  tools_install_dir:
+    - provider: azure
+      os: win
+      value: D:\miniforge3

@@ -6,6 +6,14 @@ workflow_settings:
       value: 0
     - os: win
       value: 0
+  build_workspace_dir:
+    - provider: azure
+      os: win
+      value: D:\bld
+  tools_install_dir:
+    - provider: azure
+      os: win
+      value: C:\miniforge3
   resize_partitions:
     - provider: github_actions
       os: win

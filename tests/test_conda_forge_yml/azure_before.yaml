@@ -6,3 +6,5 @@ azure:
   settings_win:
     variables:
       SET_PAGEFILE: True
+      MINIFORGE_HOME: D:\miniforge3
+      CONDA_BLD_PATH: C:\bld

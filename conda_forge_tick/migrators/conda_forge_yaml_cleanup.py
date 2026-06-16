@@ -102,6 +102,22 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 cfg,
             )
 
+            # Technically, these could be extended from Azure to GHA,
+            # but Azure usually has D: and GHA doesn't, so it'll
+            # probably be mismatched.
+            self._migrate_setting(
+                azure_variables_win.pop("CONDA_BLD_PATH", None),
+                cfg,
+                "build_workspace_dir",
+                {"provider": "azure", "os": "win"},
+            )
+            self._migrate_setting(
+                azure_variables_win.pop("MINIFORGE_HOME", None),
+                cfg,
+                "tools_install_dir",
+                {"provider": "azure", "os": "win"},
+            )
+
             # Settings that are valid only for specific workflows.
             self._migrate_setting(
                 gha_settings.pop("resize_win_partitions", None),
