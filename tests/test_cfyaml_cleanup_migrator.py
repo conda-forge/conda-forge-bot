@@ -86,19 +86,9 @@ def test_version_cfyaml_cleanup(cases, recipe_version, tmp_path):
     assert cf_yml["foo"] == "bar"
 
 
-@pytest.mark.parametrize(
-    "case,case_correct",
-    [
-        ("before_azure.yaml", "after_single.yaml"),
-        ("before_gha.yaml", "after_single.yaml"),
-        ("before_both_matching.yaml", "after_single.yaml"),
-        ("before_both_mismatched.yaml", "after_both.yaml"),
-    ],
-)
+@pytest.mark.parametrize("case", ["azure", "gha", "both_matching", "both_mismatched"])
 @pytest.mark.parametrize("recipe_version", [0, 1])
-def test_version_cfyaml_workflow_settings(
-    case: str, case_correct: str, recipe_version: int, tmp_path
-):
+def test_version_cfyaml_workflow_settings(case: str, recipe_version: int, tmp_path):
     in_yaml = (
         Path(YAML_PATHS[recipe_version]) / "version_cfyaml_cleanup_simple.yaml"
     ).read_text()
@@ -108,7 +98,9 @@ def test_version_cfyaml_workflow_settings(
 
     cf_yml_pth = tmp_path / "conda-forge.yml"
     cf_yml_pth.write_text(
-        (Path(__file__).parent / "test_conda_forge_yml" / case).read_text()
+        (
+            Path(__file__).parent / "test_conda_forge_yml" / f"{case}_before.yaml"
+        ).read_text()
     )
 
     run_test_migration(
@@ -128,6 +120,6 @@ def test_version_cfyaml_workflow_settings(
 
     new_cf_yml = cf_yml_pth.read_text()
     expected_cf_yml = (
-        Path(__file__).parent / "test_conda_forge_yml" / case_correct
+        Path(__file__).parent / "test_conda_forge_yml" / f"{case}_after.yaml"
     ).read_text()
     assert new_cf_yml == expected_cf_yml

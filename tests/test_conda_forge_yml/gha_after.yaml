@@ -1,0 +1,3 @@
+workflow_settings:
+  store_build_artifacts: true
+  free_disk_space: quick
