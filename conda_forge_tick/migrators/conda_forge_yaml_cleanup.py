@@ -1,4 +1,5 @@
 import os
+from collections.abc import Callable
 from typing import Any
 
 from conda_smithy.utils import get_yaml as smithy_get_yaml
@@ -83,6 +84,13 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             self._migrate_workflow_setting(
                 azure_settings, gha_settings, cfg, "store_build_artifacts"
             )
+            self._migrate_workflow_setting(
+                azure_settings,
+                gha_settings,
+                cfg,
+                "free_disk_space",
+                convert=self._convert_free_disk_space,
+            )
 
             # Remove leftover empty dicts.
             if not azure_settings:
@@ -99,10 +107,11 @@ class CondaForgeYAMLCleanup(MiniMigrator):
         gha_dict: dict[str, Any],
         cfg: dict[str, Any],
         name: str,
+        convert: Callable[[Any], Any] = lambda x: x,
     ) -> None:
         # Always remove old values.
-        azure_val = azure_dict.pop(name, None)
-        gha_val = gha_dict.pop(name, None)
+        azure_val = convert(azure_dict.pop(name, None))
+        gha_val = convert(gha_dict.pop(name, None))
 
         # Don't migrate the old value if a new one is provided already.
         if name in cfg.get("workflow_settings", {}):
@@ -123,3 +132,13 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             return
 
         cfg.setdefault("workflow_settings", {})[name] = new_value
+
+    @staticmethod
+    def _convert_free_disk_space(value: Any) -> Any:
+        # Matching the logic in conda-smithy.
+        if isinstance(value, list) and "docker" in value:
+            return "max"
+        elif value:
+            return "quick"
+        elif value is not None:
+            return "skip"

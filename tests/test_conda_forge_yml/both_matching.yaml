@@ -1,4 +1,6 @@
 azure:
   store_build_artifacts: true
+  free_disk_space: true
 github_actions:
   store_build_artifacts: true
+  free_disk_space: [apt, cache]

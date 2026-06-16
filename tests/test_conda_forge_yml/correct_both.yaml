@@ -4,3 +4,8 @@ workflow_settings:
       value: true
     - provider: github_actions
       value: false
+  free_disk_space:
+    - provider: azure
+      value: skip
+    - provider: github_actions
+      value: max
