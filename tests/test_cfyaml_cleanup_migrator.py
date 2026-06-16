@@ -89,10 +89,10 @@ def test_version_cfyaml_cleanup(cases, recipe_version, tmp_path):
 @pytest.mark.parametrize(
     "case,case_correct",
     [
-        ("azure.yaml", "correct_single.yaml"),
-        ("gha.yaml", "correct_single.yaml"),
-        ("both_matching.yaml", "correct_single.yaml"),
-        ("both_mismatched.yaml", "correct_both.yaml"),
+        ("before_azure.yaml", "after_single.yaml"),
+        ("before_gha.yaml", "after_single.yaml"),
+        ("before_both_matching.yaml", "after_single.yaml"),
+        ("before_both_mismatched.yaml", "after_both.yaml"),
     ],
 )
 @pytest.mark.parametrize("recipe_version", [0, 1])
