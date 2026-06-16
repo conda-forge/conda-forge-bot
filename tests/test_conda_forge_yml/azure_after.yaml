@@ -1,3 +1,8 @@
 workflow_settings:
   store_build_artifacts: true
   free_disk_space: quick
+  pagefile_size:
+    - os: linux
+      value: 8
+    - os: win
+      value: 16

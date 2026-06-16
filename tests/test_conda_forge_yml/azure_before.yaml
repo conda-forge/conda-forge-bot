@@ -1,3 +1,8 @@
 azure:
   store_build_artifacts: true
   free_disk_space: true
+  settings_linux:
+    swapfile_size: 8GiB
+  settings_win:
+    variables:
+      SET_PAGEFILE: True

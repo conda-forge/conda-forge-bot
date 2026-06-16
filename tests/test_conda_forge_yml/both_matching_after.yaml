@@ -1,6 +1,11 @@
 workflow_settings:
   store_build_artifacts: true
   free_disk_space: quick
+  pagefile_size:
+    - os: linux
+      value: 0
+    - os: win
+      value: 0
   resize_partitions:
     - provider: github_actions
       os: win

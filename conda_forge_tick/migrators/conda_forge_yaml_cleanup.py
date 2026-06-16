@@ -81,6 +81,10 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             # values.
             azure_settings = cfg.get("azure", {})
             gha_settings = cfg.get("github_actions", {})
+            azure_settings_linux = azure_settings.get("settings_linux", {})
+            azure_settings_win = azure_settings.get("settings_win", {})
+            azure_variables_win = azure_settings_win.get("variables", {})
+
             self._migrate_workflow_setting(
                 azure_settings, gha_settings, cfg, "store_build_artifacts"
             )
@@ -91,6 +95,30 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 "free_disk_space",
                 convert=self._convert_free_disk_space,
             )
+
+            # Pagefile used to be supported on Azure only, with separate
+            # keys for Linux and Windows. Extend it to GHA.
+            pagefile_list = []
+            # swapfile_size is "{size}GiB"
+            if (
+                pagefile_linux := azure_settings_linux.pop("swapfile_size", None)
+            ) is not None:
+                try:
+                    pagefile_list.append(
+                        {
+                            "os": "linux",
+                            "value": int(pagefile_linux.removesuffix("GiB")),
+                        }
+                    )
+                except ValueError:
+                    pass
+            # SET_PAGEFILE is True for 16 GiB
+            if (
+                pagefile_win := azure_variables_win.pop("SET_PAGEFILE", None)
+            ) is not None:
+                pagefile_list.append({"os": "win", "value": 16 if pagefile_win else 0})
+            if pagefile_list:
+                cfg.setdefault("workflow_settings", {})["pagefile_size"] = pagefile_list
 
             # Settings that are valid only for specific workflows.
             if (
@@ -105,6 +133,12 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 ]
 
             # Remove leftover empty dicts.
+            if not azure_variables_win:
+                azure_settings_win.pop("variables", None)
+            if not azure_settings_win:
+                azure_settings.pop("settings_win", None)
+            if not azure_settings_linux:
+                azure_settings.pop("settings_linux", None)
             if not azure_settings:
                 cfg.pop("azure", None)
             if not gha_settings:

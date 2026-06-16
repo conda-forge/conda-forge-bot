@@ -9,6 +9,9 @@ workflow_settings:
       value: skip
     - provider: github_actions
       value: max
+  pagefile_size:
+    - os: win
+      value: 16
   resize_partitions:
     - provider: github_actions
       os: win
