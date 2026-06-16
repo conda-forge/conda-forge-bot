@@ -30,6 +30,9 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             return True
 
         cfy = attrs.get("conda-forge.yml", {})
+        # TODO: add a proper check
+        if cfy:
+            return False
         if any(key in cfy for key in (self.keys_to_remove + self.keys_to_change)):
             return False
         else:
@@ -71,5 +74,52 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                     str(v) for v in cfg["abi_migration_branches"]
                 ]
 
+            # Since we're switching workflows automatically from Azure
+            # to GHA, let's also make individual settings
+            # provider-independent, unless we're getting conflicting
+            # values.
+            azure_settings = cfg.get("azure", {})
+            gha_settings = cfg.get("github_actions", {})
+            self._migrate_workflow_setting(
+                azure_settings, gha_settings, cfg, "store_build_artifacts"
+            )
+
+            # Remove leftover empty dicts.
+            if not azure_settings:
+                cfg.pop("azure", None)
+            if not gha_settings:
+                cfg.pop("github_actions", None)
+
             with open(cfg_path, "w") as fp:
                 yaml.dump(cfg, fp)
+
+    @staticmethod
+    def _migrate_workflow_setting(
+        azure_dict: dict[str, Any],
+        gha_dict: dict[str, Any],
+        cfg: dict[str, Any],
+        name: str,
+    ) -> None:
+        # Always remove old values.
+        azure_val = azure_dict.pop(name, None)
+        gha_val = gha_dict.pop(name, None)
+
+        # Don't migrate the old value if a new one is provided already.
+        if name in cfg.get("workflow_settings", {}):
+            return
+        if azure_val is not None:
+            # If the values are different, preserve the split.
+            if gha_val is not None and azure_val != gha_val:
+                cfg.setdefault("workflow_settings", {})[name] = [
+                    {"provider": "azure", "value": azure_val},
+                    {"provider": "github_actions", "value": gha_val},
+                ]
+                return
+            new_value = azure_val
+        elif gha_val is not None:
+            new_value = gha_val
+        else:
+            # Both values are unset, skip.
+            return
+
+        cfg.setdefault("workflow_settings", {})[name] = new_value

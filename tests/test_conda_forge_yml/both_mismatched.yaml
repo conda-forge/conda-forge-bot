@@ -1,0 +1,4 @@
+azure:
+  store_build_artifacts: true
+github_actions:
+  store_build_artifacts: false

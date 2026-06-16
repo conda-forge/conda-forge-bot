@@ -1,0 +1,2 @@
+workflow_settings:
+  store_build_artifacts: true

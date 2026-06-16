@@ -1,0 +1,6 @@
+workflow_settings:
+  store_build_artifacts:
+    - provider: azure
+      value: true
+    - provider: github_actions
+      value: false
