@@ -103,16 +103,12 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             )
 
             # Settings that are valid only for specific workflows.
-            if (
-                resize_win_partitions := gha_settings.pop("resize_win_partitions", None)
-            ) is not None:
-                cfg.setdefault("workflow_settings", {})["resize_partitions"] = [
-                    {
-                        "provider": "github_actions",
-                        "os": "win",
-                        "value": resize_win_partitions,
-                    }
-                ]
+            self._migrate_setting(
+                gha_settings.pop("resize_win_partitions", None),
+                cfg,
+                "resize_partitions",
+                {"provider": "github_actions", "os": "win"},
+            )
 
             # Remove leftover empty dicts.
             if not azure_variables_win:
@@ -200,3 +196,13 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             pagefile_list.append({"os": "win", "value": 16 if win_set_pagefile else 0})
         if pagefile_list:
             cfg.setdefault("workflow_settings", {})["pagefile_size"] = pagefile_list
+
+    @staticmethod
+    def _migrate_setting(
+        value: Any | None, cfg: dict[str, Any], name: str, params: dict[str, str]
+    ) -> None:
+        # Don't migrate the old value if a new one is provided already.
+        if name in cfg.get("workflow_settings", {}):
+            return
+        if value is not None:
+            cfg.setdefault("workflow_settings", {})[name] = [{**params, "value": value}]
