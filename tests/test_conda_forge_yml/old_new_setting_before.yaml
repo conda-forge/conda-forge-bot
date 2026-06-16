@@ -1,0 +1,20 @@
+azure:
+  store_build_artifacts: true
+  free_disk_space: true
+  settings_linux:
+    swapfile_size: 0GiB
+  settings_win:
+    variables:
+      SET_PAGEFILE: False
+github_actions:
+  store_build_artifacts: true
+  free_disk_space: [apt, cache]
+  resize_win_partitions: false
+workflow_settings:
+  store_build_artifacts: false
+  free_disk_space: skip
+  pagefile_size: 1
+  resize_partitions:
+    - os: win
+      provider: github_actions
+      value: true

@@ -86,7 +86,9 @@ def test_version_cfyaml_cleanup(cases, recipe_version, tmp_path):
     assert cf_yml["foo"] == "bar"
 
 
-@pytest.mark.parametrize("case", ["azure", "gha", "both_matching", "both_mismatched"])
+@pytest.mark.parametrize(
+    "case", ["azure", "gha", "both_matching", "both_mismatched", "old_new_setting"]
+)
 @pytest.mark.parametrize("recipe_version", [0, 1])
 def test_version_cfyaml_workflow_settings(case: str, recipe_version: int, tmp_path):
     in_yaml = (
