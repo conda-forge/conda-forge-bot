@@ -1,3 +1,4 @@
 github_actions:
   store_build_artifacts: true
   free_disk_space: [apt, cache]
+  resize_win_partitions: true

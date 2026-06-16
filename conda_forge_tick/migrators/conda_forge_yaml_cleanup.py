@@ -92,6 +92,18 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 convert=self._convert_free_disk_space,
             )
 
+            # Settings that are valid only for specific workflows.
+            if (
+                resize_win_partitions := gha_settings.pop("resize_win_partitions", None)
+            ) is not None:
+                cfg.setdefault("workflow_settings", {})["resize_partitions"] = [
+                    {
+                        "provider": "github_actions",
+                        "os": "win",
+                        "value": resize_win_partitions,
+                    }
+                ]
+
             # Remove leftover empty dicts.
             if not azure_settings:
                 cfg.pop("azure", None)

@@ -9,3 +9,7 @@ workflow_settings:
       value: skip
     - provider: github_actions
       value: max
+  resize_partitions:
+    - provider: github_actions
+      os: win
+      value: true

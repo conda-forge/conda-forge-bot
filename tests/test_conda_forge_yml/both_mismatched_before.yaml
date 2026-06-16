@@ -4,3 +4,4 @@ azure:
 github_actions:
   store_build_artifacts: false
   free_disk_space: [apt, cache, docker]
+  resize_win_partitions: true
