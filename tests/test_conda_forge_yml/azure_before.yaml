@@ -3,6 +3,8 @@ azure:
   free_disk_space: true
   settings_linux:
     swapfile_size: 8GiB
+    variables:
+      CONDA_FORGE_DOCKER_RUN_ARGS: --cap-add SYS_ADMIN
   settings_win:
     variables:
       SET_PAGEFILE: True

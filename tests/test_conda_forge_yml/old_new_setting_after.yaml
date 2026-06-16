@@ -1,3 +1,5 @@
+docker:
+  run_args: --cap-add SYS_ADMIN
 workflow_settings:
   store_build_artifacts: false
   free_disk_space: skip

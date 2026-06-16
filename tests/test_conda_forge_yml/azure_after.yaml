@@ -14,3 +14,5 @@ workflow_settings:
     - provider: azure
       os: win
       value: D:\miniforge3
+docker:
+  run_args: --cap-add SYS_ADMIN

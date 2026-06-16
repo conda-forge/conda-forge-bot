@@ -83,6 +83,7 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             gha_settings = cfg.get("github_actions", {})
             azure_settings_linux = azure_settings.get("settings_linux", {})
             azure_settings_win = azure_settings.get("settings_win", {})
+            azure_variables_linux = azure_settings_linux.get("variables", {})
             azure_variables_win = azure_settings_win.get("variables", {})
 
             self._migrate_workflow_setting(
@@ -126,9 +127,18 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 {"provider": "github_actions", "os": "win"},
             )
 
+            if (
+                docker_run_args := azure_variables_linux.pop(
+                    "CONDA_FORGE_DOCKER_RUN_ARGS", None
+                )
+            ) is not None and "run_args" not in cfg.get("docker", {}):
+                cfg.setdefault("docker", {})["run_args"] = docker_run_args
+
             # Remove leftover empty dicts.
             if not azure_variables_win:
                 azure_settings_win.pop("variables", None)
+            if not azure_variables_linux:
+                azure_settings_linux.pop("variables", None)
             if not azure_settings_win:
                 azure_settings.pop("settings_win", None)
             if not azure_settings_linux:

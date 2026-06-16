@@ -3,11 +3,15 @@ azure:
   free_disk_space: true
   settings_linux:
     swapfile_size: 0GiB
+    variables:
+      CONDA_FORGE_DOCKER_RUN_ARGS: --ignored
   settings_win:
     variables:
       MINIFORGE_HOME: D:\miniforge3
       CONDA_BLD_PATH: C:\bld
       SET_PAGEFILE: False
+docker:
+  run_args: --cap-add SYS_ADMIN
 github_actions:
   store_build_artifacts: true
   free_disk_space: [apt, cache]
