@@ -31,10 +31,24 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             return True
 
         cfy = attrs.get("conda-forge.yml", {})
-        # TODO: add a proper check
-        if cfy:
-            return False
-        if any(key in cfy for key in (self.keys_to_remove + self.keys_to_change)):
+        azure_settings = cfy.get("azure", {})
+        gha_settings = cfy.get("github_actions", {})
+        azure_settings_linux = azure_settings.get("settings_linux", {})
+        azure_settings_win = azure_settings.get("settings_win", {})
+        azure_variables_linux = azure_settings_linux.get("variables", {})
+        azure_variables_win = azure_settings_win.get("variables", {})
+        if (
+            any(key in cfy for key in (self.keys_to_remove + self.keys_to_change))
+            or (set(azure_settings) | set(gha_settings)).intersection(
+                ("store_build_artifacts", "free_disk_space")
+            )
+            or "resize_win_partitions" in gha_settings
+            or "swapfile_size" in azure_settings_linux
+            or "CONDA_FORGE_DOCKER_RUN_ARGS" in azure_variables_linux
+            or set(azure_variables_win).intersection(
+                ("CONDA_BLD_PATH", "MINIFORGE_HOME", "SET_PAGEFILE")
+            )
+        ):
             return False
         else:
             return True

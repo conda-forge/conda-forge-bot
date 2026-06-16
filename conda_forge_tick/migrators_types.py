@@ -124,8 +124,32 @@ class PRedElementTypedDict(TypedDict, total=False):
     PR: PR_TD
 
 
+class CondaForgeYamlSettingsLinux(TypedDict, total=False):
+    swapfile_size: str
+    variables: dict[str, str]
+
+
+class CondaForgeYamlSettingsWin(TypedDict, total=False):
+    variables: dict[str, str]
+
+
+class CondaForgeYamlAzure(TypedDict, total=False):
+    store_build_artifacts: bool
+    free_disk_space: bool | list[str]
+    settings_linux: CondaForgeYamlSettingsLinux
+    settings_win: CondaForgeYamlSettingsWin
+
+
+class CondaForgeYamlGitHubActions(TypedDict, total=False):
+    store_build_artifacts: bool
+    free_disk_space: bool | list[str]
+    resize_win_partitions: bool
+
+
 class CondaForgeYamlContents(TypedDict, total=False):
+    azure: CondaForgeYamlAzure
     bot: dict[str, typing.Any]
+    github_actions: CondaForgeYamlGitHubActions
     provider: dict[str, str]
     build_platform: dict[str, str]
 
