@@ -68,7 +68,7 @@ build_platform:
   win_arm64: win_64
 provider:
 {expected_providers}\
-  linux_aarch64: {provider or "default"}
+  linux_aarch64: default
 """
     )
 

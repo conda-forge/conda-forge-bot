@@ -67,9 +67,8 @@ class CrossToNativeMigrator(Migrator):
             if not self._migrate_platform(platform, cfyaml):
                 continue
 
-            build_platform = cfyaml["build_platform"].pop(platform)
-            provider = cfyaml.setdefault("provider", {}).get(build_platform, "default")
-            cfyaml["provider"][platform] = provider
+            del cfyaml["build_platform"][platform]
+            cfyaml.setdefault("provider", {})[platform] = "default"
 
         with open(cfyaml_path, "w") as fp:
             yaml_safe_dump(cfyaml, fp)
