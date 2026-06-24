@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import networkx as nx
 import pytest
@@ -83,3 +84,44 @@ def test_version_cfyaml_cleanup(cases, recipe_version, tmp_path):
     assert "max_py_ver" not in new_cf_yml
     assert "compiler_stack" not in new_cf_yml
     assert cf_yml["foo"] == "bar"
+
+
+@pytest.mark.parametrize(
+    "case", ["azure", "gha", "both_matching", "both_mismatched", "old_new_setting"]
+)
+@pytest.mark.parametrize("recipe_version", [0, 1])
+def test_version_cfyaml_workflow_settings(case: str, recipe_version: int, tmp_path):
+    in_yaml = (
+        Path(YAML_PATHS[recipe_version]) / "version_cfyaml_cleanup_simple.yaml"
+    ).read_text()
+    out_yaml = (
+        Path(YAML_PATHS[recipe_version]) / "version_cfyaml_cleanup_simple_correct.yaml"
+    ).read_text()
+
+    cf_yml_pth = tmp_path / "conda-forge.yml"
+    cf_yml_pth.write_text(
+        (
+            Path(__file__).parent / "test_conda_forge_yml" / f"{case}_before.yaml"
+        ).read_text()
+    )
+
+    run_test_migration(
+        m=VERSION_CF,
+        inp=in_yaml,
+        output=out_yaml,
+        kwargs={"new_version": "0.9"},
+        prb="Dependencies have been updated if changed",
+        mr_out={
+            "migrator_name": Version.name,
+            "migrator_version": Version.migrator_version,
+            "version": "0.9",
+        },
+        tmp_path=tmp_path,
+        recipe_version=recipe_version,
+    )
+
+    new_cf_yml = cf_yml_pth.read_text()
+    expected_cf_yml = (
+        Path(__file__).parent / "test_conda_forge_yml" / f"{case}_after.yaml"
+    ).read_text()
+    assert new_cf_yml == expected_cf_yml
