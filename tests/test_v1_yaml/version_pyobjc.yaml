@@ -1,0 +1,70 @@
+schema_version: 1
+
+context:
+  name: pyobjc-framework-Quartz
+  version: "12.2"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://files.pythonhosted.org/packages/source/${{ name[0] }}/${{ name }}/pyobjc_framework_quartz-${{ version }}.tar.gz
+  sha256: b343395d4790323b0376fe20c83ac468510ba19f65429323ca211708c939d107
+
+build:
+  number: 0
+  script:
+    # force pyobjc to use conda-forge's chosen SDK
+    - export CFLAGS="${CFLAGS} -isysroot ${SDKROOT:-$CONDA_BUILD_SYSROOT}"
+    # force ignoring invalid compiler flag (-Wl,-export-dynamic)
+    - export CFLAGS="${CFLAGS} -Wno-unused-command-line-argument"
+    - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: (not osx) or match(python, ">=2,<3") or python_impl == 'pypy' or (arm64 and match(python, "<3.9"))
+
+requirements:
+  build:
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+  host:
+    - pip
+    - python
+    - setuptools
+    - wheel
+  run:
+    - python
+    - pyobjc-core >=${{ version }}
+    - pyobjc-framework-cocoa >=${{ version }}
+
+tests:
+  - python:
+      pip_check: true
+      imports:
+        - Quartz
+        - Quartz.CoreGraphics
+        - Quartz.CoreVideo
+        - Quartz.ImageIO
+        - Quartz.ImageKit
+        - Quartz.PDFKit
+        - Quartz.QuartzComposer
+        - Quartz.QuartzCore
+        - Quartz.QuartzFilters
+        - Quartz.QuickLookUI
+
+about:
+  license: MIT
+  license_file: LICENSE.txt
+  summary: Wrappers for the Quartz frameworks on Mac OS X
+  homepage: https://github.com/ronaldoussoren/pyobjc
+  repository: https://github.com/ronaldoussoren/pyobjc/tree/master/pyobjc-framework-Quartz
+  documentation: https://pyobjc.readthedocs.io/en/latest/
+
+extra:
+  recipe-maintainers:
+    - jschueller
+    - hhslepicka
+    - thewchan

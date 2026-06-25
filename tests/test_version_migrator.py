@@ -136,6 +136,13 @@ def test_version_up(case, new_ver, tmp_path, caplog):
         ),
         ("polars", "1.20.0"),
         ("svcore", "0.2025.40"),
+        pytest.param(
+            "pyobjc",
+            "12.2.1",
+            marks=pytest.mark.xfail(
+                reason="https://github.com/conda-forge/conda-forge-bot/issues/6272"
+            ),
+        ),
     ],
 )
 def test_version_up_v1(case, new_ver, tmp_path, caplog):
