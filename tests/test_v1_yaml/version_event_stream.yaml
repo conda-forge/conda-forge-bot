@@ -15,7 +15,6 @@ source:
 build:
   script: ${{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv
   number: 2
-  skip: win
 
 requirements:
   build:
