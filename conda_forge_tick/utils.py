@@ -517,9 +517,7 @@ def _render_recipe_yaml(
                 [] if cbc_path is None else ["--variant-config", str(cbc_path)]
             )
         target_platform_flags = (
-            []
-            if platform_arch is None or variant_config_flags
-            else ["--target-platform", platform_arch]
+            [] if platform_arch is None else ["--target-platform", platform_arch]
         )
 
         stubbed_text = replace_compiler_with_stub(text)
