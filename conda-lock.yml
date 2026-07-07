@@ -1105,7 +1105,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.40
+  version: 1.43.41
   manager: conda
   platform: linux-64
   dependencies:
@@ -1113,14 +1113,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.40-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.41-pyhd8ed1ab_0.conda
   hash:
-    md5: 0f6faf9aff93a887e1a7ca3d1a3fae50
-    sha256: 6a07f4ab2e84436b8f2dcf8e9138efe0d8db3472251088762cd8b60e979b3668
+    md5: 8fc5b4716960138a40f041bbc973de54
+    sha256: b112780786c0e538b902d8823d59217e05afad916dde733ad4d407a7693a73f4
   category: main
   optional: false
 - name: botocore
-  version: 1.43.40
+  version: 1.43.41
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -1128,14 +1128,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.40-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.41-pyhd8ed1ab_0.conda
   hash:
-    md5: 0f6faf9aff93a887e1a7ca3d1a3fae50
-    sha256: 6a07f4ab2e84436b8f2dcf8e9138efe0d8db3472251088762cd8b60e979b3668
+    md5: 8fc5b4716960138a40f041bbc973de54
+    sha256: b112780786c0e538b902d8823d59217e05afad916dde733ad4d407a7693a73f4
   category: main
   optional: false
 - name: botocore
-  version: 1.43.40
+  version: 1.43.41
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -1143,10 +1143,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.40-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.41-pyhd8ed1ab_0.conda
   hash:
-    md5: 0f6faf9aff93a887e1a7ca3d1a3fae50
-    sha256: 6a07f4ab2e84436b8f2dcf8e9138efe0d8db3472251088762cd8b60e979b3668
+    md5: 8fc5b4716960138a40f041bbc973de54
+    sha256: b112780786c0e538b902d8823d59217e05afad916dde733ad4d407a7693a73f4
   category: main
   optional: false
 - name: brotli-python
@@ -16139,42 +16139,42 @@ package:
   category: main
   optional: false
 - name: tqdm
-  version: 4.68.3
+  version: 4.68.4
   manager: conda
   platform: linux-64
   dependencies:
     __unix: ''
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.68.3-pyh8f84b5b_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.68.4-pyh8f84b5b_0.conda
   hash:
-    md5: 65094960cb7ed216b6049aab57205902
-    sha256: 613d5cc47571c0b66e31265ff1e0fa5bef0e7b7670f33c67f5a2c587faf6e5d1
+    md5: 54772f97dc361b1659ef0b34d71d39b4
+    sha256: 1964320e89c00a531705449187f4b8ed85f935c73f13ba55de3a6b35b05443fa
   category: main
   optional: false
 - name: tqdm
-  version: 4.68.3
+  version: 4.68.4
   manager: conda
   platform: linux-aarch64
   dependencies:
     __unix: ''
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.68.3-pyh8f84b5b_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.68.4-pyh8f84b5b_0.conda
   hash:
-    md5: 65094960cb7ed216b6049aab57205902
-    sha256: 613d5cc47571c0b66e31265ff1e0fa5bef0e7b7670f33c67f5a2c587faf6e5d1
+    md5: 54772f97dc361b1659ef0b34d71d39b4
+    sha256: 1964320e89c00a531705449187f4b8ed85f935c73f13ba55de3a6b35b05443fa
   category: main
   optional: false
 - name: tqdm
-  version: 4.68.3
+  version: 4.68.4
   manager: conda
   platform: osx-arm64
   dependencies:
     __unix: ''
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.68.3-pyh8f84b5b_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.68.4-pyh8f84b5b_0.conda
   hash:
-    md5: 65094960cb7ed216b6049aab57205902
-    sha256: 613d5cc47571c0b66e31265ff1e0fa5bef0e7b7670f33c67f5a2c587faf6e5d1
+    md5: 54772f97dc361b1659ef0b34d71d39b4
+    sha256: 1964320e89c00a531705449187f4b8ed85f935c73f13ba55de3a6b35b05443fa
   category: main
   optional: false
 - name: trove-classifiers
