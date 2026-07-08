@@ -44,12 +44,12 @@ from conda_forge_tick.update_sources import url_exists
             False,
         ),
         pytest.param(
-            "ftp://ftp.info-zip.org/pub/infozip/src/zip30.tgz",
+            "ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.18.tar.gz",
             True,
             marks=pytest.mark.xfail(reason="sometimes this fails"),
         ),
         pytest.param(
-            "ftp://ftp.info-zip.org/pub/infozip/src/zip33879130.tgz",
+            "ftp://ftp.gnu.org/gnu/gdbm/gdbm-156874345879.tar.gz",
             False,
             marks=pytest.mark.xfail(reason="sometimes this fails"),
         ),
