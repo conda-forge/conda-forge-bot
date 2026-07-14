@@ -3183,7 +3183,7 @@ package:
   category: main
   optional: false
 - name: coverage
-  version: 7.15.0
+  version: 7.15.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -3192,14 +3192,14 @@ package:
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     tomli: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/coverage-7.15.0-py312h8a5da7c_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/coverage-7.15.1-py312h8a5da7c_0.conda
   hash:
-    md5: 81c362e153956e8b0ab533387443ba27
-    sha256: 260364f80ef8c0fbbc244330ac29f863c3c76ff27551a3cd87a45af39a3628aa
+    md5: b052b858ea88cdeb5eb5e1697f025bdf
+    sha256: 679473d9c239b969cb234c3db27ce614a23bf4c117900e5290a095eb1f8d674f
   category: main
   optional: false
 - name: coverage
-  version: 7.15.0
+  version: 7.15.1
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -3207,14 +3207,14 @@ package:
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     tomli: ''
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/coverage-7.15.0-py312hd077ced_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/coverage-7.15.1-py312hd077ced_0.conda
   hash:
-    md5: 872445d47afa6245bb40f781d6e099ca
-    sha256: 60d2e746091877a17664134097bc36fd6b4b12da78c3c921541a8781d5448a16
+    md5: c82da5ccf2f06a1031532caa853fa3f5
+    sha256: 760e3fde4040dabaf450312f1dbe7ee994ba2fcad6870ce0a821436076e3ab8e
   category: main
   optional: false
 - name: coverage
-  version: 7.15.0
+  version: 7.15.1
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -3222,10 +3222,10 @@ package:
     python: '>=3.12,<3.13.0a0,>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     tomli: ''
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/coverage-7.15.0-py312h04c11ed_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/coverage-7.15.1-py312h04c11ed_0.conda
   hash:
-    md5: 1dcd05450d7f06a03b61039278b272b0
-    sha256: e72becd27ad38a0ff15dbf4851ec89df0ddc8d2fb674ca43a6b45abf76f7d261
+    md5: 814faeb49ad88dec7a2623a03a906827
+    sha256: ad4830141190c28f1ec63d466ec0f272fe807a804808edd7234e23760ccb3597
   category: main
   optional: false
 - name: cpp-expected
@@ -5147,7 +5147,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    __glibc: '>=2.28,<3.0.a0'
+    __glibc: '>=2.17,<3.0.a0'
     libcurl: '>=8.21.0,<9.0a0'
     libexpat: '>=2.8.1,<3.0a0'
     libgcc: '>=14'
@@ -5156,10 +5156,10 @@ package:
     openssl: '>=3.5.7,<4.0a0'
     pcre2: '>=10.47,<10.48.0a0'
     perl: 5.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.55.0-pl5321hc575239_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.55.0-pl5321h5685339_1.conda
   hash:
-    md5: f7302ea5f77189667c1035a8824179ca
-    sha256: 0b6a49c481ea5556e2f260cc376ecb9a8e9e7bcf4a2cf370a571b5c61e9dd898
+    md5: da325124b01b7b88e7374d160d02698b
+    sha256: ffe825e3ff78876dc5aa28eee791d8d9be4a47157761aa38dbff79e9222b3b8e
   category: main
   optional: false
 - name: git
@@ -5167,7 +5167,6 @@ package:
   manager: conda
   platform: linux-aarch64
   dependencies:
-    __glibc: '>=2.28,<3.0.a0'
     libcurl: '>=8.21.0,<9.0a0'
     libexpat: '>=2.8.1,<3.0a0'
     libgcc: '>=14'
@@ -5176,10 +5175,10 @@ package:
     openssl: '>=3.5.7,<4.0a0'
     pcre2: '>=10.47,<10.48.0a0'
     perl: 5.*
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/git-2.55.0-pl5321hfc83acc_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/git-2.55.0-pl5321h06f7e71_1.conda
   hash:
-    md5: 198230ef642951979039d219aa86ea75
-    sha256: 9764cef56e590f7c4caf2abd80653d5d0b16b3b1b75e38b3e5373753cacbd309
+    md5: cdbc79af349a0df66596b1f91534e476
+    sha256: 02615f600a0d4242dcedcb7ebd8f1faa02f7136551cc3e804fc879a015237644
   category: main
   optional: false
 - name: git
@@ -5196,10 +5195,10 @@ package:
     openssl: '>=3.5.7,<4.0a0'
     pcre2: '>=10.47,<10.48.0a0'
     perl: 5.*
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/git-2.55.0-pl5321h545aa0d_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/git-2.55.0-pl5321h545aa0d_1.conda
   hash:
-    md5: 3236a9c410e02de993ca4c52f4c9e995
-    sha256: 6bd316474d328f85b27f30cf9713de8febd47bc9339da9f5e12669586117aea8
+    md5: d041b375de31a576c37b8c52044c94b7
+    sha256: 4bb0bfe6b0fcb2830689e2b6b99090b458ad791b6adca570e5d3a322eb912cbc
   category: main
   optional: false
 - name: gitdb
@@ -10726,7 +10725,7 @@ package:
   category: main
   optional: false
 - name: mypy
-  version: 2.2.0
+  version: 2.3.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -10737,17 +10736,17 @@ package:
     pathspec: '>=1.0.0'
     psutil: '>=4.0'
     python: ''
-    python-librt: '>=0.12.0'
+    python-librt: '>=0.13.0'
     python_abi: 3.12.*
     typing_extensions: '>=4.6.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/mypy-2.2.0-py312h574c966_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/mypy-2.3.0-py312h574c966_0.conda
   hash:
-    md5: 94e8601ebd10d5119a17108c570a6bac
-    sha256: cd7e588b6272313fdb2c7ac8615ddbe8c99991babf87bcc678171fce8a2f3dec
+    md5: 67cff6752e05f627ca1891ccc0788760
+    sha256: 269f40944e42d84edc2cc488ea1890e129c084c12fd777c62502f7d26e887e74
   category: main
   optional: false
 - name: mypy
-  version: 2.2.0
+  version: 2.3.0
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -10757,17 +10756,17 @@ package:
     pathspec: '>=1.0.0'
     psutil: '>=4.0'
     python: ''
-    python-librt: '>=0.12.0'
+    python-librt: '>=0.13.0'
     python_abi: 3.12.*
     typing_extensions: '>=4.6.0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/mypy-2.2.0-py312he3571bd_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/mypy-2.3.0-py312he3571bd_0.conda
   hash:
-    md5: d632a473fc7685fb1226c098c8f15ea5
-    sha256: 853ce3170c3b061aa725d5f69781f66293dca26fa8a93b42d532fe07580507a2
+    md5: 57dfda284b36428adab26f96e45c7774
+    sha256: a524006c4dc719cb3ea3b8cfc9e55f75b5605c06511eff9354f3c0e27c951f65
   category: main
   optional: false
 - name: mypy
-  version: 2.2.0
+  version: 2.3.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -10777,13 +10776,13 @@ package:
     pathspec: '>=1.0.0'
     psutil: '>=4.0'
     python: ''
-    python-librt: '>=0.12.0'
+    python-librt: '>=0.13.0'
     python_abi: 3.12.*
     typing_extensions: '>=4.6.0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/mypy-2.2.0-py312h939899b_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/mypy-2.3.0-py312h939899b_0.conda
   hash:
-    md5: 5a68e336241e5626e51c540159e9f685
-    sha256: 5de65fbe4fdee08f3bd588150c997fc479924b3974473f3fbd3dac48942bb6b5
+    md5: 1abd3081c61490edf210561db8644fc8
+    sha256: 8107086cbde813919e0e57b58c1b467cead7bd7282d1f166f43ede22e32e9eea
   category: main
   optional: false
 - name: mypy_extensions
