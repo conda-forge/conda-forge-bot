@@ -74,7 +74,7 @@ from conda_forge_tick.migrators import (
     YAMLRoundTrip,
     make_from_lazy_json_data,
 )
-from conda_forge_tick.migrators.arch import OSXArm, WinArm64
+from conda_forge_tick.migrators.arch import LinuxRISCV64, OSXArm, WinArm64
 from conda_forge_tick.migrators.migration_yaml import MigrationYamlCreator
 from conda_forge_tick.migrators_types import BuildRunExportsDict, PackageName
 from conda_forge_tick.os_utils import pushd
@@ -282,6 +282,25 @@ def add_arch_migrate(migrators: MutableSequence[Migrator], gx: nx.DiGraph) -> No
                     UpdateCMakeArgsWinMigrator(),
                     GuardTestingWinMigrator(),
                     CrossRBaseWinMigrator(),
+                    CrossPythonMigrator(),
+                    NoCondaInspectMigrator(),
+                    MPIPinRunAsBuildCleanup(),
+                    CombineV1ConditionsMigrator(),
+                ],
+            ),
+        )
+
+    with fold_log_lines("making linux-riscv64 migrator"):
+        migrators.append(
+            LinuxRISCV64(
+                total_graph=gx,
+                pr_limit=PR_LIMIT,
+                piggy_back_migrations=[
+                    UpdateConfigSubGuessMigrator(),
+                    CondaForgeYAMLCleanup(),
+                    UpdateCMakeArgsMigrator(),
+                    GuardTestingMigrator(),
+                    CrossRBaseMigrator(),
                     CrossPythonMigrator(),
                     NoCondaInspectMigrator(),
                     MPIPinRunAsBuildCleanup(),
