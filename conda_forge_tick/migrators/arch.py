@@ -239,12 +239,14 @@ class _CrossCompileRebuild(GraphMigrator):
 
     ignored_packages: set[str] = set()
     excluded_dependencies: set[str] = set()
-    arches: dict = {}
+    build_platform: dict[str, str] = {}
+    arches: dict[str, str] = {}
 
     @property
     def additional_keys(self):
         return {
-            "build_platform": self.build_platform,  # type: ignore[attr-defined]
+            "build_platform": self.build_platform,
+            "provider": self.arches,
             "test": "native_and_emulated",
         }
 
@@ -339,7 +341,7 @@ class _CrossCompileRebuild(GraphMigrator):
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         if super().filter(attrs):
             return True
-        for arch in self.arches:
+        for arch in self.build_platform:
             configured_arch = (
                 attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
             ) or (
@@ -393,10 +395,10 @@ class OSXArm(_CrossCompileRebuild):
     """A Migrator that adds osx-arm64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
-    migrator_version = 1
-    build_platform = {"osx_arm64": "osx_64"}
+    migrator_version = 2
+    build_platform = {"osx_arm64": "osx_arm64"}
     pkg_list_filename = "osx_arm64.txt"
-    arches = {"osx_arm64": "osx_64"}
+    arches = {"osx_arm64": "default"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "arm osx addition")
