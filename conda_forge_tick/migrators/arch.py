@@ -434,10 +434,10 @@ class WinArm64(_CrossCompileRebuild):
     """A Migrator that adds win-arm64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
-    migrator_version = 1
-    build_platform = {"win_arm64": "win_64"}
+    migrator_version = 2
+    build_platform = {"win_arm64": "win_arm64"}
     pkg_list_filename = "win_arm64.txt"
-    arches = {"win_arm64": "win_64"}
+    arches = {"win_arm64": "default"}
     excluded_dependencies = {"r-languageserver"}
 
     def __init__(self, *args, **kwargs):
