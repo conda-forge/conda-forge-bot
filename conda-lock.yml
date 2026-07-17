@@ -4297,13 +4297,13 @@ package:
   category: main
   optional: false
 - name: fastapi
-  version: 0.139.0
+  version: 0.139.2
   manager: conda
   platform: linux-64
   dependencies:
     email_validator: ''
     fastapi-cli: ''
-    fastapi-core: ==0.139.0
+    fastapi-core: ==0.139.2
     fastar: ''
     httpx: ''
     jinja2: ''
@@ -4311,20 +4311,20 @@ package:
     pydantic-settings: ''
     python-multipart: ''
     uvicorn-standard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.139.0-hedad5b1_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.139.2-h910e1b0_0.conda
   hash:
-    md5: ac9495d5ac7d1819abe469ce568bb9ff
-    sha256: 385787cc0310920f7d36d399a9fd4685970b1a6447a4863fe49b4107f2a6dee8
+    md5: b8d424997a76ae2992b48e460cdb8de1
+    sha256: 4226bd615aa1dee9c632c1d943a34bf8aebddd539d21346dc70410ac9379669b
   category: main
   optional: false
 - name: fastapi
-  version: 0.139.0
+  version: 0.139.2
   manager: conda
   platform: linux-aarch64
   dependencies:
     email_validator: ''
     fastapi-cli: ''
-    fastapi-core: ==0.139.0
+    fastapi-core: ==0.139.2
     fastar: ''
     httpx: ''
     jinja2: ''
@@ -4332,20 +4332,20 @@ package:
     pydantic-settings: ''
     python-multipart: ''
     uvicorn-standard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.139.0-hedad5b1_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.139.2-h910e1b0_0.conda
   hash:
-    md5: ac9495d5ac7d1819abe469ce568bb9ff
-    sha256: 385787cc0310920f7d36d399a9fd4685970b1a6447a4863fe49b4107f2a6dee8
+    md5: b8d424997a76ae2992b48e460cdb8de1
+    sha256: 4226bd615aa1dee9c632c1d943a34bf8aebddd539d21346dc70410ac9379669b
   category: main
   optional: false
 - name: fastapi
-  version: 0.139.0
+  version: 0.139.2
   manager: conda
   platform: osx-arm64
   dependencies:
     email_validator: ''
     fastapi-cli: ''
-    fastapi-core: ==0.139.0
+    fastapi-core: ==0.139.2
     fastar: ''
     httpx: ''
     jinja2: ''
@@ -4353,10 +4353,10 @@ package:
     pydantic-settings: ''
     python-multipart: ''
     uvicorn-standard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.139.0-hedad5b1_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.139.2-h910e1b0_0.conda
   hash:
-    md5: ac9495d5ac7d1819abe469ce568bb9ff
-    sha256: 385787cc0310920f7d36d399a9fd4685970b1a6447a4863fe49b4107f2a6dee8
+    md5: b8d424997a76ae2992b48e460cdb8de1
+    sha256: 4226bd615aa1dee9c632c1d943a34bf8aebddd539d21346dc70410ac9379669b
   category: main
   optional: false
 - name: fastapi-cli
@@ -4408,7 +4408,7 @@ package:
   category: main
   optional: false
 - name: fastapi-core
-  version: 0.139.0
+  version: 0.139.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -4418,14 +4418,14 @@ package:
     starlette: '>=0.46.0'
     typing-inspection: '>=0.4.2'
     typing_extensions: '>=4.8.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.139.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.139.2-pyhcf101f3_0.conda
   hash:
-    md5: 62afa338b0a242254d5086cdd9d58939
-    sha256: f1391cd1fb68263952b18be78406d115b0626a726ee40889ae46c2e4c4f3127a
+    md5: 6754f96f008fd7b28997ecdcad5b4d88
+    sha256: bb24d8ece7ec8a842b9879006c86a58852c12d7f1f3ae11ca70616a1062fff47
   category: main
   optional: false
 - name: fastapi-core
-  version: 0.139.0
+  version: 0.139.2
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -4435,14 +4435,14 @@ package:
     starlette: '>=0.46.0'
     typing-inspection: '>=0.4.2'
     typing_extensions: '>=4.8.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.139.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.139.2-pyhcf101f3_0.conda
   hash:
-    md5: 62afa338b0a242254d5086cdd9d58939
-    sha256: f1391cd1fb68263952b18be78406d115b0626a726ee40889ae46c2e4c4f3127a
+    md5: 6754f96f008fd7b28997ecdcad5b4d88
+    sha256: bb24d8ece7ec8a842b9879006c86a58852c12d7f1f3ae11ca70616a1062fff47
   category: main
   optional: false
 - name: fastapi-core
-  version: 0.139.0
+  version: 0.139.2
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -4452,10 +4452,10 @@ package:
     starlette: '>=0.46.0'
     typing-inspection: '>=0.4.2'
     typing_extensions: '>=4.8.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.139.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.139.2-pyhcf101f3_0.conda
   hash:
-    md5: 62afa338b0a242254d5086cdd9d58939
-    sha256: f1391cd1fb68263952b18be78406d115b0626a726ee40889ae46c2e4c4f3127a
+    md5: 6754f96f008fd7b28997ecdcad5b4d88
+    sha256: bb24d8ece7ec8a842b9879006c86a58852c12d7f1f3ae11ca70616a1062fff47
   category: main
   optional: false
 - name: fastar
