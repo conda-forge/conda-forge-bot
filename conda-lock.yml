@@ -1105,7 +1105,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.51
+  version: 1.43.52
   manager: conda
   platform: linux-64
   dependencies:
@@ -1113,14 +1113,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.51-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.52-pyhd8ed1ab_0.conda
   hash:
-    md5: 2a1e86f8f6a84a61bea1d418a018308f
-    sha256: d6ac50782bba6f067a9c3d0da9aebb3ecfce2579ede4826e0f8f90ded5641c6b
+    md5: 80d1badbbf37e83a6b8262011f07c045
+    sha256: aa51970a8c41df247dad31834644cc7c8aa35c63e36c95a37ade386add073228
   category: main
   optional: false
 - name: botocore
-  version: 1.43.51
+  version: 1.43.52
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -1128,14 +1128,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.51-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.52-pyhd8ed1ab_0.conda
   hash:
-    md5: 2a1e86f8f6a84a61bea1d418a018308f
-    sha256: d6ac50782bba6f067a9c3d0da9aebb3ecfce2579ede4826e0f8f90ded5641c6b
+    md5: 80d1badbbf37e83a6b8262011f07c045
+    sha256: aa51970a8c41df247dad31834644cc7c8aa35c63e36c95a37ade386add073228
   category: main
   optional: false
 - name: botocore
-  version: 1.43.51
+  version: 1.43.52
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -1143,10 +1143,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.51-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.52-pyhd8ed1ab_0.conda
   hash:
-    md5: 2a1e86f8f6a84a61bea1d418a018308f
-    sha256: d6ac50782bba6f067a9c3d0da9aebb3ecfce2579ede4826e0f8f90ded5641c6b
+    md5: 80d1badbbf37e83a6b8262011f07c045
+    sha256: aa51970a8c41df247dad31834644cc7c8aa35c63e36c95a37ade386add073228
   category: main
   optional: false
 - name: brotli-python
@@ -15213,7 +15213,7 @@ package:
   category: main
   optional: false
 - name: setuptools-scm
-  version: 10.2.0
+  version: 10.2.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -15223,14 +15223,14 @@ package:
     tomli: '>=1'
     typing_extensions: ''
     vcs_versioning: '>=2.0.0.dev0'
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.2.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.2.1-pyhcf101f3_0.conda
   hash:
-    md5: 224418e442ea786882979fbd2b36061f
-    sha256: 8272686bacba85b683bf4ad1fedde16203b7610276074e22593a275b0ce3c017
+    md5: eefa3bc61c9224107d3a9afeb37552a9
+    sha256: 8eb9daf6fc70111abf73f848c6d32d2769aa1fba550f793b865076fd4e33fb3a
   category: main
   optional: false
 - name: setuptools-scm
-  version: 10.2.0
+  version: 10.2.1
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -15240,14 +15240,14 @@ package:
     tomli: '>=1'
     typing_extensions: ''
     vcs_versioning: '>=2.0.0.dev0'
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.2.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.2.1-pyhcf101f3_0.conda
   hash:
-    md5: 224418e442ea786882979fbd2b36061f
-    sha256: 8272686bacba85b683bf4ad1fedde16203b7610276074e22593a275b0ce3c017
+    md5: eefa3bc61c9224107d3a9afeb37552a9
+    sha256: 8eb9daf6fc70111abf73f848c6d32d2769aa1fba550f793b865076fd4e33fb3a
   category: main
   optional: false
 - name: setuptools-scm
-  version: 10.2.0
+  version: 10.2.1
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -15257,46 +15257,46 @@ package:
     tomli: '>=1'
     typing_extensions: ''
     vcs_versioning: '>=2.0.0.dev0'
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.2.0-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.2.1-pyhcf101f3_0.conda
   hash:
-    md5: 224418e442ea786882979fbd2b36061f
-    sha256: 8272686bacba85b683bf4ad1fedde16203b7610276074e22593a275b0ce3c017
+    md5: eefa3bc61c9224107d3a9afeb37552a9
+    sha256: 8eb9daf6fc70111abf73f848c6d32d2769aa1fba550f793b865076fd4e33fb3a
   category: main
   optional: false
 - name: setuptools_scm
-  version: 10.2.0
+  version: 10.2.1
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: ==10.2.0
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.2.0-he0c3440_0.conda
+    setuptools-scm: ==10.2.1
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.2.1-hea71cf2_0.conda
   hash:
-    md5: cc27f4be260e32227b41d00e87d16b32
-    sha256: da16cd83d7bb21dc9cedab0cb140dfe1e2d3e5cfac0ba3996539e8f67f08dfda
+    md5: 3dab6a6584747027738b1425381b25e6
+    sha256: 455767721a5a0a28bcb574ddc3b9c0b42989839db1652e4bfa7bfaccca2c88de
   category: main
   optional: false
 - name: setuptools_scm
-  version: 10.2.0
+  version: 10.2.1
   manager: conda
   platform: linux-aarch64
   dependencies:
-    setuptools-scm: ==10.2.0
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.2.0-he0c3440_0.conda
+    setuptools-scm: ==10.2.1
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.2.1-hea71cf2_0.conda
   hash:
-    md5: cc27f4be260e32227b41d00e87d16b32
-    sha256: da16cd83d7bb21dc9cedab0cb140dfe1e2d3e5cfac0ba3996539e8f67f08dfda
+    md5: 3dab6a6584747027738b1425381b25e6
+    sha256: 455767721a5a0a28bcb574ddc3b9c0b42989839db1652e4bfa7bfaccca2c88de
   category: main
   optional: false
 - name: setuptools_scm
-  version: 10.2.0
+  version: 10.2.1
   manager: conda
   platform: osx-arm64
   dependencies:
-    setuptools-scm: ==10.2.0
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.2.0-he0c3440_0.conda
+    setuptools-scm: ==10.2.1
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.2.1-hea71cf2_0.conda
   hash:
-    md5: cc27f4be260e32227b41d00e87d16b32
-    sha256: da16cd83d7bb21dc9cedab0cb140dfe1e2d3e5cfac0ba3996539e8f67f08dfda
+    md5: 3dab6a6584747027738b1425381b25e6
+    sha256: 455767721a5a0a28bcb574ddc3b9c0b42989839db1652e4bfa7bfaccca2c88de
   category: main
   optional: false
 - name: sgmllib3k
