@@ -1105,7 +1105,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.53
+  version: 1.43.54
   manager: conda
   platform: linux-64
   dependencies:
@@ -1113,14 +1113,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.53-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.54-pyhd8ed1ab_0.conda
   hash:
-    md5: cdfac606ea0e83507790bcc7ca3e4af5
-    sha256: 450477ca800ec413ec1dca528fe2f2f3a50bca7632836203e4283129a895b965
+    md5: 45b6331f2b96828b2ca7fa5b71a12a04
+    sha256: bf8c12fea0cc2aa2f40fd55e84be6e55837e995b205b95dcc58f7b1ce986256c
   category: main
   optional: false
 - name: botocore
-  version: 1.43.53
+  version: 1.43.54
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -1128,14 +1128,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.53-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.54-pyhd8ed1ab_0.conda
   hash:
-    md5: cdfac606ea0e83507790bcc7ca3e4af5
-    sha256: 450477ca800ec413ec1dca528fe2f2f3a50bca7632836203e4283129a895b965
+    md5: 45b6331f2b96828b2ca7fa5b71a12a04
+    sha256: bf8c12fea0cc2aa2f40fd55e84be6e55837e995b205b95dcc58f7b1ce986256c
   category: main
   optional: false
 - name: botocore
-  version: 1.43.53
+  version: 1.43.54
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -1143,10 +1143,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.53-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.54-pyhd8ed1ab_0.conda
   hash:
-    md5: cdfac606ea0e83507790bcc7ca3e4af5
-    sha256: 450477ca800ec413ec1dca528fe2f2f3a50bca7632836203e4283129a895b965
+    md5: 45b6331f2b96828b2ca7fa5b71a12a04
+    sha256: bf8c12fea0cc2aa2f40fd55e84be6e55837e995b205b95dcc58f7b1ce986256c
   category: main
   optional: false
 - name: brotli-python
@@ -1270,39 +1270,39 @@ package:
   category: main
   optional: false
 - name: ca-certificates
-  version: 2026.6.17
+  version: 2026.7.22
   manager: conda
   platform: linux-64
   dependencies:
     __unix: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.6.17-hbd8a1cb_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.7.22-hbd8a1cb_0.conda
   hash:
-    md5: a9965dd99f683c5f444428f896635716
-    sha256: f8e3c730fa14ee3f170493779f06522c4acf89169f43db4f039727709b6419cf
+    md5: 0f51e2391ade309db462a55611263e9c
+    sha256: 0a0544cf95f64394fe4959286f5c71f5444ad58feb0602e53becb27448d24da6
   category: main
   optional: false
 - name: ca-certificates
-  version: 2026.6.17
+  version: 2026.7.22
   manager: conda
   platform: linux-aarch64
   dependencies:
     __unix: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.6.17-hbd8a1cb_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.7.22-hbd8a1cb_0.conda
   hash:
-    md5: a9965dd99f683c5f444428f896635716
-    sha256: f8e3c730fa14ee3f170493779f06522c4acf89169f43db4f039727709b6419cf
+    md5: 0f51e2391ade309db462a55611263e9c
+    sha256: 0a0544cf95f64394fe4959286f5c71f5444ad58feb0602e53becb27448d24da6
   category: main
   optional: false
 - name: ca-certificates
-  version: 2026.6.17
+  version: 2026.7.22
   manager: conda
   platform: osx-arm64
   dependencies:
     __unix: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.6.17-hbd8a1cb_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.7.22-hbd8a1cb_0.conda
   hash:
-    md5: a9965dd99f683c5f444428f896635716
-    sha256: f8e3c730fa14ee3f170493779f06522c4acf89169f43db4f039727709b6419cf
+    md5: 0f51e2391ade309db462a55611263e9c
+    sha256: 0a0544cf95f64394fe4959286f5c71f5444ad58feb0602e53becb27448d24da6
   category: main
   optional: false
 - name: cachecontrol
@@ -1462,39 +1462,39 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.1.4
+  version: 7.1.5
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.4-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.5-pyhd8ed1ab_0.conda
   hash:
-    md5: fbaa0445bcf8ba9e808c90cbc1235090
-    sha256: de5e4deaa31b748502339ed2d725233af94f6db2fe1b414608bcb34581e8dd6b
+    md5: ee5149f928a76bb95cf1ad72902166ee
+    sha256: 93dd241d6a43de76d8e09b3e1f539a49ce52aef5c0849785eef661070ad48530
   category: main
   optional: false
 - name: cachetools
-  version: 7.1.4
+  version: 7.1.5
   manager: conda
   platform: linux-aarch64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.4-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.5-pyhd8ed1ab_0.conda
   hash:
-    md5: fbaa0445bcf8ba9e808c90cbc1235090
-    sha256: de5e4deaa31b748502339ed2d725233af94f6db2fe1b414608bcb34581e8dd6b
+    md5: ee5149f928a76bb95cf1ad72902166ee
+    sha256: 93dd241d6a43de76d8e09b3e1f539a49ce52aef5c0849785eef661070ad48530
   category: main
   optional: false
 - name: cachetools
-  version: 7.1.4
+  version: 7.1.5
   manager: conda
   platform: osx-arm64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.4-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.1.5-pyhd8ed1ab_0.conda
   hash:
-    md5: fbaa0445bcf8ba9e808c90cbc1235090
-    sha256: de5e4deaa31b748502339ed2d725233af94f6db2fe1b414608bcb34581e8dd6b
+    md5: ee5149f928a76bb95cf1ad72902166ee
+    sha256: 93dd241d6a43de76d8e09b3e1f539a49ce52aef5c0849785eef661070ad48530
   category: main
   optional: false
 - name: cairo
@@ -4806,7 +4806,7 @@ package:
   category: main
   optional: false
 - name: fontconfig
-  version: 2.18.1
+  version: 2.18.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -4815,16 +4815,16 @@ package:
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=14'
-    libuuid: '>=2.42.1,<3.0a0'
+    libuuid: '>=2.42.2,<3.0a0'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/fontconfig-2.18.1-h27c8c51_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/fontconfig-2.18.2-h27c8c51_0.conda
   hash:
-    md5: e0e050cfa9fa85fe39632ab11cb7f3e0
-    sha256: 2e50bdcebdf70a865b81f2456bbc586386451ec601c60f2b6cd22b8c40a2d384
+    md5: 3c702747058a5d0af93fe71e559327f3
+    sha256: d77a47bc2b340b997c680241751e581672d1d0377a680eaf0b19026f013f56b7
   category: main
   optional: false
 - name: fontconfig
-  version: 2.18.1
+  version: 2.18.2
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -4832,16 +4832,16 @@ package:
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=14'
-    libuuid: '>=2.42.1,<3.0a0'
+    libuuid: '>=2.42.2,<3.0a0'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/fontconfig-2.18.1-hba86a56_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/fontconfig-2.18.2-hba86a56_0.conda
   hash:
-    md5: f4d29a0cd77104a683607319a542ac7e
-    sha256: 2ccfd118269d363a5506161c4a0d96da46d2f01beecc74e0540a54b4737d0e45
+    md5: 4c3b60329dd9fbd20940b28d6f45f4a1
+    sha256: 12e49d4bcc7b57ebcb51e199921604ec6218c6a09d345449b2bc7772fe5061b7
   category: main
   optional: false
 - name: fontconfig
-  version: 2.18.1
+  version: 2.18.2
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -4851,10 +4851,10 @@ package:
     libfreetype6: '>=2.14.3'
     libintl: '>=0.25.1,<1.0a0'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/fontconfig-2.18.1-h2b252f5_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/fontconfig-2.18.2-h2b252f5_0.conda
   hash:
-    md5: 9d928e6a62192141fb6540a3125b1345
-    sha256: 8607d8d0b32f9f6fc61ea8c06b537486b78428a04516658222fa4d1d521af765
+    md5: 992ac5eb08a3a29b5f465cf90f326471
+    sha256: 9977c3f83d7f383de9bbd8a1ac6fd6eb4485cd9fda1679a9a63b697f4cb45a89
   category: main
   optional: false
 - name: fonts-conda-ecosystem
