@@ -51,6 +51,7 @@ class MigratorName(StrEnum):
     ARCH_REBUILD = "ArchRebuild"
     OSX_ARM = "OSXArm"
     WIN_ARM64 = "WinArm64"
+    LINUX_RISCV64 = "LinuxRISCV64"
     MIGRATION_YAML = "MigrationYaml"
     REBUILD = "Rebuild"
     BLAS_REBUILD = "BlasRebuild"
