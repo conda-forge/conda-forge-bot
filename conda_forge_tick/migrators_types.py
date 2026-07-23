@@ -1,5 +1,5 @@
 import typing
-from typing import Literal, TypedDict, Union
+from typing import Any, Literal, TypedDict, Union
 
 PackageName = typing.NewType("PackageName", str)
 
@@ -124,10 +124,63 @@ class PRedElementTypedDict(TypedDict, total=False):
     PR: PR_TD
 
 
+class CondaForgeYamlSettingsLinux(TypedDict, total=False):
+    swapfile_size: str
+    variables: dict[str, str]
+
+
+class CondaForgeYamlSettingsWin(TypedDict, total=False):
+    variables: dict[str, str]
+
+
+class CondaForgeYamlAzure(TypedDict, total=False):
+    store_build_artifacts: bool
+    free_disk_space: bool | list[str]
+    settings_linux: CondaForgeYamlSettingsLinux
+    settings_win: CondaForgeYamlSettingsWin
+
+
+class CondaForgeYamlGitHubActions(TypedDict, total=False):
+    store_build_artifacts: bool
+    free_disk_space: bool | list[str]
+    resize_win_partitions: bool
+
+
+class CondaForgeYamlDocker(TypedDict, total=False):
+    run_args: str
+
+
+class CondaForgeYamlWorkflowSetting(TypedDict, total=False):
+    os: str
+    provider: str
+    value: Any
+
+
+class CondaForgeYamlWorkflowSettings(TypedDict, total=False):
+    store_build_artifacts: list[CondaForgeYamlWorkflowSetting] | bool
+    free_disk_space: list[CondaForgeYamlWorkflowSetting] | str
+    pagefile_size: list[CondaForgeYamlWorkflowSetting] | int
+    build_workspace_dir: list[CondaForgeYamlWorkflowSetting] | str
+    tools_install_dir: list[CondaForgeYamlWorkflowSetting] | str
+    resize_partitions: list[CondaForgeYamlWorkflowSetting] | bool
+
+
 class CondaForgeYamlContents(TypedDict, total=False):
+    abi_migration_branches: list[str]
+    azure: CondaForgeYamlAzure
     bot: dict[str, typing.Any]
-    provider: dict[str, str]
     build_platform: dict[str, str]
+    compiler_stack: str
+    docker: CondaForgeYamlDocker
+    github_actions: CondaForgeYamlGitHubActions
+    max_py_ver: str
+    max_r_ver: str
+    min_py_ver: str
+    min_r_ver: str
+    provider: dict[str, str]
+    test: Literal["all", "native", "native_and_emulated"]
+    test_on_native_only: bool
+    workflow_settings: CondaForgeYamlWorkflowSettings
 
 
 AttrsTypedDict = TypedDict(
