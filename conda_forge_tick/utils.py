@@ -518,7 +518,7 @@ def _render_recipe_yaml(
             )
         target_platform_flags = (
             []
-            if platform_arch is None or variant_config_flags
+            if platform_arch is None or platform_arch == "noarch"
             else ["--target-platform", platform_arch]
         )
 

@@ -580,7 +580,7 @@ class BaseRawURL(AbstractSource):
         if ci_support_keys:
             ci_support_key = sorted(ci_support_keys)[0]
             plat, arch = get_platform_arch_from_ci_support_filename(
-                ci_support_key.replace("ci_support", "")
+                ci_support_key.replace("ci_support_", "")
             )
             platform_arch = f"{plat}-{arch}"
             cbc_data = node_attrs[ci_support_key]  # type: ignore[literal-required]

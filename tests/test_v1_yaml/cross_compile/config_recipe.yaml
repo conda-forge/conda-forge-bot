@@ -13,7 +13,6 @@ source:
 
 build:
   number: 2
-  skip: win
 
 requirements:
   build:
