@@ -69,6 +69,7 @@ def extract_pypi_name_from_metadata_source_url(
                     url.startswith("https://pypi.io/packages/")
                     or url.startswith("https://pypi.org/packages/")
                     or url.startswith("https://pypi.python.org/packages/")
+                    or url.startswith("https://files.pythonhosted.org/packages/")
                 ):
                     return canonicalize_pypi_name(url.split("/")[-2])
     return None
