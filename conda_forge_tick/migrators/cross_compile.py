@@ -554,7 +554,7 @@ class CrossCompilationForARMAndPower(MiniMigrator):
 
             build_platform = config.get("build_platform", {})
             if build_platform:
-                for arch in ["linux_aarch64", "linux_ppc64le"]:
+                for arch in ["linux_ppc64le"]:
                     if arch in build_platform:
                         continue
                     if config.get("provider", {}).get(arch) == "default":
