@@ -24,7 +24,7 @@ repos:
           - --py312-plus
 
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.47.0
+    rev: v1.48.0
     hooks:
       - id: typos
         exclude: |
@@ -34,7 +34,7 @@ repos:
           )$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.15
+    rev: v0.15.20
     hooks:
       - id: ruff-check
         args: [ --fix ]
