@@ -356,6 +356,12 @@ def add_rebuild_migration_yaml(
                 old_pkg=PackageName("xz"), new_pkg=PackageName("liblzma-devel")
             )
         )
+    if migration_name == "dav1d130":
+        piggy_back_migrations.append(
+            MiniReplacement(
+                old_pkg=PackageName("dav1d"), new_pkg=PackageName("dav1d-dev")
+            )
+        )
     piggy_back_migrations = _make_mini_migrators_with_defaults(
         extra_mini_migrators=piggy_back_migrations
     )
