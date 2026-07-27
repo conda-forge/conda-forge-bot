@@ -13703,39 +13703,39 @@ package:
   category: main
   optional: false
 - name: python-fastjsonschema
-  version: 2.21.2
+  version: 2.22.0
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.21.2-pyhe01879c_0.conda
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.22.0-pyhcf101f3_0.conda
   hash:
-    md5: 23029aae904a2ba587daba708208012f
-    sha256: df9aa74e9e28e8d1309274648aac08ec447a92512c33f61a8de0afa9ce32ebe8
+    md5: af1dcbcaa183c4b20abda6e3f303838c
+    sha256: eb848944b5dda3f1e84daed83957cabe4d7261df1792b8df36fd145bd0b82826
   category: main
   optional: false
 - name: python-fastjsonschema
-  version: 2.21.2
+  version: 2.22.0
   manager: conda
   platform: linux-aarch64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.21.2-pyhe01879c_0.conda
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.22.0-pyhcf101f3_0.conda
   hash:
-    md5: 23029aae904a2ba587daba708208012f
-    sha256: df9aa74e9e28e8d1309274648aac08ec447a92512c33f61a8de0afa9ce32ebe8
+    md5: af1dcbcaa183c4b20abda6e3f303838c
+    sha256: eb848944b5dda3f1e84daed83957cabe4d7261df1792b8df36fd145bd0b82826
   category: main
   optional: false
 - name: python-fastjsonschema
-  version: 2.21.2
+  version: 2.22.0
   manager: conda
   platform: osx-arm64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.21.2-pyhe01879c_0.conda
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/python-fastjsonschema-2.22.0-pyhcf101f3_0.conda
   hash:
-    md5: 23029aae904a2ba587daba708208012f
-    sha256: df9aa74e9e28e8d1309274648aac08ec447a92512c33f61a8de0afa9ce32ebe8
+    md5: af1dcbcaa183c4b20abda6e3f303838c
+    sha256: eb848944b5dda3f1e84daed83957cabe4d7261df1792b8df36fd145bd0b82826
   category: main
   optional: false
 - name: python-gil
@@ -14218,7 +14218,7 @@ package:
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.15
+  version: 1.4.16
   manager: conda
   platform: linux-64
   dependencies:
@@ -14230,14 +14230,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.15-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.16-pyhd8ed1ab_0.conda
   hash:
-    md5: bf0ab2e7a5e04c52e9a6b3e9f49576d0
-    sha256: 73781301e41d33ff6de1c38a471795df6882909343216774b087938f040f1d8f
+    md5: 73756bfeace28a6a55e5ea45a0dcd2d2
+    sha256: 1ecd2fb2863d04ee2028b515177c3ce932a419d07a630d65e8c8e2dc23bae8ea
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.15
+  version: 1.4.16
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -14249,14 +14249,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.15-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.16-pyhd8ed1ab_0.conda
   hash:
-    md5: bf0ab2e7a5e04c52e9a6b3e9f49576d0
-    sha256: 73781301e41d33ff6de1c38a471795df6882909343216774b087938f040f1d8f
+    md5: 73756bfeace28a6a55e5ea45a0dcd2d2
+    sha256: 1ecd2fb2863d04ee2028b515177c3ce932a419d07a630d65e8c8e2dc23bae8ea
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.15
+  version: 1.4.16
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -14268,10 +14268,10 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.15-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.16-pyhd8ed1ab_0.conda
   hash:
-    md5: bf0ab2e7a5e04c52e9a6b3e9f49576d0
-    sha256: 73781301e41d33ff6de1c38a471795df6882909343216774b087938f040f1d8f
+    md5: 73756bfeace28a6a55e5ea45a0dcd2d2
+    sha256: 1ecd2fb2863d04ee2028b515177c3ce932a419d07a630d65e8c8e2dc23bae8ea
   category: main
   optional: false
 - name: readline
