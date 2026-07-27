@@ -14218,7 +14218,7 @@ package:
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.16
+  version: 1.4.17
   manager: conda
   platform: linux-64
   dependencies:
@@ -14230,14 +14230,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.16-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.17-pyhd8ed1ab_0.conda
   hash:
-    md5: 73756bfeace28a6a55e5ea45a0dcd2d2
-    sha256: 1ecd2fb2863d04ee2028b515177c3ce932a419d07a630d65e8c8e2dc23bae8ea
+    md5: 0387171acdb6ae57d80bbf3a6d585f59
+    sha256: d2f32c15257b0dc0e76aae820887b49032ff303bb2095fc0d1c48dc2eeb59168
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.16
+  version: 1.4.17
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -14249,14 +14249,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.16-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.17-pyhd8ed1ab_0.conda
   hash:
-    md5: 73756bfeace28a6a55e5ea45a0dcd2d2
-    sha256: 1ecd2fb2863d04ee2028b515177c3ce932a419d07a630d65e8c8e2dc23bae8ea
+    md5: 0387171acdb6ae57d80bbf3a6d585f59
+    sha256: d2f32c15257b0dc0e76aae820887b49032ff303bb2095fc0d1c48dc2eeb59168
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.16
+  version: 1.4.17
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -14268,10 +14268,10 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.16-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.17-pyhd8ed1ab_0.conda
   hash:
-    md5: 73756bfeace28a6a55e5ea45a0dcd2d2
-    sha256: 1ecd2fb2863d04ee2028b515177c3ce932a419d07a630d65e8c8e2dc23bae8ea
+    md5: 0387171acdb6ae57d80bbf3a6d585f59
+    sha256: d2f32c15257b0dc0e76aae820887b49032ff303bb2095fc0d1c48dc2eeb59168
   category: main
   optional: false
 - name: readline
