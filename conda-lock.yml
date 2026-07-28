@@ -4297,13 +4297,13 @@ package:
   category: main
   optional: false
 - name: fastapi
-  version: 0.140.1
+  version: 0.140.11
   manager: conda
   platform: linux-64
   dependencies:
     email_validator: ''
     fastapi-cli: ''
-    fastapi-core: ==0.140.1
+    fastapi-core: ==0.140.11
     fastar: ''
     httpx: ''
     jinja2: ''
@@ -4311,20 +4311,20 @@ package:
     pydantic-settings: ''
     python-multipart: ''
     uvicorn-standard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.140.1-hdf98ecd_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.140.11-hedf3711_0.conda
   hash:
-    md5: e9b767fc3206cce259724aa638f77856
-    sha256: 4380fecec5a07780dd6fb4db933bddb9759b681ffaeee20285e78e6ecee5e732
+    md5: e67c7f4859d4ce0ddf4253e24bb1144a
+    sha256: 732e846ac78431c984a6572ae3f9a9ea21ab0d8bd874306576f4c5ed92b7dd4e
   category: main
   optional: false
 - name: fastapi
-  version: 0.140.1
+  version: 0.140.11
   manager: conda
   platform: linux-aarch64
   dependencies:
     email_validator: ''
     fastapi-cli: ''
-    fastapi-core: ==0.140.1
+    fastapi-core: ==0.140.11
     fastar: ''
     httpx: ''
     jinja2: ''
@@ -4332,20 +4332,20 @@ package:
     pydantic-settings: ''
     python-multipart: ''
     uvicorn-standard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.140.1-hdf98ecd_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.140.11-hedf3711_0.conda
   hash:
-    md5: e9b767fc3206cce259724aa638f77856
-    sha256: 4380fecec5a07780dd6fb4db933bddb9759b681ffaeee20285e78e6ecee5e732
+    md5: e67c7f4859d4ce0ddf4253e24bb1144a
+    sha256: 732e846ac78431c984a6572ae3f9a9ea21ab0d8bd874306576f4c5ed92b7dd4e
   category: main
   optional: false
 - name: fastapi
-  version: 0.140.1
+  version: 0.140.11
   manager: conda
   platform: osx-arm64
   dependencies:
     email_validator: ''
     fastapi-cli: ''
-    fastapi-core: ==0.140.1
+    fastapi-core: ==0.140.11
     fastar: ''
     httpx: ''
     jinja2: ''
@@ -4353,10 +4353,10 @@ package:
     pydantic-settings: ''
     python-multipart: ''
     uvicorn-standard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.140.1-hdf98ecd_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.140.11-hedf3711_0.conda
   hash:
-    md5: e9b767fc3206cce259724aa638f77856
-    sha256: 4380fecec5a07780dd6fb4db933bddb9759b681ffaeee20285e78e6ecee5e732
+    md5: e67c7f4859d4ce0ddf4253e24bb1144a
+    sha256: 732e846ac78431c984a6572ae3f9a9ea21ab0d8bd874306576f4c5ed92b7dd4e
   category: main
   optional: false
 - name: fastapi-cli
@@ -4408,7 +4408,7 @@ package:
   category: main
   optional: false
 - name: fastapi-core
-  version: 0.140.1
+  version: 0.140.11
   manager: conda
   platform: linux-64
   dependencies:
@@ -4418,14 +4418,14 @@ package:
     starlette: '>=0.46.0'
     typing-inspection: '>=0.4.2'
     typing_extensions: '>=4.8.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.140.1-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.140.11-pyhcf101f3_0.conda
   hash:
-    md5: 34b45cdfd969968d74fd2d0cb1ece9f2
-    sha256: 473914299bfa67afd81dc5c57748c26bf03924a8f1fa65e86d10d3f223edf9e0
+    md5: f09f47d9a8bf40cd9057cb63dec41c6a
+    sha256: 383d920d8e934990eb3ddccf3e1b4f661d00c890a747da93abb7c1a213b47782
   category: main
   optional: false
 - name: fastapi-core
-  version: 0.140.1
+  version: 0.140.11
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -4435,14 +4435,14 @@ package:
     starlette: '>=0.46.0'
     typing-inspection: '>=0.4.2'
     typing_extensions: '>=4.8.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.140.1-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.140.11-pyhcf101f3_0.conda
   hash:
-    md5: 34b45cdfd969968d74fd2d0cb1ece9f2
-    sha256: 473914299bfa67afd81dc5c57748c26bf03924a8f1fa65e86d10d3f223edf9e0
+    md5: f09f47d9a8bf40cd9057cb63dec41c6a
+    sha256: 383d920d8e934990eb3ddccf3e1b4f661d00c890a747da93abb7c1a213b47782
   category: main
   optional: false
 - name: fastapi-core
-  version: 0.140.1
+  version: 0.140.11
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -4452,10 +4452,10 @@ package:
     starlette: '>=0.46.0'
     typing-inspection: '>=0.4.2'
     typing_extensions: '>=4.8.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.140.1-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.140.11-pyhcf101f3_0.conda
   hash:
-    md5: 34b45cdfd969968d74fd2d0cb1ece9f2
-    sha256: 473914299bfa67afd81dc5c57748c26bf03924a8f1fa65e86d10d3f223edf9e0
+    md5: f09f47d9a8bf40cd9057cb63dec41c6a
+    sha256: 383d920d8e934990eb3ddccf3e1b4f661d00c890a747da93abb7c1a213b47782
   category: main
   optional: false
 - name: fastar
@@ -7289,7 +7289,7 @@ package:
   category: main
   optional: false
 - name: libarchive
-  version: 3.8.8
+  version: 3.8.9
   manager: conda
   platform: linux-64
   dependencies:
@@ -7304,14 +7304,14 @@ package:
     lzo: '>=2.10,<3.0a0'
     openssl: '>=3.5.7,<4.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libarchive-3.8.8-gpl_hc2c16d8_100.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libarchive-3.8.9-gpl_hc2c16d8_100.conda
   hash:
-    md5: 44652e646cb623f486ea72e7e7479222
-    sha256: f916b51f55f51a9bb2d902e0a5f029490f7b745aee549c349751c1787ddc26b8
+    md5: 3988040b14a8083b1a5382d99f584e5f
+    sha256: 000b4baa9ce849b5fb259af9256331d0c7872361ac63a2bba0d0c48eb35663d0
   category: main
   optional: false
 - name: libarchive
-  version: 3.8.8
+  version: 3.8.9
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -7325,14 +7325,14 @@ package:
     lzo: '>=2.10,<3.0a0'
     openssl: '>=3.5.7,<4.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libarchive-3.8.8-gpl_hbe7d12b_100.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libarchive-3.8.9-gpl_hbe7d12b_100.conda
   hash:
-    md5: a023664e901257bc10437c26a4923528
-    sha256: 74ee8968f3abdb7c1cec4b6701791b8bfcc6ba7b79de2aa76e2042a86fb3a6ec
+    md5: e776765ee657e43186676e1de5eceb9b
+    sha256: d9d9beb35f57285b967de5bd0f13152ac296e14cc3cb9d39b63513724c416423
   category: main
   optional: false
 - name: libarchive
-  version: 3.8.8
+  version: 3.8.9
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -7347,10 +7347,10 @@ package:
     lzo: '>=2.10,<3.0a0'
     openssl: '>=3.5.7,<4.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libarchive-3.8.8-gpl_h6fbacd7_100.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libarchive-3.8.9-gpl_h6fbacd7_100.conda
   hash:
-    md5: cfa10f3c4b14c13f676dc08e2ea29023
-    sha256: 05c370fae4f2a5fd7baf59c15d75caec718d785ec47e813dbf7bff68355e4bb7
+    md5: 4963589c8bed67dd0540d890ba690f53
+    sha256: b58cfffd0774142d308a25f1bdc610c46d71cb67489f1b1eec0891e78ede5b11
   category: main
   optional: false
 - name: libblas
