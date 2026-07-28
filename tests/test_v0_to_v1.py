@@ -1,0 +1,130 @@
+import logging
+import textwrap
+
+from conda_forge_tick.migrators import GenericV0ToV1Migrator
+
+CLEAN_RECIPE = textwrap.dedent(
+    """\
+    {% set name = "boto" %}
+    {% set version = "2.49.0" %}
+
+    package:
+      name: {{ name|lower }}
+      version: {{ version }}
+
+    source:
+      fn: {{ name }}-{{ version }}.tar.gz
+      url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+      sha256: ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a
+
+    requirements:
+      host:
+        - python
+      run:
+        - python
+
+    build:
+      number: 0
+      script: python setup.py install
+
+    test:
+      commands:
+        - s3put -h
+      imports:
+        - boto
+
+    about:
+      home: https://github.com/boto/boto/
+      license: MIT
+      summary: Amazon Web Services Library
+    """
+)
+
+# Only difference from CLEAN_RECIPE: an `about/license_family` field. crm drops
+# the field and emits a warning that's on GenericV0ToV1Migrator's ignore-list,
+# so this should still be treated as a clean conversion.
+IGNORED_WARNING_RECIPE = CLEAN_RECIPE.replace(
+    "  license: MIT\n",
+    "  license: MIT\n  license_family: MIT\n",
+)
+
+# Replaces the tarball source with an `svn_url`, which crm converts but flags
+# with a non-ignorable warning ("SVN packages are no longer supported").
+BLOCKING_WARNING_RECIPE = CLEAN_RECIPE.replace(
+    "source:\n"
+    "  fn: {{ name }}-{{ version }}.tar.gz\n"
+    "  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz\n"
+    "  sha256: ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a\n",
+    "source:\n  svn_url: https://example.com/svn/boto\n  svn_rev: 123\n",
+)
+
+# A second top-level `build:` key triggers a DuplicateKeyException, which crm
+# raises during parsing before any message table exists.
+UNPARSABLE_RECIPE = CLEAN_RECIPE + "\nbuild:\n  number: 1\n"
+
+
+def test_convert_clean_recipe():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(CLEAN_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert "schema_version: 1" in v1_content
+
+
+def test_convert_ignores_known_safe_warnings():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(IGNORED_WARNING_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert "schema_version: 1" in v1_content
+
+
+def test_convert_blocks_on_unignored_warning():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(BLOCKING_WARNING_RECIPE)
+    assert v1_content is None
+    assert len(blocking) == 1
+    assert "SVN packages are no longer supported" in blocking[0]
+
+
+def test_convert_blocks_on_parser_exception():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(UNPARSABLE_RECIPE)
+    assert v1_content is None
+    assert len(blocking) == 1
+    assert "DuplicateKeyException" in blocking[0]
+
+
+def test_migrate_writes_recipe_yaml_and_removes_meta_yaml(tmp_path):
+    (tmp_path / "meta.yaml").write_text(CLEAN_RECIPE)
+
+    GenericV0ToV1Migrator().migrate(str(tmp_path), {"name": "boto"})
+
+    assert not (tmp_path / "meta.yaml").exists()
+    recipe_yaml = tmp_path / "recipe.yaml"
+    assert recipe_yaml.exists()
+    assert "schema_version: 1" in recipe_yaml.read_text()
+
+
+def test_migrate_skips_recipe_not_safe_to_convert(tmp_path, caplog):
+    (tmp_path / "meta.yaml").write_text(BLOCKING_WARNING_RECIPE)
+
+    with caplog.at_level(logging.WARNING):
+        GenericV0ToV1Migrator().migrate(str(tmp_path), {"name": "boto"})
+
+    assert (tmp_path / "meta.yaml").read_text() == BLOCKING_WARNING_RECIPE
+    assert not (tmp_path / "recipe.yaml").exists()
+    assert "not safe to auto-convert" in caplog.text
+    assert "boto" in caplog.text
+
+
+def test_migrate_skips_unparsable_recipe(tmp_path):
+    (tmp_path / "meta.yaml").write_text(UNPARSABLE_RECIPE)
+
+    GenericV0ToV1Migrator().migrate(str(tmp_path), {"name": "boto"})
+
+    assert (tmp_path / "meta.yaml").read_text() == UNPARSABLE_RECIPE
+    assert not (tmp_path / "recipe.yaml").exists()
+
+
+def test_migrate_no_op_when_meta_yaml_missing(tmp_path):
+    GenericV0ToV1Migrator().migrate(str(tmp_path), {"name": "boto"})
+
+    assert not (tmp_path / "recipe.yaml").exists()
+    assert not (tmp_path / "meta.yaml").exists()

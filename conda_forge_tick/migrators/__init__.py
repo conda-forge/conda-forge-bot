@@ -48,3 +48,4 @@ from .noarch_python_min import NoarchPythonMinMigrator
 from .nvtools import AddNVIDIATools
 from .round_trip import YAMLRoundTrip
 from .staticlib import StaticLibMigrator
+from .v0_to_v1 import GenericV0ToV1Migrator
