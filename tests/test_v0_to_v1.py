@@ -58,9 +58,25 @@ BLOCKING_WARNING_RECIPE = CLEAN_RECIPE.replace(
     "source:\n  svn_url: https://example.com/svn/boto\n  svn_rev: 123\n",
 )
 
-# A second top-level `build:` key triggers a DuplicateKeyException, which crm
-# raises during parsing before any message table exists.
-UNPARSABLE_RECIPE = CLEAN_RECIPE + "\nbuild:\n  number: 1\n"
+# Malformed YAML (an unterminated flow sequence) that crm can't parse at all,
+# raising before any message table exists. Note a second top-level `build:`
+# key would *not* trigger this: GenericV0ToV1Migrator passes
+# `ALLOW_DUPLICATE_KEYS`, matching what the `crm convert` CLI always does,
+# since that duplicate-key-with-different-selectors pattern is otherwise
+# extremely common and legitimate in conda-forge recipes.
+UNPARSABLE_RECIPE = "package: [name: boto\n"
+
+# A second top-level `build:` key - the common `key: val  # [selector]` /
+# `key: val2  # [other-selector]` pattern conda-forge recipes rely on.
+DUPLICATE_KEY_RECIPE = CLEAN_RECIPE + "\nbuild:\n  number: 1\n"
+
+# `{{ environ["PREFIX"] }}` (common in license_file fields, not just R/Bioconda
+# recipes) needs crm's pre-processing step to become valid v1 syntax; without
+# it, crm leaves behind invalid `${{ environ["PREFIX"] }}` with no warning.
+ENVIRON_RECIPE = CLEAN_RECIPE.replace(
+    "  summary: Amazon Web Services Library\n",
+    '  summary: Amazon Web Services Library\n  license_file: {{ environ["PREFIX"] }}/LICENSE\n',
+)
 
 
 def test_convert_clean_recipe():
@@ -77,6 +93,21 @@ def test_convert_ignores_known_safe_warnings():
     assert "schema_version: 1" in v1_content
 
 
+def test_convert_allows_duplicate_keys():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(DUPLICATE_KEY_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert "schema_version: 1" in v1_content
+
+
+def test_convert_preprocesses_environ_syntax():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(ENVIRON_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert 'env.get("PREFIX")' in v1_content
+    assert "environ[" not in v1_content
+
+
 def test_convert_blocks_on_unignored_warning():
     v1_content, blocking = GenericV0ToV1Migrator()._convert(BLOCKING_WARNING_RECIPE)
     assert v1_content is None
@@ -88,7 +119,7 @@ def test_convert_blocks_on_parser_exception():
     v1_content, blocking = GenericV0ToV1Migrator()._convert(UNPARSABLE_RECIPE)
     assert v1_content is None
     assert len(blocking) == 1
-    assert "DuplicateKeyException" in blocking[0]
+    assert "ParsingException" in blocking[0]
 
 
 def test_migrate_writes_recipe_yaml_and_removes_meta_yaml(tmp_path):

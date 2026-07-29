@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Any
 
 from conda_recipe_manager.parser._message_table import MessageCategory, MessageTable
-from conda_recipe_manager.parser.exceptions import BaseParserException
 from conda_recipe_manager.parser.recipe_parser_convert import RecipeParserConvert
+from conda_recipe_manager.parser.types import RecipeReaderFlags
 
 from conda_forge_tick.migrators.core import MiniMigrator
 
@@ -53,13 +53,23 @@ class GenericV0ToV1Migrator(MiniMigrator):
         not safe to ship unattended, along with the list of messages that
         explain why (empty if the conversion is clean).
         """
-        # crm can *raise* on malformed recipes (ParsingException,
-        # DuplicateKeyException, ...) at construction, before any msg_tbl
-        # exists to record the failure.
+        # Mirrors what the `crm convert` CLI always does: pre-process the raw
+        # text (e.g. rewrites `{{ environ["FOO"] }}`, common in Bioconda/R
+        # recipes' `license_file`, to valid v1 syntax) and allow the ordinary
+        # `key: val  # [selector]` duplicate-key pattern that's otherwise
+        # extremely common in conda-forge recipes.
+        content = RecipeParserConvert.pre_process_recipe_text(raw_meta_yaml)
+
+        # crm can raise - or, on some malformed/unusual recipes (e.g.
+        # multi-output), crash with an unrelated exception - at construction
+        # or during conversion, before any msg_tbl exists to record why. Any
+        # of that means this recipe isn't safe to auto-convert.
         try:
-            converter = RecipeParserConvert(raw_meta_yaml)
+            converter = RecipeParserConvert(
+                content, flags=RecipeReaderFlags.ALLOW_DUPLICATE_KEYS
+            )
             v1_content, msg_tbl, _debug = converter.render_to_v1_recipe_format()
-        except BaseParserException as exc:
+        except Exception as exc:
             return None, [f"crm raised {type(exc).__name__}: {exc}"]
 
         blocking = self._actionable_messages(msg_tbl)
