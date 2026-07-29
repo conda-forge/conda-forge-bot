@@ -209,39 +209,39 @@ package:
   category: main
   optional: false
 - name: annotated-doc
-  version: 0.0.4
+  version: 0.0.5
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.4-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.5-pyhcf101f3_0.conda
   hash:
-    md5: 52be5139047efadaeeb19c6a5103f92a
-    sha256: cc9fbc50d4ee7ee04e49ee119243e6f1765750f0fd0b4d270d5ef35461b643b1
+    md5: d68ec17cb915cab4642357417ec0a104
+    sha256: a0a320c709fded9b5178108dedebf81a1f5a5d9c7720e3af50c1ab058dadd296
   category: main
   optional: false
 - name: annotated-doc
-  version: 0.0.4
+  version: 0.0.5
   manager: conda
   platform: linux-aarch64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.4-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.5-pyhcf101f3_0.conda
   hash:
-    md5: 52be5139047efadaeeb19c6a5103f92a
-    sha256: cc9fbc50d4ee7ee04e49ee119243e6f1765750f0fd0b4d270d5ef35461b643b1
+    md5: d68ec17cb915cab4642357417ec0a104
+    sha256: a0a320c709fded9b5178108dedebf81a1f5a5d9c7720e3af50c1ab058dadd296
   category: main
   optional: false
 - name: annotated-doc
-  version: 0.0.4
+  version: 0.0.5
   manager: conda
   platform: osx-arm64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.4-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.5-pyhcf101f3_0.conda
   hash:
-    md5: 52be5139047efadaeeb19c6a5103f92a
-    sha256: cc9fbc50d4ee7ee04e49ee119243e6f1765750f0fd0b4d270d5ef35461b643b1
+    md5: d68ec17cb915cab4642357417ec0a104
+    sha256: a0a320c709fded9b5178108dedebf81a1f5a5d9c7720e3af50c1ab058dadd296
   category: main
   optional: false
 - name: annotated-types
@@ -9164,10 +9164,10 @@ package:
     icu: '>=78.3,<79.0a0'
     libgcc: '>=14'
     libstdcxx: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libpsl-0.22.0-h49b2146_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libpsl-0.22.0-hf670292_2.conda
   hash:
-    md5: af5ddfb52ad25d833c70c7511478d4eb
-    sha256: 71118885feab91c61bea4e9532ec46e0653b24f02e563681f822915aee8435bb
+    md5: f4bb2168fb76b16a31ac27e0a372d2e3
+    sha256: a9fcbf3d64be6e0c587dd6135f6d720e1569972692d42bff6c013cd5056ac23d
   category: main
   optional: false
 - name: libpsl
@@ -9178,10 +9178,10 @@ package:
     icu: '>=78.3,<79.0a0'
     libgcc: '>=14'
     libstdcxx: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libpsl-0.22.0-h9aac952_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libpsl-0.22.0-h36cc0f4_2.conda
   hash:
-    md5: f8f91448e5ba30051ceb17b45b31da9b
-    sha256: 15ec553e784f2b8601c3df58e1dbe723309303c5ed405bc671bffae722c81023
+    md5: 47afdf763422a5af207655265caed647
+    sha256: 8b50e5d457749b082338b01c8627774ffefe3eece6c6f9b984e947a8c24c77ad
   category: main
   optional: false
 - name: libpsl
@@ -9192,10 +9192,10 @@ package:
     __osx: '>=11.0'
     icu: '>=78.3,<79.0a0'
     libcxx: '>=19'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libpsl-0.22.0-h92480b3_1.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libpsl-0.22.0-h7a62e17_2.conda
   hash:
-    md5: 9bced3ae8f4bc78a5b22f7247554c9ee
-    sha256: 1dd03b21e74f41ed7af31d82f61129d94e3cce31485eb221e3acecba26ab34bf
+    md5: 0eb67a1cb0a95320b05d8d53a24b1bff
+    sha256: ccde1bf413f0d6f4d76dd714b018882fded6bbd1054862da10017c88f4f8a311
   category: main
   optional: false
 - name: librsvg
@@ -14218,7 +14218,7 @@ package:
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.17
+  version: 1.4.18
   manager: conda
   platform: linux-64
   dependencies:
@@ -14230,14 +14230,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.17-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.18-pyhd8ed1ab_0.conda
   hash:
-    md5: 0387171acdb6ae57d80bbf3a6d585f59
-    sha256: d2f32c15257b0dc0e76aae820887b49032ff303bb2095fc0d1c48dc2eeb59168
+    md5: 77c52ba3f5cc73247d714a451b2cbeb9
+    sha256: ba250980a1df9654b31acf6b7166b0ceed4444117cec4fea1c337e0ee673e8d0
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.17
+  version: 1.4.18
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -14249,14 +14249,14 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.17-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.18-pyhd8ed1ab_0.conda
   hash:
-    md5: 0387171acdb6ae57d80bbf3a6d585f59
-    sha256: d2f32c15257b0dc0e76aae820887b49032ff303bb2095fc0d1c48dc2eeb59168
+    md5: 77c52ba3f5cc73247d714a451b2cbeb9
+    sha256: ba250980a1df9654b31acf6b7166b0ceed4444117cec4fea1c337e0ee673e8d0
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.17
+  version: 1.4.18
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -14268,10 +14268,10 @@ package:
     ruamel.yaml: ''
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.17-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.18-pyhd8ed1ab_0.conda
   hash:
-    md5: 0387171acdb6ae57d80bbf3a6d585f59
-    sha256: d2f32c15257b0dc0e76aae820887b49032ff303bb2095fc0d1c48dc2eeb59168
+    md5: 77c52ba3f5cc73247d714a451b2cbeb9
+    sha256: ba250980a1df9654b31acf6b7166b0ceed4444117cec4fea1c337e0ee673e8d0
   category: main
   optional: false
 - name: readline
