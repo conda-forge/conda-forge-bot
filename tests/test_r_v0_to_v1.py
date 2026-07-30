@@ -108,6 +108,28 @@ def test_convert_skips_multi_output_recipe_instead_of_crashing():
             True,
         ),
         ({"name": "r-foo", "feedstock_name": "r-foo", "raw_meta_yaml": ""}, True),
+        (
+            # No "r-" name/prefix and no "r-base" mention, but maintained by
+            # the conda-forge/r team - still detected as an R feedstock.
+            {
+                "name": "some-cran-tool",
+                "feedstock_name": "some-cran-tool",
+                "raw_meta_yaml": "package:\n  name: some-cran-tool\n",
+                "extra": {"recipe-maintainers": ["conda-forge/r", "someuser"]},
+            },
+            False,
+        ),
+        (
+            # Has an unrelated maintainer team, but no "r-" prefix and no
+            # "r-base" mention - not an R feedstock.
+            {
+                "name": "foo",
+                "feedstock_name": "foo",
+                "raw_meta_yaml": "package:\n  name: foo\n",
+                "extra": {"recipe-maintainers": ["conda-forge/core"]},
+            },
+            True,
+        ),
     ],
 )
 def test_filter_scopes_to_r_feedstocks(attrs, should_skip):

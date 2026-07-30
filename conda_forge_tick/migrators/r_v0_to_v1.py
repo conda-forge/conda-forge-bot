@@ -7,6 +7,10 @@ if typing.TYPE_CHECKING:
 
 
 def _is_r_feedstock(attrs: "AttrsTypedDict") -> bool:
+    # R feedstocks are all maintained by the same conda-forge/r team, e.g.
+    # https://github.com/conda-forge/r-essentials-feedstock/blob/main/recipe/meta.yaml#L69-L71
+    if "conda-forge/r" in attrs.get("extra", {}).get("recipe-maintainers", []):
+        return True
     return (
         attrs.get("feedstock_name", "").startswith("r-")
         or attrs.get("name", "").startswith("r-")

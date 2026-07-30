@@ -37,13 +37,13 @@ class GenericV0ToV1Migrator(MiniMigrator):
     )
 
     def _actionable_messages(self, msg_tbl: MessageTable) -> list[str]:
-        blocking = list(msg_tbl.get_messages(MessageCategory.EXCEPTION))
-        blocking += msg_tbl.get_messages(MessageCategory.ERROR)
-        blocking += [
-            msg
-            for msg in msg_tbl.get_messages(MessageCategory.WARNING)
-            if not any(ignore in msg for ignore in self.IGNORED_WARNINGS)
+        blocking = [
+            *msg_tbl.get_messages(MessageCategory.EXCEPTION),
+            *msg_tbl.get_messages(MessageCategory.ERROR),
         ]
+        for msg in msg_tbl.get_messages(MessageCategory.WARNING):
+            if not any(ignore in msg for ignore in self.IGNORED_WARNINGS):
+                blocking.append(msg)
         return blocking
 
     def _convert(self, raw_meta_yaml: str) -> tuple[str | None, list[str]]:
@@ -70,6 +70,7 @@ class GenericV0ToV1Migrator(MiniMigrator):
             )
             v1_content, msg_tbl, _debug = converter.render_to_v1_recipe_format()
         except Exception as exc:
+            logger.debug("CRM failed to convert", exc_info=exc)
             return None, [f"crm raised {type(exc).__name__}: {exc}"]
 
         blocking = self._actionable_messages(msg_tbl)
