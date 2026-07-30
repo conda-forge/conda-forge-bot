@@ -423,7 +423,6 @@ fi
         == """\
 build_platform:
   linux_64: linux_64
-  linux_aarch64: linux_64
   linux_ppc64le: linux_64
 provider:
   linux_aarch64: default
