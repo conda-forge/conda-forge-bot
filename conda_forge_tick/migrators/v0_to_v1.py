@@ -34,6 +34,11 @@ class GenericV0ToV1Migrator(MiniMigrator):
     IGNORED_WARNINGS: tuple[str, ...] = (
         # crm already removes the deprecated field, the warning is just noise.
         "Field at `/about/license_family` is no longer supported.",
+        # crm already patched `license` to a corrected SPDX identifier (e.g.
+        # `GPL-2` -> `GPL-2.0-only`, matching this repo's own LicenseMigrator
+        # mapping in migrators/license.py) before emitting this - it's just
+        # noting the change, not something that needs manual review.
+        "license from `",
     )
 
     def _actionable_messages(self, msg_tbl: MessageTable) -> list[str]:

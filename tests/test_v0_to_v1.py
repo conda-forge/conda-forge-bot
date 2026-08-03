@@ -78,6 +78,11 @@ ENVIRON_RECIPE = CLEAN_RECIPE.replace(
     '  summary: Amazon Web Services Library\n  license_file: {{ environ["PREFIX"] }}/LICENSE\n',
 )
 
+# `GPL-2` is a legacy, non-SPDX license string; crm's own SPDX correction
+# pass patches it to `GPL-2.0-only` in the output (matching this repo's own
+# LicenseMigrator mapping in migrators/license.py) and just logs the change.
+LEGACY_LICENSE_RECIPE = CLEAN_RECIPE.replace("  license: MIT\n", "  license: GPL-2\n")
+
 
 def test_convert_clean_recipe():
     v1_content, blocking = GenericV0ToV1Migrator()._convert(CLEAN_RECIPE)
@@ -106,6 +111,13 @@ def test_convert_preprocesses_environ_syntax():
     assert v1_content is not None
     assert 'env.get("PREFIX")' in v1_content
     assert "environ[" not in v1_content
+
+
+def test_convert_ignores_corrected_legacy_license():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(LEGACY_LICENSE_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert "license: GPL-2.0-only" in v1_content
 
 
 def test_convert_blocks_on_unignored_warning():
