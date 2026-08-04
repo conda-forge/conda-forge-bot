@@ -2153,7 +2153,7 @@ package:
   category: main
   optional: false
 - name: conda-build
-  version: 26.5.0
+  version: 26.7.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -2175,22 +2175,21 @@ package:
     pkginfo: ''
     psutil: ''
     py-lief: ''
-    py-rattler-build: '>=0.61.4'
+    py-rattler-build: '>=0.65.1'
     python: '>=3.11'
     python-libarchive-c: ''
     pyyaml: ''
-    rattler-build: ''
     requests: ''
     ripgrep: ''
     tqdm: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.5.0-pyh31ec981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.7.0-pyh31ec981_0.conda
   hash:
-    md5: 306da8702472faa705f0a39374fd3b9f
-    sha256: a09a81d816623502b447e1514e9faf5aa45832e6f6cbcf1165cbd504e69b36f6
+    md5: c72f3dcb256b52cfd79e30dbf5f118de
+    sha256: 05552dc437e01197eab02443622f75e6049f93ff9361100bcae43fb13b20dfe9
   category: main
   optional: false
 - name: conda-build
-  version: 26.5.0
+  version: 26.7.0
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -2212,22 +2211,21 @@ package:
     pkginfo: ''
     psutil: ''
     py-lief: ''
-    py-rattler-build: '>=0.61.4'
+    py-rattler-build: '>=0.65.1'
     python: '>=3.11'
     python-libarchive-c: ''
     pyyaml: ''
-    rattler-build: ''
     requests: ''
     ripgrep: ''
     tqdm: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.5.0-pyh31ec981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.7.0-pyh31ec981_0.conda
   hash:
-    md5: 306da8702472faa705f0a39374fd3b9f
-    sha256: a09a81d816623502b447e1514e9faf5aa45832e6f6cbcf1165cbd504e69b36f6
+    md5: c72f3dcb256b52cfd79e30dbf5f118de
+    sha256: 05552dc437e01197eab02443622f75e6049f93ff9361100bcae43fb13b20dfe9
   category: main
   optional: false
 - name: conda-build
-  version: 26.5.0
+  version: 26.7.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -2249,18 +2247,17 @@ package:
     pkginfo: ''
     psutil: ''
     py-lief: ''
-    py-rattler-build: '>=0.61.4'
+    py-rattler-build: '>=0.65.1'
     python: '>=3.11'
     python-libarchive-c: ''
     pyyaml: ''
-    rattler-build: ''
     requests: ''
     ripgrep: ''
     tqdm: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.5.0-pyha39d2d0_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.7.0-pyha39d2d0_0.conda
   hash:
-    md5: 19bea462086979013f1f04754fdbcda0
-    sha256: a1a034fee39d61ea97a91e944c3e6f72c39632906cae9eedc11668b34aa8b47a
+    md5: 1085a193af58654010fbccab5e96508d
+    sha256: 6929dfd0172a951736dd529dea6f9c29142bbe30c56f8aaf22f84aa53aa5fdd9
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
@@ -3180,7 +3177,7 @@ package:
   category: main
   optional: false
 - name: coverage
-  version: 7.15.2
+  version: 7.15.3
   manager: conda
   platform: linux-64
   dependencies:
@@ -3189,14 +3186,14 @@ package:
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     tomli: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/coverage-7.15.2-py312h8a5da7c_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/coverage-7.15.3-py312h8a5da7c_0.conda
   hash:
-    md5: 11e8cba550d02296c444316f6ebd5255
-    sha256: e89d003aafa069ff41885fb798495a411e8f99f10929c490457df0dcd255f964
+    md5: 962394cf93d7c91a75d8fb2543235562
+    sha256: d81fc94dfc035e2b8bd644670d410ae4de0d913c5c025ea6227406927e8b34f0
   category: main
   optional: false
 - name: coverage
-  version: 7.15.2
+  version: 7.15.3
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -3204,14 +3201,14 @@ package:
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     tomli: ''
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/coverage-7.15.2-py312hd077ced_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/coverage-7.15.3-py312hd077ced_0.conda
   hash:
-    md5: fc12ad978376dd87b753e3f79a0bfbbf
-    sha256: 3ba9ba7fbc50e9efff78f9cace9aa4c48925411eb7c95500eb5d2d1eb86ca1e5
+    md5: 86ff61f8c1a31602d3003cb252404ded
+    sha256: 696d53d03f7a536c6153026dbd2dfeb1d42c06a83777834f88adfd65c7d55e86
   category: main
   optional: false
 - name: coverage
-  version: 7.15.2
+  version: 7.15.3
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -3219,10 +3216,10 @@ package:
     python: '>=3.12,<3.13.0a0,>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     tomli: ''
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/coverage-7.15.2-py312h04c11ed_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/coverage-7.15.3-py312h04c11ed_0.conda
   hash:
-    md5: 1d5168bc82c0cb958ed6bfe404f583dc
-    sha256: 33cf2cafbb42a1232b1e2c52c453f4a9e8d1eceae01f289a75d6513f58115647
+    md5: b6f243afde9952e2766ba75744454629
+    sha256: f2f300ef3bf422734c41c8f812191e475b21c13068b75c7c6111a7c937abf979
   category: main
   optional: false
 - name: cpp-expected
@@ -5848,39 +5845,39 @@ package:
   category: main
   optional: false
 - name: harfbuzz
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: linux-64
   dependencies:
-    libharfbuzz-devel: 14.2.1
-  url: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.2.1-ha770c72_1.conda
+    libharfbuzz-devel: 14.3.0
+  url: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.3.0-ha770c72_0.conda
   hash:
-    md5: 72e956a71241633d8c80aa198fd08784
-    sha256: 853beec89ff91cbbf630f1d305b69153eb28a3cb78af95ddc1fb4d30e524c6f4
+    md5: 7f42f814e1306f83e4cac267baa9acab
+    sha256: 511813aaad42ed2494efc77452738fed7734985e069efc08c279a701b1708ba0
   category: main
   optional: false
 - name: harfbuzz
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: linux-aarch64
   dependencies:
-    libharfbuzz-devel: 14.2.1
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/harfbuzz-14.2.1-h8af1aa0_1.conda
+    libharfbuzz-devel: 14.3.0
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/harfbuzz-14.3.0-h8af1aa0_0.conda
   hash:
-    md5: 41198d1dd71d97c1507e6bd17edd10c7
-    sha256: 57b157674ecee4d16e2873a3624095b4ed1859ce8c574b161e0d9c1723788733
+    md5: 9aa6588dcf66468cab18936ade8a1b25
+    sha256: f2c5c27765b1c1d3c65f15584cb24f6bedd5733848644920b1a3ec6403623cee
   category: main
   optional: false
 - name: harfbuzz
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: osx-arm64
   dependencies:
-    libharfbuzz-devel: 14.2.1
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/harfbuzz-14.2.1-hce30654_1.conda
+    libharfbuzz-devel: 14.3.0
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/harfbuzz-14.3.0-hce30654_0.conda
   hash:
-    md5: 95896299aa1012c7410629b2ee360f87
-    sha256: 8922ec1cd17f558ca38c513d4880b7fadbfa08b38a563880c8c2ceddfcc1fba2
+    md5: aab13bb027c8295f5b09ccb8cd084698
+    sha256: 67042b0e8896f707c60981947ae22fe0c13942283c8d7ac9b8286cc01cc1c2d2
   category: main
   optional: false
 - name: hatch
@@ -8337,7 +8334,7 @@ package:
   category: main
   optional: false
 - name: libharfbuzz
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -8348,18 +8345,18 @@ package:
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=14'
-    libglib: '>=2.88.2,<3.0a0'
+    libglib: '>=2.88.3,<3.0a0'
     libpng: '>=1.6.58,<1.7.0a0'
     libstdcxx: '>=14'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-14.2.1-h17a8019_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-14.3.0-h17a8019_0.conda
   hash:
-    md5: fb4669c3990b94ea32fbb81f433e9aa6
-    sha256: 821c315f6b5171aa89e735be2ad84e74eb3f898fc7610ee36cfecd95dfa789e8
+    md5: f33637ebded146eafa6b2197c8f597a6
+    sha256: fb72d6f7e90d4927cb53a4e13592559ce74b65052323d5d6dd12499b026c680e
   category: main
   optional: false
 - name: libharfbuzz
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -8369,18 +8366,18 @@ package:
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=14'
-    libglib: '>=2.88.2,<3.0a0'
+    libglib: '>=2.88.3,<3.0a0'
     libpng: '>=1.6.58,<1.7.0a0'
     libstdcxx: '>=14'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libharfbuzz-14.2.1-h3a99ef3_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libharfbuzz-14.3.0-h3a99ef3_0.conda
   hash:
-    md5: 655cedd9626545089b9e9ead153cf619
-    sha256: ae1d16dd62f626c4dab1240a49f6b04e14e4f30140e5fb26bb835821dba114b6
+    md5: a2126ced7efaf094bc85126bad568105
+    sha256: d8e5e449554ac33496ee1dbb1f039c2a9cf629ee6cb7c5330f3dc4f1f6cab694
   category: main
   optional: false
 - name: libharfbuzz
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -8391,17 +8388,17 @@ package:
     libcxx: '>=19'
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
-    libglib: '>=2.88.2,<3.0a0'
+    libglib: '>=2.88.3,<3.0a0'
     libpng: '>=1.6.58,<1.7.0a0'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libharfbuzz-14.2.1-h5a65909_1.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libharfbuzz-14.3.0-h5a65909_0.conda
   hash:
-    md5: e8d6e86663316dfbdec7dac532824516
-    sha256: 75860db66af9748572038d1e3a2260eca56ee4b38b9523e042fac8caf4277529
+    md5: 19248fa96b4c573e46bfec7fa3c875fa
+    sha256: 5803da482e914fc5d7ea82b31789471973b03ca58e9caffedd86e175c3aee447
   category: main
   optional: false
 - name: libharfbuzz-devel
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -8413,19 +8410,19 @@ package:
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=14'
-    libglib: '>=2.88.2,<3.0a0'
-    libharfbuzz: 14.2.1
+    libglib: '>=2.88.3,<3.0a0'
+    libharfbuzz: 14.3.0
     libpng: '>=1.6.58,<1.7.0a0'
     libstdcxx: '>=14'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-devel-14.2.1-h17a8019_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-devel-14.3.0-h17a8019_0.conda
   hash:
-    md5: 99cf21100441e51272f1cd6fe0632a20
-    sha256: 6d8e793042affd18ca1784b7794fab14d16f54f984777ce6ab86bacaa465ab0d
+    md5: 15634b3c7e5a68ca7c6e0bbf84cb2383
+    sha256: 7ce9326c2520ae758f523ae2d72a0762f7494d77fe8cc9a96065df541e1db8e2
   category: main
   optional: false
 - name: libharfbuzz-devel
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -8436,19 +8433,19 @@ package:
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=14'
-    libglib: '>=2.88.2,<3.0a0'
-    libharfbuzz: 14.2.1
+    libglib: '>=2.88.3,<3.0a0'
+    libharfbuzz: 14.3.0
     libpng: '>=1.6.58,<1.7.0a0'
     libstdcxx: '>=14'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libharfbuzz-devel-14.2.1-h3a99ef3_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libharfbuzz-devel-14.3.0-h3a99ef3_0.conda
   hash:
-    md5: b6762f2c0386ba4606d5b2cba1e41ca8
-    sha256: 866b0132df7d080a7b2e3c44e4c79723f007db6c035b1e751612d29db698859b
+    md5: d69e4662c2cd040907196f0209015311
+    sha256: 455479216cb20d5f68a074a50638763986b34da6f6495c72017585324a576f6b
   category: main
   optional: false
 - name: libharfbuzz-devel
-  version: 14.2.1
+  version: 14.3.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -8460,14 +8457,14 @@ package:
     libcxx: '>=19'
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
-    libglib: '>=2.88.2,<3.0a0'
-    libharfbuzz: 14.2.1
+    libglib: '>=2.88.3,<3.0a0'
+    libharfbuzz: 14.3.0
     libpng: '>=1.6.58,<1.7.0a0'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libharfbuzz-devel-14.2.1-h5a65909_1.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libharfbuzz-devel-14.3.0-h5a65909_0.conda
   hash:
-    md5: e538f961a3042abf8307c5c5a6d6b09b
-    sha256: f3f74f090b6a31fed00d64cbe6bbeed6b2a9b820442714ecb66ada08dec913ea
+    md5: 9b9a765bb25ac591d79ced348d4dc340
+    sha256: ec6822ad0101e1d627aebb04792a0a642a706ba3c12e2691a90c7c3995b09fc1
   category: main
   optional: false
 - name: libiconv
