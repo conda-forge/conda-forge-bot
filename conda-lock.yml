@@ -3551,7 +3551,7 @@ package:
   category: main
   optional: false
 - name: dateparser
-  version: 1.4.1
+  version: 1.4.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -3560,14 +3560,14 @@ package:
     pytz: '>=2024.2'
     regex: '>=2024.9.11'
     tzlocal: '>=0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.2-pyhd8ed1ab_0.conda
   hash:
-    md5: 125562237801cfef918161d2ceb2c468
-    sha256: 4519800be73315780e77ca61e26440f7c90121c706d6f5d001f67226a2da4b08
+    md5: 2197e362ec4e51408956030a457ad09f
+    sha256: 183fc95ed3ce2cd8d1f414532d440d648baf314351005efaa2dcfb7033a79f6c
   category: main
   optional: false
 - name: dateparser
-  version: 1.4.1
+  version: 1.4.2
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -3576,14 +3576,14 @@ package:
     pytz: '>=2024.2'
     regex: '>=2024.9.11'
     tzlocal: '>=0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.2-pyhd8ed1ab_0.conda
   hash:
-    md5: 125562237801cfef918161d2ceb2c468
-    sha256: 4519800be73315780e77ca61e26440f7c90121c706d6f5d001f67226a2da4b08
+    md5: 2197e362ec4e51408956030a457ad09f
+    sha256: 183fc95ed3ce2cd8d1f414532d440d648baf314351005efaa2dcfb7033a79f6c
   category: main
   optional: false
 - name: dateparser
-  version: 1.4.1
+  version: 1.4.2
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -3592,10 +3592,10 @@ package:
     pytz: '>=2024.2'
     regex: '>=2024.9.11'
     tzlocal: '>=0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.2-pyhd8ed1ab_0.conda
   hash:
-    md5: 125562237801cfef918161d2ceb2c468
-    sha256: 4519800be73315780e77ca61e26440f7c90121c706d6f5d001f67226a2da4b08
+    md5: 2197e362ec4e51408956030a457ad09f
+    sha256: 183fc95ed3ce2cd8d1f414532d440d648baf314351005efaa2dcfb7033a79f6c
   category: main
   optional: false
 - name: dbus
