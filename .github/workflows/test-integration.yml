@@ -14,7 +14,6 @@ concurrency:
 
 env:
   CF_TICK_USE_LOCAL_PINNINGS: "true"
-  CF_FEEDSTOCK_OPS_IN_CONTAINER: "true"
 
 defaults:
   run:
