@@ -54,7 +54,8 @@ def global_environment_setup():
     )
 
     # by default, we enable container mode because it is the default in the bot
-    os.environ["CF_FEEDSTOCK_OPS_IN_CONTAINER"] = "false"
+    # set if not set
+    os.environ.setdefault("CF_FEEDSTOCK_OPS_IN_CONTAINER", "false")
 
     # set if not set
     os.environ.setdefault("CF_FEEDSTOCK_OPS_CONTAINER_NAME", "conda-forge-tick")
