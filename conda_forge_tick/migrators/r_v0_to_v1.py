@@ -39,6 +39,20 @@ class RV0ToV1Migrator(GenericV0ToV1Migrator):
         "constraints on dependencies that use variables:",
     )
 
+    # R-specific SPDX corrections, layered on top of the shared
+    # migrators/license.py mapping via _to_spdx() below - kept here, not in
+    # that shared table, since this is a CRAN-specific convention.
+    _SPDX_OVERRIDES: dict[str, str] = {
+        # CRAN's "Unlimited" license, commonly pre-wrapped as the SPDX
+        # custom-license reference "LicenseRef-Unlimited".
+        "LicenseRef-Unlimited": "Unlimited",
+    }
+
+    def _to_spdx(self, lic: str) -> str:
+        if lic in self._SPDX_OVERRIDES:
+            return self._SPDX_OVERRIDES[lic]
+        return super()._to_spdx(lic)
+
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         if super().filter(attrs, not_bad_str_start):
             return True

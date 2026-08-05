@@ -10,7 +10,7 @@ from conda_recipe_manager.parser.recipe_reader import RecipeReader
 from conda_recipe_manager.parser.types import RecipeReaderFlags
 
 from conda_forge_tick.migrators.core import MiniMigrator
-from conda_forge_tick.migrators.license import _to_spdx
+from conda_forge_tick.migrators.license import _to_spdx as _to_spdx_generic
 
 if typing.TYPE_CHECKING:
     from ..migrators_types import AttrsTypedDict
@@ -40,16 +40,16 @@ _JINJA_TOKEN_RE = re.compile(r"\$\{\{|\}\}")
 _V0_SELECTOR_RE = re.compile(r"#\s*\[")
 
 
-def _normalize_legacy_license(raw_meta_yaml: str) -> str:
+def _normalize_legacy_license(raw_meta_yaml: str, to_spdx) -> str:
     """Rewrite a recognized legacy license string to its SPDX identifier.
 
     crm has its own SPDX-correction pass, but it only catches a handful of
-    common mistakes and doesn't call out to a real SPDX database (see its
-    ``_fix_bad_licenses``). This repo's own ``LicenseMigrator`` already has a
-    broader, battle-tested mapping (e.g. ``GPL (>= 2)`` -> ``GPL-2.0-or-later``)
-    that crm's matcher doesn't know about; apply it first so crm never has a
-    reason to warn "Could not patch unrecognized license" for a string we
-    already know how to fix.
+    common mistakes and doesn't call out to a real SPDX database. ``to_spdx``
+    is a callable mapping a legacy string to its SPDX identifier (a no-op if
+    it doesn't recognize the string) - normally ``GenericV0ToV1Migrator._to_spdx``
+    or a subclass's override of it - applied here so crm never has a reason
+    to warn "Could not patch unrecognized license" for a string we already know
+    how to fix.
     """
 
     def _repl(match: re.Match) -> str:
@@ -59,7 +59,7 @@ def _normalize_legacy_license(raw_meta_yaml: str) -> str:
         if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
             quote = value[0]
             unquoted = value[1:-1]
-        corrected = _to_spdx(unquoted)
+        corrected = to_spdx(unquoted)
         if corrected == unquoted:
             return match.group(0)
         return f"{match.group('prefix')}{quote}{corrected}{quote}"
@@ -206,6 +206,17 @@ class GenericV0ToV1Migrator(MiniMigrator):
                 blocking.append(msg)
         return blocking
 
+    def _to_spdx(self, lic: str) -> str:
+        """Map a legacy license string to its SPDX identifier, if recognized.
+
+        Delegates verbatim to this repo's shared ``LicenseMigrator`` mapping
+        (``migrators/license.py``) - nothing package-specific lives here.
+        Subclasses override this method (not ``IGNORED_WARNINGS``) to layer
+        their own mappings on top without touching the shared table; see
+        ``RV0ToV1Migrator._to_spdx`` for the R-specific "Unlimited" case.
+        """
+        return _to_spdx_generic(lic)
+
     def _convert(self, raw_meta_yaml: str) -> tuple[str | None, list[str]]:
         """Attempt to convert ``raw_meta_yaml`` (schema v0) to a v1 recipe.
 
@@ -216,7 +227,7 @@ class GenericV0ToV1Migrator(MiniMigrator):
         # Fix legacy license strings crm's own matcher won't recognize, and
         # hide `environ["X"]` calls before crm's duplicate-key merge can
         # mangle them - see the two functions' docstrings above.
-        raw_meta_yaml = _normalize_legacy_license(raw_meta_yaml)
+        raw_meta_yaml = _normalize_legacy_license(raw_meta_yaml, self._to_spdx)
         raw_meta_yaml = _hide_environ_calls(raw_meta_yaml)
 
         # Mirrors what the `crm convert` CLI always does otherwise (e.g.

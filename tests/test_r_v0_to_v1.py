@@ -57,6 +57,41 @@ R_BASE_MULTI_OUTPUT_RECIPE = (
     Path(__file__).parent / "r-base-feedstock" / "recipe" / "meta.yaml"
 ).read_text()
 
+# A real pattern (from r-presenceabsence): CRAN's "Unlimited" license,
+# pre-wrapped as the SPDX custom-license reference "LicenseRef-Unlimited".
+# crm's own matcher maps the *bare* string "Unlimited" -> "NOASSERTION", but
+# doesn't recognize the "LicenseRef-" wrapped form, so it warns "Could not
+# patch unrecognized license" unless we strip the wrapper first.
+LICENSEREF_UNLIMITED_RECIPE = textwrap.dedent(
+    """\
+    package:
+      name: r-presenceabsence
+      version: "1.0"
+
+    requirements:
+      host:
+        - r-base
+      run:
+        - r-base
+
+    about:
+      home: https://CRAN.R-project.org/package=PresenceAbsence
+      license: LicenseRef-Unlimited
+      license_family: other
+      summary: test
+    """
+)
+
+
+def test_to_spdx_overrides_r_specific_mapping_and_falls_back_to_shared_one():
+    migrator = RV0ToV1Migrator()
+    # R-specific override.
+    assert migrator._to_spdx("LicenseRef-Unlimited") == "Unlimited"
+    # Falls back to GenericV0ToV1Migrator._to_spdx() -> the shared mapping.
+    assert migrator._to_spdx("GPL-2") == "GPL-2.0-only"
+    # Unrecognized strings are still a no-op.
+    assert migrator._to_spdx("nonsense") == "nonsense"
+
 
 def test_generic_migrator_blocks_on_r_specific_warnings():
     # GenericV0ToV1Migrator has no idea these warnings are safe to ignore;
@@ -79,6 +114,17 @@ def test_convert_clean_with_r_specific_tokens():
     # left as invalid `${{ environ["PREFIX"] }}`.
     assert 'env.get("PREFIX")' in v1_content
     assert "environ[" not in v1_content
+
+
+def test_convert_normalizes_licenseref_unlimited():
+    # Mapping straight to "NOASSERTION" ourselves would backfire: it isn't
+    # itself a recognized SPDX license ID, so crm would just reject it right
+    # back as "unrecognized". Stripping down to the bare "Unlimited" lets
+    # crm's own matcher apply its own agreed correction instead.
+    v1_content, blocking = RV0ToV1Migrator()._convert(LICENSEREF_UNLIMITED_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert "license: NOASSERTION" in v1_content
 
 
 def test_convert_skips_multi_output_recipe_instead_of_crashing():

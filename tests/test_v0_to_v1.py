@@ -102,6 +102,14 @@ UNRECOGNIZED_LICENSE_RECIPE = CLEAN_RECIPE.replace(
     "  license: MIT\n", "  license: GPL (>= 2)\n"
 )
 
+# CRAN's "Unlimited" license (real example: r-presenceabsence). This is
+# an R-specific mapping that lives in RV0ToV1Migrator._to_spdx, not here - see
+# test_r_v0_to_v1.py for the positive case; the negative case below confirms
+# it stays confined to the R subclass.
+LICENSEREF_UNLIMITED_RECIPE = CLEAN_RECIPE.replace(
+    "  license: MIT\n", "  license: LicenseRef-Unlimited\n"
+)
+
 # A real pattern (from r-kedd): a duplicate `license_file` key, once per
 # platform selector, where *both* values contain their own `environ["..."]`
 # call. crm's duplicate-key ternary merge mishandles a value that already
@@ -172,6 +180,23 @@ def test_convert_normalizes_unrecognized_legacy_license():
     assert blocking == []
     assert v1_content is not None
     assert "license: GPL-2.0-or-later" in v1_content
+
+
+def test_to_spdx_delegates_to_shared_license_mapping():
+    assert GenericV0ToV1Migrator()._to_spdx("GPL-2") == "GPL-2.0-only"
+    # Unrecognized strings are a no-op, same as the shared _to_spdx().
+    assert GenericV0ToV1Migrator()._to_spdx("nonsense") == "nonsense"
+
+
+def test_convert_does_not_know_r_specific_licenseref_unlimited():
+    # "LicenseRef-Unlimited" -> "Unlimited" is an R-specific mapping (CRAN's
+    # "Unlimited" license) that lives in RV0ToV1Migrator._to_spdx, not here.
+    # GenericV0ToV1Migrator has no idea it's safe to rewrite, so it still
+    # blocks. See test_r_v0_to_v1.py for the positive (RV0ToV1Migrator) case.
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(LICENSEREF_UNLIMITED_RECIPE)
+    assert v1_content is None
+    assert len(blocking) == 1
+    assert "Could not patch unrecognized license" in blocking[0]
 
 
 def test_convert_fixes_duplicate_environ_license_file_merge():
