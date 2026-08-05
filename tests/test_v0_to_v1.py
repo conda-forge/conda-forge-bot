@@ -83,6 +83,27 @@ ENVIRON_RECIPE = CLEAN_RECIPE.replace(
 # LicenseMigrator mapping in migrators/license.py) and just logs the change.
 LEGACY_LICENSE_RECIPE = CLEAN_RECIPE.replace("  license: MIT\n", "  license: GPL-2\n")
 
+# `GPL (>= 2)` is a legacy license string crm's own SPDX matcher can't map at
+# all (it just warns "Could not patch unrecognized license" and leaves the
+# field as-is) - but this repo's own LicenseMigrator mapping already knows
+# `GPL (>= 2)` -> `GPL-2.0-or-later`, so GenericV0ToV1Migrator normalizes it
+# before crm ever sees it.
+UNRECOGNIZED_LICENSE_RECIPE = CLEAN_RECIPE.replace(
+    "  license: MIT\n", "  license: GPL (>= 2)\n"
+)
+
+# A real pattern (from r-kedd): a duplicate `license_file` key, once per
+# platform selector, where *both* values contain their own `environ["..."]`
+# call. crm's duplicate-key ternary merge mishandles a value that already
+# contains a templated expression, producing malformed, mismatched-brace v1
+# syntax with no warning at all.
+DUPLICATE_ENVIRON_LICENSE_FILE_RECIPE = CLEAN_RECIPE.replace(
+    "  summary: Amazon Web Services Library\n",
+    "  summary: Amazon Web Services Library\n"
+    "  license_file: '{{ environ[\"PREFIX\"] }}/share/licenses/MIT'  # [unix]\n"
+    "  license_file: '{{ environ[\"PREFIX\"] }}\\share\\licenses\\MIT'  # [win]\n",
+)
+
 
 def test_convert_clean_recipe():
     v1_content, blocking = GenericV0ToV1Migrator()._convert(CLEAN_RECIPE)
@@ -118,6 +139,38 @@ def test_convert_ignores_corrected_legacy_license():
     assert blocking == []
     assert v1_content is not None
     assert "license: GPL-2.0-only" in v1_content
+
+
+def test_convert_normalizes_unrecognized_legacy_license():
+    # Without normalization, crm can't map this string at all and warns
+    # "Could not patch unrecognized license" - not on the ignore-list, and
+    # rightly so, since crm leaves the original (non-SPDX) string in place
+    # in that case. GenericV0ToV1Migrator normalizes it first instead, so
+    # crm never has a reason to warn.
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(UNRECOGNIZED_LICENSE_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert "license: GPL-2.0-or-later" in v1_content
+
+
+def test_convert_fixes_duplicate_environ_license_file_merge():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(
+        DUPLICATE_ENVIRON_LICENSE_FILE_RECIPE
+    )
+    assert blocking == []
+    assert v1_content is not None
+    # Exactly one well-formed `${{ ... }}` block for license_file, not the
+    # malformed, mismatched-brace output crm produces without the fix.
+    license_file_lines = [
+        line for line in v1_content.splitlines() if "license_file" in line
+    ]
+    assert len(license_file_lines) == 1
+    license_file_line = license_file_lines[0]
+    assert license_file_line.count("${{") == 1
+    assert license_file_line.count("}}") == 1
+    assert 'env.get("PREFIX")' in license_file_line
+    assert "if win" in license_file_line and "if unix" in license_file_line
+    assert "environ[" not in v1_content
 
 
 def test_convert_blocks_on_unignored_warning():
