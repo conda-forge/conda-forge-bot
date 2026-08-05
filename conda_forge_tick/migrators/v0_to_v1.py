@@ -6,6 +6,7 @@ from typing import Any
 
 from conda_recipe_manager.parser._message_table import MessageCategory, MessageTable
 from conda_recipe_manager.parser.recipe_parser_convert import RecipeParserConvert
+from conda_recipe_manager.parser.recipe_reader import RecipeReader
 from conda_recipe_manager.parser.types import RecipeReaderFlags
 
 from conda_forge_tick.migrators.core import MiniMigrator
@@ -27,6 +28,16 @@ _LICENSE_LINE_RE = re.compile(
 _ENVIRON_RE = re.compile(r"""\{\{\s*environ\[['"](\w+)['"]\]\s*\}\}""")
 _ENVIRON_PLACEHOLDER_FMT = "__CFTICK_ENVIRON_{}__"
 _ENVIRON_PLACEHOLDER_RE = re.compile(r"__CFTICK_ENVIRON_(\w+)__")
+# A single-or-double-quoted string literal, captured whole so a literal
+# containing more than one placeholder (see _restore_environ_calls) can be
+# split at every occurrence, not just the first.
+_QUOTED_STRING_RE = re.compile(r"(['\"])((?:(?!\1).)*)\1")
+
+# Tokens used by _malformed_output_reasons to sanity-check crm's (or our
+# own text-level fixes) v1 output structurally, since crm's message table
+# can report nothing at all for malformed text - see that function.
+_JINJA_TOKEN_RE = re.compile(r"\$\{\{|\}\}")
+_V0_SELECTOR_RE = re.compile(r"#\s*\[")
 
 
 def _normalize_legacy_license(raw_meta_yaml: str) -> str:
@@ -80,28 +91,83 @@ def _restore_environ_calls(v1_content: str) -> str:
     """Undo ``_hide_environ_calls`` in crm's v1 output."""
 
     def _in_string(match: re.Match) -> str:
-        quote, before, var, after = match.groups()
+        quote, body = match.group(1), match.group(2)
+        if not _ENVIRON_PLACEHOLDER_RE.search(body):
+            return match.group(0)
+
+        # A value can have more than one `environ[...]` call in it.
+        # Split at every placeholder, not just the first - otherwise
+        # the second one is left behind as plain text, and the fallback
+        # pass further down wraps it in its own `${{ ... }}`.
         parts = []
-        if before:
-            parts.append(f"{quote}{before}{quote}")
-        parts.append(f'env.get("{var}")')
-        if after:
-            parts.append(f"{quote}{after}{quote}")
+        pos = 0
+        for m in _ENVIRON_PLACEHOLDER_RE.finditer(body):
+            if m.start() > pos:
+                parts.append(f"{quote}{body[pos : m.start()]}{quote}")
+            parts.append(f'env.get("{m.group(1)}")')
+            pos = m.end()
+        if pos < len(body):
+            parts.append(f"{quote}{body[pos:]}{quote}")
         return "(" + " ~ ".join(parts) + ")"
 
     # A placeholder embedded inside a quoted string literal - the merged-
     # ternary case - needs the literal split into a concatenation at the
-    # placeholder's position.
-    content = re.sub(
-        r"(['\"])([^'\"]*)" + _ENVIRON_PLACEHOLDER_RE.pattern + r"([^'\"]*)\1",
-        _in_string,
-        v1_content,
-    )
+    # placeholder's position(s).
+    content = _QUOTED_STRING_RE.sub(_in_string, v1_content)
     # A placeholder on its own (the common, non-duplicated case) is just the
     # template call.
     return _ENVIRON_PLACEHOLDER_RE.sub(
         lambda m: f'${{{{ env.get("{m.group(1)}") }}}}', content
     )
+
+
+def _malformed_output_reasons(v1_content: str) -> list[str]:
+    """Find structural problems in crm's v1 output that its message table
+    can miss entirely.
+
+    crm or our own text-level fixes above can produce malformed v1 text
+    with an empty message table: mismatched ``${{``/``}}``, or a duplicate
+    key left over from a failed selector merge. That output may still be
+    valid YAML in every such case seen so far, so a plain YAML parse isn't a
+    useful check; these are.
+    """
+    reasons: list[str] = []
+
+    # A v1 recipe should never have duplicate keys - that's a v0 selector
+    # idiom, resolved into `if`/`then` blocks during conversion. Note the
+    # deliberate absence of ALLOW_DUPLICATE_KEYS here, unlike the v0 read in
+    # _convert().
+    # Therefore a duplicate key surviving into v1 output would mean a merge
+    # failed.
+    try:
+        RecipeReader(v1_content)
+    except Exception as exc:
+        reasons.append(
+            f"generated recipe.yaml does not re-parse: {type(exc).__name__}: {exc}"
+        )
+
+    for lineno, line in enumerate(v1_content.splitlines(), 1):
+        stripped = line.lstrip()
+        if stripped.startswith("#"):
+            continue
+        if _V0_SELECTOR_RE.search(line):
+            reasons.append(f"line {lineno}: leftover v0 selector: {stripped}")
+
+        depth = 0
+        for token in _JINJA_TOKEN_RE.findall(line):
+            if token == "${{":
+                if depth:
+                    reasons.append(f"line {lineno}: nested `${{{{`")
+                depth += 1
+            else:
+                depth -= 1
+                if depth < 0:
+                    reasons.append(f"line {lineno}: unmatched `}}}}`")
+                    break
+        if depth > 0:
+            reasons.append(f"line {lineno}: unclosed `${{{{`")
+
+    return reasons
 
 
 class GenericV0ToV1Migrator(MiniMigrator):
@@ -173,7 +239,15 @@ class GenericV0ToV1Migrator(MiniMigrator):
             return None, [f"crm raised {type(exc).__name__}: {exc}"]
 
         v1_content = _restore_environ_calls(v1_content)
+
+        # crm's message table is not a fully trustworthy signal: it has
+        # produced malformed output (mismatched `${{`/`}}`, a duplicate key
+        # left over from a failed merge) while reporting no warnings or
+        # errors at all. Structurally sanity-check the text itself too,
+        # rather than shipping something broken just because nothing in
+        # msg_tbl complained.
         blocking = self._actionable_messages(msg_tbl)
+        blocking += _malformed_output_reasons(v1_content)
         if blocking:
             return None, blocking
         return v1_content, []

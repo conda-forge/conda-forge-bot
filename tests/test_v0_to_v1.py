@@ -2,6 +2,7 @@ import logging
 import textwrap
 
 from conda_forge_tick.migrators import GenericV0ToV1Migrator
+from conda_forge_tick.migrators.v0_to_v1 import _malformed_output_reasons
 
 CLEAN_RECIPE = textwrap.dedent(
     """\
@@ -66,9 +67,18 @@ BLOCKING_WARNING_RECIPE = CLEAN_RECIPE.replace(
 # extremely common and legitimate in conda-forge recipes.
 UNPARSABLE_RECIPE = "package: [name: boto\n"
 
-# A second top-level `build:` key - the common `key: val  # [selector]` /
-# `key: val2  # [other-selector]` pattern conda-forge recipes rely on.
-DUPLICATE_KEY_RECIPE = CLEAN_RECIPE + "\nbuild:\n  number: 1\n"
+# A duplicate `script:` key, once per selector - the common `key: val
+# # [selector]` / `key: val2  # [other-selector]` pattern conda-forge
+# recipes rely on. Note this must actually carry a selector: an unselectored
+# duplicate key (e.g. two unconditional `build:` blocks) doesn't merge into
+# anything - crm's ALLOW_DUPLICATE_KEYS just permits it through, and the
+# genuinely-duplicate key survives into v1 output, which
+# _malformed_output_reasons correctly flags as broken.
+DUPLICATE_KEY_RECIPE = CLEAN_RECIPE.replace(
+    "  script: python setup.py install\n",
+    "  script: python setup.py install  # [not win]\n"
+    "  script: python setup.py install --old-and-unmanageable  # [win]\n",
+)
 
 # `{{ environ["PREFIX"] }}` (common in license_file fields, not just R/Bioconda
 # recipes) needs crm's pre-processing step to become valid v1 syntax; without
@@ -102,6 +112,17 @@ DUPLICATE_ENVIRON_LICENSE_FILE_RECIPE = CLEAN_RECIPE.replace(
     "  summary: Amazon Web Services Library\n"
     "  license_file: '{{ environ[\"PREFIX\"] }}/share/licenses/MIT'  # [unix]\n"
     "  license_file: '{{ environ[\"PREFIX\"] }}\\share\\licenses\\MIT'  # [win]\n",
+)
+
+# Two separate `environ[...]` calls merged into the *same* duplicated value.
+# `_restore_environ_calls` used to only handle the first placeholder in a
+# literal, leaving a second one to get blindly expanded into a `${{ ... }}`
+# nested *inside* the already-templated expression.
+MULTI_ENVIRON_LICENSE_FILE_RECIPE = CLEAN_RECIPE.replace(
+    "  summary: Amazon Web Services Library\n",
+    "  summary: Amazon Web Services Library\n"
+    '  license_file: \'{{ environ["PREFIX"] }}/{{ environ["PKG_NAME"] }}/L\'  # [unix]\n'
+    '  license_file: \'{{ environ["PREFIX"] }}\\{{ environ["PKG_NAME"] }}\\L\'  # [win]\n',
 )
 
 
@@ -171,6 +192,73 @@ def test_convert_fixes_duplicate_environ_license_file_merge():
     assert 'env.get("PREFIX")' in license_file_line
     assert "if win" in license_file_line and "if unix" in license_file_line
     assert "environ[" not in v1_content
+
+
+def test_convert_fixes_multiple_environ_calls_in_one_duplicated_value():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(
+        MULTI_ENVIRON_LICENSE_FILE_RECIPE
+    )
+    assert blocking == []
+    assert v1_content is not None
+    license_file_lines = [
+        line for line in v1_content.splitlines() if "license_file" in line
+    ]
+    assert len(license_file_lines) == 1
+    license_file_line = license_file_lines[0]
+    # Exactly one top-level `${{ ... }}` block - not one nested inside
+    # another because a second placeholder got expanded in place.
+    assert license_file_line.count("${{") == 1
+    assert license_file_line.count("}}") == 1
+    # Once per branch (win/unix each build their own path from both vars) -
+    # not nested inside one another.
+    assert license_file_line.count('env.get("PREFIX")') == 2
+    assert license_file_line.count('env.get("PKG_NAME")') == 2
+    assert "environ[" not in v1_content
+    assert _malformed_output_reasons(v1_content) == []
+
+
+def test_malformed_output_reasons_catches_mismatched_braces():
+    # A real (simplified) example of what crm produces for a duplicate-key
+    # merge gone wrong, with no warning attached at all.
+    broken = (
+        'license_file: ${{ env.get("PREFIX") }}/GPL if unix else '
+        "env.get(\"PREFIX\") }}\\GPL if win else '' }}\n"
+    )
+    reasons = _malformed_output_reasons(broken)
+    assert reasons
+    assert any("unmatched" in r for r in reasons)
+
+
+def test_malformed_output_reasons_catches_nested_braces():
+    nested = (
+        "license_file: ${{ ('${{ env.get(\"PREFIX\") }}/' ~ "
+        "env.get(\"PKG_NAME\") ~ '/L') if unix else '' }}\n"
+    )
+    reasons = _malformed_output_reasons(nested)
+    assert reasons
+    assert any("nested" in r for r in reasons)
+
+
+def test_malformed_output_reasons_catches_duplicate_keys():
+    duplicate = "about:\n  license_file:\n    - a\n  license_file:\n    - b\n"
+    reasons = _malformed_output_reasons(duplicate)
+    assert reasons
+    assert any("does not re-parse" in r for r in reasons)
+
+
+def test_malformed_output_reasons_no_false_positive_on_good_output():
+    good = textwrap.dedent(
+        """\
+        schema_version: 1
+        about:
+          license_file: ${{ (env.get("PREFIX") ~ '/GPL-3') if unix else (env.get("PREFIX") ~ '\\\\GPL-3') if win else '' }}
+        requirements:
+          build:
+            - if: not win
+              then: ${{ compiler('c') }}
+        """
+    )
+    assert _malformed_output_reasons(good) == []
 
 
 def test_convert_blocks_on_unignored_warning():
