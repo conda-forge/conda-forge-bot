@@ -1,6 +1,7 @@
 import copy
 import logging
 import os
+import pprint
 import re
 import secrets
 import time
@@ -434,6 +435,10 @@ class MigrationYaml(GraphMigrator):
             with pushd(recipe_dir), open("conda_build_config.yaml") as f:
                 cbc_contents = f.read()
             merged_cbc = merge_migrator_cbc(self.yaml_contents, cbc_contents)
+            logger.info(
+                "merged conda_build_config.yaml for closing migration:\n%s",
+                merged_cbc,
+            )
             with pushd(os.path.join(recipe_dir, "migrations")):
                 if os.path.exists(f"{self.name}.yaml"):
                     os.remove(f"{self.name}.yaml")
