@@ -175,6 +175,7 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.GH_TOKEN_STAGING_BOT_USER }}
           TEST_SETUP_TOKEN: ${{ secrets.GH_TOKEN_STAGING_BOT_USER }}
+          TIMEOUT: 7200
 
       - name: Print Proxy Logs
         run: cat /tmp/mitmproxy.log
