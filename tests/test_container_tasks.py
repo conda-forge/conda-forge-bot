@@ -276,9 +276,7 @@ def test_container_tasks_rerender_feedstock_containerized_same_as_local(
 
             try:
                 msg = rerender_feedstock(
-                    os.path.join(
-                        tmpdir_cont, "conda-forge-pinning-feedstock"
-                    ),
+                    os.path.join(tmpdir_cont, "conda-forge-pinning-feedstock"),
                     use_container=True,
                 )
             finally:
@@ -322,9 +320,7 @@ def test_container_tasks_rerender_feedstock_containerized_same_as_local(
 
             try:
                 local_msg = rerender_feedstock(
-                    os.path.join(
-                        tmpdir_local, "conda-forge-pinning-feedstock"
-                    ),
+                    os.path.join(tmpdir_local, "conda-forge-pinning-feedstock"),
                     use_container=False,
                 )
             finally:
@@ -389,9 +385,7 @@ def test_container_tasks_rerender_feedstock_containerized_empty(use_containers):
                     )
 
             local_msg = rerender_feedstock(
-                os.path.join(
-                    tmpdir_local, "conda-forge-pinning-feedstock"
-                ),
+                os.path.join(tmpdir_local, "conda-forge-pinning-feedstock"),
                 use_container=False,
             )
 
@@ -404,9 +398,7 @@ def test_container_tasks_rerender_feedstock_containerized_empty(use_containers):
 
         # now run in container and make sure commit message is None
         msg = rerender_feedstock(
-            os.path.join(
-                tmpdir_local, "conda-forge-pinning-feedstock"
-            ),
+            os.path.join(tmpdir_local, "conda-forge-pinning-feedstock"),
             use_container=True,
         )
 
