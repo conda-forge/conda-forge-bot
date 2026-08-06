@@ -1,5 +1,6 @@
 import os
-from typing import Any
+from collections.abc import Callable
+from typing import Any, Literal, get_args
 
 from conda_smithy.utils import get_yaml as smithy_get_yaml
 from ruamel.yaml import YAML
@@ -7,22 +8,29 @@ from ruamel.yaml import YAML
 from conda_forge_tick.migrators.core import MiniMigrator
 from conda_forge_tick.os_utils import pushd
 
-from ..migrators_types import AttrsTypedDict
+from ..migrators_types import (
+    AttrsTypedDict,
+    CondaForgeYamlAzure,
+    CondaForgeYamlContents,
+    CondaForgeYamlGitHubActions,
+    CondaForgeYamlWorkflowSetting,
+)
 
 
 class CondaForgeYAMLCleanup(MiniMigrator):
     allowed_schema_versions = {0, 1}
-    keys_to_remove = [
+    _keys_type = Literal[
         "min_r_ver",
         "max_r_ver",
         "min_py_ver",
         "max_py_ver",
         "compiler_stack",
     ]
-    keys_to_change = [
+    keys_to_remove: tuple[_keys_type] = get_args(_keys_type)
+    keys_to_change = (
         "test_on_native_only",
         "abi_migration_branches",
-    ]
+    )
 
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         """Remove recipes without a conda-forge.yml file that has the keys to remove or change."""
@@ -30,7 +38,24 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             return True
 
         cfy = attrs.get("conda-forge.yml", {})
-        if any(key in cfy for key in (self.keys_to_remove + self.keys_to_change)):
+        azure_settings = cfy.get("azure", {})
+        gha_settings = cfy.get("github_actions", {})
+        azure_settings_linux = azure_settings.get("settings_linux", {})
+        azure_settings_win = azure_settings.get("settings_win", {})
+        azure_variables_linux = azure_settings_linux.get("variables", {})
+        azure_variables_win = azure_settings_win.get("variables", {})
+        if (
+            any(key in cfy for key in (self.keys_to_remove + self.keys_to_change))
+            or (set(azure_settings) | set(gha_settings)).intersection(
+                ("store_build_artifacts", "free_disk_space")
+            )
+            or "resize_win_partitions" in gha_settings
+            or "swapfile_size" in azure_settings_linux
+            or "CONDA_FORGE_DOCKER_RUN_ARGS" in azure_variables_linux
+            or set(azure_variables_win).intersection(
+                ("CONDA_BLD_PATH", "MINIFORGE_HOME", "SET_PAGEFILE")
+            )
+        ):
             return False
         else:
             return True
@@ -44,7 +69,7 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             # just like smithy does
             smithy_yaml = smithy_get_yaml(allow_duplicate_keys=True)
             with open(cfg_path) as fp:
-                cfg = smithy_yaml.load(fp.read())
+                cfg: CondaForgeYamlContents = smithy_yaml.load(fp.read())
             with open(cfg_path, "w") as fp:
                 smithy_yaml.dump(cfg, fp)
 
@@ -71,5 +96,165 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                     str(v) for v in cfg["abi_migration_branches"]
                 ]
 
+            # Since we're switching workflows automatically from Azure
+            # to GHA, let's also make individual settings
+            # provider-independent, unless we're getting conflicting
+            # values.
+            azure_settings = cfg.get("azure", {})
+            gha_settings = cfg.get("github_actions", {})
+            azure_settings_linux = azure_settings.get("settings_linux", {})
+            azure_settings_win = azure_settings.get("settings_win", {})
+            azure_variables_linux = azure_settings_linux.get("variables", {})
+            azure_variables_win = azure_settings_win.get("variables", {})
+
+            self._migrate_workflow_setting(
+                azure_settings, gha_settings, cfg, "store_build_artifacts"
+            )
+            self._migrate_workflow_setting(
+                azure_settings,
+                gha_settings,
+                cfg,
+                "free_disk_space",
+                convert=self._convert_free_disk_space,
+            )
+
+            self._migrate_pagefile_size(
+                azure_settings_linux.pop("swapfile_size", None),
+                azure_variables_win.pop("SET_PAGEFILE", None),
+                cfg,
+            )
+
+            # Technically, these could be extended from Azure to GHA,
+            # but Azure usually has D: and GHA doesn't, so it'll
+            # probably be mismatched.
+            self._migrate_setting(
+                azure_variables_win.pop("CONDA_BLD_PATH", None),
+                cfg,
+                "build_workspace_dir",
+                {"provider": "azure", "os": "win"},
+            )
+            self._migrate_setting(
+                azure_variables_win.pop("MINIFORGE_HOME", None),
+                cfg,
+                "tools_install_dir",
+                {"provider": "azure", "os": "win"},
+            )
+
+            # Settings that are valid only for specific workflows.
+            self._migrate_setting(
+                gha_settings.pop("resize_win_partitions", None),
+                cfg,
+                "resize_partitions",
+                {"provider": "github_actions", "os": "win"},
+            )
+
+            if (
+                docker_run_args := azure_variables_linux.pop(
+                    "CONDA_FORGE_DOCKER_RUN_ARGS", None
+                )
+            ) is not None and "run_args" not in cfg.get("docker", {}):
+                cfg.setdefault("docker", {})["run_args"] = docker_run_args
+
+            # Remove leftover empty dicts.
+            if not azure_variables_win:
+                azure_settings_win.pop("variables", None)
+            if not azure_variables_linux:
+                azure_settings_linux.pop("variables", None)
+            if not azure_settings_win:
+                azure_settings.pop("settings_win", None)
+            if not azure_settings_linux:
+                azure_settings.pop("settings_linux", None)
+            if not azure_settings:
+                cfg.pop("azure", None)
+            if not gha_settings:
+                cfg.pop("github_actions", None)
+
             with open(cfg_path, "w") as fp:
                 yaml.dump(cfg, fp)
+
+    @staticmethod
+    def _migrate_workflow_setting(
+        azure_dict: CondaForgeYamlAzure,
+        gha_dict: CondaForgeYamlGitHubActions,
+        cfg: CondaForgeYamlContents,
+        name: Literal["store_build_artifacts", "free_disk_space"],
+        convert: Callable[[Any], Any] = lambda x: x,
+    ) -> None:
+        # Always remove old values.
+        azure_val = convert(azure_dict.pop(name, None))
+        gha_val = convert(gha_dict.pop(name, None))
+
+        # Don't migrate the old value if a new one is provided already.
+        if name in cfg.get("workflow_settings", {}):
+            return
+        if azure_val is not None:
+            # If the values are different, preserve the split.
+            if gha_val is not None and azure_val != gha_val:
+                cfg.setdefault("workflow_settings", {})[name] = [
+                    {"provider": "azure", "value": azure_val},
+                    {"provider": "github_actions", "value": gha_val},
+                ]
+                return
+            new_value = azure_val
+        elif gha_val is not None:
+            new_value = gha_val
+        else:
+            # Both values are unset, skip.
+            return
+
+        cfg.setdefault("workflow_settings", {})[name] = new_value
+
+    @staticmethod
+    def _convert_free_disk_space(value: Any) -> Any:
+        # Matching the logic in conda-smithy.
+        if isinstance(value, list) and "docker" in value:
+            return "max"
+        elif value:
+            return "quick"
+        elif value is not None:
+            return "skip"
+
+    @staticmethod
+    def _migrate_pagefile_size(
+        linux_swapfile_size: str | None,
+        win_set_pagefile: str | None,
+        cfg: CondaForgeYamlContents,
+    ) -> None:
+        # Don't migrate the old value if a new one is provided already.
+        if "pagefile_size" in cfg.get("workflow_settings", {}):
+            return
+
+        # Pagefile used to be supported on Azure only, with separate
+        # keys for Linux and Windows. Extend it to GHA.
+        pagefile_list: list[CondaForgeYamlWorkflowSetting] = []
+        # swapfile_size is "{size}GiB"
+        if linux_swapfile_size is not None:
+            try:
+                pagefile_list.append(
+                    {
+                        "os": "linux",
+                        "value": int(linux_swapfile_size.removesuffix("GiB")),
+                    }
+                )
+            except ValueError:
+                pass
+        # SET_PAGEFILE is True for 16 GiB
+        if win_set_pagefile is not None:
+            pagefile_list.append(
+                {"os": "win", "value": 16 if win_set_pagefile == "True" else 0}
+            )
+        if pagefile_list:
+            cfg.setdefault("workflow_settings", {})["pagefile_size"] = pagefile_list
+
+    @staticmethod
+    def _migrate_setting(
+        value: Any | None,
+        cfg: CondaForgeYamlContents,
+        name: Literal["build_workspace_dir", "tools_install_dir", "resize_partitions"],
+        params: CondaForgeYamlWorkflowSetting,
+    ) -> None:
+        # Don't migrate the old value if a new one is provided already.
+        if name in cfg.get("workflow_settings", {}):
+            return
+        if value is not None:
+            cfg.setdefault("workflow_settings", {})[name] = [{**params, "value": value}]
