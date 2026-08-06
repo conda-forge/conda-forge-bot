@@ -2,7 +2,10 @@ import logging
 import textwrap
 
 from conda_forge_tick.migrators import GenericV0ToV1Migrator
-from conda_forge_tick.migrators.v0_to_v1 import _malformed_output_reasons
+from conda_forge_tick.migrators.v0_to_v1 import (
+    _join_folded_quoted_scalars,
+    _malformed_output_reasons,
+)
 
 CLEAN_RECIPE = textwrap.dedent(
     """\
@@ -110,6 +113,17 @@ LICENSEREF_UNLIMITED_RECIPE = CLEAN_RECIPE.replace(
     "  license: MIT\n", "  license: LicenseRef-Unlimited\n"
 )
 
+# A YAML-folded multi-line double-quoted `summary:` whose continuation line
+# is itself shaped like `'word' more: words` - crm's line-based reader
+# misparses that continuation as its own key/value pair and crashes with a
+# raw ParsingException instead of a clean warning (real example: r-stringi's
+# `about/summary`, a long description CRAN wraps across two physical lines).
+FOLDED_SUMMARY_RECIPE = CLEAN_RECIPE.replace(
+    "  summary: Amazon Web Services Library\n",
+    "  summary: \"Amazon Web Services Library, supports 'S3', 'EC2',\n"
+    "    'SQS' and more. Available regions: us-east-1.\"\n",
+)
+
 # A real pattern (from r-kedd): a duplicate `license_file` key, once per
 # platform selector, where *both* values contain their own `environ["..."]`
 # call. crm's duplicate-key ternary merge mishandles a value that already
@@ -161,6 +175,33 @@ def test_convert_preprocesses_environ_syntax():
     assert v1_content is not None
     assert 'env.get("PREFIX")' in v1_content
     assert "environ[" not in v1_content
+
+
+def test_join_folded_quoted_scalars_joins_multiline_value():
+    joined = _join_folded_quoted_scalars(FOLDED_SUMMARY_RECIPE)
+    assert (
+        "  summary: \"Amazon Web Services Library, supports 'S3', 'EC2',"
+        " 'SQS' and more. Available regions: us-east-1.\"\n"
+    ) in joined
+    # The two folded lines become one - everything else is untouched.
+    assert joined.count("\n") == FOLDED_SUMMARY_RECIPE.count("\n") - 1
+    assert "  license: MIT\n" in joined
+
+
+def test_join_folded_quoted_scalars_leaves_single_line_values_alone():
+    assert _join_folded_quoted_scalars(CLEAN_RECIPE) == CLEAN_RECIPE
+
+
+def test_convert_fixes_folded_quoted_scalar_crash():
+    # Without _join_folded_quoted_scalars, crm raises a raw ParsingException
+    # on this shape rather than a clean, actionable warning.
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(FOLDED_SUMMARY_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert (
+        "summary: \"Amazon Web Services Library, supports 'S3', 'EC2',"
+        " 'SQS' and more. Available regions: us-east-1.\""
+    ) in v1_content
 
 
 def test_convert_ignores_corrected_legacy_license():

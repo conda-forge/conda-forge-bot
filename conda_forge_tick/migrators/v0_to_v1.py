@@ -39,6 +39,80 @@ _QUOTED_STRING_RE = re.compile(r"(['\"])((?:(?!\1).)*)\1")
 _JINJA_TOKEN_RE = re.compile(r"\$\{\{|\}\}")
 _V0_SELECTOR_RE = re.compile(r"#\s*\[")
 
+# A block-mapping `key: "..."` (or `key: '...'`) whose value opens a quote -
+# see _join_folded_quoted_scalars.
+_SCALAR_KEY_RE = re.compile(r"^([ \t]*[\w.-]+:[ \t]*)([\"'])")
+
+
+def _find_scalar_close(text: str, quote: str) -> int:
+    r"""Given a quote character, find where it closes in
+    ``text`` (-1 if it doesn't), respecting ``\"``
+    and ``''`` escapes.
+    """
+    i, n = 0, len(text)
+    while i < n:
+        ch = text[i]
+        if quote == '"' and ch == "\\":
+            i += 2
+            continue
+        if ch == quote:
+            if quote == "'" and i + 1 < n and text[i + 1] == "'":
+                i += 2
+                continue
+            return i + 1
+        i += 1
+    return -1
+
+
+def _join_folded_quoted_scalars(raw_meta_yaml: str) -> str:
+    """Join a quoted scalar value that YAML folds across multiple physical
+    lines back onto a single line.
+
+    YAML folds a line break inside a quoted scalar into a single space, so
+    this is a semantic no-op - but crm's recipe reader parses selectors line
+    by line, and a continuation line shaped like ``'word' more: words``
+    (quote-led, with a colon later in the line) gets misread as its own
+    key/value pair instead of plain scalar content, crashing with a raw
+    ``ParsingException`` instead of a clean warning (real example:
+    r-stringi's ``about/summary``, a long description wrapped across two
+    lines). Physically joining the fold before crm ever sees it removes the
+    ambiguous line shape entirely.
+    """
+    lines = raw_meta_yaml.split("\n")
+    out: list[str] = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        match = _SCALAR_KEY_RE.match(line)
+        if not match:
+            out.append(line)
+            i += 1
+            continue
+        quote = match.group(2)
+        if _find_scalar_close(line[match.end() :], quote) != -1:
+            out.append(line)
+            i += 1
+            continue
+
+        chunk = [line]
+        j = i + 1
+        closed = False
+        while j < len(lines):
+            chunk.append(lines[j])
+            closed = _find_scalar_close(lines[j].strip(), quote) != -1
+            j += 1
+            if closed:
+                break
+        if not closed:
+            # Genuinely unclosed/malformed - leave as-is and let crm raise
+            # its own error rather than silently swallowing lines.
+            out.append(line)
+            i += 1
+            continue
+        out.append(chunk[0] + "".join(" " + c.strip() for c in chunk[1:]))
+        i = j
+    return "\n".join(out)
+
 
 def _normalize_legacy_license(raw_meta_yaml: str, to_spdx) -> str:
     """Rewrite a recognized legacy license string to its SPDX identifier.
@@ -224,10 +298,11 @@ class GenericV0ToV1Migrator(MiniMigrator):
         not safe to ship unattended, along with the list of messages that
         explain why (empty if the conversion is clean).
         """
-        # Fix legacy license strings crm's own matcher won't recognize, and
-        # hide `environ["X"]` calls before crm's duplicate-key merge can
-        # mangle them - see the two functions' docstrings above.
+        # Join folded multi-line quoted scalars before crm's line-based reader can misparse a continuation line.
+        raw_meta_yaml = _join_folded_quoted_scalars(raw_meta_yaml)
+        # Fix legacy license strings crm's own matcher won't recognize.
         raw_meta_yaml = _normalize_legacy_license(raw_meta_yaml, self._to_spdx)
+        # Hide `environ["X"]` calls before crm's duplicate-key merge can mangle them.
         raw_meta_yaml = _hide_environ_calls(raw_meta_yaml)
 
         # Mirrors what the `crm convert` CLI always does otherwise (e.g.
