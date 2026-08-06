@@ -256,11 +256,11 @@ def test_container_tasks_rerender_feedstock_containerized_same_as_local(
                 [
                     "git",
                     "clone",
-                    "https://github.com/conda-forge/conda-forge-feedstock-check-solvable-feedstock.git",
+                    "https://github.com/conda-forge/conda-forge-pinning-feedstock.git",
                 ]
             )
             # make sure rerender happens
-            with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+            with pushd("conda-forge-pinning-feedstock"):
                 cmds = [
                     ["git", "rm", "-f", ".gitignore"],
                     ["git", "rm", "-rf", ".scripts"],
@@ -277,7 +277,7 @@ def test_container_tasks_rerender_feedstock_containerized_same_as_local(
             try:
                 msg = rerender_feedstock(
                     os.path.join(
-                        tmpdir_cont, "conda-forge-feedstock-check-solvable-feedstock"
+                        tmpdir_cont, "conda-forge-pinning-feedstock"
                     ),
                     use_container=True,
                 )
@@ -302,11 +302,11 @@ def test_container_tasks_rerender_feedstock_containerized_same_as_local(
                 [
                     "git",
                     "clone",
-                    "https://github.com/conda-forge/conda-forge-feedstock-check-solvable-feedstock.git",
+                    "https://github.com/conda-forge/conda-forge-pinning-feedstock.git",
                 ]
             )
             # make sure rerender happens
-            with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+            with pushd("conda-forge-pinning-feedstock"):
                 cmds = [
                     ["git", "rm", "-f", ".gitignore"],
                     ["git", "rm", "-rf", ".scripts"],
@@ -323,7 +323,7 @@ def test_container_tasks_rerender_feedstock_containerized_same_as_local(
             try:
                 local_msg = rerender_feedstock(
                     os.path.join(
-                        tmpdir_local, "conda-forge-feedstock-check-solvable-feedstock"
+                        tmpdir_local, "conda-forge-pinning-feedstock"
                     ),
                     use_container=False,
                 )
@@ -370,11 +370,11 @@ def test_container_tasks_rerender_feedstock_containerized_empty(use_containers):
                 [
                     "git",
                     "clone",
-                    "https://github.com/conda-forge/conda-forge-feedstock-check-solvable-feedstock.git",
+                    "https://github.com/conda-forge/conda-forge-pinning-feedstock.git",
                 ]
             )
             # make sure rerender happens
-            with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+            with pushd("conda-forge-pinning-feedstock"):
                 cmds = [
                     ["git", "rm", "-f", ".gitignore"],
                     ["git", "rm", "-rf", ".scripts"],
@@ -390,13 +390,13 @@ def test_container_tasks_rerender_feedstock_containerized_empty(use_containers):
 
             local_msg = rerender_feedstock(
                 os.path.join(
-                    tmpdir_local, "conda-forge-feedstock-check-solvable-feedstock"
+                    tmpdir_local, "conda-forge-pinning-feedstock"
                 ),
                 use_container=False,
             )
 
             assert local_msg is not None
-            with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+            with pushd("conda-forge-pinning-feedstock"):
                 subprocess.run(
                     ["git", "commit", "-am", local_msg],
                     check=True,
@@ -405,7 +405,7 @@ def test_container_tasks_rerender_feedstock_containerized_empty(use_containers):
         # now run in container and make sure commit message is None
         msg = rerender_feedstock(
             os.path.join(
-                tmpdir_local, "conda-forge-feedstock-check-solvable-feedstock"
+                tmpdir_local, "conda-forge-pinning-feedstock"
             ),
             use_container=True,
         )
@@ -423,11 +423,11 @@ def test_container_tasks_rerender_feedstock_containerized_permissions(use_contai
                 [
                     "git",
                     "clone",
-                    "https://github.com/conda-forge/conda-forge-feedstock-check-solvable-feedstock.git",
+                    "https://github.com/conda-forge/conda-forge-pinning-feedstock.git",
                 ]
             )
 
-            with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+            with pushd("conda-forge-pinning-feedstock"):
                 orig_perms_bl = os.stat("build-locally.py").st_mode
                 print(
                     f"\n\ncloned permissions for build-locally.py: {orig_perms_bl:#o}\n\n"
@@ -435,12 +435,12 @@ def test_container_tasks_rerender_feedstock_containerized_permissions(use_contai
                 orig_exec = get_user_execute_permissions(".")
 
             local_msg = rerender_feedstock(
-                os.path.join(tmpdir, "conda-forge-feedstock-check-solvable-feedstock"),
+                os.path.join(tmpdir, "conda-forge-pinning-feedstock"),
                 use_container=False,
             )
 
             if local_msg is not None:
-                with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+                with pushd("conda-forge-pinning-feedstock"):
                     cmds = [
                         ["git", "config", "user.email", "conda@conda.conda"],
                         ["git", "config", "user.name", "conda c. conda"],
@@ -450,7 +450,7 @@ def test_container_tasks_rerender_feedstock_containerized_permissions(use_contai
                         subprocess.run(cmd, check=True)
 
             # now change permissions
-            with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+            with pushd("conda-forge-pinning-feedstock"):
                 orig_perms_bl = os.stat("build-locally.py").st_mode
                 print(
                     f"\n\ninput permissions for build-locally.py: {orig_perms_bl:#o}\n\n"
@@ -471,12 +471,12 @@ def test_container_tasks_rerender_feedstock_containerized_permissions(use_contai
                     )
 
             msg = rerender_feedstock(
-                os.path.join(tmpdir, "conda-forge-feedstock-check-solvable-feedstock"),
+                os.path.join(tmpdir, "conda-forge-pinning-feedstock"),
                 use_container=True,
             )
             assert msg is not None
 
-            with pushd("conda-forge-feedstock-check-solvable-feedstock"):
+            with pushd("conda-forge-pinning-feedstock"):
                 perms_bl = os.stat("build-locally.py").st_mode
                 print(f"\n\nfinal permissions for build-locally.py: {perms_bl:#o}\n\n")
                 cont_rerend_exec = get_user_execute_permissions(".")
@@ -552,18 +552,18 @@ def test_container_tasks_is_recipe_solvable_containerized(use_containers):
                 [
                     "git",
                     "clone",
-                    "https://github.com/conda-forge/conda-forge-feedstock-check-solvable-feedstock.git",
+                    "https://github.com/conda-forge/conda-forge-pinning-feedstock.git",
                 ]
             )
 
         res_cont = is_recipe_solvable(
-            os.path.join(tmpdir, "conda-forge-feedstock-check-solvable-feedstock"),
+            os.path.join(tmpdir, "conda-forge-pinning-feedstock"),
             use_container=True,
         )
         assert res_cont[0], res_cont
 
         res_local = is_recipe_solvable(
-            os.path.join(tmpdir, "conda-forge-feedstock-check-solvable-feedstock"),
+            os.path.join(tmpdir, "conda-forge-pinning-feedstock"),
             use_container=False,
         )
         assert res_local[0], res_local
