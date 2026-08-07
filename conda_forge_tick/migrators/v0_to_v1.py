@@ -2,8 +2,9 @@ import logging
 import re
 import typing
 from pathlib import Path
-from typing import Any
+from typing import Any, Final
 
+from conda_recipe_manager.licenses.spdx_utils import SpdxUtils
 from conda_recipe_manager.parser._message_table import MessageCategory, MessageTable
 from conda_recipe_manager.parser.recipe_parser_convert import RecipeParserConvert
 from conda_recipe_manager.parser.recipe_reader import RecipeReader
@@ -16,6 +17,10 @@ if typing.TYPE_CHECKING:
     from ..migrators_types import AttrsTypedDict
 
 logger = logging.getLogger(__name__)
+
+# Cached like crm's own `RecipeParserConvert._SPDX_UTILS` - parses the ~700
+# entry SPDX database once rather than per lookup.
+_SPDX_UTILS: Final = SpdxUtils()
 
 # Matches a top-level `license:` field's raw value (not `license_family:`/
 # `license_file:` - the colon must follow "license" immediately).
@@ -42,6 +47,12 @@ _V0_SELECTOR_RE = re.compile(r"#\s*\[")
 # A block-mapping `key: "..."` (or `key: '...'`) whose value opens a quote -
 # see _join_folded_quoted_scalars.
 _SCALAR_KEY_RE = re.compile(r"^([ \t]*[\w.-]+:[ \t]*)([\"'])")
+
+# crm's "Could not patch unrecognized license: `X`" warning, so the license
+# string can be pulled back out for GenericV0ToV1Migrator._is_safe_compound_spdx_expression.
+_UNRECOGNIZED_LICENSE_RE = re.compile(
+    r"^Could not patch unrecognized license: `(?P<license>.+)`$"
+)
 
 
 def _find_scalar_close(text: str, quote: str) -> int:
@@ -276,9 +287,36 @@ class GenericV0ToV1Migrator(MiniMigrator):
             *msg_tbl.get_messages(MessageCategory.ERROR),
         ]
         for msg in msg_tbl.get_messages(MessageCategory.WARNING):
-            if not any(ignore in msg for ignore in self.IGNORED_WARNINGS):
-                blocking.append(msg)
+            if any(ignore in msg for ignore in self.IGNORED_WARNINGS):
+                continue
+            unrecognized_license = _UNRECOGNIZED_LICENSE_RE.match(msg)
+            if unrecognized_license and self._is_safe_compound_spdx_expression(
+                unrecognized_license.group("license")
+            ):
+                continue
+            blocking.append(msg)
         return blocking
+
+    def _is_safe_compound_spdx_expression(self, lic: str) -> bool:
+        """Check whether ``lic`` is a two-part ``A OR B`` SPDX expression
+        whose sides are both already exact, valid SPDX identifiers.
+
+        crm's own SPDX matcher deliberately declines to touch *any* license
+        string containing ``AND``/``OR``/``WITH``, even a perfectly valid
+        one, to avoid mangling a compound expression it wasn't designed to
+        parse - so it warns "Could not patch unrecognized license" on an
+        already-correct expression just as readily as a genuinely bad one
+        (real example: r-icenreg's ``LGPL-2.0-only OR LGPL-2.1-only``).
+        Confirming both sides independently resolve to themselves lets us
+        treat that specific warning as safe to ignore - the field is left
+        untouched either way, so there's nothing to rewrite.
+        """
+        parts = lic.split(" OR ")
+        if len(parts) != 2:
+            return False
+        return all(
+            _SPDX_UTILS.find_closest_license_match(part) == part for part in parts
+        )
 
     def _to_spdx(self, lic: str) -> str:
         """Map a legacy license string to its SPDX identifier, if recognized.

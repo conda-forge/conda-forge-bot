@@ -113,6 +113,22 @@ LICENSEREF_UNLIMITED_RECIPE = CLEAN_RECIPE.replace(
     "  license: MIT\n", "  license: LicenseRef-Unlimited\n"
 )
 
+# A real pattern (from r-icenreg): an already-valid compound SPDX
+# expression - two real SPDX ids joined by "OR". crm's matcher declines to
+# touch *any* license string containing AND/OR/WITH on purpose (to avoid
+# mangling a compound expression), so it warns "Could not patch unrecognized
+# license" even though this one needs no fixing at all.
+COMPOUND_OR_LICENSE_RECIPE = CLEAN_RECIPE.replace(
+    "  license: MIT\n", "  license: LGPL-2.0-only OR LGPL-2.1-only\n"
+)
+
+# Same shape, but the left side isn't a real SPDX id - crm is right to warn
+# here, and we shouldn't wave it through just because it looks like the
+# COMPOUND_OR_LICENSE_RECIPE pattern.
+INVALID_COMPOUND_OR_LICENSE_RECIPE = CLEAN_RECIPE.replace(
+    "  license: MIT\n", "  license: NotARealLicense OR LGPL-2.1-only\n"
+)
+
 # A YAML-folded multi-line double-quoted `summary:` whose continuation line
 # is itself shaped like `'word' more: words` - crm's line-based reader
 # misparses that continuation as its own key/value pair and crashes with a
@@ -235,6 +251,36 @@ def test_convert_does_not_know_r_specific_licenseref_unlimited():
     # GenericV0ToV1Migrator has no idea it's safe to rewrite, so it still
     # blocks. See test_r_v0_to_v1.py for the positive (RV0ToV1Migrator) case.
     v1_content, blocking = GenericV0ToV1Migrator()._convert(LICENSEREF_UNLIMITED_RECIPE)
+    assert v1_content is None
+    assert len(blocking) == 1
+    assert "Could not patch unrecognized license" in blocking[0]
+
+
+def test_is_safe_compound_spdx_expression():
+    migrator = GenericV0ToV1Migrator()
+    assert migrator._is_safe_compound_spdx_expression("LGPL-2.0-only OR LGPL-2.1-only")
+    assert migrator._is_safe_compound_spdx_expression("MPL-2.0 OR GPL-3.0-or-later")
+    # One side isn't a real SPDX id.
+    assert not migrator._is_safe_compound_spdx_expression("NotARealLicense OR MIT")
+    # Not a compound expression at all.
+    assert not migrator._is_safe_compound_spdx_expression("MIT")
+    # More than two parts is out of scope.
+    assert not migrator._is_safe_compound_spdx_expression(
+        "MIT OR Apache-2.0 OR BSD-3-Clause"
+    )
+
+
+def test_convert_passes_through_valid_compound_or_license():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(COMPOUND_OR_LICENSE_RECIPE)
+    assert blocking == []
+    assert v1_content is not None
+    assert "license: LGPL-2.0-only OR LGPL-2.1-only" in v1_content
+
+
+def test_convert_still_blocks_invalid_compound_or_license():
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(
+        INVALID_COMPOUND_OR_LICENSE_RECIPE
+    )
     assert v1_content is None
     assert len(blocking) == 1
     assert "Could not patch unrecognized license" in blocking[0]
