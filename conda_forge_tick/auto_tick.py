@@ -1144,6 +1144,7 @@ def _run_migrator(
             ]
 
             try:
+                all_filtered = True
                 for base_branch in base_branches:
                     with fctx.with_attrs_branch(base_branch):
                         # skip things that do not get migrated
@@ -1169,6 +1170,7 @@ def _run_migrator(
                                 base_branch,
                             )
                         ):
+                            all_filtered = False
                             tried_prs += 1
                             good_prs, break_loop = _run_migrator_on_feedstock_branch(
                                 attrs=attrs,
@@ -1182,6 +1184,14 @@ def _run_migrator(
                             )
                             if break_loop:
                                 break
+                if all_filtered:
+                    # Since all branches are filtered, mark this feedstock as done
+                    pred = attrs["pr_info"]["PRed"]
+                    nuid = migrator.migrator_uid(attrs)
+                    if all(pr["data"] != nuid for pr in pred):
+                        pred.append(
+                            {"PR": {"number": None, "state": "closed"}, "data": nuid}
+                        )
             finally:
                 # do this but it is crazy
                 gc.collect()
