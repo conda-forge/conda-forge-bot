@@ -1189,7 +1189,9 @@ def _run_migrator(
                     pred = attrs["pr_info"]["PRed"]
                     nuid = migrator.migrator_uid(attrs)
                     if all(pr["data"] != nuid for pr in pred):
-                        pred.append({'PR': {'number': None, 'state': 'closed'}, 'data': nuid})
+                        pred.append(
+                            {"PR": {"number": None, "state": "closed"}, "data": nuid}
+                        )
             finally:
                 # do this but it is crazy
                 gc.collect()
