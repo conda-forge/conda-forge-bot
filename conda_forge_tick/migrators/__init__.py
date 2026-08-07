@@ -39,6 +39,7 @@ from .pip_check import PipCheckMigrator
 from .pip_wheel_dep import PipWheelMigrator
 from .pypi_org import PyPIOrgMigrator
 from .r_ucrt import RUCRTCleanup
+from .r_v0_to_v1 import RV0ToV1Migrator
 from .cdt import CDTMigrator
 from .recipe_v1 import CombineV1ConditionsMigrator
 from .replacement import Replacement, MiniReplacement
@@ -48,3 +49,4 @@ from .noarch_python_min import NoarchPythonMinMigrator
 from .nvtools import AddNVIDIATools
 from .round_trip import YAMLRoundTrip
 from .staticlib import StaticLibMigrator
+from .v0_to_v1 import GenericV0ToV1Migrator
