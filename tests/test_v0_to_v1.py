@@ -3,6 +3,7 @@ import textwrap
 
 from conda_forge_tick.migrators import GenericV0ToV1Migrator
 from conda_forge_tick.migrators.v0_to_v1 import (
+    _duplicate_top_level_key_reasons,
     _join_folded_quoted_scalars,
     _malformed_output_reasons,
 )
@@ -81,6 +82,15 @@ DUPLICATE_KEY_RECIPE = CLEAN_RECIPE.replace(
     "  script: python setup.py install\n",
     "  script: python setup.py install  # [not win]\n"
     "  script: python setup.py install --old-and-unmanageable  # [win]\n",
+)
+
+# A real pattern (from r-loose.rock): two full, unconditional `build:`
+# sections with no selector on either - most likely a copy-paste mistake in
+# the source recipe (one declares `noarch: generic`, the other doesn't).
+UNSELECTORED_DUPLICATE_BUILD_RECIPE = CLEAN_RECIPE.replace(
+    "build:\n  number: 0\n  script: python setup.py install\n",
+    "build:\n  number: 0\n  noarch: generic\n\n"
+    "build:\n  number: 0\n  script: python setup.py install\n",
 )
 
 # `{{ environ["PREFIX"] }}` (common in license_file fields, not just R/Bioconda
@@ -183,6 +193,36 @@ def test_convert_allows_duplicate_keys():
     assert blocking == []
     assert v1_content is not None
     assert "schema_version: 1" in v1_content
+
+
+def test_duplicate_top_level_key_reasons_flags_unselectored_duplicate():
+    reasons = _duplicate_top_level_key_reasons(UNSELECTORED_DUPLICATE_BUILD_RECIPE)
+    assert len(reasons) == 1
+    assert "top-level `build:` section appears 2 times" in reasons[0]
+
+
+def test_duplicate_top_level_key_reasons_ignores_selectored_leaf_duplicates():
+    # `script:` is duplicated too, but each occurrence carries a selector -
+    # the legitimate, crm-mergeable idiom, not an authoring mistake.
+    assert _duplicate_top_level_key_reasons(DUPLICATE_KEY_RECIPE) == []
+
+
+def test_duplicate_top_level_key_reasons_no_false_positive_on_clean_recipe():
+    assert _duplicate_top_level_key_reasons(CLEAN_RECIPE) == []
+
+
+def test_convert_blocks_on_unselectored_duplicate_top_level_section():
+    # Caught before crm even runs, with a clearer reason than crm's own
+    # DuplicateKeyException would give (see _malformed_output_reasons).
+    v1_content, blocking = GenericV0ToV1Migrator()._convert(
+        UNSELECTORED_DUPLICATE_BUILD_RECIPE
+    )
+    assert v1_content is None
+    assert blocking == [
+        "top-level `build:` section appears 2 times with no selector to "
+        "distinguish them - likely an authoring mistake in the source "
+        "recipe that needs manual review"
+    ]
 
 
 def test_convert_preprocesses_environ_syntax():

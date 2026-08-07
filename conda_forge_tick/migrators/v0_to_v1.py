@@ -54,6 +54,49 @@ _UNRECOGNIZED_LICENSE_RE = re.compile(
     r"^Could not patch unrecognized license: `(?P<license>.+)`$"
 )
 
+# An unindented top-level section header, e.g. `build:` or `build:  # [win]`
+# - see _duplicate_top_level_key_reasons.
+_TOP_LEVEL_KEY_RE = re.compile(r"^([A-Za-z_][\w.-]*):[ \t]*(?:#.*)?$")
+
+
+def _duplicate_top_level_key_reasons(raw_meta_yaml: str) -> list[str]:
+    """Flag a genuinely duplicated, unselectored top-level section (e.g. two
+    full ``build:`` blocks) before crm ever sees it.
+
+    The common, legitimate conda-forge idiom is a duplicated *leaf* key with
+    a selector on each occurrence (``script: ...  # [win]`` /
+    ``script: ...  # [not win]``) - crm's duplicate-key merge handles that
+    correctly. Two unconditional top-level *section* headers with the same
+    name and no selector on either, on the other hand, isn't a pattern crm
+    merges: it just tolerates the duplicate through
+    (``ALLOW_DUPLICATE_KEYS``), and the raw duplicate survives into v1
+    output, where ``_malformed_output_reasons`` catches it only as a bare
+    ``DuplicateKeyException`` - accurate, but not obviously actionable.
+    This is almost always a real authoring mistake in the source recipe
+    (real example: r-loose.rock has two ``build:`` blocks, one with
+    ``noarch: generic`` and one without) that needs a human to reconcile,
+    not something safe to guess at - so we catch it early with a clearer
+    message instead of letting crm run first.
+    """
+    counts: dict[str, int] = {}
+    has_selector: dict[str, bool] = {}
+    for line in raw_meta_yaml.splitlines():
+        match = _TOP_LEVEL_KEY_RE.match(line)
+        if not match:
+            continue
+        key = match.group(1)
+        counts[key] = counts.get(key, 0) + 1
+        if _V0_SELECTOR_RE.search(line):
+            has_selector[key] = True
+
+    return [
+        f"top-level `{key}:` section appears {count} times with no selector "
+        "to distinguish them - likely an authoring mistake in the source "
+        "recipe that needs manual review"
+        for key, count in counts.items()
+        if count > 1 and not has_selector.get(key)
+    ]
+
 
 def _find_scalar_close(text: str, quote: str) -> int:
     r"""Given a quote character, find where it closes in
@@ -336,6 +379,14 @@ class GenericV0ToV1Migrator(MiniMigrator):
         not safe to ship unattended, along with the list of messages that
         explain why (empty if the conversion is clean).
         """
+        # A genuinely duplicated, unselectored top-level section is almost
+        # certainly a source-recipe authoring mistake, not something crm can
+        # safely merge - catch it now with a clear reason rather than
+        # letting crm run first and re-report it as a bare exception later.
+        duplicate_key_reasons = _duplicate_top_level_key_reasons(raw_meta_yaml)
+        if duplicate_key_reasons:
+            return None, duplicate_key_reasons
+
         # Join folded multi-line quoted scalars before crm's line-based reader can misparse a continuation line.
         raw_meta_yaml = _join_folded_quoted_scalars(raw_meta_yaml)
         # Fix legacy license strings crm's own matcher won't recognize.
