@@ -2048,17 +2048,19 @@ package:
   category: main
   optional: false
 - name: conda
-  version: 26.5.0
+  version: 26.7.0
   manager: conda
   platform: linux-64
   dependencies:
     archspec: '>=0.2.3'
+    backports.zstd: '>=1.3.0'
     boltons: '>=23.0.0'
     charset-normalizer: ''
     conda-libmamba-solver: '>=26.4.1'
     conda-lockfiles: '>=0.2.0'
     conda-package-handling: '>=2.2.0'
-    conda-pypi: '>=0.9.0'
+    conda-pypi: '>=0.10.1'
+    conda-rattler-solver: '>=0.1.1'
     conda-self: '>=0.2.0'
     distro: '>=1.5.0'
     frozendict: '>=2.4.2'
@@ -2068,32 +2070,33 @@ package:
     platformdirs: '>=3.10.0'
     pluggy: '>=1.6.0'
     pycosat: '>=0.6.3'
-    python: '>=3.12,<3.13.0a0'
+    python: ''
     python_abi: 3.12.*
     requests: '>=2.28.0,<3'
     ruamel.yaml: '>=0.11.14,<0.19'
     setuptools: '>=60.0.0'
     tqdm: '>=4'
     truststore: '>=0.8.0'
-    zstandard: '>=0.19.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/conda-26.5.0-py312h7900ff3_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/conda-26.7.0-py312h20c3967_0.conda
   hash:
-    md5: 32235f7b43b3e55630e53a586fe30b10
-    sha256: 01d5f9e72db64679cfd9312a46ac265003edc9c35f0bee58271cf478cc5bea88
+    md5: 412b7f5ca58882a115d29b04c9a1ff18
+    sha256: 44a171d3859dcf5ac809822d17d36be9a64e0e2e4db868477ff7fa31e93e56f2
   category: main
   optional: false
 - name: conda
-  version: 26.5.0
+  version: 26.7.0
   manager: conda
   platform: linux-aarch64
   dependencies:
     archspec: '>=0.2.3'
+    backports.zstd: '>=1.3.0'
     boltons: '>=23.0.0'
     charset-normalizer: ''
     conda-libmamba-solver: '>=26.4.1'
     conda-lockfiles: '>=0.2.0'
     conda-package-handling: '>=2.2.0'
-    conda-pypi: '>=0.9.0'
+    conda-pypi: '>=0.10.1'
+    conda-rattler-solver: '>=0.1.1'
     conda-self: '>=0.2.0'
     distro: '>=1.5.0'
     frozendict: '>=2.4.2'
@@ -2103,32 +2106,33 @@ package:
     platformdirs: '>=3.10.0'
     pluggy: '>=1.6.0'
     pycosat: '>=0.6.3'
-    python: '>=3.12,<3.13.0a0,>=3.12,<3.13.0a0'
+    python: 3.12.*
     python_abi: 3.12.*
     requests: '>=2.28.0,<3'
     ruamel.yaml: '>=0.11.14,<0.19'
     setuptools: '>=60.0.0'
     tqdm: '>=4'
     truststore: '>=0.8.0'
-    zstandard: '>=0.19.0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/conda-26.5.0-py312h996f985_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/conda-26.7.0-py312h6d8504a_0.conda
   hash:
-    md5: 285f6d895266eb82b2f68de27810bb4e
-    sha256: 3019918627ac7fb9103971e7e8b19c6d4c1bd88460c7120ecc98c31117cf61ed
+    md5: 16641ae0217218a93cfeb57205d88d42
+    sha256: e4c2a017f298e75fd7dc8e103e4858e376b51535420d1633c88f801f75516e56
   category: main
   optional: false
 - name: conda
-  version: 26.5.0
+  version: 26.7.0
   manager: conda
   platform: osx-arm64
   dependencies:
     archspec: '>=0.2.3'
+    backports.zstd: '>=1.3.0'
     boltons: '>=23.0.0'
     charset-normalizer: ''
     conda-libmamba-solver: '>=26.4.1'
     conda-lockfiles: '>=0.2.0'
     conda-package-handling: '>=2.2.0'
-    conda-pypi: '>=0.9.0'
+    conda-pypi: '>=0.10.1'
+    conda-rattler-solver: '>=0.1.1'
     conda-self: '>=0.2.0'
     distro: '>=1.5.0'
     frozendict: '>=2.4.2'
@@ -2138,18 +2142,17 @@ package:
     platformdirs: '>=3.10.0'
     pluggy: '>=1.6.0'
     pycosat: '>=0.6.3'
-    python: '>=3.12,<3.13.0a0,>=3.12,<3.13.0a0'
+    python: 3.12.*
     python_abi: 3.12.*
     requests: '>=2.28.0,<3'
     ruamel.yaml: '>=0.11.14,<0.19'
     setuptools: '>=60.0.0'
     tqdm: '>=4'
     truststore: '>=0.8.0'
-    zstandard: '>=0.19.0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/conda-26.5.0-py312h81bd7bf_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/conda-26.7.0-py312hc28c600_0.conda
   hash:
-    md5: 7b871232b9115ad23b39b95692dc3901
-    sha256: baadac8d57f78e6878294e6cb2fecc719bcd627af8c0dc92ae683827f2430f0a
+    md5: 9c7c6c575b1e99fac7afe4e8fd7ba3b1
+    sha256: 3dc6e23c8aafad2d458fadf8963dd9a6f736ecdb052ad42051f8f1377df99257
   category: main
   optional: false
 - name: conda-build
@@ -2261,7 +2264,7 @@ package:
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.16.0
+  version: 0.17.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -2271,26 +2274,26 @@ package:
     conda-build: '>=3.27'
     conda-forge-metadata: '>=0.11.0'
     conda-package-handling: ''
-    conda-smithy: '>=3.40.1'
+    conda-smithy: '>=2026'
     orjson: ''
     pixi: ''
-    py-rattler: '>=0.22.0,<0.23a0'
+    py-rattler: '>=0.22.0,<0.26a0'
     pydantic-settings: '>=2.8.1,<3.0.0'
     python: '>=3.11'
-    rattler-build-conda-compat: '>=0.0.2,<2.0.0a0'
+    rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
     requests: ''
     ruamel.yaml: ''
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.16.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.17.0-pyhd8ed1ab_0.conda
   hash:
-    md5: a00fe176b552a9fe0589cd4bec28a0be
-    sha256: 04f66f3c5e174e1b926bcf3c1ac2e2f5d8d749e8a63e1af95d6aabd2fac85ca1
+    md5: 504c4d00c0546602128508137ae46af9
+    sha256: 90d87b99e502467a35e56f4df689c62b057368dae0c7457b7dfa8fb73c92edec
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.16.0
+  version: 0.17.0
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -2300,26 +2303,26 @@ package:
     conda-build: '>=3.27'
     conda-forge-metadata: '>=0.11.0'
     conda-package-handling: ''
-    conda-smithy: '>=3.40.1'
+    conda-smithy: '>=2026'
     orjson: ''
     pixi: ''
-    py-rattler: '>=0.22.0,<0.23a0'
+    py-rattler: '>=0.22.0,<0.26a0'
     pydantic-settings: '>=2.8.1,<3.0.0'
     python: '>=3.11'
-    rattler-build-conda-compat: '>=0.0.2,<2.0.0a0'
+    rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
     requests: ''
     ruamel.yaml: ''
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.16.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.17.0-pyhd8ed1ab_0.conda
   hash:
-    md5: a00fe176b552a9fe0589cd4bec28a0be
-    sha256: 04f66f3c5e174e1b926bcf3c1ac2e2f5d8d749e8a63e1af95d6aabd2fac85ca1
+    md5: 504c4d00c0546602128508137ae46af9
+    sha256: 90d87b99e502467a35e56f4df689c62b057368dae0c7457b7dfa8fb73c92edec
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.16.0
+  version: 0.17.0
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -2329,22 +2332,22 @@ package:
     conda-build: '>=3.27'
     conda-forge-metadata: '>=0.11.0'
     conda-package-handling: ''
-    conda-smithy: '>=3.40.1'
+    conda-smithy: '>=2026'
     orjson: ''
     pixi: ''
-    py-rattler: '>=0.22.0,<0.23a0'
+    py-rattler: '>=0.22.0,<0.26a0'
     pydantic-settings: '>=2.8.1,<3.0.0'
     python: '>=3.11'
-    rattler-build-conda-compat: '>=0.0.2,<2.0.0a0'
+    rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
     requests: ''
     ruamel.yaml: ''
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.16.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.17.0-pyhd8ed1ab_0.conda
   hash:
-    md5: a00fe176b552a9fe0589cd4bec28a0be
-    sha256: 04f66f3c5e174e1b926bcf3c1ac2e2f5d8d749e8a63e1af95d6aabd2fac85ca1
+    md5: 504c4d00c0546602128508137ae46af9
+    sha256: 90d87b99e502467a35e56f4df689c62b057368dae0c7457b7dfa8fb73c92edec
   category: main
   optional: false
 - name: conda-forge-metadata
@@ -2919,6 +2922,48 @@ package:
   hash:
     md5: 6146fb15533801ad3db56c4f0e6acbf7
     sha256: 49b58e13c77c9ed59298b19743c4810742b845914c247988b5baef327c333dae
+  category: main
+  optional: false
+- name: conda-rattler-solver
+  version: 0.1.1
+  manager: conda
+  platform: linux-64
+  dependencies:
+    conda: '>=26.5.0'
+    py-rattler: '>=0.25.0,<0.26.0a0'
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-rattler-solver-0.1.1-pyhcf101f3_0.conda
+  hash:
+    md5: f5d15171925a157707e1ad165179449c
+    sha256: 77ea286de14f5d2dd0c376627ec41d0c226ad94ad8b25262f36712070324aa05
+  category: main
+  optional: false
+- name: conda-rattler-solver
+  version: 0.1.1
+  manager: conda
+  platform: linux-aarch64
+  dependencies:
+    conda: '>=26.5.0'
+    py-rattler: '>=0.25.0,<0.26.0a0'
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-rattler-solver-0.1.1-pyhcf101f3_0.conda
+  hash:
+    md5: f5d15171925a157707e1ad165179449c
+    sha256: 77ea286de14f5d2dd0c376627ec41d0c226ad94ad8b25262f36712070324aa05
+  category: main
+  optional: false
+- name: conda-rattler-solver
+  version: 0.1.1
+  manager: conda
+  platform: osx-arm64
+  dependencies:
+    conda: '>=26.5.0'
+    py-rattler: '>=0.25.0,<0.26.0a0'
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-rattler-solver-0.1.1-pyhcf101f3_0.conda
+  hash:
+    md5: f5d15171925a157707e1ad165179449c
+    sha256: 77ea286de14f5d2dd0c376627ec41d0c226ad94ad8b25262f36712070324aa05
   category: main
   optional: false
 - name: conda-recipe-manager
@@ -12067,7 +12112,7 @@ package:
   category: main
   optional: false
 - name: py-rattler
-  version: 0.22.0
+  version: 0.25.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -12075,44 +12120,44 @@ package:
     _python_abi3_support: 1.*
     cpython: '>=3.10'
     libgcc: '>=14'
-    openssl: '>=3.5.5,<4.0a0'
+    openssl: '>=3.5.7,<4.0a0'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-0.22.0-py310h70157a2_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-0.25.0-py310h70157a2_2.conda
   hash:
-    md5: 199bc1590036339fb5957f0795541980
-    sha256: ff43dd8948b7e5ecccee2c5ece3ac75e107f271c849d447cb18e57183343a1c8
+    md5: 8c845f47320cf9d61106989ab343250f
+    sha256: 1aa4eb372a408a8655327c3e304891028dce9ea3002cd3d68845e66e51ba7510
   category: main
   optional: false
 - name: py-rattler
-  version: 0.22.0
+  version: 0.25.0
   manager: conda
   platform: linux-aarch64
   dependencies:
     _python_abi3_support: 1.*
     cpython: '>=3.10'
     libgcc: '>=14'
-    openssl: '>=3.5.5,<4.0a0'
+    openssl: '>=3.5.7,<4.0a0'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/py-rattler-0.22.0-py310h48c5ec3_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/py-rattler-0.25.0-py310h45743d3_2.conda
   hash:
-    md5: c145ac9987cca35ad54e57a836656992
-    sha256: 6097a6436dcbf59ef1eec54ffc6e068b6fda960f4d73b5b2d5a5ae924cabda07
+    md5: 2785001b19be87a765d0bb587834af13
+    sha256: 87eaec1a50e21ae77b137ca9c9cea67d379bf872bf6adc8cdd3364164cf6ca4d
   category: main
   optional: false
 - name: py-rattler
-  version: 0.22.0
+  version: 0.25.0
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
     _python_abi3_support: 1.*
     cpython: '>=3.10'
-    openssl: '>=3.5.5,<4.0a0'
+    openssl: '>=3.5.7,<4.0a0'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/py-rattler-0.22.0-py310hcf6febd_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/py-rattler-0.25.0-py310hbaa5893_2.conda
   hash:
-    md5: 9cd2290d0b4ebf713b83cb943cd17d07
-    sha256: 8fd8733772d61b47ff43de89dbe59e2077335c25a16a1bf227dfe2ef04d028fc
+    md5: e892ed39dc91aa9372ac09fd72e1439f
+    sha256: 42ebc11b1bc7adb0e1732eb0915e5078fb1d398587f3dcce5dcb9bda376db7cf
   category: main
   optional: false
 - name: py-rattler-build
