@@ -896,7 +896,7 @@ class GraphMigrator(Migrator):
             ):
                 continue
 
-            if self.filter_node_migrated(payload):
+            if super().filter_node_migrated(payload):
                 continue
             muid = frozen_to_json_friendly(self.migrator_uid(payload))
             pr_muids = _sanitized_muids(payload.get("pr_info", {}).get("PRed", []))
