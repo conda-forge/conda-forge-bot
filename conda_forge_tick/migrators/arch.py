@@ -490,6 +490,9 @@ class LinuxRISCV64(_CrossCompileRebuild):
         "ctng-compilers",
         "gfortran_impl_osx-64",
         "gfortran_osx-64",
+        # intel packages will not be built for riscv
+        "intel-compiler-repack",
+        "intel_repack",
     }
 
     def __init__(self, *args, **kwargs):
