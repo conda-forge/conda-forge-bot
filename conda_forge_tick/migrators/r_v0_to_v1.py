@@ -53,6 +53,25 @@ class RV0ToV1Migrator(GenericV0ToV1Migrator):
             return self._SPDX_OVERRIDES[lic]
         return super()._to_spdx(lic)
 
+    def _build_script_review_reasons(self, build_sh: str) -> list[str]:
+        # In real feedstocks carrying this pattern (e.g. r-pca3d, r-msqc),
+        # this install_name_tool fix is nested inside `if target_platform ==
+        # osx-64` - but only reachable from the branch that already excludes
+        # osx-64 (the one osx-arm64 falls into), making it dead code that
+        # predates osx-arm64 support entirely.
+        if (
+            "install_name_tool -change" in build_sh
+            and "R.framework/Versions" in build_sh
+        ):
+            return [
+                "build.sh's `install_name_tool` dylib-path fixes for osx-64 are "
+                "commonly nested inside the branch that already excludes "
+                "osx-64 (the one osx-arm64 falls into) - making them dead code "
+                "that's likely never run. Verify whether that's the case here, "
+                "and if so, whether osx-arm64 needs the missing fix."
+            ]
+        return []
+
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         if super().filter(attrs, not_bad_str_start):
             return True

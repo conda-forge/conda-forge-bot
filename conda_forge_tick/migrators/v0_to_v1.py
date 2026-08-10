@@ -372,6 +372,18 @@ class GenericV0ToV1Migrator(MiniMigrator):
         """
         return _to_spdx_generic(lic)
 
+    def _build_script_review_reasons(self, build_sh: str) -> list[str]:
+        """Extension point: return non-blocking reasons to flag ``build.sh``
+        for manual review after an otherwise-successful conversion.
+
+        ``build.sh`` itself is never inspected or rewritten by this class -
+        crm's conversion is schema-only as of now. This is just a place
+        for subclasses to surface ecosystem-specific red flags (e.g. a
+        leftover platform-specific workaround) that are worth a maintainer's
+        attention without blocking the conversion itself.
+        """
+        return []
+
     def _convert(self, raw_meta_yaml: str) -> tuple[str | None, list[str]]:
         """Attempt to convert ``raw_meta_yaml`` (schema v0) to a v1 recipe.
 
@@ -444,3 +456,16 @@ class GenericV0ToV1Migrator(MiniMigrator):
         assert v1_content is not None
         (Path(recipe_dir) / "recipe.yaml").write_text(v1_content)
         meta_yaml_path.unlink()
+
+        build_sh_path = Path(recipe_dir) / "build.sh"
+        if build_sh_path.exists():
+            review_reasons = self._build_script_review_reasons(
+                build_sh_path.read_text()
+            )
+            if review_reasons:
+                logger.warning(
+                    "v0 -> v1 conversion for %s succeeded, but build.sh may need "
+                    "manual review:\n%s",
+                    attrs.get("name", recipe_dir),
+                    "\n".join(review_reasons),
+                )

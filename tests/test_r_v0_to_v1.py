@@ -1,3 +1,4 @@
+import logging
 import textwrap
 from pathlib import Path
 
@@ -200,3 +201,51 @@ def test_migrate_skips_multi_output_recipe(tmp_path):
 
     assert (tmp_path / "meta.yaml").read_text() == R_BASE_MULTI_OUTPUT_RECIPE
     assert not (tmp_path / "recipe.yaml").exists()
+
+
+# A real pattern (from r-msqc/r-pca3d/r-cffr/r-juniperkernel): the outer
+# `if` already routes osx-64 to a plain install, so the `install_name_tool`
+# fix - nested under `target_platform == osx-64` inside the `else` - is only
+# ever reached when target_platform != osx-64, making it dead code.
+LEGACY_OSX_ARM64_WORKAROUND_BUILD_SH = textwrap.dedent(
+    """\
+    #!/bin/bash
+    if [[ ${target_platform} == osx-64 ]] || [[ ${target_platform} =~ linux.* ]]; then
+      ${R} CMD INSTALL --build .
+    else
+      mv ./* "${PREFIX}"/lib/R/library
+      if [[ ${target_platform} == osx-64 ]]; then
+        install_name_tool -change /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libR.dylib "${PREFIX}"/lib/R/lib/libR.dylib "${SHARED_LIB}" || true
+      fi
+    fi
+    """
+)
+
+
+def test_build_script_review_reasons_flags_legacy_osx_arm64_workaround():
+    reasons = RV0ToV1Migrator()._build_script_review_reasons(
+        LEGACY_OSX_ARM64_WORKAROUND_BUILD_SH
+    )
+    assert len(reasons) == 1
+    assert "osx-arm64" in reasons[0]
+
+
+def test_build_script_review_reasons_no_false_positive_on_ordinary_script():
+    reasons = RV0ToV1Migrator()._build_script_review_reasons(
+        "#!/bin/bash\n${R} CMD INSTALL --build .\n"
+    )
+    assert reasons == []
+
+
+def test_migrate_warns_about_legacy_osx_arm64_workaround(tmp_path, caplog):
+    (tmp_path / "meta.yaml").write_text(MAGRITTR_RECIPE)
+    (tmp_path / "build.sh").write_text(LEGACY_OSX_ARM64_WORKAROUND_BUILD_SH)
+
+    with caplog.at_level(logging.WARNING):
+        RV0ToV1Migrator().migrate(str(tmp_path), {"name": "r-magrittr"})
+
+    # The conversion still succeeds - this is a non-blocking, informational
+    # flag, not a reason to skip.
+    assert (tmp_path / "recipe.yaml").exists()
+    assert "manual review" in caplog.text
+    assert "osx-arm64" in caplog.text

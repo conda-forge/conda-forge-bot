@@ -464,3 +464,21 @@ def test_migrate_no_op_when_meta_yaml_missing(tmp_path):
 
     assert not (tmp_path / "recipe.yaml").exists()
     assert not (tmp_path / "meta.yaml").exists()
+
+
+def test_build_script_review_reasons_is_a_no_op_by_default():
+    # Base class knows nothing package-specific; subclasses (e.g.
+    # RV0ToV1Migrator) layer their own checks on top - see
+    # tests/test_r_v0_to_v1.py.
+    assert GenericV0ToV1Migrator()._build_script_review_reasons("anything") == []
+
+
+def test_migrate_does_not_warn_about_build_sh_by_default(tmp_path, caplog):
+    (tmp_path / "meta.yaml").write_text(CLEAN_RECIPE)
+    (tmp_path / "build.sh").write_text("#!/bin/bash\n$PYTHON setup.py install\n")
+
+    with caplog.at_level(logging.WARNING):
+        GenericV0ToV1Migrator().migrate(str(tmp_path), {"name": "boto"})
+
+    assert (tmp_path / "recipe.yaml").exists()
+    assert "manual review" not in caplog.text
