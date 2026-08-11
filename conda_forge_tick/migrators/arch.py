@@ -155,8 +155,10 @@ class ArchRebuild(GraphMigrator):
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
 
-    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
-        if super().filter(attrs):
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ) -> bool:
+        if super().filter_node_migrated(attrs, not_bad_str_start):
             return True
         for arch in self.arches:
             configured_arch = (
@@ -336,8 +338,10 @@ class _CrossCompileRebuild(GraphMigrator):
         )
         assert not self.check_solvable, "We don't want to check solvability!"
 
-    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
-        if super().filter(attrs):
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ) -> bool:
+        if super().filter_node_migrated(attrs, not_bad_str_start):
             return True
         for arch in self.arches:
             configured_arch = (
@@ -483,6 +487,17 @@ class LinuxRISCV64(_CrossCompileRebuild):
     bump_number = 1
     pkg_list_filename = "linux_riscv64.txt"
     arches = {"linux_riscv64": "linux_64"}
+    ignored_packages = {
+        # already built compiler packages that get caught in a cycle
+        "_openmp_mutex",
+        "ctng-compiler-activation",
+        "ctng-compilers",
+        "gfortran_impl_osx-64",
+        "gfortran_osx-64",
+        # intel packages will not be built for riscv
+        "intel-compiler-repack",
+        "intel_repack",
+    }
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support linux riscv64 platform")
