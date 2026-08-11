@@ -141,10 +141,9 @@ def _make_migrator_graph(graph, migrator, effective=False, pluck_nodes=True):
                 filters = []
                 for base_branch in base_branches:
                     attrs["branch"] = base_branch
+                    filters.append(migrator.filter_not_in_migration(attrs))
                     if effective:
                         filters.append(migrator.filter_node_migrated(attrs))
-                    else:
-                        filters.append(migrator.filter_not_in_migration(attrs))
                 if filters and all(filters):
                     nodes_to_pluck.add(node)
             finally:
