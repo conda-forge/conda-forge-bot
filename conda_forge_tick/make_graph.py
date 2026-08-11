@@ -89,6 +89,13 @@ def make_outputs_lut_from_graph(gx):
                 # for pypy-meta we only map to pypy and not python or cffi
                 # for graalpy we only map to graalpy and not python or openjdk
                 outputs_lut[k].add(node_name)
+
+    # we remove keys that map to themselves to save space when storing
+    # the data
+    for k in list(outputs_lut.keys()):
+        if outputs_lut[k] == {k}:
+            del outputs_lut[k]
+
     return outputs_lut
 
 
