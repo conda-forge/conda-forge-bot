@@ -1648,52 +1648,52 @@ package:
   category: main
   optional: false
 - name: cffi
-  version: 1.17.1
+  version: 2.1.1
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libffi: '>=3.4,<4.0a0'
-    libgcc: '>=13'
+    libffi: '>=3.7.0,<3.8.0a0'
+    libgcc: '>=14'
     pycparser: ''
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/cffi-1.17.1-py312h06ac9bb_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/cffi-2.1.1-py312h00755a8_1.conda
   hash:
-    md5: a861504bbea4161a9170b85d4d2be840
-    sha256: cba6ea83c4b0b4f5b5dc59cb19830519b28f95d7ebef7c9c5cf1c14843621457
+    md5: a0871f2cbe751c8c5d4593ca441f01f2
+    sha256: 1e86b722c2143e731a989cf64aa9825d5c13ae37a30a93d0d84d9d0aa36c5ebc
   category: main
   optional: false
 - name: cffi
-  version: 1.17.1
+  version: 2.1.1
   manager: conda
   platform: linux-aarch64
   dependencies:
-    libffi: '>=3.4,<4.0a0'
-    libgcc: '>=13'
+    libffi: '>=3.7.0,<3.8.0a0'
+    libgcc: '>=14'
     pycparser: ''
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/cffi-1.17.1-py312hac81daf_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/cffi-2.1.1-py312h13f58d0_1.conda
   hash:
-    md5: 1a256e5581b1099e9295cb84d53db3ea
-    sha256: 1162e3ca039e7ca7c0e78f0a020ed1bde968096841b663e3f393c966eb82f0f0
+    md5: c22ce842e1864ef28cd8e978743c6288
+    sha256: cb7528d96e13169b68356b01c4cba0eca82fd6cba8174ae3259bbadc769ffc85
   category: main
   optional: false
 - name: cffi
-  version: 1.17.1
+  version: 2.1.1
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
-    libffi: '>=3.4,<4.0a0'
+    libffi: '>=3.7.0,<3.8.0a0'
     pycparser: ''
-    python: '>=3.12,<3.13.0a0,>=3.12,<3.13.0a0'
+    python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/cffi-1.17.1-py312h0fad829_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/cffi-2.1.1-py312he4004ae_1.conda
   hash:
-    md5: 19a5456f72f505881ba493979777b24e
-    sha256: 8d91a0d01358b5c3f20297c6c536c5d24ccd3e0c2ddd37f9d0593d0f0070226f
+    md5: d6892c6c545cf834654b594704dc7340
+    sha256: abf84cad318e5596e51204bf93ceb90a1294fb3f314ef14d84f6c3ec0bc523f6
   category: main
   optional: false
 - name: cfgv
@@ -9353,39 +9353,40 @@ package:
   category: main
   optional: false
 - name: libsodium
-  version: 1.0.20
+  version: 1.0.22
   manager: conda
   platform: linux-64
   dependencies:
-    libgcc-ng: '>=12'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libsodium-1.0.20-h4ab18f5_0.conda
+    __glibc: '>=2.17,<3.0.a0'
+    libgcc: '>=14'
+  url: https://conda.anaconda.org/conda-forge/linux-64/libsodium-1.0.22-h280c20c_1.conda
   hash:
-    md5: a587892d3c13b6621a6091be690dbca2
-    sha256: 0105bd108f19ea8e6a78d2d994a6d4a8db16d19a41212070d2d1d48a63c34161
+    md5: 965e4d531b588b2e42f66fd8e48b056c
+    sha256: b677bbf1c339d894757c3dcfbb2f88649e499e4991d70ae09a1466da9a6c92d6
   category: main
   optional: false
 - name: libsodium
-  version: 1.0.20
+  version: 1.0.22
   manager: conda
   platform: linux-aarch64
   dependencies:
-    libgcc-ng: '>=12'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libsodium-1.0.20-h68df207_0.conda
+    libgcc: '>=14'
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libsodium-1.0.22-h80f16a2_1.conda
   hash:
-    md5: 2e4a8f23bebdcb85ca8e5a0fbe75666a
-    sha256: 448df5ea3c5cf1af785aad46858d7a5be0522f4234a4dc9bb764f4d11ff3b981
+    md5: 5cb9cebc948d70e6e7c81670f911dab3
+    sha256: 36fb7afb28fecb8d678611e05a96b1e135510369b7fe5e353e407308ef1f6796
   category: main
   optional: false
 - name: libsodium
-  version: 1.0.20
+  version: 1.0.22
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libsodium-1.0.20-h99b78c6_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libsodium-1.0.22-h1a92334_1.conda
   hash:
-    md5: a7ce36e284c5faaf93c220dfc39e3abd
-    sha256: fade8223e1e1004367d7101dd17261003b60aa576df6d7802191f8972f7470b1
+    md5: 9ed5ab909c449bdcae72322e44875a18
+    sha256: 202be45db5726757a8ea1f374f85aacc18c504f5ff15b2558496dff4c8779c48
   category: main
   optional: false
 - name: libsolv
@@ -12938,55 +12939,55 @@ package:
   category: main
   optional: false
 - name: pynacl
-  version: 1.5.0
+  version: 1.6.2
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    cffi: '>=1.4.1'
+    cffi: '>=2.0.0'
     libgcc: '>=14'
-    libsodium: '>=1.0.20,<1.0.21.0a0'
+    libsodium: '>=1.0.22,<1.0.23.0a0'
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     six: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/pynacl-1.5.0-py312h4c3975b_5.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pynacl-1.6.2-py312hf34ed73_3.conda
   hash:
-    md5: 6c540d52d01c715f64250b195b989dd1
-    sha256: f6533d66bbc6f44bb0190f1b97d5809cb5e1b2ec5c71ebadb43cb60b6909ec0a
+    md5: 6f66ed67355fc922de43ea352e90aed2
+    sha256: 4222d563991ff6b1fa34cded6e3ed4f6c11835e02561d42c48da56fcad47a308
   category: main
   optional: false
 - name: pynacl
-  version: 1.5.0
+  version: 1.6.2
   manager: conda
   platform: linux-aarch64
   dependencies:
-    cffi: '>=1.4.1'
+    cffi: '>=2.0.0'
     libgcc: '>=14'
-    libsodium: '>=1.0.20,<1.0.21.0a0'
+    libsodium: '>=1.0.22,<1.0.23.0a0'
     python: '>=3.12,<3.13.0a0,>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     six: ''
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/pynacl-1.5.0-py312hcd1a082_5.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/pynacl-1.6.2-py312h6ecc08e_3.conda
   hash:
-    md5: bb778a2168c476c6b24066b1a3283417
-    sha256: e5c7b8b48570bccff6cd800ace915d4c7b3a21c745b35b94053b4a9088512cdd
+    md5: 249e157d88416595eb5bdb53ae1ba764
+    sha256: 6a7bdbb9ffdfa5ada23a5fdb4aab57b9d89468998ed768b7243a46149ab583d9
   category: main
   optional: false
 - name: pynacl
-  version: 1.5.0
+  version: 1.6.2
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
-    cffi: '>=1.4.1'
-    libsodium: '>=1.0.20,<1.0.21.0a0'
+    cffi: '>=2.0.0'
+    libsodium: '>=1.0.22,<1.0.23.0a0'
     python: '>=3.12,<3.13.0a0,>=3.12,<3.13.0a0'
     python_abi: 3.12.*
     six: ''
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/pynacl-1.5.0-py312h4409184_5.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/pynacl-1.6.2-py312h8fd69cb_3.conda
   hash:
-    md5: 16dac9ed623109c9131e2ee28868d698
-    sha256: 4bb30a19c283ddf2808f1b43ae40682a3e3d0eb8aab0df5c6106ff07bc3d188b
+    md5: 761e7760a3d2b798df407e3ee46743b9
+    sha256: 957ebd94941c0f75f23ab13bdf89cc7740e3d8855dfe7c696784e664d5a7b519
   category: main
   optional: false
 - name: pynamodb
@@ -15438,10 +15439,10 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=14'
     libstdcxx: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-4.6.6-hb700be7_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-4.6.6-h171cf75_1.conda
   hash:
-    md5: 5c944c42bd3cfd10c84ba3b60f5ac518
-    sha256: d874a6f7df9ad052a2d3f480ed5d0ddbde0590fb55a05e5fa0a4a0f837e7ed71
+    md5: 92b6b03d39f81d10467a6901ce85fc3b
+    sha256: 09adc403283de12da403a996a9ddd068f1b425dcdccefa2eeec4e2b684e114d4
   category: main
   optional: false
 - name: simdjson
@@ -15451,10 +15452,10 @@ package:
   dependencies:
     libgcc: '>=14'
     libstdcxx: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/simdjson-4.6.6-hfefdfc9_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/simdjson-4.6.6-hdc560ac_1.conda
   hash:
-    md5: f9d5cde0f496eadbf0dd73f33634b6e2
-    sha256: 5e7233b0c476aa411a7c179fd1f073948b851493aa6bd5b79ac3301afbda76d5
+    md5: 29e7b24861307a4492905722184f94ef
+    sha256: d2cd42f1af6854ac4e404169e05f37ec328acee888ccb0e2d59e9977a2db61dd
   category: main
   optional: false
 - name: simdjson
@@ -15464,10 +15465,10 @@ package:
   dependencies:
     __osx: '>=11.0'
     libcxx: '>=19'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/simdjson-4.6.6-h4ddebb9_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/simdjson-4.6.6-h3feff0a_1.conda
   hash:
-    md5: cfd828173a502c9c38398485a42d73a8
-    sha256: 7ca60025b81915f8a0540f7a7628e70a3e25929fcaeed4509cf0236a1e7a455d
+    md5: 12e5ea9092b8563bc2575feda2ec9156
+    sha256: 3fe0b91319d7754a44aa8577abdb638add85d9408aecaa6c87a3c904720f8c43
   category: main
   optional: false
 - name: six
