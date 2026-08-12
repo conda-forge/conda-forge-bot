@@ -362,7 +362,10 @@ def _add_graph_metadata(gx: nx.DiGraph):
     logger.info("making outputs LUT")
     # make the outputs look up table so we can link properly
     # and add this as an attr so we can use later
-    gx.graph["outputs_lut"] = make_outputs_lut_from_graph(gx)
+    lzj = LazyJson("outputs_to_feedstocks.json")
+    with lzj as attrs:
+        attrs.update(make_outputs_lut_from_graph(gx))
+    gx.graph["outputs_lut"] = lzj
 
     logger.info("making strong run exports")
     # collect all of the strong run exports

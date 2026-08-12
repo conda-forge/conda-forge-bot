@@ -330,7 +330,7 @@ def deploy(
         ]
         if "file" in get_lazy_json_backends():
             drs_to_deploy += CF_TICK_GRAPH_DATA_HASHMAPS
-            drs_to_deploy += ["graph.json"]
+            drs_to_deploy += ["graph.json", "outputs_to_feedstocks.json"]
     else:
         if dirs_to_ignore:
             raise RuntimeError(
