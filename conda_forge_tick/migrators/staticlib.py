@@ -4,7 +4,7 @@ import os
 import re
 import secrets
 import time
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from functools import lru_cache
 from typing import Any, Literal
 
@@ -28,6 +28,8 @@ from conda_forge_tick.utils import (
     get_keys_default,
     get_recipe_schema_version,
 )
+
+from ..migrators_types import PackageName
 
 BUILD_STRING_END_RE = re.compile(r".*_\d+$")
 
@@ -419,6 +421,8 @@ class StaticLibMigrator(GraphMigrator):
         longterm=False,
         paused=False,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
+        cycles: Collection["PackageName"] | None = None,
     ):
         if not hasattr(self, "_init_args"):
             self._init_args = []
@@ -437,8 +441,6 @@ class StaticLibMigrator(GraphMigrator):
                 "total_graph": total_graph,
             }
 
-        self.top_level = set()
-        self.cycles = set()
         self.bump_number = bump_number
         self.longterm = longterm
         self.force_pr_after_solver_attempts = force_pr_after_solver_attempts
@@ -457,6 +459,8 @@ class StaticLibMigrator(GraphMigrator):
             effective_graph=effective_graph,
             name="static_lib_migrator",
             total_graph=total_graph,
+            top_level=top_level,
+            cycles=cycles,
         )
 
     def predecessors_not_yet_built(self, attrs: "AttrsTypedDict") -> bool:
