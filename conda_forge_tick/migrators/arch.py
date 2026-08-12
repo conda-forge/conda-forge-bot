@@ -493,6 +493,11 @@ class LinuxRISCV64(_CrossCompileRebuild):
         # intel packages will not be built for riscv
         "intel-compiler-repack",
         "intel_repack",
+        # stuck in nirvana (built manually already)
+        "zlib",
+        # bot detects cycle: llvmdev <- python <- ncurses <- llvmdev;
+        # last edge is spurious though (ncurses was built manually)
+        "ncurses",
     }
 
     def __init__(self, *args, **kwargs):
