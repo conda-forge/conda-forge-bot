@@ -841,7 +841,7 @@ class GraphMigrator(Migrator):
         graph: nx.DiGraph | None = None,
         pr_limit: int = 0,
         top_level: set["PackageName"] | None = None,
-        cycles: Sequence["PackageName"] | None = None,
+        cycles: Collection["PackageName"] | None = None,
         obj_version: int | None = None,
         piggy_back_migrations: Sequence[MiniMigrator] | None = None,
         check_solvable: bool = True,

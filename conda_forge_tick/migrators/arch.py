@@ -26,6 +26,7 @@ from conda_forge_tick.utils import (
     yaml_safe_load,
 )
 
+from ..migrators_types import PackageName
 from .migration_yaml import all_noarch
 
 
@@ -97,6 +98,8 @@ class ArchRebuild(GraphMigrator):
         target_packages: Collection[str] | None = None,
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
+        cycles: Collection["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -152,6 +155,8 @@ class ArchRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
+            cycles=cycles,
+            top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
 
@@ -260,6 +265,8 @@ class _CrossCompileRebuild(GraphMigrator):
         target_packages: Collection[str] | None = None,
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
+        cycles: Collection["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -336,6 +343,8 @@ class _CrossCompileRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
+            cycles=cycles,
+            top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability!"
 
