@@ -1156,27 +1156,28 @@ def _run_migrator(
                             )
 
                             # Since filtered, mark this feedstock+branch as done if needed
-                            with attrs["pr_info"] as pri:
-                                sync_pr_info = False
-                                nuid = migrator.migrator_uid(attrs)
+                            if migrator.filter_node_migrated(attrs):
+                                with attrs["pr_info"] as pri:
+                                    sync_pr_info = False
+                                    nuid = migrator.migrator_uid(attrs)
 
-                                if all(
-                                    pr["data"] != nuid for pr in pri.get("PRed", [])
-                                ):
-                                    if "PRed" not in pri:
-                                        pri["PRed"] = []
-                                    pri["PRed"].append(
-                                        {
-                                            "PR": get_spoofed_closed_pr_info().model_dump(
-                                                mode="json"
-                                            ),
-                                            "data": nuid,
-                                        }
-                                    )
-                                    sync_pr_info = True
+                                    if all(
+                                        pr["data"] != nuid for pr in pri.get("PRed", [])
+                                    ):
+                                        if "PRed" not in pri:
+                                            pri["PRed"] = []
+                                        pri["PRed"].append(
+                                            {
+                                                "PR": get_spoofed_closed_pr_info().model_dump(
+                                                    mode="json"
+                                                ),
+                                                "data": nuid,
+                                            }
+                                        )
+                                        sync_pr_info = True
 
-                            if sync_pr_info:
-                                sync_lazy_json_object(pri, "file", ["github_api"])
+                                if sync_pr_info:
+                                    sync_lazy_json_object(pri, "file", ["github_api"])
 
                             continue
 
