@@ -359,7 +359,7 @@ def add_rebuild_migration_yaml(
     if migration_name == "dav1d130":
         piggy_back_migrations.append(
             MiniReplacement(
-                old_pkg=PackageName("dav1d"), new_pkg=PackageName("dav1d-dev")
+                old_pkg=PackageName("dav1d"), new_pkg=PackageName("dav1d-devel")
             )
         )
     piggy_back_migrations = _make_mini_migrators_with_defaults(
