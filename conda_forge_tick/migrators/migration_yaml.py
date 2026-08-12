@@ -294,7 +294,7 @@ class MigrationYaml(GraphMigrator):
         )
 
         if total_graph is not None:
-            # recompute top-level nodes and cycles after cutting to graph of all rebuilds
+            # trim top-level nodes to just those that are successors of the pin
             # these computations have to go after the call to super which turns the
             # total graph into the graph of all possible rebuilds (stored in self.graph)
             migrator_payload = self.loaded_yaml.get("__migrator", {})
@@ -306,24 +306,12 @@ class MigrationYaml(GraphMigrator):
             if self.graph is None:
                 raise ValueError("graph is None")
 
-            top_level = {
-                node
-                for node in {
-                    total_graph.successors(feedstock_name)
-                    for feedstock_name in feedstock_names
-                }
-                if (node in self.graph)
-                and len(list(self.graph.predecessors(node))) == 0
-            }
+            all_successors = set()
+            for feedstock_name in feedstock_names:
+                all_successors |= set(total_graph.successors(feedstock_name))
 
-            cycles = set()
-            for cyc in nx.simple_cycles(self.graph):
-                cycles |= set(cyc)
-
-            self.top_level = self.top_level | top_level
+            self.top_level = {node for node in self.top_level if node in all_successors}
             self._init_kwargs["top_level"] = top_level
-            self.cycles = self.cycles | cycles
-            self._init_kwargs["cycles"] = cycles
 
     def filter_not_in_migration(self, attrs, not_bad_str_start=""):
         if super().filter_not_in_migration(attrs, not_bad_str_start):

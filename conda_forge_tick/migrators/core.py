@@ -881,6 +881,23 @@ class GraphMigrator(Migrator):
             total_graph=total_graph,
         )
 
+        if self.graph is None:
+            raise ValueError("graph is None")
+
+        # set top-level and cycles
+        graph_top_level = {
+            node for node in self.graph if len(list(self.graph.predecessors(node))) == 0
+        }
+
+        graph_cycles = set()
+        for cyc in nx.simple_cycles(self.graph):
+            graph_cycles |= set(cyc)
+
+        self.top_level = self.top_level | graph_top_level
+        self._init_kwargs["top_level"] = self.top_level
+        self.cycles = self.cycles | graph_cycles
+        self._init_kwargs["cycles"] = self.cycles
+
     def all_predecessors_issued(self, attrs: "AttrsTypedDict") -> bool:
         # Check if all upstreams have been issue and are stale
         if self.graph is None:
