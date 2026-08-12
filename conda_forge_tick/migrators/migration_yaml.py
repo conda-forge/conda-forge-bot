@@ -193,6 +193,9 @@ class MigrationYaml(GraphMigrator):
         allowlist_file: str | None = None,
         **kwargs: Any,
     ):
+        top_level = top_level or set()
+        cycles = set(cycles or [])
+
         if allowlist_file is not None:
             target_packages = load_target_packages(allowlist_file)
             total_graph = cut_graph_to_target_packages(total_graph, target_packages)
@@ -224,8 +227,8 @@ class MigrationYaml(GraphMigrator):
 
         self.yaml_contents = yaml_contents
         assert isinstance(name, str)
-        self.top_level = top_level or set()
-        self.cycles = set(cycles or [])
+        self.top_level = top_level
+        self.cycles = cycles
         self.automerge = automerge
         self.conda_forge_yml_patches = conda_forge_yml_patches
         self.loaded_yaml = yaml_safe_load(self.yaml_contents)

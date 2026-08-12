@@ -848,6 +848,9 @@ class GraphMigrator(Migrator):
         ignored_deps_per_node=None,
         effective_graph: nx.DiGraph | None = None,
     ):
+        top_level = top_level or set()
+        cycles = set(cycles or [])
+
         if not hasattr(self, "_init_args"):
             self._init_args = []
 
@@ -867,8 +870,8 @@ class GraphMigrator(Migrator):
             }
 
         self.name = name
-        self.top_level = top_level or set()
-        self.cycles = set(cycles or [])
+        self.top_level = top_level
+        self.cycles = cycles
         self.ignored_deps_per_node = ignored_deps_per_node or {}
 
         super().__init__(
