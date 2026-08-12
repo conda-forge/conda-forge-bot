@@ -1186,6 +1186,8 @@ def _run_migrator(
                                 break
                 if all_filtered:
                     # Since all branches are filtered, mark this feedstock as done
+                    if "PRed" not in attrs["pr_info"]:
+                        attrs["pr_info"]["PRed"] = []
                     pred = attrs["pr_info"]["PRed"]
                     nuid = migrator.migrator_uid(attrs)
                     if all(pr["data"] != nuid for pr in pred):
