@@ -467,6 +467,10 @@ def test_extract_section_from_yaml_text(
         ("${{ blah | x_compiler }}", "x_compiler_stub"),
         ("${{ blah | x_compiler | foo}}", "x_compiler_stub"),
         ("${{x_compiler|foo}}", "x_compiler_stub"),
+        (
+            "          then: cuda-version ${{ cuda_compiler_version }}",
+            "          then: cuda-version ${{ cuda_compiler_version }}",
+        ),
     ],
 )
 def test_replace_compiler_stub(text, expected):

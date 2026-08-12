@@ -1101,7 +1101,7 @@ def load_migrators(
     migrators : list of Migrator
         The list of migrators to run in the correct randomized order.
     """
-    all_names = get_all_keys_for_hashmap("migrators") + ["version"]
+    all_names = get_all_keys_for_hashmap("migrators")
 
     # Filter names if specified
     if filter_name:
@@ -1137,7 +1137,7 @@ def _load_migrators(
     longterm_migrators = []
 
     with executor("process", 2) as pool:
-        futs = [pool.submit(_load, name) for name in all_names if name != "version"]
+        futs = [pool.submit(_load, name) for name in all_names]
 
         for fut in tqdm.tqdm(
             as_completed(futs), desc="loading migrators", ncols=80, total=len(all_names)
@@ -1159,13 +1159,11 @@ def _load_migrators(
             else:
                 migrators.append(migrator)
 
+    version_migrator = _make_version_migrator(load_existing_graph())
+
     RNG.shuffle(pinning_migrators)
     RNG.shuffle(longterm_migrators)
-    migrators = migrators + pinning_migrators + longterm_migrators
-
-    if "version" in all_names:
-        version_migrator = _make_version_migrator(load_existing_graph())
-        migrators = [version_migrator] + migrators
+    migrators = [version_migrator] + migrators + pinning_migrators + longterm_migrators
 
     return migrators
 
