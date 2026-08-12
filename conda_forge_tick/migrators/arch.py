@@ -155,10 +155,8 @@ class ArchRebuild(GraphMigrator):
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
 
-    def filter_node_migrated(
-        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
-    ) -> bool:
-        if super().filter_node_migrated(attrs, not_bad_str_start):
+    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
+        if super().filter(attrs):
             return True
         for arch in self.arches:
             configured_arch = (
@@ -338,10 +336,8 @@ class _CrossCompileRebuild(GraphMigrator):
         )
         assert not self.check_solvable, "We don't want to check solvability!"
 
-    def filter_node_migrated(
-        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
-    ) -> bool:
-        if super().filter_node_migrated(attrs, not_bad_str_start):
+    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
+        if super().filter(attrs):
             return True
         for arch in self.arches:
             configured_arch = (

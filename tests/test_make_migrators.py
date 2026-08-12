@@ -202,7 +202,7 @@ def test_make_migrators_initialize_migrators():
 @pytest.mark.parametrize(
     "filter_name, expected_names",
     [
-        (None, ["python314", "python314t", "python315", "compilers", "version"]),
+        (None, ["python314", "python314t", "python315", "compilers"]),
         (["python"], ["python314", "python314t", "python315"]),
         (["PYTHON"], ["python314", "python314t", "python315"]),
         (["python314"], ["python314", "python314t"]),
