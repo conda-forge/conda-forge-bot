@@ -1156,20 +1156,27 @@ def _run_migrator(
                             )
 
                             # Since filtered, mark this feedstock+branch as done if needed
-                            if "PRed" not in attrs["pr_info"]:
-                                attrs["pr_info"]["PRed"] = []
-                            nuid = migrator.migrator_uid(attrs)
-                            if all(
-                                pr["data"] != nuid for pr in attrs["pr_info"]["PRed"]
-                            ):
-                                attrs["pr_info"]["PRed"].append(
-                                    {
-                                        "PR": get_spoofed_closed_pr_info().model_dump(
-                                            mode="json"
-                                        ),
-                                        "data": nuid,
-                                    }
-                                )
+                            with attrs["pr_info"] as pri:
+                                sync_pr_info = False
+                                nuid = migrator.migrator_uid(attrs)
+
+                                if all(
+                                    pr["data"] != nuid for pr in pri.get("PRed", [])
+                                ):
+                                    if "PRed" not in pri:
+                                        pri["PRed"] = []
+                                    pri["PRed"].append(
+                                        {
+                                            "PR": get_spoofed_closed_pr_info().model_dump(
+                                                mode="json"
+                                            ),
+                                            "data": nuid,
+                                        }
+                                    )
+                                    sync_pr_info = True
+
+                            if sync_pr_info:
+                                sync_lazy_json_object(pri, "file", ["github_api"])
 
                             continue
 
