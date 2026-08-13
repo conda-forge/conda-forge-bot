@@ -66,7 +66,9 @@ jobs:
           pushd cf-graph
 
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-          conda-forge-tick make-migrators
+          conda-forge-tick make-migrators --list --filename=../old_migrators.txt
+          conda-forge-tick make-migrators --filename=../new_migrators.txt
+          conda-forge-tick make-migrators --clean-up=../old_migrators.txt,../new_migrators.txt
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}

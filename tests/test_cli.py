@@ -15,7 +15,6 @@ commands = (
     "gather-all-feedstocks",
     "make-graph",
     "make-mappings",
-    "make-migrators",
     "make-status-report",
     "sync-lazy-json-across-backends",
     "update-prs",
@@ -26,6 +25,7 @@ job_commands = (
     "make-graph",
     "update-prs",
     "update-upstream-versions",
+    "make-migrators",
 )
 
 global_options = (
