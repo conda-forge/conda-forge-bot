@@ -90,6 +90,9 @@ class MigratorName(StrEnum):
     """
 
     ADD_NVIDIA_TOOLS = "AddNVIDIATools"
+    """
+    This migrator is no longer present in the codebase but still appears in the graph.
+    """
 
 
 class MigrationPullRequestData(StrictBaseModel):
