@@ -1315,34 +1315,39 @@ def main(
     if list_migrators:
         mgs = set(get_all_keys_for_hashmap("migrators"))
         if filename is not None:
-            with open(filename, "w") as fp:
-                for mg in mgs:
-                    fp.write(mg + "\n")
+            with fold_log_lines("listing current migrators"):
+                with open(filename, "w") as fp:
+                    for mg in mgs:
+                        fp.write(mg + "\n")
+                        print(mg)
         else:
             for mg in mgs:
                 print(mg)
         return
     elif clean_up is not None:
-        fnames = clean_up.split(",")
-        if len(fnames) > 0:
-            old_migrators = _read_mg_list(fnames[0])
-        else:
-            old_migrators = set()
+        with fold_log_lines("cleaning up migrators"):
+            fnames = clean_up.split(",")
+            if len(fnames) > 0:
+                old_migrators = _read_mg_list(fnames[0])
+            else:
+                old_migrators = set()
 
-        if len(fnames) > 1:
-            new_migrators = set()
-            for fname in fnames[1:]:
-                new_migrators |= _read_mg_list(fname)
-        else:
-            new_migrators = set()
+            if len(fnames) > 1:
+                new_migrators = set()
+                for fname in fnames[1:]:
+                    new_migrators |= _read_mg_list(fname)
+            else:
+                new_migrators = set()
 
-        with lazy_json_override_backends(
-            ["file"],
-            hashmaps_to_sync=["migrators"],
-        ):
-            migrators_to_remove = old_migrators - new_migrators
-            for migrator in migrators_to_remove:
-                remove_key_for_hashmap("migrators", migrator)
+            with lazy_json_override_backends(
+                ["file"],
+                hashmaps_to_sync=["migrators"],
+            ):
+                migrators_to_remove = old_migrators - new_migrators
+                for migrator in migrators_to_remove:
+                    print(f"removing migrator {migrator}", flush=True)
+                    remove_key_for_hashmap("migrators", migrator)
+        return
     else:
         gx = load_existing_graph()
         migrators = initialize_migrators(
@@ -1355,10 +1360,10 @@ def main(
             migrators,
             dry_run=ctx.dry_run,
         )
+        with fold_log_lines("listing created migrators"):
+            for mg in new_migrators:
+                print(mg)
         if filename is not None:
             with open(filename, "w") as fp:
                 for mg in new_migrators:
                     fp.write(mg + "\n")
-        else:
-            for mg in new_migrators:
-                print(mg)
