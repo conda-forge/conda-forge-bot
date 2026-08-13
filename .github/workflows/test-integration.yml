@@ -9,7 +9,7 @@ on:
 # Integration tests interact with GitHub resources in the integration test infrastructure and therefore
 # cannot run concurrently with other integration tests.
 concurrency:
-  group: conda-forge-bot-integration-tests
+  group: conda-forge-bot-integration-tests${{ github.event_name == 'pull_request' && '-pr' || ''  }}
   cancel-in-progress: false
 
 env:
@@ -33,6 +33,7 @@ jobs:
             final_should_run=true
           else
             final_should_run=false
+          fi
 
           echo "should-run=${final_should_run}" >> "$GITHUB_OUTPUT"
           echo "should run: ${final_should_run}"
