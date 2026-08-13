@@ -35,8 +35,6 @@ jobs:
             final_should_run=false
           fi
 
-          final_should_run=true
-          
           echo "should-run=${final_should_run}" >> "$GITHUB_OUTPUT"
           echo "should run: ${final_should_run}"
 
@@ -79,12 +77,6 @@ jobs:
         run: |
           ver=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
           echo "version=${ver}" >> "$GITHUB_OUTPUT"
-
-      - name: get version
-        if: ${{ steps.should-run.outputs.should-run == 'true' }}
-        run: |
-          pwd
-          ls -lah
           
       - name: build docker image
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
