@@ -166,14 +166,19 @@ def _make_migrator_graph(graph, migrator, effective=False, pluck_nodes=True):
                         # in this branch the node is in the migration
 
                         # if we are computing the effective graph, then we filter
-                        # if the node needs to be migrated
+                        # if the node has been migrated already or is not ready
+                        # to be migrated
                         if effective:
                             # if we are working on the effective graph, then
                             # we cannot call migrator.filter_node_migrated(attrs)
+                            # or migrator.filter_node_ready_to_be_migrated(attrs)
                             # unless migrator.graph is set.
-                            # thus we only compute it here and the caller has to
+                            # thus we only compute it them and the caller has to
                             # to call this function with effective=False first.
-                            filters.append(migrator.filter_node_migrated(attrs))
+                            filters.append(
+                                migrator.filter_node_migrated(attrs)
+                                or migrator.filter_node_not_ready_to_be_migrated(attrs)
+                            )
                         else:
                             # if not doing effective graph, then do not filter the node
                             filters.append(False)
@@ -510,9 +515,11 @@ class Migrator:
         bool :
             True if node is to be skipped
         """
-        return self.filter_not_in_migration(
-            attrs, not_bad_str_start
-        ) or self.filter_node_migrated(attrs, not_bad_str_start)
+        return (
+            self.filter_not_in_migration(attrs, not_bad_str_start)
+            or self.filter_node_not_ready_to_be_migrated(attrs, not_bad_str_start)
+            or self.filter_node_migrated(attrs, not_bad_str_start)
+        )
 
     def filter_not_in_migration(
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
@@ -535,6 +542,12 @@ class Migrator:
             or bad_attr
             or skip_migrator_due_to_schema(attrs, self.allowed_schema_versions)
         )
+
+    def filter_node_not_ready_to_be_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ) -> bool:
+        """If true don't act on a node in a migration because it is not ready to be migrated."""
+        return False
 
     def filter_node_migrated(
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
@@ -997,7 +1010,10 @@ class GraphMigrator(Migrator):
 
         return not_in_migration
 
-    def filter_node_migrated(self, attrs, not_bad_str_start=""):
+    def filter_node_not_ready_to_be_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ) -> bool:
+        """If true don't act on a node in a migration because it is not ready to be migrated."""
         name = attrs.get("name", "")
 
         # If in top level or in a cycle don't check for upstreams just build
@@ -1022,7 +1038,12 @@ class GraphMigrator(Migrator):
                 else:
                     node_is_ready = True
 
-        return (not node_is_ready) or super().filter_node_migrated(attrs, "Upstream:")
+        return (not node_is_ready) or super().filter_node_not_ready_to_be_migrated(
+            attrs
+        )
+
+    def filter_node_migrated(self, attrs, not_bad_str_start=""):
+        return super().filter_node_migrated(attrs, "Upstream:")
 
     def migrator_uid(self, attrs: "AttrsTypedDict") -> "MigrationUidTypedDict":
         if self.name is None:

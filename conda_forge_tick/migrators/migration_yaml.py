@@ -399,7 +399,7 @@ class MigrationYaml(GraphMigrator):
             or (node in excluded_feedstocks)
         )
 
-    def filter_node_migrated(self, attrs, not_bad_str_start=""):
+    def filter_node_not_ready_to_be_migrated(self, attrs, not_bad_str_start=""):
         migrator_payload = self.loaded_yaml.get("__migrator", {})
         wait_for_migrators = migrator_payload.get("wait_for_migrators", [])
 
@@ -423,7 +423,7 @@ class MigrationYaml(GraphMigrator):
             wait_for_migrators,
         )
 
-        return need_to_wait or super().filter_node_migrated(attrs, not_bad_str_start)
+        return need_to_wait or super().filter_node_not_ready_to_be_migrated(attrs)
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
