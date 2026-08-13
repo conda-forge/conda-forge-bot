@@ -94,7 +94,7 @@ jobs:
           image: conda-forge-tick
           tags: test
           containerfiles: |
-            ./Dockerfile
+            Dockerfile
           extra-args: |
             --no-cache
             --squash
