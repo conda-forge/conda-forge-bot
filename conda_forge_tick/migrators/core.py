@@ -122,7 +122,23 @@ def _lazy_json_or_dict(data):
 
 
 def _make_migrator_graph(graph, migrator, effective=False, pluck_nodes=True):
-    """Prune graph only to nodes that need rebuilds."""
+    """Prune graph only to nodes that need rebuilds.
+
+    If called with effective=False, the returned graph has all nodes in the migration
+    either already migrated or awaiting a PR. The graph returned in this case is stored
+    on the migrator as self.graph.
+
+    If called with effective=True, the returned graph has only nodes in the migration
+    which also are awaiting a PR and are eligible to have a PR be made (e.g., all of
+    their upstream dependencies have also been migrated). The graph returned in this
+    case is stored on the migrator as self.effective_graph.
+
+    When pluck_nodes is True, nodes are removed and their edges are redirected to
+    their upstream and downstream packages.
+
+    When pluck_nodes is False, nodes are removed and the edges are simply clipped.
+    This option is used by the Version migrator.
+    """
     gx2 = copy.deepcopy(graph)
 
     # Prune graph to only things that need builds right now
@@ -144,15 +160,22 @@ def _make_migrator_graph(graph, migrator, effective=False, pluck_nodes=True):
                     not_in_migration = migrator.filter_not_in_migration(attrs)
 
                     if not_in_migration:
+                        # always filter nodes not in the migration
                         filters.append(True)
                     else:
+                        # in this branch the node is in the migration
+
+                        # if we are computing the effective graph, then we filter
+                        # if the node needs to be migrated
                         if effective:
-                            node_migrated = migrator.filter_node_migrated(attrs)
-                            if node_migrated:
-                                filters.append(True)
-                            else:
-                                filters.append(False)
+                            # if we are working on the effective graph, then
+                            # we cannot call migrator.filter_node_migrated(attrs)
+                            # unless migrator.graph is set.
+                            # thus we only compute it here and the caller has to
+                            # to call this function with effective=False first.
+                            filters.append(migrator.filter_node_migrated(attrs))
                         else:
+                            # if not doing effective graph, then do not filter the node
                             filters.append(False)
 
                 if filters and all(filters):
