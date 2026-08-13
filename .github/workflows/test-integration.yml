@@ -80,6 +80,12 @@ jobs:
           ver=$(python -c "import conda_forge_tick; print(conda_forge_tick.__version__)")
           echo "version=${ver}" >> "$GITHUB_OUTPUT"
 
+      - name: get version
+        if: ${{ steps.should-run.outputs.should-run == 'true' }}
+        run: |
+          pwd
+          ls -lah
+          
       - name: build docker image
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
