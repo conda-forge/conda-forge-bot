@@ -35,6 +35,8 @@ jobs:
             final_should_run=false
           fi
 
+          final_should_run=true
+          
           echo "should-run=${final_should_run}" >> "$GITHUB_OUTPUT"
           echo "should run: ${final_should_run}"
 
