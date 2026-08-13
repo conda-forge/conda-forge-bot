@@ -1,6 +1,7 @@
 import contextlib
 import copy
 import glob
+import hashlib
 import logging
 import os
 import pprint
@@ -114,6 +115,10 @@ DEFAULT_MINI_MIGRATORS = [
 ]
 
 
+def _compute_job_for_name(name: str, n_jobs: int) -> int:
+    return abs(int(hashlib.sha1(name.encode("utf-8")).hexdigest(), 16)) % n_jobs + 1
+
+
 def _make_mini_migrators_with_defaults(
     extra_mini_migrators: list[MiniMigrator] | None = None,
 ) -> list[MiniMigrator]:
@@ -187,6 +192,8 @@ def add_replacement_migrator(
     new_pkg: "PackageName",
     rationale: str,
     alt_migrator: type[Replacement] | None = None,
+    job: int = 1,
+    n_jobs: int = 1,
 ) -> None:
     """Add a migrator to replace one package with another.
 
@@ -204,8 +211,14 @@ def add_replacement_migrator(
         The reason the for the migration. Should be a full statement.
     alt_migrator : Replacement migrator or a subclass thereof
         An alternate Replacement migrator to use for special tasks.
+    job : int, optional
+        The job number (1-indexed) for parallel processing. Default is 1.
+    n_jobs : int, optional
 
     """
+    if _compute_job_for_name(old_pkg + new_pkg, n_jobs) != job:
+        return
+
     with fold_log_lines(f"making replacement migrator for {old_pkg} -> {new_pkg}"):
         if alt_migrator is not None:
             migrators.append(
@@ -236,78 +249,92 @@ def add_replacement_migrator(
         migrators[-1].pr_limit = pr_limit
 
 
-def add_arch_migrate(migrators: MutableSequence[Migrator], gx: nx.DiGraph) -> None:
+def add_arch_migrate(
+    migrators: MutableSequence[Migrator],
+    gx: nx.DiGraph,
+    job: int = 1,
+    n_jobs: int = 1,
+) -> None:
     """Add rebuild migrators.
 
     Parameters
     ----------
     migrators : list of Migrator
         The list of migrators to run.
+    gx : graph
+        The conda-forge dependency graph.
+    job : int, optional
+        The job number (1-indexed) for parallel processing. Default is 1.
+    n_jobs : int, optional
 
     """
-    with fold_log_lines("making aarch64+ppc64le migrator"):
-        migrators.append(
-            ArchRebuild(
-                total_graph=gx,
-                pr_limit=PR_LIMIT,
-            ),
-        )
+    if _compute_job_for_name("aarch64+ppc64le", n_jobs) == job:
+        with fold_log_lines("making aarch64+ppc64le migrator"):
+            migrators.append(
+                ArchRebuild(
+                    total_graph=gx,
+                    pr_limit=PR_LIMIT,
+                ),
+            )
 
-    with fold_log_lines("making osx-arm64 migrator"):
-        migrators.append(
-            OSXArm(
-                total_graph=gx,
-                pr_limit=PR_LIMIT,
-                piggy_back_migrations=[
-                    UpdateConfigSubGuessMigrator(),
-                    CondaForgeYAMLCleanup(),
-                    UpdateCMakeArgsMigrator(),
-                    GuardTestingMigrator(),
-                    CrossRBaseMigrator(),
-                    CrossPythonMigrator(),
-                    NoCondaInspectMigrator(),
-                    MPIPinRunAsBuildCleanup(),
-                    CombineV1ConditionsMigrator(),
-                ],
-            ),
-        )
+    if _compute_job_for_name("osx-arm64", n_jobs) == job:
+        with fold_log_lines("making osx-arm64 migrator"):
+            migrators.append(
+                OSXArm(
+                    total_graph=gx,
+                    pr_limit=PR_LIMIT,
+                    piggy_back_migrations=[
+                        UpdateConfigSubGuessMigrator(),
+                        CondaForgeYAMLCleanup(),
+                        UpdateCMakeArgsMigrator(),
+                        GuardTestingMigrator(),
+                        CrossRBaseMigrator(),
+                        CrossPythonMigrator(),
+                        NoCondaInspectMigrator(),
+                        MPIPinRunAsBuildCleanup(),
+                        CombineV1ConditionsMigrator(),
+                    ],
+                ),
+            )
 
-    with fold_log_lines("making win-arm64 migrator"):
-        migrators.append(
-            WinArm64(
-                total_graph=gx,
-                pr_limit=PR_LIMIT,
-                piggy_back_migrations=[
-                    CondaForgeYAMLCleanup(),
-                    UpdateCMakeArgsWinMigrator(),
-                    GuardTestingWinMigrator(),
-                    CrossRBaseWinMigrator(),
-                    CrossPythonMigrator(),
-                    NoCondaInspectMigrator(),
-                    MPIPinRunAsBuildCleanup(),
-                    CombineV1ConditionsMigrator(),
-                ],
-            ),
-        )
+    if _compute_job_for_name("win-arm64", n_jobs) == job:
+        with fold_log_lines("making win-arm64 migrator"):
+            migrators.append(
+                WinArm64(
+                    total_graph=gx,
+                    pr_limit=PR_LIMIT,
+                    piggy_back_migrations=[
+                        CondaForgeYAMLCleanup(),
+                        UpdateCMakeArgsWinMigrator(),
+                        GuardTestingWinMigrator(),
+                        CrossRBaseWinMigrator(),
+                        CrossPythonMigrator(),
+                        NoCondaInspectMigrator(),
+                        MPIPinRunAsBuildCleanup(),
+                        CombineV1ConditionsMigrator(),
+                    ],
+                ),
+            )
 
-    with fold_log_lines("making linux-riscv64 migrator"):
-        migrators.append(
-            LinuxRISCV64(
-                total_graph=gx,
-                pr_limit=PR_LIMIT,
-                piggy_back_migrations=[
-                    UpdateConfigSubGuessMigrator(),
-                    CondaForgeYAMLCleanup(),
-                    UpdateCMakeArgsMigrator(),
-                    GuardTestingMigrator(),
-                    CrossRBaseMigrator(),
-                    CrossPythonMigrator(),
-                    NoCondaInspectMigrator(),
-                    MPIPinRunAsBuildCleanup(),
-                    CombineV1ConditionsMigrator(),
-                ],
-            ),
-        )
+    if _compute_job_for_name("linux-riscv64", n_jobs) == job:
+        with fold_log_lines("making linux-riscv64 migrator"):
+            migrators.append(
+                LinuxRISCV64(
+                    total_graph=gx,
+                    pr_limit=PR_LIMIT,
+                    piggy_back_migrations=[
+                        UpdateConfigSubGuessMigrator(),
+                        CondaForgeYAMLCleanup(),
+                        UpdateCMakeArgsMigrator(),
+                        GuardTestingMigrator(),
+                        CrossRBaseMigrator(),
+                        CrossPythonMigrator(),
+                        NoCondaInspectMigrator(),
+                        MPIPinRunAsBuildCleanup(),
+                        CombineV1ConditionsMigrator(),
+                    ],
+                ),
+            )
 
 
 def add_rebuild_migration_yaml(
@@ -416,6 +443,8 @@ def migration_factory(
     pr_limit: int = PR_LIMIT,
     only_keep=None,
     _testing_frac=None,
+    job: int = 1,
+    n_jobs: int = 1,
 ) -> None:
     migration_yamls = []
     migrations_loc = os.path.join(
@@ -435,6 +464,11 @@ def migration_factory(
             os.path.splitext(os.path.basename(yaml_file))[0]
             for yaml_file, _ in migration_yamls
         ]
+
+    # cut to only migrators for this job
+    only_keep = [
+        mname for mname in only_keep if _compute_job_for_name(mname, n_jobs) == job
+    ]
 
     if _testing_frac is not None:
         rng = random.Random(10)
@@ -732,6 +766,8 @@ def create_migration_yaml_creator(
     gx: nx.DiGraph,
     pin_to_debug=None,
     _testing_frac=None,
+    job: int = 1,
+    n_jobs: int = 1,
 ):
     cfp_gx = copy.deepcopy(gx)
     for node in list(cfp_gx.nodes):
@@ -764,6 +800,13 @@ def create_migration_yaml_creator(
         pinning_names = sorted(
             [on for on in pinning_names if rng.uniform(0, 1) < _testing_frac]
         )
+
+    # cut to only nodes for this job
+    pinning_names = [
+        pinning_name
+        for pinning_name in pinning_names
+        if _compute_job_for_name(pinning_name, n_jobs) == job
+    ]
 
     pinning_migration_sizes = _compute_approximate_pinning_migration_sizes(
         gx,
@@ -903,9 +946,16 @@ def create_migration_yaml_creator(
 
 
 def add_noarch_python_min_migrator(
-    migrators: MutableSequence[Migrator], gx: nx.DiGraph
+    migrators: MutableSequence[Migrator],
+    gx: nx.DiGraph,
+    job: int = 1,
+    n_jobs: int = 1,
 ):
-    with fold_log_lines("making `noarch: python` migrator"):
+
+    if _compute_job_for_name("`noarch: python` min", n_jobs) != job:
+        return
+
+    with fold_log_lines("making `noarch: python` min migrator"):
         migrators.append(
             NoarchPythonMinMigrator(
                 total_graph=gx,
@@ -924,7 +974,13 @@ def add_noarch_python_min_migrator(
         migrators[-1].pr_limit = pr_limit
 
 
-def add_static_lib_migrator(migrators: MutableSequence[Migrator], gx: nx.DiGraph):
+def add_static_lib_migrator(
+    migrators: MutableSequence[Migrator], gx: nx.DiGraph, job: int = 1, n_jobs: int = 1
+):
+
+    if _compute_job_for_name("static lib", n_jobs) != job:
+        return
+
     with fold_log_lines("making static lib migrator"):
         migrators.append(
             StaticLibMigrator(
@@ -945,9 +1001,12 @@ def add_static_lib_migrator(migrators: MutableSequence[Migrator], gx: nx.DiGraph
 
 
 def add_nvtools_migrator(
-    migrators: MutableSequence[Migrator],
-    gx: nx.DiGraph,
+    migrators: MutableSequence[Migrator], gx: nx.DiGraph, job: int = 1, n_jobs: int = 1
 ):
+
+    if _compute_job_for_name("add nvtools", n_jobs) != job:
+        return
+
     with fold_log_lines("making add nvtools migrator"):
         migrators.append(
             AddNVIDIATools(
@@ -967,9 +1026,12 @@ def add_nvtools_migrator(
 
 
 def add_cdt_migrator(
-    migrators: MutableSequence[Migrator],
-    gx: nx.DiGraph,
+    migrators: MutableSequence[Migrator], gx: nx.DiGraph, job: int = 1, n_jobs: int = 1
 ):
+
+    if _compute_job_for_name("cdt", n_jobs) != job:
+        return
+
     with fold_log_lines("making cdt migrator"):
         migrators.append(
             CDTMigrator(
@@ -1023,11 +1085,13 @@ def _make_version_migrator(
 def initialize_migrators(
     gx: nx.DiGraph,
     dry_run: bool = False,
+    job: int = 1,
+    n_jobs: int = 1,
     _testing_frac=None,
 ) -> MutableSequence[Migrator]:
     migrators: list[Migrator] = []
 
-    add_arch_migrate(migrators, gx)
+    add_arch_migrate(migrators, gx, job=job, n_jobs=n_jobs)
 
     add_replacement_migrator(
         migrators,
@@ -1035,6 +1099,8 @@ def initialize_migrators(
         cast("PackageName", "mpir"),
         cast("PackageName", "gmp"),
         "The package 'mpir' is deprecated and unmaintained. Use 'gmp' instead.",
+        job=job,
+        n_jobs=n_jobs,
     )
 
     add_replacement_migrator(
@@ -1045,26 +1111,36 @@ def initialize_migrators(
         "The astropy feedstock has been split into two packages, astropy-base only "
         "has required dependencies and astropy now has all optional dependencies. "
         "To maintain the old behavior you should migrate to astropy-base.",
+        job=job,
+        n_jobs=n_jobs,
     )
 
-    add_noarch_python_min_migrator(migrators, gx)
+    add_noarch_python_min_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
-    add_static_lib_migrator(migrators, gx)
+    add_static_lib_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
-    add_nvtools_migrator(migrators, gx)
+    add_nvtools_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
-    add_cdt_migrator(migrators, gx)
+    add_cdt_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
     pinning_migrators: list[Migrator] = []
-    migration_factory(pinning_migrators, gx, _testing_frac=_testing_frac)
+    migration_factory(
+        pinning_migrators, gx, _testing_frac=_testing_frac, job=job, n_jobs=n_jobs
+    )
     create_migration_yaml_creator(
-        migrators=pinning_migrators, gx=gx, _testing_frac=_testing_frac
+        migrators=pinning_migrators,
+        gx=gx,
+        _testing_frac=_testing_frac,
+        job=job,
+        n_jobs=n_jobs,
     )
 
-    version_migrator = _make_version_migrator(gx, dry_run=dry_run)
-
     RNG.shuffle(pinning_migrators)
-    migrators = [version_migrator] + migrators + pinning_migrators
+    migrators = migrators + pinning_migrators
+
+    if _compute_job_for_name("version", n_jobs) == job:
+        version_migrator = _make_version_migrator(gx, dry_run=dry_run)
+        migrators = [version_migrator] + migrators
 
     with fold_log_lines("migration graph sizes"):
         print("rebuild migration graph sizes:", flush=True)
@@ -1168,7 +1244,7 @@ def _load_migrators(
     return migrators
 
 
-def dump_migrators(migrators: MutableSequence[Migrator], dry_run: bool = False) -> None:
+def dump_migrators(migrators: MutableSequence[Migrator], dry_run: bool = False) -> set:
     """Dump the current migrators to JSON.
 
     Parameters
@@ -1185,7 +1261,7 @@ def dump_migrators(migrators: MutableSequence[Migrator], dry_run: bool = False) 
     """
     if dry_run:
         print("dry run: dumping migrators to json", flush=True)
-        return
+        return set()
 
     with (
         fold_log_lines("dumping migrators to JSON"),
@@ -1194,7 +1270,6 @@ def dump_migrators(migrators: MutableSequence[Migrator], dry_run: bool = False) 
             hashmaps_to_sync=["migrators"],
         ),
     ):
-        old_migrators = set(get_all_keys_for_hashmap("migrators"))
         new_migrators = set()
         for migrator in tqdm.tqdm(
             migrators, desc="dumping migrators", ncols=80, total=len(migrators)
@@ -1216,18 +1291,79 @@ def dump_migrators(migrators: MutableSequence[Migrator], dry_run: bool = False) 
             except Exception as e:
                 logger.error("Error dumping migrator %s to JSON!", migrator, exc_info=e)
 
-        migrators_to_remove = old_migrators - new_migrators
-        for migrator in migrators_to_remove:
-            remove_key_for_hashmap("migrators", migrator)
+    return new_migrators
 
 
-def main(ctx: CliContext) -> None:
-    gx = load_existing_graph()
-    migrators = initialize_migrators(
-        gx,
-        dry_run=ctx.dry_run,
-    )
-    dump_migrators(
-        migrators,
-        dry_run=ctx.dry_run,
-    )
+def _read_mg_list(fname):
+    mg_names = set()
+    with open(fname) as fp:
+        for line in fp.readlines():
+            line = line.strip()
+            if line:
+                mg_names.add(line)
+    return mg_names
+
+
+def main(
+    ctx: CliContext,
+    job: int = 1,
+    n_jobs: int = 1,
+    list_migrators: bool = False,
+    clean_up: str | None = None,
+    filename: str | None = None,
+) -> None:
+    if list_migrators:
+        mgs = set(get_all_keys_for_hashmap("migrators"))
+        if filename is not None:
+            with fold_log_lines("listing current migrators"):
+                with open(filename, "w") as fp:
+                    for mg in mgs:
+                        fp.write(mg + "\n")
+                        print(mg)
+        else:
+            for mg in mgs:
+                print(mg)
+        return
+    elif clean_up is not None:
+        with fold_log_lines("cleaning up migrators"):
+            fnames = clean_up.split(",")
+            if len(fnames) > 0:
+                old_migrators = _read_mg_list(fnames[0])
+            else:
+                old_migrators = set()
+
+            if len(fnames) > 1:
+                new_migrators = set()
+                for fname in fnames[1:]:
+                    new_migrators |= _read_mg_list(fname)
+            else:
+                new_migrators = set()
+
+            with lazy_json_override_backends(
+                ["file"],
+                hashmaps_to_sync=["migrators"],
+            ):
+                migrators_to_remove = old_migrators - new_migrators
+                for migrator in migrators_to_remove:
+                    print(f"removing migrator {migrator}", flush=True)
+                    remove_key_for_hashmap("migrators", migrator)
+        return
+    else:
+        gx = load_existing_graph()
+        migrators = initialize_migrators(
+            gx,
+            dry_run=ctx.dry_run,
+            job=job,
+            n_jobs=n_jobs,
+        )
+        new_migrators = dump_migrators(
+            migrators,
+            dry_run=ctx.dry_run,
+        )
+        with fold_log_lines("listing created migrators"):
+            for mg in new_migrators:
+                print(mg)
+        if filename is not None:
+            with open(filename, "w") as fp:
+                for mg in new_migrators:
+                    fp.write(mg + "\n")
