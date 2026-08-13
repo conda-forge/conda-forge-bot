@@ -940,7 +940,7 @@ class GraphMigrator(Migrator):
         }
 
         graph_cycles = set()
-        for cyc in nx.simple_cycles(self.graph):
+        for cyc in nx.simple_cycles(self.effective_graph):
             graph_cycles |= set(cyc)
 
         self.top_level = self.top_level | graph_top_level
