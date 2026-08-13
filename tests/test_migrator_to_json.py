@@ -361,7 +361,6 @@ def test_migrator_to_json_riscv64():
 @pytest.mark.parametrize(
     "klass",
     [
-        conda_forge_tick.migrators.AddNVIDIATools,
         conda_forge_tick.migrators.RebuildBroken,
     ],
 )

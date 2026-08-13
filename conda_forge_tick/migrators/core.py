@@ -270,6 +270,10 @@ def make_from_lazy_json_data(data):
     """Deserialize the migrator from LazyJson-compatible data."""
     import conda_forge_tick.migrators
 
+    if not hasattr(conda_forge_tick.migrators, data["class"]):
+        logger.warning("Migrator '%s' could not be loaded!", data["class"])
+        return None
+
     cls = getattr(conda_forge_tick.migrators, data["class"])
 
     kwargs = copy.deepcopy(data["kwargs"])
@@ -281,6 +285,9 @@ def make_from_lazy_json_data(data):
         kwargs["piggy_back_migrations"] = [
             make_from_lazy_json_data(mini_migrator)
             for mini_migrator in kwargs["piggy_back_migrations"]
+        ]
+        kwargs["piggy_back_migrations"] = [
+            m for m in kwargs["piggy_back_migrations"] if m is not None
         ]
 
     # this keyword was removed from the class init,
