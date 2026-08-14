@@ -564,7 +564,6 @@ def test_container_tasks_is_recipe_solvable_containerized(use_containers):
 
 
 yaml_rebuild = MigrationYaml(yaml_contents="{}", name="hi", total_graph=TOTAL_GRAPH)
-yaml_rebuild.cycles = set()
 
 
 @pytest.mark.skipif(

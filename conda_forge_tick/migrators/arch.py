@@ -99,7 +99,6 @@ class ArchRebuild(GraphMigrator):
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
         top_level: set["PackageName"] | None = None,
-        cycles: Collection["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -155,7 +154,6 @@ class ArchRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
-            cycles=cycles,
             top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
@@ -266,7 +264,6 @@ class _CrossCompileRebuild(GraphMigrator):
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
         top_level: set["PackageName"] | None = None,
-        cycles: Collection["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -343,7 +340,6 @@ class _CrossCompileRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
-            cycles=cycles,
             top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability!"

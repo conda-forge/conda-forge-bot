@@ -4,7 +4,7 @@ import os
 import re
 import secrets
 import time
-from collections.abc import Collection, Sequence
+from collections.abc import Sequence
 from functools import lru_cache
 from typing import Any, Literal
 
@@ -422,8 +422,9 @@ class StaticLibMigrator(GraphMigrator):
         paused=False,
         total_graph: nx.DiGraph | None = None,
         top_level: set["PackageName"] | None = None,
-        cycles: Collection["PackageName"] | None = None,
     ):
+        top_level = top_level or set()
+
         if not hasattr(self, "_init_args"):
             self._init_args = []
 
@@ -439,6 +440,7 @@ class StaticLibMigrator(GraphMigrator):
                 "force_pr_after_solver_attempts": force_pr_after_solver_attempts,
                 "paused": paused,
                 "total_graph": total_graph,
+                "top_level": top_level,
             }
 
         self.bump_number = bump_number
@@ -460,7 +462,6 @@ class StaticLibMigrator(GraphMigrator):
             name="static_lib_migrator",
             total_graph=total_graph,
             top_level=top_level,
-            cycles=cycles,
         )
 
     def predecessors_not_yet_built(self, attrs: "AttrsTypedDict") -> bool:

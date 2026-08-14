@@ -5,7 +5,7 @@ import re
 import secrets
 import time
 from collections import defaultdict
-from collections.abc import Collection, Sequence
+from collections.abc import Sequence
 from typing import Any, Literal
 
 import networkx as nx
@@ -178,7 +178,6 @@ class MigrationYaml(GraphMigrator):
         graph: nx.DiGraph | None = None,
         pr_limit: int = 0,
         top_level: set["PackageName"] | None = None,
-        cycles: Collection["PackageName"] | None = None,
         migration_number: int | None = None,
         bump_number: int = 1,
         piggy_back_migrations: Sequence[MiniMigrator] | None = None,
@@ -194,7 +193,6 @@ class MigrationYaml(GraphMigrator):
         **kwargs: Any,
     ):
         top_level = top_level or set()
-        cycles = set(cycles or [])
 
         if allowlist_file is not None:
             target_packages = load_target_packages(allowlist_file)
@@ -209,7 +207,6 @@ class MigrationYaml(GraphMigrator):
                 "graph": graph,
                 "pr_limit": pr_limit,
                 "top_level": top_level,
-                "cycles": cycles,
                 "migration_number": migration_number,
                 "bump_number": bump_number,
                 "piggy_back_migrations": piggy_back_migrations,
@@ -228,7 +225,6 @@ class MigrationYaml(GraphMigrator):
         self.yaml_contents = yaml_contents
         assert isinstance(name, str)
         self.top_level = top_level
-        self.cycles = cycles
         self.automerge = automerge
         self.conda_forge_yml_patches = conda_forge_yml_patches
         self.loaded_yaml = yaml_safe_load(self.yaml_contents)
