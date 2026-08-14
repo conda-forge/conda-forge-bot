@@ -76,6 +76,7 @@ class MigratorName(StrEnum):
     This legacy migrator R noarch packages technically exists in the codebase, but does not appear in the graph.
     """
     PINNING = "Pinning"
+    CDT_MIGRATOR = "CDTMigrator"
     COMPILER_REBUILD = "CompilerRebuild"
     """
     This migrator is no longer present in the codebase but still appears in the graph.
