@@ -126,3 +126,11 @@ def test_get_feedstock_commit_hash_and_timestamp():
     sha, ts = _get_feedstock_commit_hash_and_timestamp("ngmix")
     assert sha is not None
     assert ts is not None
+
+
+def test_feedstock_parser_load_feedstock_local_pyobjc_framework_quartz():
+    attrs = load_feedstock_local(
+        "pyobjc-framework-quartz",
+        {},
+    )
+    assert attrs["feedstock_name"] == "pyobjc-framework-quartz"
