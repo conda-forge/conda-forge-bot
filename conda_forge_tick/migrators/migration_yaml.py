@@ -5,7 +5,7 @@ import re
 import secrets
 import time
 from collections import defaultdict
-from collections.abc import Collection, Sequence
+from collections.abc import Sequence
 from typing import Any, Literal
 
 import networkx as nx
@@ -178,7 +178,6 @@ class MigrationYaml(GraphMigrator):
         graph: nx.DiGraph | None = None,
         pr_limit: int = 0,
         top_level: set["PackageName"] | None = None,
-        cycles: Collection["PackageName"] | None = None,
         migration_number: int | None = None,
         bump_number: int = 1,
         piggy_back_migrations: Sequence[MiniMigrator] | None = None,
@@ -193,6 +192,8 @@ class MigrationYaml(GraphMigrator):
         allowlist_file: str | None = None,
         **kwargs: Any,
     ):
+        top_level = top_level or set()
+
         if allowlist_file is not None:
             target_packages = load_target_packages(allowlist_file)
             total_graph = cut_graph_to_target_packages(total_graph, target_packages)
@@ -206,7 +207,6 @@ class MigrationYaml(GraphMigrator):
                 "graph": graph,
                 "pr_limit": pr_limit,
                 "top_level": top_level,
-                "cycles": cycles,
                 "migration_number": migration_number,
                 "bump_number": bump_number,
                 "piggy_back_migrations": piggy_back_migrations,
@@ -224,8 +224,7 @@ class MigrationYaml(GraphMigrator):
 
         self.yaml_contents = yaml_contents
         assert isinstance(name, str)
-        self.top_level = top_level or set()
-        self.cycles = set(cycles or [])
+        self.top_level = top_level
         self.automerge = automerge
         self.conda_forge_yml_patches = conda_forge_yml_patches
         self.loaded_yaml = yaml_safe_load(self.yaml_contents)
@@ -294,7 +293,7 @@ class MigrationYaml(GraphMigrator):
         )
 
         if total_graph is not None:
-            # recompute top-level nodes and cycles after cutting to graph of all rebuilds
+            # trim top-level nodes to just those that are successors of the pin
             # these computations have to go after the call to super which turns the
             # total graph into the graph of all possible rebuilds (stored in self.graph)
             migrator_payload = self.loaded_yaml.get("__migrator", {})
@@ -306,24 +305,12 @@ class MigrationYaml(GraphMigrator):
             if self.graph is None:
                 raise ValueError("graph is None")
 
-            top_level = {
-                node
-                for node in {
-                    total_graph.successors(feedstock_name)
-                    for feedstock_name in feedstock_names
-                }
-                if (node in self.graph)
-                and len(list(self.graph.predecessors(node))) == 0
-            }
+            all_successors = set()
+            for feedstock_name in feedstock_names:
+                all_successors |= set(total_graph.successors(feedstock_name))
 
-            cycles = set()
-            for cyc in nx.simple_cycles(self.graph):
-                cycles |= set(cyc)
-
-            self.top_level = self.top_level | top_level
+            self.top_level = {node for node in self.top_level if node in all_successors}
             self._init_kwargs["top_level"] = top_level
-            self.cycles = self.cycles | cycles
-            self._init_kwargs["cycles"] = cycles
 
     def filter_not_in_migration(self, attrs, not_bad_str_start=""):
         if super().filter_not_in_migration(attrs, not_bad_str_start):
@@ -399,7 +386,7 @@ class MigrationYaml(GraphMigrator):
             or (node in excluded_feedstocks)
         )
 
-    def filter_node_migrated(self, attrs, not_bad_str_start=""):
+    def filter_node_not_ready_to_be_migrated(self, attrs, not_bad_str_start=""):
         migrator_payload = self.loaded_yaml.get("__migrator", {})
         wait_for_migrators = migrator_payload.get("wait_for_migrators", [])
 
@@ -423,7 +410,7 @@ class MigrationYaml(GraphMigrator):
             wait_for_migrators,
         )
 
-        return need_to_wait or super().filter_node_migrated(attrs, not_bad_str_start)
+        return need_to_wait or super().filter_node_not_ready_to_be_migrated(attrs)
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
@@ -434,6 +421,10 @@ class MigrationYaml(GraphMigrator):
             with pushd(recipe_dir), open("conda_build_config.yaml") as f:
                 cbc_contents = f.read()
             merged_cbc = merge_migrator_cbc(self.yaml_contents, cbc_contents)
+            logger.info(
+                "merged conda_build_config.yaml for closing migration:\n%s",
+                merged_cbc,
+            )
             with pushd(os.path.join(recipe_dir, "migrations")):
                 if os.path.exists(f"{self.name}.yaml"):
                     os.remove(f"{self.name}.yaml")

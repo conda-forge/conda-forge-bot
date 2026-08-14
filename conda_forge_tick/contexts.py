@@ -62,7 +62,7 @@ class FeedstockContext:
     @property
     def automerge(self) -> bool | str:
         """
-        Get the automerge setting of the feedstock.
+        The automerge setting of the feedstock.
         Note: A better solution to implement this is to use the NodeAttributes Pydantic
         model for the attrs field. This can be done in the future.
         """
@@ -76,7 +76,7 @@ class FeedstockContext:
     @property
     def check_solvable(self) -> bool:
         """
-        Get the check_solvable setting of the feedstock.
+        The check_solvable setting of the feedstock.
         Note: A better solution to implement this is to use the NodeAttributes Pydantic
         model for the attrs field. This can be done in the future.
         """

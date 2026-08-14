@@ -26,6 +26,7 @@ from conda_forge_tick.utils import (
     yaml_safe_load,
 )
 
+from ..migrators_types import PackageName
 from .migration_yaml import all_noarch
 
 
@@ -97,6 +98,7 @@ class ArchRebuild(GraphMigrator):
         target_packages: Collection[str] | None = None,
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -152,12 +154,14 @@ class ArchRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
+            top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
 
-    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
-        if super().filter(attrs):
-            return True
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ):
+        has_arch_all_arch = True
         for arch in self.arches:
             configured_arch = (
                 attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
@@ -167,9 +171,11 @@ class ArchRebuild(GraphMigrator):
             )
             if not configured_arch:
                 # This arch is not in provider or build_platform
-                return False
+                has_arch_all_arch = False
 
-        return True
+        return has_arch_all_arch or super().filter_node_migrated(
+            attrs, not_bad_str_start
+        )
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
@@ -257,6 +263,7 @@ class _CrossCompileRebuild(GraphMigrator):
         target_packages: Collection[str] | None = None,
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -333,12 +340,14 @@ class _CrossCompileRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
+            top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability!"
 
-    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
-        if super().filter(attrs):
-            return True
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ):
+        has_arch_all_arch = True
         for arch in self.arches:
             configured_arch = (
                 attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
@@ -348,9 +357,11 @@ class _CrossCompileRebuild(GraphMigrator):
             )
             if not configured_arch:
                 # This arch is not in provider or build_platform
-                return False
+                has_arch_all_arch = False
 
-        return True
+        return has_arch_all_arch or super().filter_node_migrated(
+            attrs, not_bad_str_start
+        )
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
@@ -470,3 +481,58 @@ class WinArm64(_CrossCompileRebuild):
 
     def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
         return super().remote_branch(feedstock_ctx) + "_arm64_win"
+
+
+class LinuxRISCV64(_CrossCompileRebuild):
+    """A Migrator that adds linux-riscv64 builds to feedstocks."""
+
+    allowed_schema_versions = {0, 1}
+    migrator_version = 1
+    build_platform = {"linux_riscv64": "linux_64"}
+    # We bump here as most feedstocks need a rerender and updates
+    # the compiler versions
+    bump_number = 1
+    pkg_list_filename = "linux_riscv64.txt"
+    arches = {"linux_riscv64": "linux_64"}
+    ignored_packages = {
+        # already built compiler packages that get caught in a cycle
+        "_openmp_mutex",
+        "ctng-compiler-activation",
+        "ctng-compilers",
+        "gfortran_impl_osx-64",
+        "gfortran_osx-64",
+        # intel packages will not be built for riscv
+        "intel-compiler-repack",
+        "intel_repack",
+    }
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("name", "support linux riscv64 platform")
+        super().__init__(*args, **kwargs)
+
+    def pr_title(self, feedstock_ctx: FeedstockContext) -> str:
+        title = "Support linux-riscv64 platform"
+        branch = feedstock_ctx.attrs.get("branch", "main")
+        if branch not in ["main", "master"]:
+            return f"[{branch}] " + title
+        else:
+            return title
+
+    def pr_body(
+        self, feedstock_ctx: ClonedFeedstockContext, add_label_text: bool = True
+    ) -> str:
+        body = super().pr_body(feedstock_ctx)
+        body = body.format(
+            dedent(
+                """\
+                This feedstock is being rebuilt as part of the linux riscv64 migration.
+
+                **Feel free to merge the PR if CI is all green, but please don't close it
+                without reaching out the the linux-riscv64 team first at <code>@</code>conda-forge/help-riscv64.**
+                """,
+            ),
+        )
+        return body
+
+    def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
+        return super().remote_branch(feedstock_ctx) + "_riscv64"

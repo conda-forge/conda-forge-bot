@@ -331,7 +331,7 @@ In this section, we list the collection of jobs that comprise the bot. Each job 
 
 **pypi-mapping** / `bot-pypi-mapping.yml`: Builds a mapping of packages between PyPI and `conda-forge`, and a mapping of python imports to packages using the bot's metadata. The PyPI mapping is written to `conda-forge-bot-data/mappings` and the import mapping is written to `conda-forge-bot-data/import_to_pkg_maps`. This job also generates some internal data stored at `conda-forge-bot-data/ranked_hubs_authorities.json`.
 
-**make-graph** / `bot-make-graph.yml`: Builds the `conda-forge` dependency graph from the feedstocks in `conda-forge-bot-data/all_feedstocks.json`. The graph is written to `conda-forge-bot-data/graph.json`. and specific attributes for each node are written to `conda-forge-bot-data/node_attrs`. This job also performs some schema migrations and might add new files to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`.
+**make-graph** / `bot-make-graph.yml`: Builds the `conda-forge` dependency graph from the feedstocks in `conda-forge-bot-data/all_feedstocks.json`. The graph is written to `conda-forge-bot-data/graph.json` and `conda-forge-bot-data/outputs_to_feedstocks.json`. Specific attributes for each node are written to `conda-forge-bot-data/node_attrs`. This job also performs some schema migrations and might add new files to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`.
 
 **update-nodes** / `bot-update-nodes.yml`: Updates the feedstock attributes for each graph node in `conda-forge-bot-data/node_attrs`. This job also performs some schema migrations and might add new files to `conda-forge-bot-data/pr_info` and `conda-forge-bot-data/version_pr_info`.
 

@@ -54,7 +54,8 @@ def global_environment_setup():
     )
 
     # by default, we enable container mode because it is the default in the bot
-    os.environ["CF_FEEDSTOCK_OPS_IN_CONTAINER"] = "false"
+    # set if not set
+    os.environ.setdefault("CF_FEEDSTOCK_OPS_IN_CONTAINER", "false")
 
     # set if not set
     os.environ.setdefault("CF_FEEDSTOCK_OPS_CONTAINER_NAME", "conda-forge-tick")
@@ -300,7 +301,26 @@ def test_scenario(
 
     with in_fresh_cf_graph():
         with mitmproxy_env():
-            invoke_bot_command(["--debug", "make-migrators"])
+            invoke_bot_command(
+                [
+                    "--debug",
+                    "make-migrators",
+                    "--list",
+                    "--filename=../old_migrators.txt",
+                ]
+            )
+        with mitmproxy_env():
+            invoke_bot_command(
+                ["--debug", "make-migrators", "--filename=../new_migrators.txt"]
+            )
+        with mitmproxy_env():
+            invoke_bot_command(
+                [
+                    "--debug",
+                    "make-migrators",
+                    "--clean-up=../old_migrators.txt,../new_migrators.txt",
+                ]
+            )
         invoke_bot_command(["--debug", "deploy-to-github", "--git-only"])
 
     with in_fresh_cf_graph():
@@ -327,7 +347,26 @@ def test_scenario(
         # because of an implementation detail in the bot, we need to run make-migrators twice
         # for changes to be picked up
         with mitmproxy_env():
-            invoke_bot_command(["--debug", "make-migrators"])
+            invoke_bot_command(
+                [
+                    "--debug",
+                    "make-migrators",
+                    "--list",
+                    "--filename=../old_migrators.txt",
+                ]
+            )
+        with mitmproxy_env():
+            invoke_bot_command(
+                ["--debug", "make-migrators", "--filename=../new_migrators.txt"]
+            )
+        with mitmproxy_env():
+            invoke_bot_command(
+                [
+                    "--debug",
+                    "make-migrators",
+                    "--clean-up=../old_migrators.txt,../new_migrators.txt",
+                ]
+            )
         invoke_bot_command(["--debug", "deploy-to-github", "--git-only"])
 
     with in_fresh_cf_graph():

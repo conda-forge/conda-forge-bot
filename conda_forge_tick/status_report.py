@@ -23,6 +23,7 @@ from conda_forge_tick.make_migrators import load_migrators
 from conda_forge_tick.migrators import (
     ArchRebuild,
     GraphMigrator,
+    LinuxRISCV64,
     MatplotlibBase,
     MigrationYamlCreator,
     Migrator,
@@ -516,6 +517,7 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
                     or isinstance(migrator, ArchRebuild)
                     or isinstance(migrator, OSXArm)
                     or isinstance(migrator, WinArm64)
+                    or isinstance(migrator, LinuxRISCV64)
                 ):
                     longterm_status[migrator_name] = f"{migrator.name} Migration Status"
                 else:

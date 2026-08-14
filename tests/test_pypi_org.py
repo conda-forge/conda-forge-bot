@@ -22,6 +22,7 @@ VERSION_WITH_PYPI_ORG = Version(
     "feedstock,new_ver",
     [
         ("seaborn", "0.13.2"),
+        ("seaborn_org", "0.13.2"),
     ],
 )
 def test_pypi_org(feedstock, new_ver, tmp_path):

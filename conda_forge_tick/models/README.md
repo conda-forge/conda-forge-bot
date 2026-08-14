@@ -27,6 +27,7 @@ conda-forge-bot-data
 │   ├── somepackage.json
 │   └── ...
 ├── graph.json
+├── outputs_to_feedstocks.json
 └── ranked_hubs_authorities.json
 ```
 
@@ -81,6 +82,9 @@ are package names and the edges are dependencies. The node list of this graph is
 the conda-forge ecosystem. The edges are directed from the dependency package to the dependent package.
 
 The nodes have attributes which reference JSON files in the `node_attrs` directory.
+
+### `outputs_to_feedstocks.json`
+A JSON blob holding non-trivial outputs to feedstocks mappings used by the bot.
 
 ### `ranked_hubs_authorities.json`
 Undocumented.

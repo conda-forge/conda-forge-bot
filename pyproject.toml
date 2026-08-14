@@ -46,3 +46,6 @@ preview = true
 
 [tool.ruff.lint.pycodestyle]
 max-line-length = 120
+
+[tool.pytest.ini_options]
+addopts = ["--ignore=tests_integration/lib/"]

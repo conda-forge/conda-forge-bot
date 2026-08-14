@@ -25,14 +25,12 @@ class _MigrationYaml(NoFilter, MigrationYaml):
 TOTAL_GRAPH = nx.DiGraph()
 TOTAL_GRAPH.graph["outputs_lut"] = {}
 yaml_rebuild = _MigrationYaml(yaml_contents="{}", name="hi", total_graph=TOTAL_GRAPH)
-yaml_rebuild.cycles = []
 yaml_rebuild_no_build_number = _MigrationYaml(
     yaml_contents="{}",
     name="hi",
     bump_number=0,
     total_graph=TOTAL_GRAPH,
 )
-yaml_rebuild_no_build_number.cycles = []
 
 
 def sample_yaml_rebuild() -> str:
