@@ -266,7 +266,7 @@ def _make_migrator_lazy_json_name(mgr, data):
         )
 
 
-def make_from_lazy_json_data(data):
+def make_from_lazy_json_data(data: dict | LazyJson):
     """Deserialize the migrator from LazyJson-compatible data."""
     import conda_forge_tick.migrators
 
@@ -895,13 +895,14 @@ class GraphMigrator(Migrator):
         graph: nx.DiGraph | None = None,
         pr_limit: int = 0,
         top_level: set["PackageName"] | None = None,
-        cycles: Sequence["PackageName"] | None = None,
         obj_version: int | None = None,
         piggy_back_migrations: Sequence[MiniMigrator] | None = None,
         check_solvable: bool = True,
         ignored_deps_per_node=None,
         effective_graph: nx.DiGraph | None = None,
     ):
+        top_level = top_level or set()
+
         if not hasattr(self, "_init_args"):
             self._init_args = []
 
@@ -911,7 +912,6 @@ class GraphMigrator(Migrator):
                 "graph": graph,
                 "pr_limit": pr_limit,
                 "top_level": top_level,
-                "cycles": cycles,
                 "obj_version": obj_version,
                 "piggy_back_migrations": piggy_back_migrations,
                 "check_solvable": check_solvable,
@@ -921,8 +921,7 @@ class GraphMigrator(Migrator):
             }
 
         self.name = name
-        self.top_level = top_level or set()
-        self.cycles = set(cycles or [])
+        self.top_level = top_level
         self.ignored_deps_per_node = ignored_deps_per_node or {}
 
         super().__init__(
@@ -934,6 +933,17 @@ class GraphMigrator(Migrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
         )
+
+        if self.graph is None:
+            raise ValueError("graph is None")
+
+        # set top-level
+        graph_top_level = {
+            node for node in self.graph if len(list(self.graph.predecessors(node))) == 0
+        }
+
+        self.top_level = self.top_level | graph_top_level
+        self._init_kwargs["top_level"] = self.top_level
 
     def all_predecessors_issued(self, attrs: "AttrsTypedDict") -> bool:
         # Check if all upstreams have been issue and are stale
@@ -1025,7 +1035,8 @@ class GraphMigrator(Migrator):
 
         # If in top level or in a cycle don't check for upstreams just build
         is_top_level = (attrs["feedstock_name"] in self.top_level) or (
-            attrs["feedstock_name"] in self.cycles
+            attrs["feedstock_name"]
+            in nx.descendants(self.graph, attrs["feedstock_name"])
         )
         if is_top_level:
             logger.debug("not filtered %s: top level", name)

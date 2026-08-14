@@ -418,9 +418,12 @@ def _is_solvability_check_needed(
         # feedstocks that have problematic bootstrapping will not always be solvable
         and context.feedstock_name not in BOOTSTRAP_MAPPINGS
         # stuff in cycles always goes
-        and context.attrs["name"] not in getattr(migrator, "cycles", set())
+        and (
+            context.feedstock_name
+            not in nx.descendants(migrator.graph, context.feedstock_name)
+        )
         # stuff at the top always goes
-        and context.attrs["name"] not in getattr(migrator, "top_level", set())
+        and context.feedstock_name not in getattr(migrator, "top_level", set())
         # either the migrator or the feedstock has to request solver checks
         and (migrator_check_solvable or context.check_solvable)
         # we try up to max_pr_attempts times, and then we just skip

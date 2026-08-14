@@ -1,15 +1,26 @@
 import hashlib
 import inspect
+import os
 import pprint
+import subprocess
+import tempfile
 from pathlib import Path
 
 import networkx as nx
 import pytest
+import tqdm
 
 import conda_forge_tick.migrators
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
-from conda_forge_tick.lazy_json_backends import dumps, loads
+from conda_forge_tick.lazy_json_backends import (
+    LazyJson,
+    dumps,
+    get_all_keys_for_hashmap,
+    lazy_json_override_backends,
+    loads,
+)
 from conda_forge_tick.migrators import core, make_from_lazy_json_data
+from conda_forge_tick.os_utils import pushd
 
 TOTAL_GRAPH = nx.DiGraph()
 TOTAL_GRAPH.graph["outputs_lut"] = {}
@@ -381,3 +392,32 @@ def test_migrator_to_json_others(klass):
     ]
     assert isinstance(migrator2, klass)
     assert dumps(migrator2.to_lazy_json_data()) == lzj_data
+
+
+def test_migrators_to_json_all_load():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--depth=1",
+                "https://github.com/conda-forge/conda-forge-bot-data.git",
+            ],
+            cwd=tmpdir,
+            check=True,
+        )
+        with (
+            pushd(os.path.join(tmpdir, "conda-forge-bot-data")),
+            lazy_json_override_backends(["file"], use_file_cache=True),
+        ):
+            mg_keys = get_all_keys_for_hashmap("migrators")
+            for mg_key in tqdm.tqdm(
+                mg_keys, desc="loading migrators", total=len(mg_keys)
+            ):
+                lzj = LazyJson(f"migrators/{mg_key}.json")
+                with lzj as data:
+                    mg = make_from_lazy_json_data(data)
+                    if not hasattr(conda_forge_tick.migrators, data["class"]):
+                        assert mg is None
+                    else:
+                        assert mg is not None

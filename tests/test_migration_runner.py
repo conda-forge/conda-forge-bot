@@ -23,7 +23,6 @@ class _MigrationYaml(NoFilter, MigrationYaml):
 TOTAL_GRAPH = nx.DiGraph()
 TOTAL_GRAPH.graph["outputs_lut"] = {}
 yaml_rebuild = _MigrationYaml(yaml_contents="{}", name="hi", total_graph=TOTAL_GRAPH)
-yaml_rebuild.cycles = []
 
 
 def test_migration_runner_run_migration_local_yaml_rebuild(tmpdir):
