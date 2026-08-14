@@ -66,7 +66,7 @@ jobs:
           pushd cf-graph
 
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-          conda-forge-tick make-migrators --list --filename=../migrators.txt
+          conda-forge-tick make-migrators --list --filename=../old-migrators.txt
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
@@ -79,7 +79,7 @@ jobs:
         with:
           name: old-migrators-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            migrators.txt
+            old-migrators.txt
 
       - name: bump on fail
         if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
@@ -99,10 +99,10 @@ jobs:
       run:
         shell: bash -leo pipefail {0}
     env:
-      N_JOBS: 6
+      N_JOBS: 10
     strategy:
       matrix:
-        job_number: [1, 2, 3, 4, 5, 6]
+        job_number: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     steps:
       - name: free disk space
@@ -156,7 +156,7 @@ jobs:
 
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           conda-forge-tick make-migrators \
-            --filename=../migrators.txt \
+            --filename=../new-migrators-${{ matrix.job_number }}.txt \
             --job=${{ matrix.job_number }} --n-jobs=${{ env.N_JOBS }}
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
@@ -181,7 +181,7 @@ jobs:
         with:
           name: new-migrators-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.job_number }}
           path: |
-            migrators.txt
+            new-migrators-${{ matrix.job_number }}.txt
 
       - name: bump on fail
         if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
@@ -262,8 +262,9 @@ jobs:
       - name: clean up migrators
         if: success() && ! env.CI_SKIP
         run: |
-          cat new-migrators-${{ github.run_id }}-${{ github.run_attempt }}-*/migrators.txt > new_migrators.txt
+          ls -lah
 
+          cat new-migrators-${{ github.run_id }}-${{ github.run_attempt }}-*/new-migrators-*.txt > new_migrators.txt
           pushd cf-graph
 
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
