@@ -96,7 +96,7 @@ build:
   number: ${{ build_number }}
   string: ${{ torch_proc_type }}_py${{ python | version_to_buildstring }}_h${{ hash }}_${{ build_number }}
   # CUDA < 12 not supported by pytorch anymore
-  skip: cuda_compiler_version == "11.8" or win
+  skip: cuda_compiler_version == "11.8"
 
 outputs:
   - package:
