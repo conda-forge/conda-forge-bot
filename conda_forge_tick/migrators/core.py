@@ -266,7 +266,7 @@ def _make_migrator_lazy_json_name(mgr, data):
         )
 
 
-def make_from_lazy_json_data(data):
+def make_from_lazy_json_data(data: dict | LazyJson):
     """Deserialize the migrator from LazyJson-compatible data."""
     import conda_forge_tick.migrators
 
