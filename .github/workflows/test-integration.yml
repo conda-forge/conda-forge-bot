@@ -129,6 +129,8 @@ jobs:
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         working-directory: conda-forge-bot
         run: |
+          python -c "import build"
+          
           pytest -s -v \
           --dist=no \
           tests_integration
