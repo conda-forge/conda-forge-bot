@@ -269,7 +269,7 @@ jobs:
         run: |
           ls -lah
 
-          cat new-migrators-${{ github.run_id }}-*/new-migrators-*.txt > new_migrators.txt
+          cat new-migrators-${{ github.run_id }}-*/new-migrators-*.txt > new-migrators.txt
           cat new-migrators.txt
 
       #     pushd cf-graph
