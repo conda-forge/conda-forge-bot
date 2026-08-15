@@ -17,82 +17,80 @@ jobs:
         shell: bash -leo pipefail {0}
 
     steps:
-      # - name: free disk space
-      #   uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
-      #   with:
-      #     remove_android: true
-      #     remove_dotnet: true
-      #     remove_haskell: true
-      #     remove_tool_cache: true
-      #     remove_swap: true
-      #     remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
-      #     remove_packages_one_command: true
-      #     rm_cmd: "rmz"
+      - name: free disk space
+        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          rm_cmd: "rmz"
 
-      # - name: get latest release
-      #   id: latest_release
-      #   run: |
-      #     tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
-      #     echo "latest release: ${tag_name}"
-      #     echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: get latest release
+        id: latest_release
+        run: |
+          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
+          echo "latest release: ${tag_name}"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      #   with:
-      #     ref: ${{ steps.latest_release.outputs.tag_name }}
-      #     path: conda-forge-bot
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.latest_release.outputs.tag_name }}
+          path: conda-forge-bot
 
-      # - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
-      #   with:
-      #     environment-file: conda-forge-bot/conda-lock.yml
-      #     environment-name: conda-forge-bot
-      #     condarc-file: conda-forge-bot/autotick-bot/condarc
+      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+        with:
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
-      # - name: do local setup and stop me if needed
-      #   run: |
-      #     cd conda-forge-bot
-      #     python autotick-bot/stop_me_if_needed.py
+      - name: do local setup and stop me if needed
+        run: |
+          cd conda-forge-bot
+          python autotick-bot/stop_me_if_needed.py
 
-      # - name: install bot code
-      #   if: success() && ! env.CI_SKIP
-      #   run: |
-      #     source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+      - name: install bot code
+        if: success() && ! env.CI_SKIP
+        run: |
+          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
       - name: list migrators
-        # if: success() && ! env.CI_SKIP
+        if: success() && ! env.CI_SKIP
         run: |
-          echo "old" > old-migrators.txt
+          pushd cf-graph
 
-        #   pushd cf-graph
-
-        #   export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-        #   conda-forge-tick make-migrators --list --filename=../old-migrators.txt
-        # env:
-        #   CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
-        #   MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
-        #   BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-        #   RUN_ID: ${{ github.run_id }}
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          conda-forge-tick make-migrators --list --filename=../old-migrators.txt
+        env:
+          CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
+          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
 
       - name: upload migrator list
-        # if: success() && ! env.CI_SKIP
+        if: success() && ! env.CI_SKIP
         uses: actions/upload-artifact@v4
         with:
           name: old-migrators-${{ github.run_id }}
           path: |
             old-migrators.txt
 
-      # - name: bump on fail
-      #   if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
-      #   run: |
-      #     export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-      #     python conda-forge-bot/autotick-bot/bump_bot_team.py
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-      #     RUN_ID: ${{ github.run_id }}
-      #     ACTION_NAME: ${{ github.workflow }}
+      - name: bump on fail
+        if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
+        run: |
+          export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          python conda-forge-bot/autotick-bot/bump_bot_team.py
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          ACTION_NAME: ${{ github.workflow }}
 
   make-migrators:
     name: make-migrators
@@ -102,101 +100,99 @@ jobs:
       run:
         shell: bash -leo pipefail {0}
     env:
-      N_JOBS: 10
+      N_JOBS: 5
     strategy:
       matrix:
-        job_number: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        job_number: [1, 2, 3, 4, 5]
 
     steps:
-      # - name: free disk space
-      #   uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
-      #   with:
-      #     remove_android: true
-      #     remove_dotnet: true
-      #     remove_haskell: true
-      #     remove_tool_cache: true
-      #     remove_swap: true
-      #     remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
-      #     remove_packages_one_command: true
-      #     rm_cmd: "rmz"
+      - name: free disk space
+        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          rm_cmd: "rmz"
 
-      # - name: get latest release
-      #   id: latest_release
-      #   run: |
-      #     tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
-      #     echo "latest release: ${tag_name}"
-      #     echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: get latest release
+        id: latest_release
+        run: |
+          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
+          echo "latest release: ${tag_name}"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      #   with:
-      #     ref: ${{ steps.latest_release.outputs.tag_name }}
-      #     path: conda-forge-bot
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.latest_release.outputs.tag_name }}
+          path: conda-forge-bot
 
-      # - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
-      #   with:
-      #     environment-file: conda-forge-bot/conda-lock.yml
-      #     environment-name: conda-forge-bot
-      #     condarc-file: conda-forge-bot/autotick-bot/condarc
+      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+        with:
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
-      # - name: do local setup and stop me if needed
-      #   run: |
-      #     cd conda-forge-bot
-      #     python autotick-bot/stop_me_if_needed.py
+      - name: do local setup and stop me if needed
+        run: |
+          cd conda-forge-bot
+          python autotick-bot/stop_me_if_needed.py
 
-      # - name: install bot code
-      #   if: success() && ! env.CI_SKIP
-      #   run: |
-      #     source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+      - name: install bot code
+        if: success() && ! env.CI_SKIP
+        run: |
+          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
       - name: make migrators
-        # if: success() && ! env.CI_SKIP
+        if: success() && ! env.CI_SKIP
         run: |
-          echo "mg${{ matrix.job_number }}" > new-migrators-${{ matrix.job_number }}.txt
+          pushd cf-graph
 
-        # pushd cf-graph
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          conda-forge-tick make-migrators \
+            --filename=../new-migrators-${{ matrix.job_number }}.txt \
+            --job=${{ matrix.job_number }} --n-jobs=${{ env.N_JOBS }}
+        env:
+          CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
+          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
 
-        #   export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-        #   conda-forge-tick make-migrators \
-        #     --filename=../new-migrators-${{ matrix.job_number }}.txt \
-        #     --job=${{ matrix.job_number }} --n-jobs=${{ env.N_JOBS }}
-        # env:
-        #   CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
-        #   MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
-        #   BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-        #   RUN_ID: ${{ github.run_id }}
+      - name: deploy
+        if: github.ref == 'refs/heads/main' && always() && ! env.CI_SKIP
+        run: |
+          pushd cf-graph
 
-      # - name: deploy
-      #   if: github.ref == 'refs/heads/main' && always() && ! env.CI_SKIP
-      #   run: |
-      #     pushd cf-graph
-
-      #     export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-      #     conda-forge-tick deploy-to-github --no-pull
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-      #     RUN_ID: ${{ github.run_id }}
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          conda-forge-tick deploy-to-github --no-pull
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
 
       - name: upload migrator list
-        # if: success() && ! env.CI_SKIP
+        if: success() && ! env.CI_SKIP
         uses: actions/upload-artifact@v4
         with:
           name: new-migrators-${{ github.run_id }}-${{ matrix.job_number }}
           path: |
             new-migrators-${{ matrix.job_number }}.txt
 
-      # - name: bump on fail
-      #   if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
-      #   run: |
-      #     export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-      #     python conda-forge-bot/autotick-bot/bump_bot_team.py
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-      #     RUN_ID: ${{ github.run_id }}
-      #     ACTION_NAME: ${{ github.workflow }}
+      - name: bump on fail
+        if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
+        run: |
+          export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          python conda-forge-bot/autotick-bot/bump_bot_team.py
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          ACTION_NAME: ${{ github.workflow }}
 
   clean-up-migrators:
     name: clean-up-migrators
@@ -208,106 +204,109 @@ jobs:
         shell: bash -leo pipefail {0}
 
     steps:
-      # - name: free disk space
-      #   uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
-      #   with:
-      #     remove_android: true
-      #     remove_dotnet: true
-      #     remove_haskell: true
-      #     remove_tool_cache: true
-      #     remove_swap: true
-      #     remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
-      #     remove_packages_one_command: true
-      #     rm_cmd: "rmz"
+      - name: free disk space
+        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          rm_cmd: "rmz"
 
-      # - name: get latest release
-      #   id: latest_release
-      #   run: |
-      #     tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
-      #     echo "latest release: ${tag_name}"
-      #     echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: get latest release
+        id: latest_release
+        run: |
+          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
+          echo "latest release: ${tag_name}"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      #   with:
-      #     ref: ${{ steps.latest_release.outputs.tag_name }}
-      #     path: conda-forge-bot
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.latest_release.outputs.tag_name }}
+          path: conda-forge-bot
 
-      # - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
-      #   with:
-      #     environment-file: conda-forge-bot/conda-lock.yml
-      #     environment-name: conda-forge-bot
-      #     condarc-file: conda-forge-bot/autotick-bot/condarc
+      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+        with:
+          environment-file: conda-forge-bot/conda-lock.yml
+          environment-name: conda-forge-bot
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
-      # - name: do local setup and stop me if needed
-      #   run: |
-      #     cd conda-forge-bot
-      #     python autotick-bot/stop_me_if_needed.py
+      - name: do local setup and stop me if needed
+        run: |
+          cd conda-forge-bot
+          python autotick-bot/stop_me_if_needed.py
 
-      # - name: install bot code
-      #   if: success() && ! env.CI_SKIP
-      #   run: |
-      #     source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+      - name: install bot code
+        if: success() && ! env.CI_SKIP
+        run: |
+          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
       - name: download old migrator list
-        # if: success() && ! env.CI_SKIP
+        if: success() && ! env.CI_SKIP
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: old-migrators-${{ github.run_id }}
 
       - name: download new migrator lists
-        # if: success() && ! env.CI_SKIP
+        if: success() && ! env.CI_SKIP
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: new-migrators-${{ github.run_id }}-*
 
       - name: clean up migrators
-        # if: success() && ! env.CI_SKIP
+        if: success() && ! env.CI_SKIP
         run: |
           ls -lah
+          echo "old:"
+          cat old-migrators.txt
 
+          echo "new:"
           cat new-migrators-${{ github.run_id }}-*/new-migrators-*.txt > new-migrators.txt
           cat new-migrators.txt
 
-      #     pushd cf-graph
+          pushd cf-graph
 
-      #     export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-      #     conda-forge-tick make-migrators \
-      #       --clean-up=../old-migrators-${{ github.run_id }}-${{ github.run_attempt }}/migrators.txt,../new_migrators.txt
-      #   env:
-      #     CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
-      #     MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-      #     RUN_ID: ${{ github.run_id }}
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          conda-forge-tick make-migrators \
+            --clean-up=../old-migrators.txt,../new-migrators.txt
+        env:
+          CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
+          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
 
-      # - name: deploy
-      #   if: github.ref == 'refs/heads/main' && always() && ! env.CI_SKIP
-      #   run: |
-      #     pushd cf-graph
+      - name: deploy
+        if: github.ref == 'refs/heads/main' && always() && ! env.CI_SKIP
+        run: |
+          pushd cf-graph
 
-      #     export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-      #     conda-forge-tick deploy-to-github --no-pull
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-      #     RUN_ID: ${{ github.run_id }}
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          conda-forge-tick deploy-to-github --no-pull
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
 
-      # - name: bump on fail
-      #   if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
-      #   run: |
-      #     export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-      #     python conda-forge-bot/autotick-bot/bump_bot_team.py
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-      #     RUN_ID: ${{ github.run_id }}
-      #     ACTION_NAME: ${{ github.workflow }}
+      - name: bump on fail
+        if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
+        run: |
+          export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          python conda-forge-bot/autotick-bot/bump_bot_team.py
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          ACTION_NAME: ${{ github.workflow }}
 
-      # - name: trigger next job
-      #   uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2
-      #   if: github.ref == 'refs/heads/main' && ! cancelled() && ! failure() && ! env.CI_SKIP
-      #   with:
-      #     workflow: bot-make-migrators
-      #     ref: ${{ github.event.ref || github.head_ref || github.ref }}
-      #     token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+      - name: trigger next job
+        uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2
+        if: github.ref == 'refs/heads/main' && ! cancelled() && ! failure() && ! env.CI_SKIP
+        with:
+          workflow: bot-make-migrators
+          ref: ${{ github.event.ref || github.head_ref || github.ref }}
+          token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
