@@ -28,10 +28,6 @@ jobs:
           remove_android: true
           remove_dotnet: true
           remove_haskell: true
-          remove_tool_cache: true
-          remove_swap: true
-          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
-          remove_packages_one_command: true
           rm_cmd: "rmz"
 
       - name: get latest release
@@ -62,7 +58,7 @@ jobs:
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+          source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
@@ -125,10 +121,6 @@ jobs:
           remove_dotnet: true
           remove_haskell: true
           rm_cmd: "rmz"
-          remove_tool_cache: true
-          remove_swap: true
-          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
-          remove_packages_one_command: true
 
       - name: get latest release
         id: latest_release
@@ -158,7 +150,7 @@ jobs:
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+          source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
