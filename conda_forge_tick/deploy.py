@@ -188,9 +188,12 @@ def _deploy_batch(
                     token=get_bot_token(),
                 )
                 if status != 0:
-                    print(">>>>>>>>>>>> git push failed", flush=True)
                     interval = exp_backoff_base**num_try
                     interval = interval * exp_backoff_rfrac * (1.0 + RNG.uniform(0, 1))
+                    print(
+                        f">>>>>>>>>>>> git push failed (waiting {interval} seconds)",
+                        flush=True,
+                    )
                     time.sleep(interval)
             num_try += 1
 
