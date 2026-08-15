@@ -1,6 +1,7 @@
 import contextlib
 import os
 import subprocess
+import sys
 import tempfile
 
 
@@ -31,7 +32,11 @@ with tempfile.TemporaryDirectory() as tmpdir, pushd(tmpdir):
     else:
         go = False
 
-if not go:
+not_pr = True
+if len(sys.argv) > 1 and sys.argv[1] == "pull_request":
+    not_pr = False
+
+if (not go) and not_pr:
     print("I could not find the file 'please.go' on main! Stopping!")
     subprocess.run(
         'echo "CI_SKIP=1" >> $GITHUB_ENV',

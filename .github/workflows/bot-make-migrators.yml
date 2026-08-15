@@ -52,7 +52,7 @@ jobs:
       - name: do local setup and stop me if needed
         run: |
           cd conda-forge-bot
-          python autotick-bot/stop_me_if_needed.py
+          python autotick-bot/stop_me_if_needed.py ${{ github.event_name }}
 
       - name: install bot code
         if: success() && ! env.CI_SKIP
