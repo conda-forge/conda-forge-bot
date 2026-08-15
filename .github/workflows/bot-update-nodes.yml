@@ -58,7 +58,7 @@ jobs:
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+          source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
@@ -150,7 +150,7 @@ jobs:
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+          source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
