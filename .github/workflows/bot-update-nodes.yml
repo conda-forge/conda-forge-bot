@@ -77,6 +77,14 @@ jobs:
           BOT_JOB: ${{ matrix.job_num }}
           RUN_ID: ${{ github.run_id }}
 
+      - name: generate token
+        id: generate_token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.CF_CURATOR_APP_ID }}
+          private-key: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       - name: deploy
         if: github.ref == 'refs/heads/main' && always() && ! env.CI_SKIP
         run: |
@@ -85,7 +93,7 @@ jobs:
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           conda-forge-tick deploy-to-github --no-pull
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ steps.generate_token.outputs.token }}
           RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail
@@ -170,6 +178,14 @@ jobs:
           BOT_JOB: ${{ matrix.job_num }}
           RUN_ID: ${{ github.run_id }}
 
+      - name: generate token
+        id: generate_token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.CF_CURATOR_APP_ID }}
+          private-key: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       - name: deploy
         if: github.ref == 'refs/heads/main' && always() && ! env.CI_SKIP
         run: |
@@ -178,7 +194,7 @@ jobs:
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           conda-forge-tick deploy-to-github --no-pull
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ steps.generate_token.outputs.token }}
           RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail
