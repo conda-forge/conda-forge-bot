@@ -1769,39 +1769,39 @@ package:
   category: main
   optional: false
 - name: charset-normalizer
-  version: 3.5.0
+  version: 3.5.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.5.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.5.1-pyhd8ed1ab_0.conda
   hash:
-    md5: 32c92fcb3455f3bea9d26d319d2e3fcb
-    sha256: 6bcd8dca600acc1f2cd439a703437adb0f66faf751f53eed5d532da4e18cead1
+    md5: e0ac3accc64e23e40969d660e5f58ac8
+    sha256: cb60ef3e0631c8bacb4f7057196dee4496091a22baa3bb4b9bccb12c7e1c921b
   category: main
   optional: false
 - name: charset-normalizer
-  version: 3.5.0
+  version: 3.5.1
   manager: conda
   platform: linux-aarch64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.5.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.5.1-pyhd8ed1ab_0.conda
   hash:
-    md5: 32c92fcb3455f3bea9d26d319d2e3fcb
-    sha256: 6bcd8dca600acc1f2cd439a703437adb0f66faf751f53eed5d532da4e18cead1
+    md5: e0ac3accc64e23e40969d660e5f58ac8
+    sha256: cb60ef3e0631c8bacb4f7057196dee4496091a22baa3bb4b9bccb12c7e1c921b
   category: main
   optional: false
 - name: charset-normalizer
-  version: 3.5.0
+  version: 3.5.1
   manager: conda
   platform: osx-arm64
   dependencies:
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.5.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.5.1-pyhd8ed1ab_0.conda
   hash:
-    md5: 32c92fcb3455f3bea9d26d319d2e3fcb
-    sha256: 6bcd8dca600acc1f2cd439a703437adb0f66faf751f53eed5d532da4e18cead1
+    md5: e0ac3accc64e23e40969d660e5f58ac8
+    sha256: cb60ef3e0631c8bacb4f7057196dee4496091a22baa3bb4b9bccb12c7e1c921b
   category: main
   optional: false
 - name: cirun
@@ -11232,46 +11232,46 @@ package:
   category: main
   optional: false
 - name: orjson
-  version: 3.11.9
+  version: 3.12.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
+    libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/orjson-3.11.9-py312h94568fe_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/orjson-3.12.0-py312he35bb96_0.conda
   hash:
-    md5: 40efeb66cfe1036a72decef4676cb10f
-    sha256: aa61f42a974fa75f3366594a242d8b3ed23861e99693ee5274d3ed21d93d86b2
+    md5: c02a56bfd152abea8023b4e3c2d38435
+    sha256: 617fd0a4e1670421e69d9e3c699fd04916aa3d56fb4abaedff4628d3b95d0822
   category: main
   optional: false
 - name: orjson
-  version: 3.11.9
+  version: 3.12.0
   manager: conda
   platform: linux-aarch64
   dependencies:
-    libgcc: '>=14'
+    libgcc: '>=15'
     python: 3.12.*
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/orjson-3.11.9-py312hb2fda44_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/orjson-3.12.0-py312hd0346e1_0.conda
   hash:
-    md5: 89bccff23ba4add0b1f7f5c83ffa06de
-    sha256: 6a622c7b6afe135117e9f0707e355da20c0a6c2a225f33dd42612a61c4b4a8f1
+    md5: c9153988a3645a157453fd464be5ff61
+    sha256: 3d8fff8f1bf36090e09f5c5d873277f6b157dde930d0d6f95faa476b489b48f9
   category: main
   optional: false
 - name: orjson
-  version: 3.11.9
+  version: 3.12.0
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
     python: 3.12.*
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/orjson-3.11.9-py312h29c43dd_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/orjson-3.12.0-py312h71b470c_0.conda
   hash:
-    md5: b61bf3b2f8e80afc0004d132f122a3df
-    sha256: 9a65726a770bf5418159543b053be16c968638eb01f4f27a76d1a35c47632d56
+    md5: baefb3422dca2ce1dd436f1760219870
+    sha256: 6d6cd18af9f6ef1029bdaca625d55fe89cd246327812e77f8c15912acea75909
   category: main
   optional: false
 - name: packaging
