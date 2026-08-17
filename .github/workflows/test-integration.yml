@@ -130,7 +130,7 @@ jobs:
         working-directory: conda-forge-bot
         run: |
           python -c "import build"
-          
+
           CONDA_VERBOSITY=3 pytest -s -v \
           --dist=no \
           tests_integration
