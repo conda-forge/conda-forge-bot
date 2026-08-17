@@ -19,7 +19,6 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
         pytest-env \
         pytest-retry \
         pytest-split \
-        python-build \
         mitmproxy \
         mypy && \
     # make symlink for conda-build locks (actual directory gets made at run time in the entrypoint)
