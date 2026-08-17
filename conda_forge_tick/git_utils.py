@@ -1868,7 +1868,7 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
 
     ntries = 17
     base = 1.5
-    rfrac = 0.5
+    rfrac = 0.20
 
     for tr in range(ntries):
         try:
@@ -1905,9 +1905,8 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
                 )
                 raise e
             else:
-                # exponential backoff
-                interval = base**tr
-                interval = rfrac * interval + (rfrac * RNG.uniform(0, 1) * interval)
+                # exponential backoff w/ +/- rfrac percent jitter
+                interval = base**tr * (1.0 + rfrac * RNG.uniform(-1, 1))
                 time.sleep(interval)
 
 
