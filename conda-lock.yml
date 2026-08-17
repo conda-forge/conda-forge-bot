@@ -1737,11 +1737,14 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/chardet-7.6.0-pyhcf101f3_0.conda
+    __glibc: '>=2.17,<3.0.a0'
+    libgcc: '>=15'
+    python: ''
+    python_abi: 3.12.*
+  url: https://conda.anaconda.org/conda-forge/linux-64/chardet-7.6.0-py312h8b7ec3f_1.conda
   hash:
-    md5: c63ff7d1ea0ff4efbbdce9e64a4a176a
-    sha256: 80874e53c80c2c0c96d718b5cd95e9a16c619e9ecf8a796768d4e125a3dcff83
+    md5: 50f48a586638851704b2717c504cd6ae
+    sha256: 8a83dd28bea7505861024c7d841110cae4d698a48e30cec898e72b31c0c1e714
   category: main
   optional: false
 - name: chardet
@@ -1749,11 +1752,13 @@ package:
   manager: conda
   platform: linux-aarch64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/chardet-7.6.0-pyhcf101f3_0.conda
+    libgcc: '>=15'
+    python: ''
+    python_abi: 3.12.*
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/chardet-7.6.0-py312he7c6268_1.conda
   hash:
-    md5: c63ff7d1ea0ff4efbbdce9e64a4a176a
-    sha256: 80874e53c80c2c0c96d718b5cd95e9a16c619e9ecf8a796768d4e125a3dcff83
+    md5: 1814ac9aba91ded6ebf25fe8e523dd09
+    sha256: 97edf853ee285f322b45e380bef184ac8157ac54a989bb9cd9b59ecc981616b5
   category: main
   optional: false
 - name: chardet
@@ -1761,11 +1766,13 @@ package:
   manager: conda
   platform: osx-arm64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/chardet-7.6.0-pyhcf101f3_0.conda
+    __osx: '>=11.0'
+    python: 3.12.*
+    python_abi: 3.12.*
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/chardet-7.6.0-py312h9eff64f_1.conda
   hash:
-    md5: c63ff7d1ea0ff4efbbdce9e64a4a176a
-    sha256: 80874e53c80c2c0c96d718b5cd95e9a16c619e9ecf8a796768d4e125a3dcff83
+    md5: d113efd4d4baa13ff48f1d173947db85
+    sha256: aba5094dc96ca36c170aa9c83b1fe795cd438e9c4e843554d38b14ba0d4e9cf4
   category: main
   optional: false
 - name: charset-normalizer
@@ -2405,36 +2412,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.17.02.04.24
+  version: 2026.08.17.07.23.37
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.17.02.04.24-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.17.07.23.37-hd8ed1ab_0.conda
   hash:
-    md5: ec7b4608aaaa39500b36e25d96944717
-    sha256: e152ad566540aad80a815cfda8bb5c07fb8b843a8ef12e55bb666d18cccc79e2
+    md5: 8009c87ad6872dd0e152a98509c9eb99
+    sha256: 0f2f8a116c305f2bf8e428ce71af9d4626e93237010bb853c6893961e103a569
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.17.02.04.24
+  version: 2026.08.17.07.23.37
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.17.02.04.24-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.17.07.23.37-hd8ed1ab_0.conda
   hash:
-    md5: ec7b4608aaaa39500b36e25d96944717
-    sha256: e152ad566540aad80a815cfda8bb5c07fb8b843a8ef12e55bb666d18cccc79e2
+    md5: 8009c87ad6872dd0e152a98509c9eb99
+    sha256: 0f2f8a116c305f2bf8e428ce71af9d4626e93237010bb853c6893961e103a569
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.17.02.04.24
+  version: 2026.08.17.07.23.37
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.17.02.04.24-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.17.07.23.37-hd8ed1ab_0.conda
   hash:
-    md5: ec7b4608aaaa39500b36e25d96944717
-    sha256: e152ad566540aad80a815cfda8bb5c07fb8b843a8ef12e55bb666d18cccc79e2
+    md5: 8009c87ad6872dd0e152a98509c9eb99
+    sha256: 0f2f8a116c305f2bf8e428ce71af9d4626e93237010bb853c6893961e103a569
   category: main
   optional: false
 - name: conda-index
