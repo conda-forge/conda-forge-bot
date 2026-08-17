@@ -3,5 +3,8 @@
 # make special locks location for conda-build for conda user
 mkdir -p ${TMPDIR}/conda_user_conda_build_locks
 
+# debugging conda import errors
+export CONDA_VERBOSITY=3
+
 # Run whatever the user wants.
 exec "$@"
