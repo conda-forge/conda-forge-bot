@@ -62,6 +62,7 @@ dependencies:
   - streamz
   - tar
   - tqdm
+  - vsc_versioning <2.3
   - wget
   - wurlitzer
   - yaml
