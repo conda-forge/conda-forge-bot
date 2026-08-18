@@ -13,24 +13,14 @@ jobs:
     name: relock
     runs-on: "ubuntu-latest"
     steps:
-      - name: free disk space
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
-        with:
-          remove_android: true
-          remove_dotnet: true
-          remove_haskell: true
-          rm_cmd: "rmz"
-
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          environment-file: conda-lock.yml
-          environment-name: conda-forge-bot
-          condarc-file: autotick-bot/condarc
-
+          python-version: '3.14'
+        
       - name: stop me if needed
         if: ${{ github.event_name == 'schedule' }}
         run: |
