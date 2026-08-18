@@ -1077,18 +1077,6 @@ def initialize_migrators(
         n_jobs=n_jobs,
     )
 
-    add_replacement_migrator(
-        migrators,
-        gx,
-        cast("PackageName", "astropy"),
-        cast("PackageName", "astropy-base"),
-        "The astropy feedstock has been split into two packages, astropy-base only "
-        "has required dependencies and astropy now has all optional dependencies. "
-        "To maintain the old behavior you should migrate to astropy-base.",
-        job=job,
-        n_jobs=n_jobs,
-    )
-
     add_noarch_python_min_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
     add_static_lib_migrator(migrators, gx, job=job, n_jobs=n_jobs)
