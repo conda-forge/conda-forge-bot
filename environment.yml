@@ -51,7 +51,7 @@ dependencies:
   - python=3.12
   - python-dateutil
   - python-graphviz
-  - rattler-build >=0.70
+  - rattler-build >=0.74,<0.75.0a0
   - rattler-build-conda-compat >=1.4.13,<2
   - requests
   - ruamel.yaml
