@@ -33,6 +33,7 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
     # install package
     cd $AUTOTICK_BOT_DIR && \
     pip install --no-deps --no-build-isolation -e . && \
+    rm -rf tests_integration && \
     cd - && \
     # deal with git config
     git config --global --add safe.directory /cf_feedstock_ops_dir && \
