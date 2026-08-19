@@ -1,0 +1,18 @@
+docker:
+  run_args: --cap-add SYS_ADMIN
+workflow_settings:
+  store_build_artifacts: false
+  free_disk_space: skip
+  pagefile_size: 1
+  resize_partitions:
+    - os: win
+      provider: github_actions
+      value: true
+  build_workspace_dir:
+    - provider: azure
+      os: win
+      value: C:\bld
+  tools_install_dir:
+    - provider: azure
+      os: win
+      value: D:\miniforge3
