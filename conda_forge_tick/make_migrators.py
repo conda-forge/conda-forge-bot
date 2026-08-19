@@ -43,6 +43,7 @@ from conda_forge_tick.migrators import (
     CrossPythonMigrator,
     CrossRBaseMigrator,
     CrossRBaseWinMigrator,
+    CrossToNativeMigrator,
     DependencyUpdateMigrator,
     DuplicateLinesCleanup,
     ExtraJinja2KeysCleanup,
@@ -1023,6 +1024,27 @@ def add_cdt_migrator(
         migrators[-1].pr_limit = pr_limit
 
 
+def add_cross_to_native_migrator(
+    migrators: MutableSequence[Migrator],
+    gx: nx.DiGraph,
+):
+    with fold_log_lines("making cross-to-native migrator"):
+        migrators.append(
+            CrossToNativeMigrator(
+                total_graph=gx,
+                pr_limit=PR_LIMIT,
+                piggy_back_migrations=_make_mini_migrators_with_defaults(
+                    extra_mini_migrators=[YAMLRoundTrip()],
+                ),
+            )
+        )
+        pr_limit, _, _ = _compute_migrator_pr_limit(
+            migrators[-1],
+            PR_LIMIT,
+        )
+        migrators[-1].pr_limit = pr_limit
+
+
 def _make_version_migrator(
     gx: nx.DiGraph,
     dry_run: bool = False,
@@ -1082,6 +1104,8 @@ def initialize_migrators(
     add_static_lib_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
     add_cdt_migrator(migrators, gx, job=job, n_jobs=n_jobs)
+
+    add_cross_to_native_migrator(migrators, gx)
 
     pinning_migrators: list[Migrator] = []
     migration_factory(
