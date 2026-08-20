@@ -395,7 +395,7 @@ class OSXArm(_CrossCompileRebuild):
     """A Migrator that adds osx-arm64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
-    migrator_version = 2
+    migrator_version = 1
     build_platform = {"osx_arm64": "osx_arm64"}
     pkg_list_filename = "osx_arm64.txt"
     arches = {"osx_arm64": "default"}
@@ -436,7 +436,7 @@ class WinArm64(_CrossCompileRebuild):
     """A Migrator that adds win-arm64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
-    migrator_version = 2
+    migrator_version = 1
     build_platform = {"win_arm64": "win_arm64"}
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "default"}
