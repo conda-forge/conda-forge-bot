@@ -341,7 +341,7 @@ class _CrossCompileRebuild(GraphMigrator):
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         if super().filter(attrs):
             return True
-        for arch in self.build_platform:
+        for arch in self.arches:
             configured_arch = (
                 attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
             ) or (
@@ -396,7 +396,7 @@ class OSXArm(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {"osx_arm64": "osx_arm64"}
+    build_platform = {}  # equivalent to {"osx_arm64": "osx_arm64"} i.e. native
     pkg_list_filename = "osx_arm64.txt"
     arches = {"osx_arm64": "default"}
 
@@ -437,7 +437,7 @@ class WinArm64(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {"win_arm64": "win_arm64"}
+    build_platform = {}  # equivalent to {"win_arm64": "win_arm64"} i.e. native
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "default"}
     excluded_dependencies = {"r-languageserver"}
