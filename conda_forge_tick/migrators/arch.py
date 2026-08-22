@@ -245,12 +245,14 @@ class _CrossCompileRebuild(GraphMigrator):
 
     ignored_packages: set[str] = set()
     excluded_dependencies: set[str] = set()
-    arches: dict = {}
+    build_platform: dict[str, str] = {}
+    arches: dict[str, str] = {}
 
     @property
     def additional_keys(self):
         return {
-            "build_platform": self.build_platform,  # type: ignore[attr-defined]
+            "build_platform": self.build_platform,
+            "provider": self.arches,
             "test": "native_and_emulated",
         }
 
@@ -405,9 +407,9 @@ class OSXArm(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {"osx_arm64": "osx_64"}
+    build_platform = {}  # equivalent to {"osx_arm64": "osx_arm64"} i.e. native
     pkg_list_filename = "osx_arm64.txt"
-    arches = {"osx_arm64": "osx_64"}
+    arches = {"osx_arm64": "default"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "arm osx addition")
@@ -446,9 +448,9 @@ class WinArm64(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {"win_arm64": "win_64"}
+    build_platform = {}  # equivalent to {"win_arm64": "win_arm64"} i.e. native
     pkg_list_filename = "win_arm64.txt"
-    arches = {"win_arm64": "win_64"}
+    arches = {"win_arm64": "default"}
     excluded_dependencies = {"r-languageserver"}
 
     def __init__(self, *args, **kwargs):
