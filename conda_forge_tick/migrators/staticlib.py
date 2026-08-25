@@ -68,7 +68,9 @@ def _read_repodata(platform_arch: str) -> Any:
             with open(rd_fn) as fp:
                 rd = orjson.loads(fp.read())
         except Exception:
-            logger.exception("Exception raised when getting repodata for %s!", platform_arch)
+            logger.exception(
+                "Exception raised when getting repodata for %s!", platform_arch
+            )
             time.sleep((0.1 * 2**i) + RNG.uniform(0, 0.1))
             continue
         else:
