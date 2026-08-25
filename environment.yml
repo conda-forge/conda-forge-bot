@@ -71,6 +71,7 @@ dependencies:
   - codecov
   - requests-mock
   - pre-commit
+  - py-rattler>=0.22.0,<0.26.0a0
   - pytest-xdist
   - pytest-cov
   - pytest-env
