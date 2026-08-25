@@ -124,6 +124,8 @@ def _rattler_record_to_conda_record(record: rattler.PackageRecord) -> PackageRec
         size=record.size or 0,
         python_site_packages_path=record.python_site_packages_path,
     )
+
+
 # END of lifted from conda_rattler_solver
 
 
