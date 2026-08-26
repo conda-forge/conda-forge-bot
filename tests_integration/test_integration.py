@@ -331,6 +331,7 @@ def test_scenario(
                 "--debug",
                 "deploy-to-github",
                 "--dirs-to-deploy=pr_json,version_pr_info,pr_info",
+                "--git-only",
             ]
         )
         with mitmproxy_env():
@@ -340,6 +341,7 @@ def test_scenario(
                 "--debug",
                 "deploy-to-github",
                 "--dirs-to-ignore=pr_json,version_pr_info,pr_info",
+                "--git-only",
             ]
         )
 
@@ -379,6 +381,7 @@ def test_scenario(
                 "--debug",
                 "deploy-to-github",
                 "--dirs-to-deploy=pr_json,version_pr_info,pr_info",
+                "--git-only",
             ]
         )
         with mitmproxy_env():
@@ -388,6 +391,7 @@ def test_scenario(
                 "--debug",
                 "deploy-to-github",
                 "--dirs-to-ignore=pr_json,version_pr_info,pr_info",
+                "--git-only",
             ]
         )
 

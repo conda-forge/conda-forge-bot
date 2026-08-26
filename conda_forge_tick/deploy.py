@@ -83,7 +83,7 @@ def _parse_gh_conflicts(output):
     return files_to_commit, files_to_delete
 
 
-def _pull_changes(batch):
+def _pull_changes(batch=None):
     r = subprocess.run(
         ["git", "pull", "-s", "recursive", "-X", "theirs"],
         text=True,
@@ -112,7 +112,9 @@ def _pull_changes(batch):
                 [
                     "commit",
                     "-m",
-                    f"{_step_name} - conflicts for batch {batch: >3d} - {get_bot_run_url()}",
+                    f"{_step_name} - conflicts for pull - {get_bot_run_url()}"
+                    if batch is None
+                    else f"{_step_name} - conflicts for pull for batch {batch} - {get_bot_run_url()}",
                 ],
             )
 
@@ -234,67 +236,49 @@ def _get_pth_commit_message(pth):
 
 
 def _deploy_via_api(
-    do_git_ops: bool,
     files_to_add: set[str],
     files_to_delete: set[str],
-    files_done: set[str],
-    files_to_try_again: set[str],
-) -> tuple[bool, set[str], set[str], set[str]]:
-    if len(files_to_add) + len(files_to_delete) <= 1000:
-        for pth in files_to_add:
-            if do_git_ops:
-                break
+) -> tuple[set[str], set[str]]:
+    files_done = set()
+    files_to_try_again = set()
+    for pth in files_to_add:
+        try:
+            print(f"pushing file '{pth}' to the graph via the GitHub API", flush=True)
 
-            try:
-                print(
-                    f"pushing file '{pth}' to the graph via the GitHub API", flush=True
-                )
+            msg = _get_pth_commit_message(pth)
 
-                msg = _get_pth_commit_message(pth)
+            push_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
+        except Exception as e:
+            logger.warning("git push via API failed - trying via git CLI", exc_info=e)
+            files_to_try_again.add(pth)
+        else:
+            files_done.add(pth)
 
-                push_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
-            except Exception as e:
-                logger.warning(
-                    "git push via API failed - trying via git CLI", exc_info=e
-                )
-                do_git_ops = True
-                files_to_try_again.add(pth)
-            else:
-                files_done.add(pth)
+        time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
-            time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
+    for pth in files_to_delete:
+        try:
+            print(
+                f"deleting file '{pth}' from the graph via the GitHub API",
+                flush=True,
+            )
 
-        for pth in files_to_delete:
-            if do_git_ops:
-                break
+            # make a nice message for stuff managed via LazyJson
+            msg = _get_pth_commit_message(pth)
 
-            try:
-                print(
-                    f"deleting file '{pth}' from the graph via the GitHub API",
-                    flush=True,
-                )
+            delete_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
+        except Exception as e:
+            logger.warning("git delete via API failed - trying via git CLI", exc_info=e)
+            files_to_try_again.add(pth)
+        else:
+            files_done.add(pth)
 
-                # make a nice message for stuff managed via LazyJson
-                msg = _get_pth_commit_message(pth)
-
-                delete_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
-            except Exception as e:
-                logger.warning(
-                    "git delete via API failed - trying via git CLI", exc_info=e
-                )
-                do_git_ops = True
-            else:
-                files_done.add(pth)
-
-            time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
-
-    else:
-        do_git_ops = True
+        time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
     for pth in files_done:
         reset_and_restore_file(pth)
 
-    return do_git_ops, files_to_add, files_done, files_to_try_again
+    return files_done, files_to_try_again
 
 
 def deploy(
@@ -302,7 +286,7 @@ def deploy(
     dirs_to_deploy: list[str] | None = None,
     git_only: bool = False,
     dirs_to_ignore: list[str] | None = None,
-    no_pull: bool = False,
+    pull_changes: bool = False,
 ):
     if dry_run:
         print("(dry run) deploying", flush=True)
@@ -395,17 +379,14 @@ def deploy(
     print("found %d files to add" % len(files_to_add), flush=True)
     print("found %d files to delete" % len(files_to_delete), flush=True)
 
-    do_git_ops = False
-    files_to_try_again: set[str] = set()
-    files_done: set[str] = set()
     if not git_only:
-        (do_git_ops, files_to_add, files_done, files_to_try_again) = _deploy_via_api(
-            do_git_ops, files_to_add, files_to_delete, files_done, files_to_try_again
+        files_done, files_to_try_again = _deploy_via_api(files_to_add, files_to_delete)
+        print(
+            f"deployed {len(files_done)} files to graph; {len(files_to_try_again)} did not deploy!",
+            flush=True,
         )
-
-    batch = 0
-    if do_git_ops or git_only:
-        files_to_add = (files_to_add - files_done) | files_to_try_again
+    else:
+        batch = 0
         n_added = 0
         while files_to_add:
             batch += 1
@@ -416,6 +397,6 @@ def deploy(
             )
 
         print(f"deployed {n_added} files to graph in {batch} batches", flush=True)
-    else:
-        if files_done and not no_pull:
-            _pull_changes(batch)
+
+    if pull_changes:
+        _pull_changes()
