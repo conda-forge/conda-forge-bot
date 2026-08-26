@@ -1,8 +1,8 @@
 import networkx as nx
 
 from conda_forge_tick.migrators.arch import (
-    _fold_noarch_node,
     _filter_stubby_and_ignored_nodes,
+    _fold_noarch_node,
 )
 
 
@@ -38,7 +38,9 @@ def _rich_feedstock_payload():
 def _build_graph():
     gx = nx.DiGraph()
     gx.add_node("python", payload={"outputs_names": {"python"}, "requirements": {}})
-    gx.add_node("ipywidgets", payload={"outputs_names": {"ipywidgets"}, "requirements": {}})
+    gx.add_node(
+        "ipywidgets", payload={"outputs_names": {"ipywidgets"}, "requirements": {}}
+    )
     gx.add_node("rich", payload=_rich_feedstock_payload())
     # only depends on the plain "rich" output
     gx.add_node(
