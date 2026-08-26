@@ -7,6 +7,7 @@ from typing import Any, Literal
 import networkx as nx
 
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
+from conda_forge_tick.feedstock_parser import _extract_requirements
 from conda_forge_tick.make_graph import (
     get_deps_from_outputs_lut,
 )
@@ -48,7 +49,66 @@ def _filter_excluded_deps(graph, excluded_dependencies):
     graph.remove_edges_from(nx.selfloop_edges(graph))
 
 
-def _filter_stubby_and_ignored_nodes(graph, ignored_packages):
+def _requirement_names(reqs):
+    """Flatten the build/host/run sections of a requirements dict into a set
+    of package names.
+    """
+    names: set[str] = set()
+    for section in ("build", "host", "run"):
+        names.update(as_iterable(reqs.get(section, []) or []))
+    return names
+
+
+def _fold_noarch_node(graph, outputs_lut, node):
+    """Remove a noarch node from the graph, fusing its in-edges to its
+    out-edges (like `pluck`), but only connect the predecessors that are
+    actually required by the specific output each successor depends on.
+
+    A naive pluck connects *every* predecessor of the noarch feedstock (i.e.
+    the union of the requirements of *all* of its outputs) to *every*
+    successor. For a multi-output feedstock, that overconnects the graph: a
+    successor which only depends on one output ends up looking like it
+    depends on the requirements of every other output too.
+
+    **operates in place**
+    """
+    attrs = graph.nodes[node].get("payload") or {}
+    meta_yaml = attrs.get("meta_yaml", {}) or {}
+    outputs_names = attrs.get("outputs_names") or {node}
+
+    preds = {p for p in graph.predecessors(node) if p != node}
+    succs = {s for s in graph.successors(node) if s != node}
+
+    new_edges: set[tuple[str, str]] = set()
+    for succ in succs:
+        succ_attrs = graph.nodes[succ].get("payload") or {}
+        succ_reqs = succ_attrs.get("requirements", {}) or {}
+        succ_dep_names = _requirement_names(succ_reqs)
+
+        # figure out which specific output(s) of this noarch feedstock
+        # `succ` actually depends on
+        needed_outputs = succ_dep_names & outputs_names
+        if needed_outputs:
+            _, output_reqs, _ = _extract_requirements(
+                meta_yaml, outputs_to_keep=needed_outputs
+            )
+            deps = (
+                get_deps_from_outputs_lut(_requirement_names(output_reqs), outputs_lut)
+                & preds
+            )
+        else:
+            # we can't tell which output is needed (e.g. an indirect edge),
+            # so be conservative and fall back to using all of them, like a
+            # plain pluck would
+            deps = preds
+
+        new_edges.update((dep, succ) for dep in deps)
+
+    graph.remove_node(node)
+    graph.add_edges_from(new_edges)
+
+
+def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
     """Remove any stub packages and ignored packages from the graph.
 
     **operates in place**
@@ -62,9 +122,10 @@ def _filter_stubby_and_ignored_nodes(graph, ignored_packages):
             or node.startswith("m2w64-")
             or node.startswith("__")
             or (node in ignored_packages)
-            or all_noarch(attrs)
         ):
             pluck(graph, node)
+        elif all_noarch(attrs):
+            _fold_noarch_node(graph, outputs_lut, node)
     # post-plucking cleanup
     graph.remove_edges_from(nx.selfloop_edges(graph))
 
@@ -128,7 +189,9 @@ class ArchRebuild(GraphMigrator):
                 total_graph = cut_graph_to_target_packages(total_graph, target_packages)
 
             # filter out stub packages and ignored packages
-            _filter_stubby_and_ignored_nodes(total_graph, self.ignored_packages)
+            _filter_stubby_and_ignored_nodes(
+                total_graph, outputs_lut, self.ignored_packages
+            )
 
         if not hasattr(self, "_init_args"):
             self._init_args = []
@@ -314,7 +377,9 @@ class _CrossCompileRebuild(GraphMigrator):
                 total_graph = cut_graph_to_target_packages(total_graph, target_packages)
 
             # filter out stub packages and ignored packages
-            _filter_stubby_and_ignored_nodes(total_graph, self.ignored_packages)
+            _filter_stubby_and_ignored_nodes(
+                total_graph, outputs_lut, self.ignored_packages
+            )
 
         if not hasattr(self, "_init_args"):
             self._init_args = []
@@ -449,7 +514,6 @@ class WinArm64(_CrossCompileRebuild):
     build_platform = {"win_arm64": "win_64"}
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "win_64"}
-    excluded_dependencies = {"r-languageserver"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support windows arm64 platform")
@@ -505,7 +569,6 @@ class LinuxRISCV64(_CrossCompileRebuild):
         "intel-compiler-repack",
         "intel_repack",
     }
-    excluded_dependencies = {"r-languageserver"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support linux riscv64 platform")
