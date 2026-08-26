@@ -385,6 +385,8 @@ def deploy(
             f"deployed {len(files_done)} files to graph; {len(files_to_try_again)} did not deploy!",
             flush=True,
         )
+        if files_to_try_again:
+            sys.exit(1)
     else:
         batch = 0
         n_added = 0
