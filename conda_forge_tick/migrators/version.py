@@ -139,10 +139,7 @@ class Version(Migrator):
                 no_jinja2_ver = True
 
             yaml = load_yaml(attrs["raw_meta_yaml"])
-            if "context" not in yaml:
-                no_jinja2_ver = True
-
-            if "version" not in yaml["context"]:
+            if ("context" not in yaml) or ("version" not in yaml["context"]):
                 no_jinja2_ver = True
         else:
             raise NotImplementedError("Schema version not implemented!")
