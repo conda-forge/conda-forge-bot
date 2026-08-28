@@ -92,8 +92,12 @@ def _fold_noarch_node(graph, outputs_lut, node):
             _, output_reqs, _ = _extract_requirements(
                 meta_yaml, outputs_to_keep=needed_outputs
             )
+            # only the *run* deps of the needed output(s) matter to `succ`:
+            # build/host deps (e.g. a build backend like poetry) are only
+            # needed to build this noarch package, not by things that
+            # merely depend on it afterwards
             deps = (
-                get_deps_from_outputs_lut(_requirement_names(output_reqs), outputs_lut)
+                get_deps_from_outputs_lut(output_reqs.get("run", set()), outputs_lut)
                 & preds
             )
         else:

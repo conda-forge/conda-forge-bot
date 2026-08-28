@@ -97,3 +97,53 @@ def test_filter_stubby_and_ignored_nodes_folds_noarch():
     assert "rich" not in gx.nodes
     assert not gx.has_edge("ipywidgets", "anaconda-cli-base")
     assert gx.has_edge("ipywidgets", "jupyter-thing")
+
+
+def _single_output_payload():
+    # mirrors conda-forge/archspec-feedstock: archspec has no explicit
+    # `outputs:` section (it's an implicit single output), and is built with
+    # poetry (a host-only build backend). Consumers of archspec only need it
+    # at run time and must not gain an edge from poetry (or anything poetry
+    # itself needs, like rapidfuzz).
+    meta_yaml = {
+        "package": {"name": "archspec"},
+        "build": {"noarch": "python"},
+        "requirements": {"host": ["python", "poetry"], "run": ["python"]},
+    }
+    return {
+        "meta_yaml": meta_yaml,
+        "outputs_names": {"archspec"},
+        "requirements": {
+            "build": set(),
+            "host": {"python", "poetry"},
+            "run": {"python"},
+            "test": set(),
+        },
+    }
+
+
+def test_fold_noarch_node_single_output_only_forwards_run_deps():
+    gx = nx.DiGraph()
+    gx.add_node("python", payload={"outputs_names": {"python"}, "requirements": {}})
+    gx.add_node("poetry", payload={"outputs_names": {"poetry"}, "requirements": {}})
+    gx.add_node("archspec", payload=_single_output_payload())
+    gx.add_node(
+        "conda",
+        payload={
+            "outputs_names": {"conda"},
+            "requirements": {"host": set(), "run": {"archspec"}},
+        },
+    )
+
+    gx.add_edge("python", "archspec")
+    gx.add_edge("poetry", "archspec")
+    gx.add_edge("archspec", "conda")
+
+    outputs_lut = {"archspec": {"archspec"}}
+
+    _fold_noarch_node(gx, outputs_lut, "archspec")
+
+    assert "archspec" not in gx.nodes
+    assert gx.has_edge("python", "conda")
+    # poetry only builds archspec, conda shouldn't depend on it
+    assert not gx.has_edge("poetry", "conda")
