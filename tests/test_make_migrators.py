@@ -14,12 +14,17 @@ from conda_forge_tick.lazy_json_backends import (
     lazy_json_override_backends,
 )
 from conda_forge_tick.make_migrators import (
+    add_rebuild_migration_yaml,
     create_migration_yaml_creator,
     dump_migrators,
     initialize_migrators,
     load_migrators,
 )
-from conda_forge_tick.migrators import MigrationYaml, MigrationYamlCreator
+from conda_forge_tick.migrators import (
+    MigrationYaml,
+    MigrationYamlCreator,
+    MiniReplacement,
+)
 from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import load_existing_graph, load_graph, pluck
 
@@ -129,6 +134,60 @@ class TestCreateMigrationYamlCreator:
 
         assert len(migrator.effective_graph) == 1
         assert "conda-forge-pinning" in migrator.effective_graph
+
+
+def test_add_rebuild_migration_yaml_replacements():
+    """Migration yamls can declare replacement mini migrators declaratively via
+    a `replacements` list in `__migrator`, instead of requiring a hardcoded
+    check on the migration name in `add_rebuild_migration_yaml`.
+    """
+    gx = nx.DiGraph()
+    gx.graph["outputs_lut"] = {}
+
+    migration_yaml = """\
+__migrator:
+  kind: version
+  migration_number: 1
+  replacements:
+    - old_pkg: foo
+      new_pkg: bar
+    - old_pkg: baz
+      new_pkg: qux
+      requirement_types: [host, run]
+"""
+    config = {
+        "kind": "version",
+        "migration_number": 1,
+        "replacements": [
+            {"old_pkg": "foo", "new_pkg": "bar"},
+            {"old_pkg": "baz", "new_pkg": "qux", "requirement_types": ["host", "run"]},
+        ],
+    }
+
+    migrators: list[MigrationYaml] = []
+    add_rebuild_migration_yaml(
+        migrators,
+        gx,
+        migration_yaml,
+        config,
+        migration_name="test_replacements_migration",
+    )
+
+    assert len(migrators) == 1
+    migrator = migrators[0]
+
+    # `replacements` should not leak into the migrator's own config
+    assert "replacements" not in config
+
+    mini_replacements = {
+        (m.old_pkg, m.new_pkg): m.requirement_types
+        for m in migrator.piggy_back_migrations
+        if isinstance(m, MiniReplacement)
+    }
+    assert mini_replacements == {
+        ("foo", "bar"): ("host",),
+        ("baz", "qux"): ("host", "run"),
+    }
 
 
 def test_make_migrators_initialize_migrators():
