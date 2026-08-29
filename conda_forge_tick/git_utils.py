@@ -1836,10 +1836,12 @@ def close_out_dirty_prs(
     return None
 
 
-def _retry_sequence(num_tries=20, base=2, factor=0.01):
+def _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=60):
     for i in range(num_tries):
         start = factor * base**i
         end = factor * base ** (i + 1)
+        if end - start > max_wait:
+            end = start + max_wait
         time.sleep(RNG.uniform(start, end))
         yield i
 
