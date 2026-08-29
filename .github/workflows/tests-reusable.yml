@@ -201,8 +201,8 @@ jobs:
         env:
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -358,8 +358,8 @@ jobs:
           MONGODB_CONNECTION_STRING: "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
