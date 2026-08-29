@@ -573,7 +573,6 @@ class LinuxRISCV64(_CrossCompileRebuild):
         "intel-compiler-repack",
         "intel_repack",
     }
-    excluded_dependencies = {"r-languageserver"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support linux riscv64 platform")
