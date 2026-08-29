@@ -66,6 +66,10 @@ jobs:
         if: success() && ! env.CI_SKIP
         run: |
           source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
       - name: run sync
         if: success() && ! env.CI_SKIP
@@ -80,6 +84,9 @@ jobs:
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
   bot-cache-trigger:
     needs: bot-cache
@@ -127,6 +134,10 @@ jobs:
         if: success() && ! env.CI_SKIP
         run: |
           source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
       - name: trigger next job
         uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2

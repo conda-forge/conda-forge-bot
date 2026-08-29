@@ -237,6 +237,8 @@ If your migrator needs special configuration, you should write a new factory fun
 - `RUN_URL`: set to the URL of the CI build (now set to a GHA run URL)
 - `MEMORY_LIMIT_GB`: set to the memory limit in GB for the bot
 - `BOT_TOKEN`: a GitHub token for the bot user
+- `BOT_APP_ID`: the client/app ID of a GitHub app to use for bot deploys
+- `BOT_PRIVATE_KEY`: the private key for a GitHub app to use for bot deploys
 - `CF_FEEDSTOCK_OPS_CONTAINER_NAME`: the name of the container to use in the bot, otherwise defaults to `quay.io/condaforge/conda-forge-tick`
 - `CF_FEEDSTOCK_OPS_CONTAINER_TAG`: set this to override the default container tag used in production runs, otherwise the value of `__version__` is used
 - `CF_TICK_USE_LOCAL_PINNINGS`: set to `true` to force the bot to always use the local copy of the pinnings file for rerenders, set during integration testing

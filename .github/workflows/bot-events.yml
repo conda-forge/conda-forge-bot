@@ -78,6 +78,8 @@ jobs:
             --no-pull-container
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
       - name: react to event
         if: success() && ! env.CI_SKIP
@@ -98,6 +100,8 @@ jobs:
 
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
           # emptied at the beginning and end of each run, used by Python tempdir
           TMPDIR: ${{ runner.temp }}
