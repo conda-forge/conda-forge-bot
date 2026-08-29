@@ -179,27 +179,25 @@ jobs:
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
         run: |
-          python -c "import os; print(list(os.environ.keys()))"
           export TEST_BOT_TOKEN_VAL=unpassword
-          pytest -m "not mongodb" -vvsx tests/test_git_utils.py
-        # pytest \
-        #   -v \
-        #   -n 3 \
-        #   --splits ${NUM_SPLITS} --group ${{ matrix.group }} \
-        #   --store-durations \
-        #   --durations-path=.test_durations.${{ matrix.group }} \
-        #   --splitting-algorithm least_duration \
-        #   --clean-durations \
-        #   --cov=conda_forge_tick \
-        #   --cov=tests \
-        #   --cov-config=.coveragerc \
-        #   --cov-report=term-missing \
-        #   --cov-report=xml \
-        #   --durations=10 \
-        #   --retries=5 \
-        #   --retry-delay=10 \
-        #   -m "not mongodb" \
-        #   tests
+          pytest \
+            -v \
+            -n 3 \
+            --splits ${NUM_SPLITS} --group ${{ matrix.group }} \
+            --store-durations \
+            --durations-path=.test_durations.${{ matrix.group }} \
+            --splitting-algorithm least_duration \
+            --clean-durations \
+            --cov=conda_forge_tick \
+            --cov=tests \
+            --cov-config=.coveragerc \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --durations=10 \
+            --retries=5 \
+            --retry-delay=10 \
+            -m "not mongodb" \
+            tests/test_git_utils.py
         env:
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
