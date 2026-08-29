@@ -2272,7 +2272,7 @@ package:
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.18.2
+  version: 0.18.3
   manager: conda
   platform: linux-64
   dependencies:
@@ -2294,14 +2294,14 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.2-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.3-pyhd8ed1ab_0.conda
   hash:
-    md5: 561d573c0e77a8d3bbb1023ffd1df471
-    sha256: e1f5f2a6cae4e42551199fdba9571db9c40f61b9bcb5130c9afb8c218890766f
+    md5: e6ec1119faadeb768e6ab455986391e8
+    sha256: a1b3b35688b92ce980325049ca43eeb138c6a826bd74f2801c9ab21da5165a9b
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.18.2
+  version: 0.18.3
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -2323,14 +2323,14 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.2-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.3-pyhd8ed1ab_0.conda
   hash:
-    md5: 561d573c0e77a8d3bbb1023ffd1df471
-    sha256: e1f5f2a6cae4e42551199fdba9571db9c40f61b9bcb5130c9afb8c218890766f
+    md5: e6ec1119faadeb768e6ab455986391e8
+    sha256: a1b3b35688b92ce980325049ca43eeb138c6a826bd74f2801c9ab21da5165a9b
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.18.2
+  version: 0.18.3
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -2352,10 +2352,10 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.2-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.3-pyhd8ed1ab_0.conda
   hash:
-    md5: 561d573c0e77a8d3bbb1023ffd1df471
-    sha256: e1f5f2a6cae4e42551199fdba9571db9c40f61b9bcb5130c9afb8c218890766f
+    md5: e6ec1119faadeb768e6ab455986391e8
+    sha256: a1b3b35688b92ce980325049ca43eeb138c6a826bd74f2801c9ab21da5165a9b
   category: main
   optional: false
 - name: conda-forge-metadata
@@ -10368,10 +10368,10 @@ package:
     python: ''
     python_abi: 3.12.*
     tomli-w: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/menuinst-2.5.2-py312h20c3967_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/menuinst-2.5.2-py312h20c3967_2.conda
   hash:
-    md5: b020052753d777ac1e2b77ed1628e989
-    sha256: 4cc9465451511d3b5781f07c21359897a167d2adfd71161e9f8ba31909349ec7
+    md5: 54a2bb444362732cf80e546c337c761c
+    sha256: 20644178f848dc8f3ad6289b0eaa6b6c1ce60ad33f22fcdad89bb0534c2cdb7b
   category: main
   optional: false
 - name: menuinst
@@ -10382,10 +10382,10 @@ package:
     python: ''
     python_abi: 3.12.*
     tomli-w: ''
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/menuinst-2.5.2-py312h3262aca_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/menuinst-2.5.2-py312h3262aca_2.conda
   hash:
-    md5: d8ae0a11b9a7a3d4bd59fd40ae464270
-    sha256: 0cfccc4a75ab376e399d1edd675348d5482fd858a9134fedacb1fc13e52ee921
+    md5: 50637af80068d2fb317d5fa10e3ffe7c
+    sha256: 891c032ca89c68dc3052db1e298ff8bfe2719c7c4e029deabca1c999e4c86dde
   category: main
   optional: false
 - name: menuinst
@@ -10396,10 +10396,10 @@ package:
     python: ''
     python_abi: 3.12.*
     tomli-w: ''
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/menuinst-2.5.2-py312h3de3f42_1.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/menuinst-2.5.2-py312h3de3f42_2.conda
   hash:
-    md5: 6f237186cc2a940a1fc55b0b6d64c0d9
-    sha256: ae497822b5c4ff32c0a91515ae91daa07c27f27fb8eda7248e6a61e0acf2dbb8
+    md5: 6848013be4b6cd33a3501aa8ebc8cc59
+    sha256: 63e5bf0f3f8f55005971c74b707109c4b655d8f91ed154248623553ec58bd341
   category: main
   optional: false
 - name: mitmproxy
