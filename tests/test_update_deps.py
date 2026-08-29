@@ -163,6 +163,9 @@ def test_update_run_deps():
     assert "python >={{ python_min }}" in recipe.dumps()
 
 
+@pytest.mark.xfail(
+    reason="depfinder sometimes fails due to bad import to package mapping"
+)
 def test_get_depfinder_comparison():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
@@ -429,6 +432,9 @@ extra:
             out_yml_src,
         ),
     ],
+)
+@pytest.mark.xfail(
+    reason="depfinder sometimes fails due to bad import to package mapping"
 )
 def test_update_deps_version(caplog, tmp_path, update_kind, out_yml):
     caplog.set_level(

@@ -475,6 +475,13 @@ def replace_compiler_with_stub(text: str) -> str:
     pattern = r"""\$\{\{.*stdlib\(\s*(["'])([^["']+)\1\s*\).*\}\}"""
     text = re.sub(pattern, lambda m: f"{m.group(2)}_stdlib_stub", text)
 
+    # some recipes use the raw <lang>_compiler variables to ignore run exports
+    pattern = r"\$\{\{.*(?=[\|\s]*)([^\|\s]+)_compiler[\|\s]+.*\}\}"
+    text = re.sub(pattern, lambda m: f"{m.group(1)}_compiler_stub", text)
+
+    pattern = r"\$\{\{.*(?=[\|\s]*)([^\|\s]+)_stdlib[\|\s]+.*\}\}"
+    text = re.sub(pattern, lambda m: f"{m.group(1)}_stdlib_stub", text)
+
     return text
 
 
@@ -518,7 +525,7 @@ def _render_recipe_yaml(
             )
         target_platform_flags = (
             []
-            if platform_arch is None or variant_config_flags
+            if platform_arch is None or platform_arch == "noarch"
             else ["--target-platform", platform_arch]
         )
 

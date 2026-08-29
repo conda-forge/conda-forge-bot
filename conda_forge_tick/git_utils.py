@@ -1836,6 +1836,16 @@ def close_out_dirty_prs(
     return None
 
 
+def _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=60):
+    for i in range(num_tries):
+        start = factor * base**i
+        end = factor * base ** (i + 1)
+        if end - start > max_wait:
+            end = start + max_wait
+        time.sleep(RNG.uniform(start, end))
+        yield i
+
+
 def _get_pth_blob_sha_and_content(
     pth: str, repo: github.Repository.Repository
 ) -> tuple[str | None, str | None]:
@@ -1866,11 +1876,8 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     with open(pth) as f:
         data = f.read()
 
-    ntries = 17
-    base = 1.5
-    rfrac = 0.5
-
-    for tr in range(ntries):
+    ntries = 20
+    for tr in _retry_sequence(num_tries=ntries):
         try:
             gh = github_client()
             repo = gh.get_repo(repo_full_name)
@@ -1904,11 +1911,6 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
                     exc_info=e,
                 )
                 raise e
-            else:
-                # exponential backoff
-                interval = base**tr
-                interval = rfrac * interval + (rfrac * RNG.uniform(0, 1) * interval)
-                time.sleep(interval)
 
 
 def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
@@ -1923,11 +1925,8 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     msg : str
         The commit message.
     """
-    ntries = 17
-    base = 1.5
-    rfrac = 0.5
-
-    for tr in range(ntries):
+    ntries = 20
+    for tr in _retry_sequence(num_tries=ntries):
         try:
             gh = github_client()
             repo = gh.get_repo(repo_full_name)
@@ -1955,12 +1954,6 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
                     exc_info=e,
                 )
                 raise e
-            else:
-                # exponential backoff
-                # exponential backoff
-                interval = base**tr
-                interval = rfrac * interval + (rfrac * RNG.uniform(0, 1) * interval)
-                time.sleep(interval)
 
 
 @lock_git_operation()

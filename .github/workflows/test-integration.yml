@@ -9,7 +9,7 @@ on:
 # Integration tests interact with GitHub resources in the integration test infrastructure and therefore
 # cannot run concurrently with other integration tests.
 concurrency:
-  group: conda-forge-bot-integration-tests
+  group: conda-forge-bot-integration-tests${{ github.event_name == 'pull_request' && '-pr' || ''  }}
   cancel-in-progress: false
 
 env:
@@ -24,59 +24,19 @@ jobs:
     name: Run Integration Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Check if we can skip the merge queue
-        id: merge-queue-ci-skipper
-        uses: cariad-tech/merge-queue-ci-skipper@cf80db21fc70244e36487acc531b3f1118889b0a
-        with:
-          secret: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-
-      - name: Get PR number
-        id: pr-number
-        # this appears to be busted now so using my own code based on the merge_group
-        # parts
-        # uses: bcgov/action-get-pr@35514fa1d4765547da319e967b509363598e8b46 # v0.1.0
-        run: |
-          if [[ ${GITHUB_EVENT_NAME} == "merge_group" ]]; then
-            pr_num=$(echo "${MGHR}" | sed -n 's|.*/pr-\([0-9]\+\)-.*|\1|p')
-          else
-            pr_num=${PR_NUMBER_FOR_PR}
-          fi
-          echo ${pr_num}
-          echo "pr=${pr_num}" >> "$GITHUB_OUTPUT"
-        env:
-          MGHR: ${{ github.event.merge_group.head_ref }}
-          PR_NUMBER_FOR_PR: ${{ github.event.number }}
-
       - name: Check if we should run rest of tests
         id: should-run
         run: |
           if [[ ${GITHUB_EVENT_NAME} == "workflow_dispatch" ]]; then
-            pr_is_fork=false
-          else
-            pr_is_fork=$(gh pr view ${PR_NUMBER} --json headRepositoryOwner | jq '.headRepositoryOwner.login != "conda-forge"')
-          fi
-
-          if [[ ${pr_is_fork} == "true" ]]; then
-            if [[ ${GITHUB_EVENT_NAME} == "merge_group" ]]; then
-              final_should_run=true
-            else
-              final_should_run=false
-            fi
-          elif [[ ${GITHUB_EVENT_NAME} == "workflow_dispatch" ]]; then
+            final_should_run=true
+          elif [[ ${GITHUB_EVENT_NAME} == "merge_group" ]]; then
             final_should_run=true
           else
-            final_should_run=${MQ_CI_SKIP}
+            final_should_run=false
           fi
-          echo "should-run=${final_should_run}" >> "$GITHUB_OUTPUT"
 
-          echo "pr number: ${PR_NUMBER}"
-          echo "pr is fork: ${pr_is_fork}"
-          echo "merge queue CI needs to run: ${MQ_CI_SKIP}"
+          echo "should-run=${final_should_run}" >> "$GITHUB_OUTPUT"
           echo "should run: ${final_should_run}"
-        env:
-          MQ_CI_SKIP: ${{ steps.merge-queue-ci-skipper.outputs.skip-check != 'true' }}
-          PR_NUMBER: ${{ steps.pr-number.outputs.pr }}
-          GH_TOKEN: ${{ github.token }}
 
       - name: free disk space
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
@@ -88,14 +48,14 @@ jobs:
           rm_cmd: "rmz"
 
       - name: Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         with:
           path: conda-forge-bot
           submodules: 'true'
 
       - name: Setup micromamba
-        uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
+        uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         with:
           environment-file: conda-forge-bot/conda-lock.yml
@@ -107,7 +67,7 @@ jobs:
         working-directory: conda-forge-bot
         run: |
           # put pinnings at old version for testing
-          micromamba install conda-forge-pinning==2025.02.25.13.14.53
+          micromamba install conda-forge-pinning==2026.08.04.15.04.25
           pip install --no-deps --no-build-isolation -e .
 
       - name: get version
@@ -120,7 +80,7 @@ jobs:
 
       - name: build docker image
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
-        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
+        uses: redhat-actions/buildah-build@3a51aade9afa17e5c78256bcbe2e1ee08c7b995b # v3.0.2
         with:
           context: conda-forge-bot
           image: conda-forge-tick
@@ -169,12 +129,15 @@ jobs:
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         working-directory: conda-forge-bot
         run: |
-          pytest -s -v \
+          python -c "import build"
+
+          CONDA_VERBOSITY=3 pytest -s -v \
           --dist=no \
           tests_integration
         env:
           BOT_TOKEN: ${{ secrets.GH_TOKEN_STAGING_BOT_USER }}
           TEST_SETUP_TOKEN: ${{ secrets.GH_TOKEN_STAGING_BOT_USER }}
+          TIMEOUT: 7200
 
       - name: Print Proxy Logs
         run: cat /tmp/mitmproxy.log

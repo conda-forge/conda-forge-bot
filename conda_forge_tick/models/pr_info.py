@@ -51,6 +51,7 @@ class MigratorName(StrEnum):
     ARCH_REBUILD = "ArchRebuild"
     OSX_ARM = "OSXArm"
     WIN_ARM64 = "WinArm64"
+    LINUX_RISCV64 = "LinuxRISCV64"
     MIGRATION_YAML = "MigrationYaml"
     REBUILD = "Rebuild"
     BLAS_REBUILD = "BlasRebuild"
@@ -75,6 +76,7 @@ class MigratorName(StrEnum):
     This legacy migrator R noarch packages technically exists in the codebase, but does not appear in the graph.
     """
     PINNING = "Pinning"
+    CDT_MIGRATOR = "CDTMigrator"
     COMPILER_REBUILD = "CompilerRebuild"
     """
     This migrator is no longer present in the codebase but still appears in the graph.
@@ -89,6 +91,9 @@ class MigratorName(StrEnum):
     """
 
     ADD_NVIDIA_TOOLS = "AddNVIDIATools"
+    """
+    This migrator is no longer present in the codebase but still appears in the graph.
+    """
 
 
 class MigrationPullRequestData(StrictBaseModel):

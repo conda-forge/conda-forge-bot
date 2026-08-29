@@ -51,7 +51,7 @@ dependencies:
   - python=3.12
   - python-dateutil
   - python-graphviz
-  - rattler-build >=0.58.3,<0.60
+  - rattler-build >=0.74,<0.75.0a0
   - rattler-build-conda-compat >=1.4.13,<2
   - requests
   - ruamel.yaml
@@ -71,6 +71,7 @@ dependencies:
   - codecov
   - requests-mock
   - pre-commit
+  - py-rattler>=0.22.0,<0.26.0a0
   - pytest-xdist
   - pytest-cov
   - pytest-env
