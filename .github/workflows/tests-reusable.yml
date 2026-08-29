@@ -23,6 +23,10 @@ on:
         required: true
       BOT_TOKEN:
         required: true
+      BOT_APP_ID:
+        required: true
+      BOT_PRIVATE_KEY:
+        required: true
 
 env:
   PY_COLORS: "1"
