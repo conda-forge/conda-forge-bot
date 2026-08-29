@@ -57,9 +57,8 @@ backoff._decorator._is_event_loop = lambda: False
 
 GITHUB3_CLIENT = threading.local()
 GITHUB_CLIENT = threading.local()
-
-APP_TOKEN = None
-APP_TOKEN_RESET_TIME = None
+GITHUB_CLIENT.APP_TOKEN = None
+GITHUB_CLIENT.APP_TOKEN_RESET_TIME = None
 
 MAX_GITHUB_TIMEOUT = 60
 
@@ -107,14 +106,14 @@ def get_bot_app_token():
     token: str
         The app token.
     """
-    global APP_TOKEN_RESET_TIME
-    global APP_TOKEN
-
     # add a minute to make sure token doesn't expire
     # while we are using it
     now = time.time()
     now_plus_1min = now + 60
-    if APP_TOKEN_RESET_TIME is None or APP_TOKEN_RESET_TIME <= now_plus_1min:  # type: ignore[unreachable]
+    if (
+        GITHUB_CLIENT.APP_TOKEN_RESET_TIME is None
+        or GITHUB_CLIENT.APP_TOKEN_RESET_TIME <= now_plus_1min
+    ):  # type: ignore[unreachable]
         with sensitive_env() as env:
             token = _generate_bot_app_token(
                 env["BOT_APP_ID"],
@@ -122,7 +121,7 @@ def get_bot_app_token():
             )
         if token is not None:
             try:
-                APP_TOKEN_RESET_TIME = github.Github(
+                GITHUB_CLIENT.APP_TOKEN_RESET_TIME = github.Github(
                     auth=github.Auth.Token(token)
                 ).rate_limiting_resettime
             except Exception:
@@ -131,11 +130,11 @@ def get_bot_app_token():
         else:
             logger.error("Bot app token could not be made!")
 
-        APP_TOKEN = token
+        GITHUB_CLIENT.APP_TOKEN = token
 
-    assert APP_TOKEN is not None, "Could not generate bot app token!"
+    assert GITHUB_CLIENT.APP_TOKEN is not None, "Could not generate bot app token!"
 
-    return APP_TOKEN
+    return GITHUB_CLIENT.APP_TOKEN
 
 
 def _generate_bot_app_token(app_id, raw_pem):
