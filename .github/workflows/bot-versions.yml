@@ -61,14 +61,8 @@ jobs:
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-
-      - name: generate token
-        id: generate_token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          client-id: ${{ secrets.CF_CURATOR_APP_ID }}
-          private-key: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
       - name: get versions
         if: success() && ! env.CI_SKIP
@@ -80,6 +74,8 @@ jobs:
         env:
           BOT_JOB: ${{ matrix.job_num }}
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
@@ -93,6 +89,8 @@ jobs:
       #     conda-forge-tick deploy-to-github
       #   env:
       #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+      #     BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+      #     BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
       #     RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail

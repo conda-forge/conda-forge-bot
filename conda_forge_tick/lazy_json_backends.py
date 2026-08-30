@@ -360,7 +360,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
     def __init__(self):
         from conda_forge_tick.git_utils import github_client
 
-        self._gh = github_client()
+        self._gh = github_client(with_app_token=True)
         self._repo = self._gh.get_repo(settings().graph_github_backend_repo)
 
     @contextlib.contextmanager
