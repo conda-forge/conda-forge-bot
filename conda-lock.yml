@@ -2413,36 +2413,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.29.23.00.56
+  version: 2026.08.30.02.05.31
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.29.23.00.56-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.02.05.31-hd8ed1ab_0.conda
   hash:
-    md5: 91b111fe9e8a4090091618018f769129
-    sha256: 7f41e9819cfcf4349c7b34083b8b328857e0f74fd1372bce0d19b4693a8cb3dc
+    md5: 51d914b66e81a9ddf936dfe29c93a65e
+    sha256: 5fed42fc48658c3d7847083a20bf41ad0fdd609f34c244eec95b3d18c072b3e6
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.29.23.00.56
+  version: 2026.08.30.02.05.31
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.29.23.00.56-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.02.05.31-hd8ed1ab_0.conda
   hash:
-    md5: 91b111fe9e8a4090091618018f769129
-    sha256: 7f41e9819cfcf4349c7b34083b8b328857e0f74fd1372bce0d19b4693a8cb3dc
+    md5: 51d914b66e81a9ddf936dfe29c93a65e
+    sha256: 5fed42fc48658c3d7847083a20bf41ad0fdd609f34c244eec95b3d18c072b3e6
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.29.23.00.56
+  version: 2026.08.30.02.05.31
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.29.23.00.56-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.02.05.31-hd8ed1ab_0.conda
   hash:
-    md5: 91b111fe9e8a4090091618018f769129
-    sha256: 7f41e9819cfcf4349c7b34083b8b328857e0f74fd1372bce0d19b4693a8cb3dc
+    md5: 51d914b66e81a9ddf936dfe29c93a65e
+    sha256: 5fed42fc48658c3d7847083a20bf41ad0fdd609f34c244eec95b3d18c072b3e6
   category: main
   optional: false
 - name: conda-index
@@ -9066,13 +9066,13 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
+    libgcc: '>=15'
     libgfortran: ''
-    libgfortran5: '>=14.3.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libopenblas-0.3.34-pthreads_h94d23a6_0.conda
+    libgfortran5: '>=15.3.0'
+  url: https://conda.anaconda.org/conda-forge/linux-64/libopenblas-0.3.34-pthreads_hcf972fe_1.conda
   hash:
-    md5: c282d68f272927612462b5d626838ef1
-    sha256: 23392fc4f4e5ba230fcd1ef825878ba5ca7ee4f6259fac0cbb13299134b7bf7a
+    md5: 25994250f54292352a82eb05ab4499ba
+    sha256: b2846ca0b00cc08d248589d289ba891856d4b42da4a3c823be6b2d660bd80a83
   category: main
   optional: false
 - name: libopenblas
@@ -9080,13 +9080,13 @@ package:
   manager: conda
   platform: linux-aarch64
   dependencies:
-    libgcc: '>=14'
+    libgcc: '>=15'
     libgfortran: ''
-    libgfortran5: '>=14.3.0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libopenblas-0.3.34-pthreads_h9d3fd7e_0.conda
+    libgfortran5: '>=15.3.0'
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libopenblas-0.3.34-pthreads_hdd72021_1.conda
   hash:
-    md5: c37ba01d9ab7bfaf5f5dddc5d8807454
-    sha256: 0905b8acaff83558e5007351b2de329ce212ef5acbd595fcc22bb7fa1592f277
+    md5: 40c4c881932f8cee30eb9a91dd5c611f
+    sha256: b1c7dfbdca5c2ffe68ee20f04d1f4b2ad1e8757e2bd82a3e138179d990752408
   category: main
   optional: false
 - name: libopenblas
@@ -9096,12 +9096,12 @@ package:
   dependencies:
     __osx: '>=11.0'
     libgfortran: ''
-    libgfortran5: '>=14.3.0'
+    libgfortran5: '>=14.4.0'
     llvm-openmp: '>=19.1.7'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libopenblas-0.3.34-openmp_he657e61_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libopenblas-0.3.34-openmp_h4f80526_1.conda
   hash:
-    md5: 89d28fb841cf16211318524fa985e384
-    sha256: bcf1967f12f1b1cc769dcc77b255fb1b27aaceb2f185450e9596d137bc6ede76
+    md5: 0b5dfcfae89beafb81234b90d5d07729
+    sha256: 45bda47a2fd2e3936cd6da2756f57a5b22af445a6da6cc37a753bd96949721e7
   category: main
   optional: false
 - name: libpciaccess
