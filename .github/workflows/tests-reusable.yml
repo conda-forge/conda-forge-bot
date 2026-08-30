@@ -197,7 +197,7 @@ jobs:
             --retries=5 \
             --retry-delay=10 \
             -m "not mongodb" \
-            tests/test_git_utils.py
+            tests
         env:
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
