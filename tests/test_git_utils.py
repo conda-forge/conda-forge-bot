@@ -1867,7 +1867,7 @@ def test_git_utils_push_and_delete_file_via_gh_api():
 def test_git_utils_bot_app_token():
     gh = github_client(with_app_token=True)
     assert gh is not None
-    print(gh.rate_limiting_resettime)
+    assert gh.rate_limiting_resettime != 0
 
 
 def test_git_utils_retry_sequence():
