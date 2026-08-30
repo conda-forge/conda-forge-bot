@@ -28,6 +28,7 @@ from conda_forge_tick.git_utils import (
     GitPlatformError,
     RepositoryNotFoundError,
     _get_pth_blob_sha_and_content,
+    _retry_sequence,
     delete_file_via_gh_api,
     github_client,
     push_file_via_gh_api,
@@ -1867,3 +1868,11 @@ def test_git_utils_bot_app_token():
     gh = github_client(with_app_token=True)
     assert gh is not None
     print(gh.rate_limiting_resettime)
+
+
+def test_git_utils_retry_sequence():
+    start = time.time()
+    for _ in _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=2):
+        pass
+    end = time.time()
+    assert end - start < 20 * 2

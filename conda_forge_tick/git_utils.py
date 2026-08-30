@@ -1965,7 +1965,7 @@ def _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=60):
         end = start * base
         if end - start > max_wait:
             end = start + max_wait
-        time.sleep(RNG.uniform(start, end))
+        time.sleep(RNG.uniform(0, end - start))
         yield i
 
 
