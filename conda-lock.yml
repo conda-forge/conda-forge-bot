@@ -2413,36 +2413,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.30.07.07.36
+  version: 2026.08.30.08.10.36
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.07.07.36-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.08.10.36-hd8ed1ab_0.conda
   hash:
-    md5: f8d98c7d6f3df2c460f87cc9f12f8b30
-    sha256: 8c9881b3e9507f133bdb739bc22062f6c9f9354283790df7e9ceafa0a3af0204
+    md5: b2e65e47c6481b761e38270634392f1e
+    sha256: 0f3c28951a9ddb196f4bcded4e8c1df97454bab20b3c5bc9c2e45e76d4d6059f
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.30.07.07.36
+  version: 2026.08.30.08.10.36
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.07.07.36-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.08.10.36-hd8ed1ab_0.conda
   hash:
-    md5: f8d98c7d6f3df2c460f87cc9f12f8b30
-    sha256: 8c9881b3e9507f133bdb739bc22062f6c9f9354283790df7e9ceafa0a3af0204
+    md5: b2e65e47c6481b761e38270634392f1e
+    sha256: 0f3c28951a9ddb196f4bcded4e8c1df97454bab20b3c5bc9c2e45e76d4d6059f
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.30.07.07.36
+  version: 2026.08.30.08.10.36
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.07.07.36-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.30.08.10.36-hd8ed1ab_0.conda
   hash:
-    md5: f8d98c7d6f3df2c460f87cc9f12f8b30
-    sha256: 8c9881b3e9507f133bdb739bc22062f6c9f9354283790df7e9ceafa0a3af0204
+    md5: b2e65e47c6481b761e38270634392f1e
+    sha256: 0f3c28951a9ddb196f4bcded4e8c1df97454bab20b3c5bc9c2e45e76d4d6059f
   category: main
   optional: false
 - name: conda-index
@@ -7371,10 +7371,10 @@ package:
   platform: linux-64
   dependencies:
     libopenblas: '>=0.3.34,<0.3.35.0a0,>=0.3.34,<1.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libblas-3.11.0-9_h4a7cf45_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libblas-3.11.0-10_h4a7cf45_openblas.conda
   hash:
-    md5: f5c4b041925dea221dc4bad2e50569d9
-    sha256: 39c7b3c5427b435c9c059ede9da61d46d42574e5b846ad37fdc3af4a5eab1e48
+    md5: e2ca3eadd889d39b4e4b6b1ecc671816
+    sha256: 3b0600d79b16cc868421adbba03364ba59d2a3c088c79eef678f4a0b43fc7c07
   category: main
   optional: false
 - name: libblas
@@ -7383,10 +7383,10 @@ package:
   platform: linux-aarch64
   dependencies:
     libopenblas: '>=0.3.34,<0.3.35.0a0,>=0.3.34,<1.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libblas-3.11.0-9_haddc8a3_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libblas-3.11.0-10_haddc8a3_openblas.conda
   hash:
-    md5: c2d360534e0377666eaf8f86e605511c
-    sha256: 5ad8fda537086a842379b7eb8d67770674e3c3afa66b09690ed62b54439fc227
+    md5: 0aef6d16472137e6b556ecc2208194f6
+    sha256: d5d9c5583906142da757b21348264469f18a66c2250dffc66738632d51049339
   category: main
   optional: false
 - name: libblas
@@ -7395,10 +7395,10 @@ package:
   platform: osx-arm64
   dependencies:
     libopenblas: '>=0.3.34,<0.3.35.0a0,>=0.3.34,<1.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libblas-3.11.0-9_h51639a9_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libblas-3.11.0-10_h51639a9_openblas.conda
   hash:
-    md5: cb1f85be9d88af453fcda3dfba995099
-    sha256: 0437866fe43b4c911470d3e7ddea18d78390bd7062d9563ce6d38c8ba5798405
+    md5: 37ec75f777eac2ee1322e19d64df82e7
+    sha256: e5a6dd4210286ae61f868cf70f297e851856b8512776f4efac4e50dba0d57457
   category: main
   optional: false
 - name: libcblas
@@ -7407,10 +7407,10 @@ package:
   platform: linux-64
   dependencies:
     libblas: 3.11.0
-  url: https://conda.anaconda.org/conda-forge/linux-64/libcblas-3.11.0-9_h0358290_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libcblas-3.11.0-10_h0358290_openblas.conda
   hash:
-    md5: 092c5649f3727af436ab0f67f48c3811
-    sha256: 4c532a70ea9aeff2fa1aabaa4828ebc00c2ed12b22aa8ba19da5302b882fc82b
+    md5: a275bd95aa4e22c24120bf6ece6eb056
+    sha256: 90fd992748d501f6efe2b8310aa81f5ee4a63629450dd88e851ba4ab757f3c3a
   category: main
   optional: false
 - name: libcblas
@@ -7419,10 +7419,10 @@ package:
   platform: linux-aarch64
   dependencies:
     libblas: 3.11.0
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libcblas-3.11.0-9_hd72aa62_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/libcblas-3.11.0-10_hd72aa62_openblas.conda
   hash:
-    md5: 1ff91e2252ca15db87a27b7b3ff280ae
-    sha256: 9e83c59429296818e7111a9f80f29c2c8a1e5ab9ae2d59aec8e67af9b87ac923
+    md5: 3d2c6a20ca24a60c5c4604a08940b3ae
+    sha256: 6a39d1f7de1fda182503896490448f0845bcf4e9420bec50afd9b32769506c3e
   category: main
   optional: false
 - name: libcblas
@@ -7431,10 +7431,10 @@ package:
   platform: osx-arm64
   dependencies:
     libblas: 3.11.0
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/libcblas-3.11.0-9_hb0561ab_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/libcblas-3.11.0-10_hb0561ab_openblas.conda
   hash:
-    md5: a7b6ba94e3ca58bc7d4e1ae4ff95c215
-    sha256: c4c71f20fdb20c86bf6f61c8c31bb349e4055bb4d19928e8580bb5615039cb4b
+    md5: 953e30e380c03f058cacffe19bce9dc9
+    sha256: d4d786f18344c6e4a3fddd1ea19e014fa5f7bd33d11f6255b147a79dd00f9327
   category: main
   optional: false
 - name: libcups
@@ -8618,10 +8618,10 @@ package:
   platform: linux-64
   dependencies:
     libblas: 3.11.0
-  url: https://conda.anaconda.org/conda-forge/linux-64/liblapack-3.11.0-9_h47877c9_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/liblapack-3.11.0-10_h47877c9_openblas.conda
   hash:
-    md5: e51473c2b7e1f9cb61daafccfd912abf
-    sha256: ea989e2dabd21d296a5a4ec515e695645aefcdf778ffdb5eeea515421d243ab5
+    md5: 7b918d4958f359c889c662aa361cf992
+    sha256: 166da1ef513efd2f9ea9e132246766306e5d1a18b4e83b8b8425b5adffb6345e
   category: main
   optional: false
 - name: liblapack
@@ -8630,10 +8630,10 @@ package:
   platform: linux-aarch64
   dependencies:
     libblas: 3.11.0
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/liblapack-3.11.0-9_h88aeb00_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/liblapack-3.11.0-10_h88aeb00_openblas.conda
   hash:
-    md5: c560d88ddee90ba4120ac63eda69fbee
-    sha256: 562077bf38f962f6b80ec4e021bd2328f603ce0b112d3045b3f3b37f1a110f73
+    md5: b4fa79baea29b5217a9848a2c24cad53
+    sha256: 87e604f065f5dd363ba2bb9fb5230b7d7b2de6718b5e09a864b061666b3c5c1f
   category: main
   optional: false
 - name: liblapack
@@ -8642,10 +8642,10 @@ package:
   platform: osx-arm64
   dependencies:
     libblas: 3.11.0
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/liblapack-3.11.0-9_hd9741b5_openblas.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/liblapack-3.11.0-10_hd9741b5_openblas.conda
   hash:
-    md5: ecc87ca1e25bd94a08c82904eb4e6846
-    sha256: db09e8e6a58415da1d866221cf518e53e84c6766a4500faae716cfa204f696ff
+    md5: 35ee607ea2e9f75c699158c5f77ef9fd
+    sha256: 09551a3022c0f8151dab85f8b89dc151a635f672c177364139c7bd019459a2b8
   category: main
   optional: false
 - name: liblief
