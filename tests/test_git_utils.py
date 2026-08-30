@@ -1861,7 +1861,7 @@ def test_git_utils_push_and_delete_file_via_gh_api():
 @pytest.mark.skipif(
     condition="BOT_APP_ID" not in conda_forge_tick.global_sensitive_env.classified_info
     or "BOT_PRIVATE_KEY" not in conda_forge_tick.global_sensitive_env.classified_info,
-    reason="No bot app ID, private key, or token in env.",
+    reason="Bot app ID and private key not in env.",
 )
 @pytest.mark.mongodb
 def test_git_utils_bot_app_token():
