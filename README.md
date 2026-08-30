@@ -199,6 +199,18 @@ __migrator:
       - value3
       - value4
 
+  # `replacements` lets you piggy-back one or more `MiniReplacement` migrators
+  # onto this migration to swap one package for another (e.g., renaming a
+  # dependency) in the recipes of feedstocks that are otherwise migrated.
+  # `requirement_types` is optional and defaults to `["host"]`; it controls
+  # which requirement sections are checked/updated for the old package.
+  replacements:
+    - old_pkg: old-package-name
+      new_pkg: new-package-name
+      requirement_types:
+        - host
+        - run
+
 # The names of any packages/pins you wish to migrate go here. Convert any
 # dashes to underscores. You can list more than one item here if things are
 # coupled or if you need to change items in zip_keys via key_add or key_remove.

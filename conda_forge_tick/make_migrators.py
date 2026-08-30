@@ -407,6 +407,17 @@ def add_rebuild_migration_yaml(
                 old_pkg=PackageName("dav1d"), new_pkg=PackageName("dav1d-devel")
             )
         )
+    for replacement in config.pop("replacements", []):
+        piggy_back_migrations.append(
+            MiniReplacement(
+                old_pkg=PackageName(replacement["old_pkg"]),
+                new_pkg=PackageName(replacement["new_pkg"]),
+                requirement_types=tuple(
+                    replacement.get("requirement_types", ("host",))
+                ),
+            )
+        )
+
     piggy_back_migrations = _make_mini_migrators_with_defaults(
         extra_mini_migrators=piggy_back_migrations
     )
