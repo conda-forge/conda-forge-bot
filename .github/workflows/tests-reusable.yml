@@ -172,9 +172,6 @@ jobs:
           if [[ -f .test_durations ]]; then
             cp .test_durations .test_durations.${{ matrix.group }}
           fi
-          ls -lah .test_durations*
-          echo " "
-          cat .test_durations*
 
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
@@ -329,6 +326,13 @@ jobs:
           restore-keys: |
             test-durations-${{ github.ref }}-
             test-durations-
+
+      - name: post-process test durations
+        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        run: |
+          if [[ -f .test_durations ]]; then
+            cp .test_durations .test_durations.mongodb
+          fi
 
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
