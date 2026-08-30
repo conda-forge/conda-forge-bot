@@ -131,13 +131,14 @@ jobs:
         run: |
           python -c "import build"
 
-          CONDA_VERBOSITY=3 pytest -s -v \
+          pytest -s -v \
           --dist=no \
           tests_integration
         env:
           BOT_TOKEN: ${{ secrets.GH_TOKEN_STAGING_BOT_USER }}
           TEST_SETUP_TOKEN: ${{ secrets.GH_TOKEN_STAGING_BOT_USER }}
           TIMEOUT: 7200
+          BOT_INTEGRATION_TESTING: true
 
       - name: Print Proxy Logs
         run: cat /tmp/mitmproxy.log

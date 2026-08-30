@@ -1803,6 +1803,7 @@ def test_trim_pr_json_keys_src():
     not conda_forge_tick.global_sensitive_env.classified_info.get("BOT_TOKEN", None),
     reason="No token for live tests.",
 )
+@pytest.mark.mongodb
 def test_git_utils_push_and_delete_file_via_gh_api():
     uid = uuid.uuid4().hex
     node = f"test_file_h{uid}"
@@ -1859,8 +1860,9 @@ def test_git_utils_push_and_delete_file_via_gh_api():
 @pytest.mark.skipif(
     condition="BOT_APP_ID" not in conda_forge_tick.global_sensitive_env.classified_info
     or "BOT_PRIVATE_KEY" not in conda_forge_tick.global_sensitive_env.classified_info,
-    reason="No bot app ID and private key in env.",
+    reason="No bot app ID, private key, or token in env.",
 )
+@pytest.mark.mongodb
 def test_git_utils_bot_app_token():
     gh = github_client(with_app_token=True)
     assert gh is not None

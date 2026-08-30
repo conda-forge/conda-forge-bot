@@ -243,17 +243,11 @@ def github_client(with_app_token: bool = False) -> github.Github:
     github.Github
         The PyGithub client.
     """
-    if with_app_token:
-        with sensitive_env() as env:
-            if "BOT_APP_ID" in env and "BOT_PRIVATE_KEY" in env:
-                return github.Github(
-                    auth=github.Auth.Token(get_bot_app_token()),
-                    per_page=100,
-                )
-            else:
-                logger.warning(
-                    "Could not find bot app ID and private key in env! Using bot token instead!"
-                )
+    if with_app_token and "BOT_INTEGRATION_TESTING" not in os.environ:
+        return github.Github(
+            auth=github.Auth.Token(get_bot_app_token()),
+            per_page=100,
+        )
 
     if not hasattr(GITHUB_CLIENT, "client"):
         GITHUB_CLIENT.client = github.Github(
@@ -1967,8 +1961,8 @@ def close_out_dirty_prs(
 
 def _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=60):
     for i in range(num_tries):
-        start = factor * base**i
-        end = factor * base ** (i + 1)
+        start = factor * (base**i)
+        end = start * base
         if end - start > max_wait:
             end = start + max_wait
         time.sleep(RNG.uniform(start, end))
