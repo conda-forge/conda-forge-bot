@@ -122,7 +122,23 @@ def _lazy_json_or_dict(data):
 
 
 def _make_migrator_graph(graph, migrator, effective=False, pluck_nodes=True):
-    """Prune graph only to nodes that need rebuilds."""
+    """Prune graph only to nodes that need rebuilds.
+
+    If called with effective=False, the returned graph has all nodes in the migration
+    either already migrated or awaiting a PR. The graph returned in this case is stored
+    on the migrator as self.graph.
+
+    If called with effective=True, the returned graph has only nodes in the migration
+    which also are awaiting a PR and are eligible to have a PR be made (e.g., all of
+    their upstream dependencies have also been migrated). The graph returned in this
+    case is stored on the migrator as self.effective_graph.
+
+    When pluck_nodes is True, nodes are removed and their edges are redirected to
+    their upstream and downstream packages.
+
+    When pluck_nodes is False, nodes are removed and the edges are simply clipped.
+    This option is used by the Version migrator.
+    """
     gx2 = copy.deepcopy(graph)
 
     # Prune graph to only things that need builds right now
@@ -141,10 +157,32 @@ def _make_migrator_graph(graph, migrator, effective=False, pluck_nodes=True):
                 filters = []
                 for base_branch in base_branches:
                     attrs["branch"] = base_branch
-                    if effective:
-                        filters.append(migrator.filter_node_migrated(attrs))
+                    not_in_migration = migrator.filter_not_in_migration(attrs)
+
+                    if not_in_migration:
+                        # always filter nodes not in the migration
+                        filters.append(True)
                     else:
-                        filters.append(migrator.filter_not_in_migration(attrs))
+                        # in this branch the node is in the migration
+
+                        # if we are computing the effective graph, then we filter
+                        # if the node has been migrated already or is not ready
+                        # to be migrated
+                        if effective:
+                            # if we are working on the effective graph, then
+                            # we cannot call migrator.filter_node_migrated(attrs)
+                            # or migrator.filter_node_ready_to_be_migrated(attrs)
+                            # unless migrator.graph is set.
+                            # thus we only compute it them and the caller has to
+                            # to call this function with effective=False first.
+                            filters.append(
+                                migrator.filter_node_migrated(attrs)
+                                or migrator.filter_node_not_ready_to_be_migrated(attrs)
+                            )
+                        else:
+                            # if not doing effective graph, then do not filter the node
+                            filters.append(False)
+
                 if filters and all(filters):
                     nodes_to_pluck.add(node)
             finally:
@@ -228,9 +266,13 @@ def _make_migrator_lazy_json_name(mgr, data):
         )
 
 
-def make_from_lazy_json_data(data):
+def make_from_lazy_json_data(data: dict | LazyJson):
     """Deserialize the migrator from LazyJson-compatible data."""
     import conda_forge_tick.migrators
+
+    if not hasattr(conda_forge_tick.migrators, data["class"]):
+        logger.warning("Migrator '%s' could not be loaded!", data["class"])
+        return None
 
     cls = getattr(conda_forge_tick.migrators, data["class"])
 
@@ -243,6 +285,9 @@ def make_from_lazy_json_data(data):
         kwargs["piggy_back_migrations"] = [
             make_from_lazy_json_data(mini_migrator)
             for mini_migrator in kwargs["piggy_back_migrations"]
+        ]
+        kwargs["piggy_back_migrations"] = [
+            m for m in kwargs["piggy_back_migrations"] if m is not None
         ]
 
     # this keyword was removed from the class init,
@@ -477,9 +522,11 @@ class Migrator:
         bool :
             True if node is to be skipped
         """
-        return self.filter_not_in_migration(
-            attrs, not_bad_str_start
-        ) or self.filter_node_migrated(attrs, not_bad_str_start)
+        return (
+            self.filter_not_in_migration(attrs, not_bad_str_start)
+            or self.filter_node_not_ready_to_be_migrated(attrs, not_bad_str_start)
+            or self.filter_node_migrated(attrs, not_bad_str_start)
+        )
 
     def filter_not_in_migration(
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
@@ -502,6 +549,12 @@ class Migrator:
             or bad_attr
             or skip_migrator_due_to_schema(attrs, self.allowed_schema_versions)
         )
+
+    def filter_node_not_ready_to_be_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ) -> bool:
+        """If true don't act on a node in a migration because it is not ready to be migrated."""
+        return False
 
     def filter_node_migrated(
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
@@ -842,13 +895,14 @@ class GraphMigrator(Migrator):
         graph: nx.DiGraph | None = None,
         pr_limit: int = 0,
         top_level: set["PackageName"] | None = None,
-        cycles: Sequence["PackageName"] | None = None,
         obj_version: int | None = None,
         piggy_back_migrations: Sequence[MiniMigrator] | None = None,
         check_solvable: bool = True,
         ignored_deps_per_node=None,
         effective_graph: nx.DiGraph | None = None,
     ):
+        top_level = top_level or set()
+
         if not hasattr(self, "_init_args"):
             self._init_args = []
 
@@ -858,7 +912,6 @@ class GraphMigrator(Migrator):
                 "graph": graph,
                 "pr_limit": pr_limit,
                 "top_level": top_level,
-                "cycles": cycles,
                 "obj_version": obj_version,
                 "piggy_back_migrations": piggy_back_migrations,
                 "check_solvable": check_solvable,
@@ -868,8 +921,7 @@ class GraphMigrator(Migrator):
             }
 
         self.name = name
-        self.top_level = top_level or set()
-        self.cycles = set(cycles or [])
+        self.top_level = top_level
         self.ignored_deps_per_node = ignored_deps_per_node or {}
 
         super().__init__(
@@ -881,6 +933,17 @@ class GraphMigrator(Migrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
         )
+
+        if self.graph is None:
+            raise ValueError("graph is None")
+
+        # set top-level
+        graph_top_level = {
+            node for node in self.graph if len(list(self.graph.predecessors(node))) == 0
+        }
+
+        self.top_level = self.top_level | graph_top_level
+        self._init_kwargs["top_level"] = self.top_level
 
     def all_predecessors_issued(self, attrs: "AttrsTypedDict") -> bool:
         # Check if all upstreams have been issue and are stale
@@ -964,12 +1027,16 @@ class GraphMigrator(Migrator):
 
         return not_in_migration
 
-    def filter_node_migrated(self, attrs, not_bad_str_start=""):
+    def filter_node_not_ready_to_be_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ) -> bool:
+        """If true don't act on a node in a migration because it is not ready to be migrated."""
         name = attrs.get("name", "")
 
         # If in top level or in a cycle don't check for upstreams just build
         is_top_level = (attrs["feedstock_name"] in self.top_level) or (
-            attrs["feedstock_name"] in self.cycles
+            attrs["feedstock_name"]
+            in nx.descendants(self.graph, attrs["feedstock_name"])
         )
         if is_top_level:
             logger.debug("not filtered %s: top level", name)
@@ -989,7 +1056,12 @@ class GraphMigrator(Migrator):
                 else:
                     node_is_ready = True
 
-        return (not node_is_ready) or super().filter_node_migrated(attrs, "Upstream:")
+        return (not node_is_ready) or super().filter_node_not_ready_to_be_migrated(
+            attrs
+        )
+
+    def filter_node_migrated(self, attrs, not_bad_str_start=""):
+        return super().filter_node_migrated(attrs, "Upstream:")
 
     def migrator_uid(self, attrs: "AttrsTypedDict") -> "MigrationUidTypedDict":
         if self.name is None:

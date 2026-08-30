@@ -38,7 +38,9 @@ class TimedCommand(click.Command):
     def invoke(self, ctx: click.Context):
         start = time.time()
         super().invoke(ctx)
-        click.echo(f"FINISHED STAGE {self.name} IN {time.time() - start} SECONDS")
+        click.echo(
+            f"FINISHED STAGE {self.name} IN {time.time() - start} SECONDS", err=True
+        )
 
 
 click.Group.command_class = TimedCommand
@@ -217,11 +219,6 @@ def make_mappings() -> None:
 
 @main.command(name="deploy-to-github")
 @click.option(
-    "--no-pull",
-    is_flag=True,
-    help="Do not pull the changes to the local repo after deployment.",
-)
-@click.option(
     "--git-only",
     is_flag=True,
     help="If given, only deploy graph data to GitHub via the git command line.",
@@ -242,13 +239,18 @@ def make_mappings() -> None:
         "directories will be ignored."
     ),
 )
+@click.option(
+    "--pull-changes",
+    is_flag=True,
+    help="Pull the changes to the local repo after deployment.",
+)
 @pass_context
 def deploy_to_github(
     ctx: CliContext,
     git_only: bool,
     dirs_to_ignore: str,
     dirs_to_deploy: str,
-    no_pull: bool,
+    pull_changes: bool,
 ) -> None:
     from . import deploy
 
@@ -257,7 +259,7 @@ def deploy_to_github(
         git_only=git_only,
         dirs_to_ignore=[] if dirs_to_ignore is None else dirs_to_ignore.split(","),
         dirs_to_deploy=[] if dirs_to_deploy is None else dirs_to_deploy.split(","),
-        no_pull=no_pull,
+        pull_changes=pull_changes,
     )
 
 
@@ -305,14 +307,56 @@ def make_import_to_package_mapping(
 
 
 @main.command(name="make-migrators")
+@job_option
+@n_jobs_option
+@click.option(
+    "--list",
+    "list_migrators",
+    is_flag=True,
+    help="List all current migrators by name, one per line on stdout.",
+)
+@click.option(
+    "--clean-up",
+    type=str,
+    default=None,
+    help=(
+        "Clean up migrators. Pass a comma-separated string of filenames. "
+        "The first file should be a list of the old migrators that are "
+        "eligible to be removed. Any subsequent files should contain names "
+        "of migrators to keep. Any migrator eligible to be removed that is not "
+        "listed in a file to keep is removed."
+    ),
+)
+@click.option(
+    "--filename",
+    type=str,
+    default=None,
+    help=(
+        "If making or listing migrators, all migrators made or listed will be printed into this file."
+    ),
+)
 @pass_context
 def make_migrators(
     ctx: CliContext,
+    job: int,
+    n_jobs: int,
+    list_migrators: bool,
+    clean_up: str | None,
+    filename: str | None,
 ) -> None:
     """Make the migrators."""
     from . import make_migrators as _make_migrators
 
-    _make_migrators.main(ctx)
+    check_job_param_relative(job, n_jobs)
+
+    _make_migrators.main(
+        ctx,
+        job=job,
+        n_jobs=n_jobs,
+        list_migrators=list_migrators,
+        clean_up=clean_up,
+        filename=filename,
+    )
 
 
 @main.command(name="react-to-event")

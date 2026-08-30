@@ -462,7 +462,7 @@ def _update_upstream_versions_process_pool(
 
             if n_changed == settings().batch_size_update_upstream_versions_deploy:
                 try:
-                    deploy(dirs_to_deploy=["versions"], no_pull=True)
+                    deploy(dirs_to_deploy=["versions"])
                 except Exception:
                     # we will try again later
                     pass
@@ -471,7 +471,7 @@ def _update_upstream_versions_process_pool(
 
     if n_changed > 0:
         try:
-            deploy(dirs_to_deploy=["versions"], no_pull=True)
+            deploy(dirs_to_deploy=["versions"])
         except Exception:
             # we will try again later
             pass

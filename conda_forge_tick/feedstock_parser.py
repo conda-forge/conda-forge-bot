@@ -150,6 +150,11 @@ def _extract_requirements(meta_yaml, outputs_to_keep=None):
 
     if outputs_to_keep:
         metas = []
+        # a package without an explicit `outputs:` section is itself the
+        # (implicit) single output, so keep its top-level requirements too
+        # if that output is one of the ones we want
+        if meta_yaml.get("package", {}).get("name") in outputs_to_keep:
+            metas.append(meta_yaml)
         for output in meta_yaml.get("outputs", []) or []:
             if output.get("name") in outputs_to_keep:
                 metas.append(output)

@@ -21,10 +21,6 @@ jobs:
           remove_android: true
           remove_dotnet: true
           remove_haskell: true
-          remove_tool_cache: true
-          remove_swap: true
-          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
-          remove_packages_one_command: true
           rm_cmd: "rmz"
 
       - name: get latest release
@@ -36,12 +32,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ steps.latest_release.outputs.tag_name }}
           path: conda-forge-bot
 
-      - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
+      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
         with:
           environment-file: conda-forge-bot/conda-lock.yml
           environment-name: conda-forge-bot
@@ -55,9 +51,17 @@ jobs:
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clean-disk-space
+          source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+
+      - name: generate token
+        id: generate_token_feedstocks
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.CF_CURATOR_APP_ID }}
+          private-key: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
 
       - name: feedstocks
         if: success() && ! env.CI_SKIP
@@ -68,7 +72,15 @@ jobs:
           conda-forge-tick gather-all-feedstocks
         env:
           RUN_ID: ${{ github.run_id }}
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ steps.generate_token_feedstocks.outputs.token }}
+
+      - name: generate token
+        id: generate_token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.CF_CURATOR_APP_ID }}
+          private-key: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
 
       - name: deploy
         if: github.ref == 'refs/heads/main' && ! cancelled() && ! env.CI_SKIP
@@ -76,9 +88,9 @@ jobs:
           pushd cf-graph
 
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-          conda-forge-tick deploy-to-github --no-pull
+          conda-forge-tick deploy-to-github
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ steps.generate_token.outputs.token }}
           RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail

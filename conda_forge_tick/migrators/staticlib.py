@@ -1,19 +1,20 @@
+import asyncio
 import copy
 import logging
 import os
 import re
 import secrets
-import time
 from collections.abc import Sequence
 from functools import lru_cache
+from itertools import chain
 from typing import Any, Literal
 
 import networkx as nx
-import orjson
+import rattler
+from conda.base.constants import KNOWN_SUBDIRS
 from conda.models.match_spec import MatchSpec
 from conda.models.records import PackageRecord
 from conda.models.version import VersionOrder
-from conda_forge_metadata.repodata import fetch_repodata
 
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
 from conda_forge_tick.migrators.core import (
@@ -28,6 +29,8 @@ from conda_forge_tick.utils import (
     get_keys_default,
     get_recipe_schema_version,
 )
+
+from ..migrators_types import PackageName
 
 BUILD_STRING_END_RE = re.compile(r".*_\d+$")
 
@@ -56,25 +59,91 @@ def _cached_match_spec(req: str | MatchSpec) -> MatchSpec:
     return MatchSpec(req)
 
 
-@lru_cache(maxsize=1)
-def _read_repodata(platform_arch: str) -> Any:
-    rd = None
-    platform_arch = platform_arch.replace("_", "-")
-    for i in range(10):
-        try:
-            rd_fn = fetch_repodata([platform_arch])[0]
-            with open(rd_fn) as fp:
-                rd = orjson.loads(fp.read())
-        except Exception:
-            time.sleep((0.1 * 2**i) + RNG.uniform(0, 0.1))
-            continue
+# START lifted from conda_rattler_solver
+# at https://github.com/conda/conda-rattler-solver/blob/c983f1fd2db158b7e5078b5b3d33218bc4242d09/conda_rattler_solver/utils.py#L43
+# under BSD 3-Clause License
+def _hash_to_str(bytes_or_str: bytes | str | None) -> None | str:
+    if not bytes_or_str:
+        return None
+    if isinstance(bytes_or_str, bytes):
+        return bytes_or_str.hex()
+    return bytes_or_str.lower()
+
+
+def _rattler_record_to_conda_record(record: rattler.PackageRecord) -> PackageRecord:
+    if timestamp := record.timestamp:
+        timestamp = int(timestamp.timestamp() * 1000)
+    else:
+        timestamp = 0
+
+    if record.noarch.none:
+        noarch = None
+    elif record.noarch.python:
+        noarch = "python"
+    elif record.noarch.generic:
+        noarch = "generic"
+    else:
+        raise ValueError(f"Unknown noarch type: {record.noarch}")
+
+    if record.channel:
+        if record.channel.endswith(("noarch", *KNOWN_SUBDIRS)):
+            channel_url = record.channel
+        elif record.subdir:
+            channel_url = f"{record.channel}/{record.subdir}"
         else:
-            break
+            channel_url = record.channel
+    else:
+        channel_url = ""
 
-    if rd is None:
-        raise RuntimeError(f"Download of repodata for {platform_arch} failed!")
+    return PackageRecord(
+        name=record.name.source,
+        version=str(record.version),
+        build=record.build,
+        build_number=record.build_number,
+        channel=channel_url,
+        subdir=record.subdir,
+        fn=record.file_name,
+        md5=_hash_to_str(record.md5),
+        legacy_bz2_md5=_hash_to_str(record.legacy_bz2_md5),
+        legacy_bz2_size=record.legacy_bz2_size,
+        url=record.url,
+        sha256=_hash_to_str(record.sha256),
+        arch=record.arch,
+        platform=str(record.platform or "") or None,
+        depends=record.depends or (),
+        constrains=record.constrains or (),
+        track_features=record.track_features or (),
+        features=record.features or (),
+        noarch=noarch,
+        # preferred_env=record.preferred_env,
+        license=record.license,
+        license_family=record.license_family,
+        # package_type=record.package_type,
+        timestamp=timestamp,
+        # date=record.date,
+        size=record.size or 0,
+        python_site_packages_path=record.python_site_packages_path,
+    )
 
-    return rd
+
+# END of lifted from conda_rattler_solver
+
+
+def _get_packages_by_name_and_platform_arch(name: str, platform_arch: str):
+    platform_arch = platform_arch.replace("_", "-")
+
+    async def query():
+        gateway = rattler.Gateway(cache_dir=".repodata_cache")
+        return chain(
+            *await gateway.query(
+                sources=["conda-forge"],
+                platforms=[platform_arch],
+                specs=[name],
+                recursive=False,
+            )
+        )
+
+    return [_rattler_record_to_conda_record(rec) for rec in asyncio.run(query())]
 
 
 @lru_cache(maxsize=128)
@@ -96,20 +165,16 @@ def get_latest_static_lib(host_req: str, platform_arch: str) -> PackageRecord | 
         The latest PackageRecord that matches the requirement.
     """
     platform_arch = platform_arch.replace("_", "-")
-    rd = _read_repodata(platform_arch)
     ms = _cached_match_spec(host_req)
 
     max_rec = None
-    for key in ["packages", "packages.conda"]:
-        for fn, rec in rd[key].items():
-            if rec["name"] == ms.name:
-                rec = PackageRecord(**rec)
-                if ms.match(rec):
-                    if max_rec is None:
-                        max_rec = rec
-                    else:
-                        if _left_gt_right_rec(rec, max_rec):
-                            max_rec = rec
+    for rec in _get_packages_by_name_and_platform_arch(ms.name, platform_arch):
+        if ms.match(rec):
+            if max_rec is None:
+                max_rec = rec
+            else:
+                if _left_gt_right_rec(rec, max_rec):
+                    max_rec = rec
 
     return max_rec
 
@@ -419,7 +484,10 @@ class StaticLibMigrator(GraphMigrator):
         longterm=False,
         paused=False,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
     ):
+        top_level = top_level or set()
+
         if not hasattr(self, "_init_args"):
             self._init_args = []
 
@@ -435,10 +503,9 @@ class StaticLibMigrator(GraphMigrator):
                 "force_pr_after_solver_attempts": force_pr_after_solver_attempts,
                 "paused": paused,
                 "total_graph": total_graph,
+                "top_level": top_level,
             }
 
-        self.top_level = set()
-        self.cycles = set()
         self.bump_number = bump_number
         self.longterm = longterm
         self.force_pr_after_solver_attempts = force_pr_after_solver_attempts
@@ -457,6 +524,7 @@ class StaticLibMigrator(GraphMigrator):
             effective_graph=effective_graph,
             name="static_lib_migrator",
             total_graph=total_graph,
+            top_level=top_level,
         )
 
     def predecessors_not_yet_built(self, attrs: "AttrsTypedDict") -> bool:
@@ -516,7 +584,6 @@ class StaticLibMigrator(GraphMigrator):
                     attrs.get("name") or "",
                     slrep,
                 )
-            _read_repodata.cache_clear()
         else:
             static_libs_out_of_date = False
 
@@ -574,7 +641,6 @@ class StaticLibMigrator(GraphMigrator):
         if not needs_update:
             muid["already_done"] = True
 
-        _read_repodata.cache_clear()
         return muid
 
     def pr_body(
