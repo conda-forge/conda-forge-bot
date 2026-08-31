@@ -1999,8 +1999,7 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     with open(pth) as f:
         data = f.read()
 
-    ntries = 20
-    for tr in _retry_sequence(num_tries=ntries):
+    for tr in _retry_sequence():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
@@ -2048,8 +2047,7 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     msg : str
         The commit message.
     """
-    ntries = 20
-    for tr in _retry_sequence(num_tries=ntries):
+    for tr in _retry_sequence():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
