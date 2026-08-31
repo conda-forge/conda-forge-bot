@@ -1959,7 +1959,7 @@ def close_out_dirty_prs(
     return None
 
 
-def _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=180):
+def _retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
     for i in range(num_tries):
         start = factor * (base**i)
         end = start * base
