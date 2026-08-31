@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba:2.6.2
+FROM mambaorg/micromamba:2.9.0
 ARG SETUPTOOLS_SCM_PRETEND_VERSION
 
 # baseline env

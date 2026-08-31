@@ -1241,7 +1241,7 @@ class NullUndefined(jinja2.Undefined):
 
 def setup_logging(level: str = "INFO") -> None:
     logging.basicConfig(
-        format="%(asctime)-15s %(levelname)-8s %(name)s || %(message)s",
+        format="%(asctime)-15s %(levelname)-8s %(name)s@%(filename)s:%(lineno)d || %(message)s",
         level=level.upper(),
     )
     logging.getLogger("urllib3").setLevel(logging.INFO)

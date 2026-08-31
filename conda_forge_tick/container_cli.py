@@ -60,7 +60,6 @@ def _setenv(name, value):
 def _get_existing_feedstock_node_attrs(existing_feedstock_node_attrs):
     from conda_forge_tick.lazy_json_backends import (
         LazyJson,
-        lazy_json_override_backends,
         loads,
     )
 
@@ -74,10 +73,7 @@ def _get_existing_feedstock_node_attrs(existing_feedstock_node_attrs):
             existing_feedstock_node_attrs += ".json"
 
         pth = os.path.join("node_attrs", existing_feedstock_node_attrs)
-        with (
-            lazy_json_override_backends(["github"], use_file_cache=False),
-            LazyJson(pth) as lzj,
-        ):
+        with LazyJson(pth) as lzj:
             attrs = copy.deepcopy(lzj.data)
 
     return attrs
@@ -111,14 +107,13 @@ def _run_bot_task(func, *, log_level: str, existing_feedstock_node_attrs, **kwar
             ):
                 # logger call needs to be here so it gets the changed stdout/stderr
                 setup_logging(log_level)
-                if existing_feedstock_node_attrs is not None:
-                    attrs = _get_existing_feedstock_node_attrs(
-                        existing_feedstock_node_attrs
-                    )
-                    with lazy_json_override_backends(["github"], use_file_cache=False):
+                with lazy_json_override_backends(["github"], use_file_cache=False):
+                    if existing_feedstock_node_attrs is not None:
+                        attrs = _get_existing_feedstock_node_attrs(
+                            existing_feedstock_node_attrs
+                        )
                         data = func(attrs=attrs, **kwargs)
-                else:
-                    with lazy_json_override_backends(["github"], use_file_cache=False):
+                    else:
                         data = func(**kwargs)
 
             ret["data"] = data
