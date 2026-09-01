@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: free disk space
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
         with:
           remove_android: true
           remove_dotnet: true
@@ -38,7 +38,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
           environment-file: conda-lock.yml
           environment-name: conda-forge-bot
@@ -60,7 +60,7 @@ jobs:
 
       - name: build docker image
         if: ${{ (! env.CI_SKIP) || github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
-        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
+        uses: redhat-actions/buildah-build@719e3c40d8af9790c23eca13f7daa339f2867034 # v3.1.0
         with:
           image: conda-forge-tick
           tags: latest ${{ steps.version.outputs.NEXT }}
@@ -74,7 +74,7 @@ jobs:
 
       - name: push docker image to quay.io
         if: ${{ (! env.CI_SKIP) && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
-        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
+        uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3.0.0
         with:
           image: conda-forge-tick
           tags: latest ${{ steps.version.outputs.NEXT }}
