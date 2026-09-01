@@ -360,7 +360,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
     def __init__(self):
         from conda_forge_tick.git_utils import github_client
 
-        self._gh = github_client()
+        self._gh = github_client(with_app_token=True)
         self._repo = self._gh.get_repo(settings().graph_github_backend_repo)
 
     @contextlib.contextmanager
@@ -1119,6 +1119,7 @@ class LazyJson(MutableMapping):
         self._load()
         data_str = dumps(self._data)
         curr_hash = hashlib.sha256(data_str.encode("utf-8")).hexdigest()
+        self._never_synced = False
         if curr_hash != self._data_hash_at_load:
             self._data_hash_at_load = curr_hash
 
@@ -1127,7 +1128,6 @@ class LazyJson(MutableMapping):
                 if CF_TICK_GRAPH_DATA_USE_FILE_CACHE:
                     file_backend = LAZY_JSON_BACKENDS["file"]()
                     file_backend.hset(self.hashmap, self.node, data_str)
-                    self._never_synced = False
 
                 # sync changes to all backends
                 for backend_name in CF_TICK_GRAPH_DATA_BACKENDS:
@@ -1135,7 +1135,6 @@ class LazyJson(MutableMapping):
                         continue
                     backend = LAZY_JSON_BACKENDS[backend_name]()
                     backend.hset(self.hashmap, self.node, data_str)
-                    self._never_synced = False
 
         if purge and not self._no_sync:
             # this evicts the json from memory and trades i/o for mem

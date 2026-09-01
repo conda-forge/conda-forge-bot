@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba:2.6.2
+FROM mambaorg/micromamba:2.9.0
 ARG SETUPTOOLS_SCM_PRETEND_VERSION
 
 # baseline env
@@ -19,7 +19,6 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
         pytest-env \
         pytest-retry \
         pytest-split \
-        python-build \
         mitmproxy \
         mypy && \
     # make symlink for conda-build locks (actual directory gets made at run time in the entrypoint)
@@ -34,6 +33,7 @@ RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml
     # install package
     cd $AUTOTICK_BOT_DIR && \
     pip install --no-deps --no-build-isolation -e . && \
+    rm -rf tests_integration && \
     cd - && \
     # deal with git config
     git config --global --add safe.directory /cf_feedstock_ops_dir && \

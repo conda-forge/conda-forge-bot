@@ -1,5 +1,8 @@
 import os
+import threading
 from contextlib import contextmanager
+
+THREAD_LOCK = threading.RLock()
 
 
 class SensitiveEnv:
@@ -8,6 +11,8 @@ class SensitiveEnv:
         "GH_TOKEN",
         "BOT_TOKEN",
         "MONGODB_CONNECTION_STRING",
+        "BOT_APP_ID",
+        "BOT_PRIVATE_KEY",
     ]
 
     def __init__(self):
@@ -33,6 +38,7 @@ class SensitiveEnv:
         """Add sensitive keys to environ if needed, when ctx is finished remove keys and update the sensitive env
         in case any were updated inside the ctx.
         """
-        self.reveal_env_vars()
-        yield os.environ
-        self.hide_env_vars()
+        with THREAD_LOCK:
+            self.reveal_env_vars()
+            yield os.environ
+            self.hide_env_vars()

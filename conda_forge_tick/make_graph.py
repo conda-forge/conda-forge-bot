@@ -79,12 +79,23 @@ def make_outputs_lut_from_graph(gx):
     outputs_lut = defaultdict(set)
     for node_name, node in gx.nodes.items():
         for k in node.get("payload", {}).get("outputs_names", []):
-            if node_name != "pypy-meta" and node_name != "graalpy":
+            if (
+                node_name != "pypy-meta"
+                and node_name != "graalpy"
+                and node_name != "zlib-ng"
+            ):
                 outputs_lut[k].add(node_name)
-            elif k in ["pypy", "graalpy"]:
+            elif k in ["pypy", "graalpy", "zlib-ng"]:
                 # for pypy-meta we only map to pypy and not python or cffi
                 # for graalpy we only map to graalpy and not python or openjdk
                 outputs_lut[k].add(node_name)
+
+    # we remove keys that map to themselves to save space when storing
+    # the data
+    for k in list(outputs_lut.keys()):
+        if outputs_lut[k] == {k}:
+            del outputs_lut[k]
+
     return outputs_lut
 
 
@@ -351,7 +362,10 @@ def _add_graph_metadata(gx: nx.DiGraph):
     logger.info("making outputs LUT")
     # make the outputs look up table so we can link properly
     # and add this as an attr so we can use later
-    gx.graph["outputs_lut"] = make_outputs_lut_from_graph(gx)
+    lzj = LazyJson("outputs_to_feedstocks.json")
+    with lzj as attrs:
+        attrs.update(make_outputs_lut_from_graph(gx))
+    gx.graph["outputs_lut"] = lzj
 
     logger.info("making strong run exports")
     # collect all of the strong run exports

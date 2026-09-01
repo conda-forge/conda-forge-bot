@@ -24,10 +24,10 @@ pip install --no-deps --no-build-isolation -e .
 
 cd ..
 
-clean_disk_space="true"
+clean_disk_space="false"
 for arg in "$@"; do
-  if [[ "$arg" == "--no-clean-disk-space" ]]; then
-    clean_disk_space="false"
+  if [[ "$arg" == "--clean-disk-space" ]]; then
+    clean_disk_space="true"
   fi
 done
 if [[ "${clean_disk_space}" == "true" ]]; then

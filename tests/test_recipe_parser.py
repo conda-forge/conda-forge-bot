@@ -1854,7 +1854,7 @@ def collect_all_recipes(directory: Path) -> Iterator[Path]:
 
 @pytest.mark.parametrize(
     "recipe_path",
-    collect_all_recipes(YAML_PATH),
+    sorted(list(collect_all_recipes(YAML_PATH))),
     ids=lambda x: str(x.relative_to(YAML_PATH)),
 )
 def test_recipe_parser_yaml_suite(recipe_path: Path):

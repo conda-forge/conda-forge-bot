@@ -7,6 +7,7 @@ from typing import Any, Literal
 import networkx as nx
 
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
+from conda_forge_tick.feedstock_parser import _extract_requirements
 from conda_forge_tick.make_graph import (
     get_deps_from_outputs_lut,
 )
@@ -26,6 +27,7 @@ from conda_forge_tick.utils import (
     yaml_safe_load,
 )
 
+from ..migrators_types import PackageName
 from .migration_yaml import all_noarch
 
 
@@ -47,7 +49,70 @@ def _filter_excluded_deps(graph, excluded_dependencies):
     graph.remove_edges_from(nx.selfloop_edges(graph))
 
 
-def _filter_stubby_and_ignored_nodes(graph, ignored_packages):
+def _requirement_names(reqs):
+    """Flatten the build/host/run sections of a requirements dict into a set
+    of package names.
+    """
+    names: set[str] = set()
+    for section in ("build", "host", "run"):
+        names.update(as_iterable(reqs.get(section, []) or []))
+    return names
+
+
+def _fold_noarch_node(graph, outputs_lut, node):
+    """Remove a noarch node from the graph, fusing its in-edges to its
+    out-edges (like `pluck`), but only connect the predecessors that are
+    actually required by the specific output each successor depends on.
+
+    A naive pluck connects *every* predecessor of the noarch feedstock (i.e.
+    the union of the requirements of *all* of its outputs) to *every*
+    successor. For a multi-output feedstock, that overconnects the graph: a
+    successor which only depends on one output ends up looking like it
+    depends on the requirements of every other output too.
+
+    **operates in place**
+    """
+    attrs = graph.nodes[node].get("payload") or {}
+    meta_yaml = attrs.get("meta_yaml", {}) or {}
+    outputs_names = attrs.get("outputs_names") or {node}
+
+    preds = {p for p in graph.predecessors(node) if p != node}
+    succs = {s for s in graph.successors(node) if s != node}
+
+    new_edges: set[tuple[str, str]] = set()
+    for succ in succs:
+        succ_attrs = graph.nodes[succ].get("payload") or {}
+        succ_reqs = succ_attrs.get("requirements", {}) or {}
+        succ_dep_names = _requirement_names(succ_reqs)
+
+        # figure out which specific output(s) of this noarch feedstock
+        # `succ` actually depends on
+        needed_outputs = succ_dep_names & outputs_names
+        if needed_outputs:
+            _, output_reqs, _ = _extract_requirements(
+                meta_yaml, outputs_to_keep=needed_outputs
+            )
+            # only the *run* deps of the needed output(s) matter to `succ`:
+            # build/host deps (e.g. a build backend like poetry) are only
+            # needed to build this noarch package, not by things that
+            # merely depend on it afterwards
+            deps = (
+                get_deps_from_outputs_lut(output_reqs.get("run", set()), outputs_lut)
+                & preds
+            )
+        else:
+            # we can't tell which output is needed (e.g. an indirect edge),
+            # so be conservative and fall back to using all of them, like a
+            # plain pluck would
+            deps = preds
+
+        new_edges.update((dep, succ) for dep in deps)
+
+    graph.remove_node(node)
+    graph.add_edges_from(new_edges)
+
+
+def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
     """Remove any stub packages and ignored packages from the graph.
 
     **operates in place**
@@ -61,9 +126,10 @@ def _filter_stubby_and_ignored_nodes(graph, ignored_packages):
             or node.startswith("m2w64-")
             or node.startswith("__")
             or (node in ignored_packages)
-            or all_noarch(attrs)
         ):
             pluck(graph, node)
+        elif all_noarch(attrs):
+            _fold_noarch_node(graph, outputs_lut, node)
     # post-plucking cleanup
     graph.remove_edges_from(nx.selfloop_edges(graph))
 
@@ -97,6 +163,7 @@ class ArchRebuild(GraphMigrator):
         target_packages: Collection[str] | None = None,
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -126,7 +193,9 @@ class ArchRebuild(GraphMigrator):
                 total_graph = cut_graph_to_target_packages(total_graph, target_packages)
 
             # filter out stub packages and ignored packages
-            _filter_stubby_and_ignored_nodes(total_graph, self.ignored_packages)
+            _filter_stubby_and_ignored_nodes(
+                total_graph, outputs_lut, self.ignored_packages
+            )
 
         if not hasattr(self, "_init_args"):
             self._init_args = []
@@ -152,12 +221,14 @@ class ArchRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
+            top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
 
-    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
-        if super().filter(attrs):
-            return True
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ):
+        has_arch_all_arch = True
         for arch in self.arches:
             configured_arch = (
                 attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
@@ -167,9 +238,11 @@ class ArchRebuild(GraphMigrator):
             )
             if not configured_arch:
                 # This arch is not in provider or build_platform
-                return False
+                has_arch_all_arch = False
 
-        return True
+        return has_arch_all_arch or super().filter_node_migrated(
+            attrs, not_bad_str_start
+        )
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
@@ -258,6 +331,7 @@ class _CrossCompileRebuild(GraphMigrator):
         target_packages: Collection[str] | None = None,
         effective_graph: nx.DiGraph | None = None,
         total_graph: nx.DiGraph | None = None,
+        top_level: set["PackageName"] | None = None,
     ):
         if total_graph is not None:
             if target_packages is None:
@@ -308,7 +382,9 @@ class _CrossCompileRebuild(GraphMigrator):
                 total_graph = cut_graph_to_target_packages(total_graph, target_packages)
 
             # filter out stub packages and ignored packages
-            _filter_stubby_and_ignored_nodes(total_graph, self.ignored_packages)
+            _filter_stubby_and_ignored_nodes(
+                total_graph, outputs_lut, self.ignored_packages
+            )
 
         if not hasattr(self, "_init_args"):
             self._init_args = []
@@ -334,12 +410,14 @@ class _CrossCompileRebuild(GraphMigrator):
             effective_graph=effective_graph,
             total_graph=total_graph,
             name=name,
+            top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability!"
 
-    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
-        if super().filter(attrs):
-            return True
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ):
+        has_arch_all_arch = True
         for arch in self.arches:
             configured_arch = (
                 attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
@@ -349,9 +427,11 @@ class _CrossCompileRebuild(GraphMigrator):
             )
             if not configured_arch:
                 # This arch is not in provider or build_platform
-                return False
+                has_arch_all_arch = False
 
-        return True
+        return has_arch_all_arch or super().filter_node_migrated(
+            attrs, not_bad_str_start
+        )
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
@@ -439,7 +519,6 @@ class WinArm64(_CrossCompileRebuild):
     build_platform = {"win_arm64": "win_64"}
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "default"}
-    excluded_dependencies = {"r-languageserver"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support windows arm64 platform")
@@ -487,3 +566,58 @@ class WinArm64(_CrossCompileRebuild):
 
     def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
         return super().remote_branch(feedstock_ctx) + "_arm64_win"
+
+
+class LinuxRISCV64(_CrossCompileRebuild):
+    """A Migrator that adds linux-riscv64 builds to feedstocks."""
+
+    allowed_schema_versions = {0, 1}
+    migrator_version = 1
+    build_platform = {"linux_riscv64": "linux_64"}
+    # We bump here as most feedstocks need a rerender and updates
+    # the compiler versions
+    bump_number = 1
+    pkg_list_filename = "linux_riscv64.txt"
+    arches = {"linux_riscv64": "linux_64"}
+    ignored_packages = {
+        # already built compiler packages that get caught in a cycle
+        "_openmp_mutex",
+        "ctng-compiler-activation",
+        "ctng-compilers",
+        "gfortran_impl_osx-64",
+        "gfortran_osx-64",
+        # intel packages will not be built for riscv
+        "intel-compiler-repack",
+        "intel_repack",
+    }
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("name", "support linux riscv64 platform")
+        super().__init__(*args, **kwargs)
+
+    def pr_title(self, feedstock_ctx: FeedstockContext) -> str:
+        title = "Support linux-riscv64 platform"
+        branch = feedstock_ctx.attrs.get("branch", "main")
+        if branch not in ["main", "master"]:
+            return f"[{branch}] " + title
+        else:
+            return title
+
+    def pr_body(
+        self, feedstock_ctx: ClonedFeedstockContext, add_label_text: bool = True
+    ) -> str:
+        body = super().pr_body(feedstock_ctx)
+        body = body.format(
+            dedent(
+                """\
+                This feedstock is being rebuilt as part of the linux riscv64 migration.
+
+                **Feel free to merge the PR if CI is all green, but please don't close it
+                without reaching out the the linux-riscv64 team first at <code>@</code>conda-forge/help-riscv64.**
+                """,
+            ),
+        )
+        return body
+
+    def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
+        return super().remote_branch(feedstock_ctx) + "_riscv64"

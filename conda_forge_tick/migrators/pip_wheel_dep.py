@@ -60,7 +60,7 @@ class PipWheelMigrator(MiniMigrator):
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         run_reqs = attrs.get("requirements", {}).get("run", set())
         source_url: str = attrs.get("url") or attrs.get("source", {}).get("url")  # type: ignore[assignment] # TODO: this assumes source.url exists
-        url_names = ["pypi.python.org", "pypi.org", "pypi.io"]
+        url_names = ["pypi.python.org", "pypi.org", "pypi.io", "files.pythonhosted.org"]
         if not any(s in source_url for s in url_names):
             return True
         if not get_keys_default(

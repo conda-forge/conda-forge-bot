@@ -1,14 +1,26 @@
 import hashlib
 import inspect
+import os
 import pprint
+import subprocess
+import tempfile
 from pathlib import Path
 
 import networkx as nx
 import pytest
+import tqdm
 
 import conda_forge_tick.migrators
-from conda_forge_tick.lazy_json_backends import dumps, loads
+from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
+from conda_forge_tick.lazy_json_backends import (
+    LazyJson,
+    dumps,
+    get_all_keys_for_hashmap,
+    lazy_json_override_backends,
+    loads,
+)
 from conda_forge_tick.migrators import core, make_from_lazy_json_data
+from conda_forge_tick.os_utils import pushd
 
 TOTAL_GRAPH = nx.DiGraph()
 TOTAL_GRAPH.graph["outputs_lut"] = {}
@@ -303,10 +315,63 @@ def test_migrator_to_json_win_arm64():
     assert dumps(migrator2.to_lazy_json_data()) == lzj_data
 
 
+def test_migrator_to_json_riscv64():
+    gx = nx.DiGraph()
+    gx.add_node("conda", reqs=["python"], payload={}, blah="foo")
+    gx.graph["outputs_lut"] = {}
+
+    migrator = conda_forge_tick.migrators.LinuxRISCV64(
+        target_packages=["python"],
+        total_graph=gx,
+        pr_limit=5,
+    )
+
+    data = migrator.to_lazy_json_data()
+    pprint.pprint(data)
+    lzj_data = dumps(data)
+    print("lazy json data:\n", lzj_data)
+    assert data["__migrator__"] is True
+    assert data["class"] == "LinuxRISCV64"
+    assert data["name"] == "supportlinuxriscv64platform"
+
+    migrator2 = make_from_lazy_json_data(loads(lzj_data))
+    assert [pgm.__class__.__name__ for pgm in migrator2.piggy_back_migrations] == [
+        pgm.__class__.__name__ for pgm in migrator.piggy_back_migrations
+    ]
+    assert isinstance(migrator2, conda_forge_tick.migrators.LinuxRISCV64)
+    assert dumps(migrator2.to_lazy_json_data()) == lzj_data
+
+    main_ctx = FeedstockContext(
+        feedstock_name="python",
+        attrs={"conda-forge.yml": {"provider": {"default_branch": "main"}}},
+    )
+    assert migrator.pr_title(main_ctx) == "Support linux-riscv64 platform"
+    assert migrator.remote_branch(main_ctx) == "bot-pr_riscv64"
+
+    other_branch_ctx = FeedstockContext(
+        feedstock_name="python",
+        attrs={
+            "conda-forge.yml": {"provider": {"default_branch": "main"}},
+            "branch": "1.20.x",
+        },
+    )
+    assert (
+        migrator.pr_title(other_branch_ctx) == "[1.20.x] Support linux-riscv64 platform"
+    )
+
+    cloned_ctx = ClonedFeedstockContext(
+        feedstock_name="python",
+        attrs={"conda-forge.yml": {"provider": {"default_branch": "main"}}},
+        local_clone_dir=Path("/dev/null"),
+    )
+    body = migrator.pr_body(cloned_ctx)
+    assert "linux riscv64 migration" in body
+    assert "conda-forge/help-riscv64" in body
+
+
 @pytest.mark.parametrize(
     "klass",
     [
-        conda_forge_tick.migrators.AddNVIDIATools,
         conda_forge_tick.migrators.RebuildBroken,
     ],
 )
@@ -327,3 +392,32 @@ def test_migrator_to_json_others(klass):
     ]
     assert isinstance(migrator2, klass)
     assert dumps(migrator2.to_lazy_json_data()) == lzj_data
+
+
+def test_migrators_to_json_all_load():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--depth=1",
+                "https://github.com/conda-forge/conda-forge-bot-data.git",
+            ],
+            cwd=tmpdir,
+            check=True,
+        )
+        with (
+            pushd(os.path.join(tmpdir, "conda-forge-bot-data")),
+            lazy_json_override_backends(["file"], use_file_cache=True),
+        ):
+            mg_keys = get_all_keys_for_hashmap("migrators")
+            for mg_key in tqdm.tqdm(
+                mg_keys, desc="loading migrators", total=len(mg_keys)
+            ):
+                lzj = LazyJson(f"migrators/{mg_key}.json")
+                with lzj as data:
+                    mg = make_from_lazy_json_data(data)
+                    if not hasattr(conda_forge_tick.migrators, data["class"]):
+                        assert mg is None
+                    else:
+                        assert mg is not None

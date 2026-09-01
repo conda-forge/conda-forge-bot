@@ -23,6 +23,10 @@ on:
         required: true
       BOT_TOKEN:
         required: true
+      BOT_APP_ID:
+        required: true
+      BOT_PRIVATE_KEY:
+        required: true
 
 env:
   PY_COLORS: "1"
@@ -36,13 +40,13 @@ jobs:
       actions: write  # for deleting cache entries
       contents: read
     env:
-      NUM_SPLITS: 4
+      NUM_SPLITS: 8
     strategy:
       # continue running the tests even if one of the groups fails
       fail-fast: false
       matrix:
         # if change the number of groups here, also change number of splits env var
-        group: [1, 2, 3, 4]
+        group: [1, 2, 3, 4, 5, 6, 7, 8]
     defaults:
       run:
         shell: bash -leo pipefail {0}
@@ -57,7 +61,7 @@ jobs:
           remove_haskell: true
           rm_cmd: "rmz"
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ inputs.skip != 'true' }}
         with:
           repository: "conda-forge/conda-forge-bot"
@@ -81,7 +85,7 @@ jobs:
           mv input-lockfile/${{ inputs.lockfile }} conda-lock.yml
           rm -rf input-lockfile
 
-      - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
+      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
@@ -153,7 +157,7 @@ jobs:
           docker images
 
       - name: restore test durations
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
         with:
           path: .test_durations
@@ -168,9 +172,6 @@ jobs:
           if [[ -f .test_durations ]]; then
             cp .test_durations .test_durations.${{ matrix.group }}
           fi
-          ls -lah .test_durations*
-          echo " "
-          cat .test_durations*
 
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
@@ -197,6 +198,8 @@ jobs:
         env:
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -240,7 +243,7 @@ jobs:
           remove_haskell: true
           rm_cmd: "rmz"
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ inputs.skip != 'true' }}
         with:
           repository: "conda-forge/conda-forge-bot"
@@ -264,7 +267,7 @@ jobs:
           mv input-lockfile/${{ inputs.lockfile }} conda-lock.yml
           rm -rf input-lockfile
 
-      - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
+      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
@@ -315,7 +318,7 @@ jobs:
           MONGODB_CONNECTION_STRING: "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"
 
       - name: restore test durations
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
         with:
           path: .test_durations
@@ -323,6 +326,13 @@ jobs:
           restore-keys: |
             test-durations-${{ github.ref }}-
             test-durations-
+
+      - name: post-process test durations
+        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        run: |
+          if [[ -f .test_durations ]]; then
+            cp .test_durations .test_durations.mongodb
+          fi
 
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
@@ -352,6 +362,8 @@ jobs:
           MONGODB_CONNECTION_STRING: "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -379,7 +391,7 @@ jobs:
       run:
         shell: bash -leo pipefail {0}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ inputs.skip != 'true' }}
         with:
           repository: "conda-forge/conda-forge-bot"
@@ -403,7 +415,7 @@ jobs:
           mv input-lockfile/${{ inputs.lockfile }} conda-lock.yml
           rm -rf input-lockfile
 
-      - uses: mamba-org/setup-micromamba@d7c9bd84e824b79d2af72a2d4196c7f4300d3476 # v3.0.0
+      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
@@ -423,13 +435,13 @@ jobs:
           coverage xml
 
       - name: upload codecov
-        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v5.1.8
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v5.1.8
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: cache test durations
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
         with:
           path: .test_durations
