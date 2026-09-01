@@ -2413,36 +2413,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.31.10.01.55
+  version: 2026.09.01.01.32.19
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.31.10.01.55-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.01.01.32.19-hd8ed1ab_0.conda
   hash:
-    md5: 84aa62efb5ac7ae7ee57bc034d2ec687
-    sha256: 90b0136853d48b23af402f6385bed7d68eb26b46b22a1e80fe6f2981c8bf79ee
+    md5: 7cfc776b3d28dc90055c318760c08524
+    sha256: 333d237a4978d01d2b6e6594567a03529d2a26ecfc8fd95835ee19193a1ac006
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.31.10.01.55
+  version: 2026.09.01.01.32.19
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.31.10.01.55-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.01.01.32.19-hd8ed1ab_0.conda
   hash:
-    md5: 84aa62efb5ac7ae7ee57bc034d2ec687
-    sha256: 90b0136853d48b23af402f6385bed7d68eb26b46b22a1e80fe6f2981c8bf79ee
+    md5: 7cfc776b3d28dc90055c318760c08524
+    sha256: 333d237a4978d01d2b6e6594567a03529d2a26ecfc8fd95835ee19193a1ac006
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.08.31.10.01.55
+  version: 2026.09.01.01.32.19
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.08.31.10.01.55-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.01.01.32.19-hd8ed1ab_0.conda
   hash:
-    md5: 84aa62efb5ac7ae7ee57bc034d2ec687
-    sha256: 90b0136853d48b23af402f6385bed7d68eb26b46b22a1e80fe6f2981c8bf79ee
+    md5: 7cfc776b3d28dc90055c318760c08524
+    sha256: 333d237a4978d01d2b6e6594567a03529d2a26ecfc8fd95835ee19193a1ac006
   category: main
   optional: false
 - name: conda-index
@@ -5181,10 +5181,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libpng: '>=1.6.58,<1.7.0a0'
     libtiff: '>=4.7.2,<4.8.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/gdk-pixbuf-2.44.8-h68053f1_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/gdk-pixbuf-2.44.8-h68053f1_1.conda
   hash:
-    md5: 10dab6a745f32ceeac6c9e00d9979797
-    sha256: 4345423572cb80f13acbe52987a880576046a0b42c4e22e3a85e0198ee02aab0
+    md5: 11adf7fc09b1146a6d91deb65d374456
+    sha256: 056fadb57a423c29a965c151422dde75b499cbef6525af87a920e642d60cdbc2
   category: main
   optional: false
 - name: gdk-pixbuf
@@ -5216,10 +5216,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libpng: '>=1.6.58,<1.7.0a0'
     libtiff: '>=4.7.2,<4.8.0a0'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/gdk-pixbuf-2.44.8-h5867e2c_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/gdk-pixbuf-2.44.8-h5867e2c_1.conda
   hash:
-    md5: aa0e0c67d3e89789959e0d77c8361b67
-    sha256: 0e91dc3531a3a7c4938abc115d7a49be61284a9a8650b404a37b2123fe5cf7dd
+    md5: 915aaa91c1f49b2362f93f28a8946bcb
+    sha256: be81ea838bdf900e3e702e567a1d3b03d334b3976d92233071852c61222be2b2
   category: main
   optional: false
 - name: git
