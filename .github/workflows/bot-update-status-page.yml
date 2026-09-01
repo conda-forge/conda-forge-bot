@@ -16,7 +16,7 @@ jobs:
         shell: bash -leo pipefail {0}
     steps:
       - name: free disk space
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
         with:
           remove_android: true
           remove_dotnet: true
@@ -37,7 +37,7 @@ jobs:
           ref: ${{ steps.latest_release.outputs.tag_name }}
           path: conda-forge-bot
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
           environment-file: conda-forge-bot/conda-lock.yml
           environment-name: conda-forge-bot
