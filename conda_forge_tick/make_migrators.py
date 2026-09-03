@@ -63,6 +63,7 @@ from conda_forge_tick.migrators import (
     PipMigrator,
     PipWheelMigrator,
     PyPIOrgMigrator,
+    RebuildOnUpdateMigrator,
     Replacement,
     RUCRTCleanup,
     StaticLibMigrator,
@@ -1016,6 +1017,29 @@ def add_static_lib_migrator(
         migrators[-1].pr_limit = pr_limit
 
 
+def add_rebuild_on_update_migrator(
+    migrators: MutableSequence[Migrator], gx: nx.DiGraph, job: int = 1, n_jobs: int = 1
+):
+
+    if _compute_job_for_name("rebuild on update", n_jobs) != job:
+        return
+
+    with fold_log_lines("making rebuild on update migrator"):
+        migrators.append(
+            RebuildOnUpdateMigrator(
+                total_graph=gx,
+                pr_limit=PR_LIMIT,
+            ),
+        )
+
+        # adaptively set PR limits based on the number of PRs made so far
+        pr_limit, _, _ = _compute_migrator_pr_limit(
+            migrators[-1],
+            PR_LIMIT,
+        )
+        migrators[-1].pr_limit = pr_limit
+
+
 def add_cdt_migrator(
     migrators: MutableSequence[Migrator], gx: nx.DiGraph, job: int = 1, n_jobs: int = 1
 ):
@@ -1097,6 +1121,8 @@ def initialize_migrators(
     add_noarch_python_min_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
     add_static_lib_migrator(migrators, gx, job=job, n_jobs=n_jobs)
+
+    add_rebuild_on_update_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 
     add_cdt_migrator(migrators, gx, job=job, n_jobs=n_jobs)
 

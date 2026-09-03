@@ -245,6 +245,28 @@ class BotConfig(BaseModel):
         description="Automatically remake untouched bot PRs with conflicts.",
     )
 
+    rebuild_on_update: list[str] | None = Field(
+        default=None,
+        description=cleandoc(
+            """
+            List of packages to watch on the conda-forge channel. When a watched
+            package publishes a new version, the bot opens a rebuild PR on this
+            feedstock (build number bump only, no recipe changes). This is for
+            feedstocks that must be rebuilt when a build-only dependency - most
+            commonly a compiler such as `go-nocgo` - updates.
+
+            These PRs are never auto-merged, regardless of the `automerge` setting.
+            Example:
+
+            ```yaml
+            bot:
+                rebuild_on_update:
+                    - go-nocgo
+            ```
+            """
+        ),
+    )
+
 
 if __name__ == "__main__":
     # This is used to generate the model dump for conda-smithy internal use

@@ -41,6 +41,7 @@ from .pypi_org import PyPIOrgMigrator
 from .r_ucrt import RUCRTCleanup
 from .cdt import CDTMigrator
 from .recipe_v1 import CombineV1ConditionsMigrator
+from .rebuild_on_update import RebuildOnUpdateMigrator
 from .replacement import Replacement, MiniReplacement
 from .use_pip import PipMigrator
 from .version import Version
