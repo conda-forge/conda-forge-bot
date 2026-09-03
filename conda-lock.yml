@@ -284,48 +284,48 @@ package:
   category: main
   optional: false
 - name: anyio
-  version: 4.14.2
+  version: 4.15.0
   manager: conda
   platform: linux-64
   dependencies:
     exceptiongroup: '>=1.0.2'
     idna: '>=2.8'
-    python: '>=3.10'
+    python: '>=3.11'
     typing_extensions: '>=4.5'
-  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.14.2-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.15.0-pyh5ded981_0.conda
   hash:
-    md5: fb568fbae6908ba86a090a85a089d11f
-    sha256: e36998c5e860e26b22e5dbcd5726dd0c4eabad949c84d383cad8512757bbf6a1
+    md5: 28190db0e223089024a41b06c11af36e
+    sha256: 35fefb7c4bc39bca28d8764b4f59bd7b739c47e3af8e5e20ee22621db0c594b3
   category: main
   optional: false
 - name: anyio
-  version: 4.14.2
+  version: 4.15.0
   manager: conda
   platform: linux-aarch64
   dependencies:
     exceptiongroup: '>=1.0.2'
     idna: '>=2.8'
-    python: '>=3.10'
+    python: '>=3.11'
     typing_extensions: '>=4.5'
-  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.14.2-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.15.0-pyh5ded981_0.conda
   hash:
-    md5: fb568fbae6908ba86a090a85a089d11f
-    sha256: e36998c5e860e26b22e5dbcd5726dd0c4eabad949c84d383cad8512757bbf6a1
+    md5: 28190db0e223089024a41b06c11af36e
+    sha256: 35fefb7c4bc39bca28d8764b4f59bd7b739c47e3af8e5e20ee22621db0c594b3
   category: main
   optional: false
 - name: anyio
-  version: 4.14.2
+  version: 4.15.0
   manager: conda
   platform: osx-arm64
   dependencies:
     exceptiongroup: '>=1.0.2'
     idna: '>=2.8'
-    python: '>=3.10'
+    python: '>=3.11'
     typing_extensions: '>=4.5'
-  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.14.2-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.15.0-pyh5ded981_0.conda
   hash:
-    md5: fb568fbae6908ba86a090a85a089d11f
-    sha256: e36998c5e860e26b22e5dbcd5726dd0c4eabad949c84d383cad8512757bbf6a1
+    md5: 28190db0e223089024a41b06c11af36e
+    sha256: 35fefb7c4bc39bca28d8764b4f59bd7b739c47e3af8e5e20ee22621db0c594b3
   category: main
   optional: false
 - name: appdirs
@@ -528,49 +528,49 @@ package:
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.8.0
+  version: 0.9.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     _python_abi3_support: 1.*
-    cpython: '>=3.10'
+    cpython: '>=3.11'
     libgcc: '>=15'
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.8.0-py310ha6597b5_1.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.9.0-py311hf77984d_0.conda
   hash:
-    md5: caf081b80ddd3672a79b36c34b702737
-    sha256: 52ebc10de5c5a1c7914f0c405405de57c6daaa1d6fa1b8f15d1f5dbd78f27534
+    md5: d62c61e02f021c697a25baf855251284
+    sha256: 5b77c2444c8fef0feb1c37e7050c78f7e235c62ffec9ab58b6c4a82566ef32d4
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.8.0
+  version: 0.9.0
   manager: conda
   platform: linux-aarch64
   dependencies:
     _python_abi3_support: 1.*
-    cpython: '>=3.10'
+    cpython: '>=3.11'
     libgcc: '>=15'
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/ast-serialize-0.8.0-py310he485581_1.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/ast-serialize-0.9.0-py311h8ca180e_0.conda
   hash:
-    md5: 81bd5eb7f50dc080be259ba4b8fb31c7
-    sha256: 2c81588ff97c5b275bd06031a610169d7c89425dd56a9f9db0a84a91579d50f8
+    md5: c650025bc276b3435b12c7669af887cc
+    sha256: 3c40d163cce6d32185d97a17201c15b27e001c0c581a69302cf1099fa4cf7b95
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.8.0
+  version: 0.9.0
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
     _python_abi3_support: 1.*
-    cpython: '>=3.10'
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/ast-serialize-0.8.0-py310h2dd3e6a_1.conda
+    cpython: '>=3.11'
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/ast-serialize-0.9.0-py311hfcb3ee1_0.conda
   hash:
-    md5: 4dc99dafb06c621175a1bbdacc9f4427
-    sha256: 59e60451e51f40fb0a3409f763fa5903ed59c700ebceea78077ffe6a5513930a
+    md5: d45efdf0910b873fa5e403979e1f964c
+    sha256: 04132369f1c298002413cbf73b073c1b53c856291f792e2c7b84edba9eefb727
   category: main
   optional: false
 - name: at-spi2-atk
@@ -1105,7 +1105,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.85
+  version: 1.43.87
   manager: conda
   platform: linux-64
   dependencies:
@@ -1113,14 +1113,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.85-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.87-pyhd8ed1ab_0.conda
   hash:
-    md5: 8747f320b8eddfc5abb99ea88e6880a0
-    sha256: ecdff46d914d8002a3d48c3b312df9b237ce8ed3de5c1d34ee9300af00f19f53
+    md5: 6fcb76f804eb93bf1db9d259629fd52a
+    sha256: de9b62dafd21aa00bcf231d0240d27d1840776cfe08bfb0d21a85fae107454f1
   category: main
   optional: false
 - name: botocore
-  version: 1.43.85
+  version: 1.43.87
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -1128,14 +1128,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.85-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.87-pyhd8ed1ab_0.conda
   hash:
-    md5: 8747f320b8eddfc5abb99ea88e6880a0
-    sha256: ecdff46d914d8002a3d48c3b312df9b237ce8ed3de5c1d34ee9300af00f19f53
+    md5: 6fcb76f804eb93bf1db9d259629fd52a
+    sha256: de9b62dafd21aa00bcf231d0240d27d1840776cfe08bfb0d21a85fae107454f1
   category: main
   optional: false
 - name: botocore
-  version: 1.43.85
+  version: 1.43.87
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -1143,10 +1143,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.85-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.87-pyhd8ed1ab_0.conda
   hash:
-    md5: 8747f320b8eddfc5abb99ea88e6880a0
-    sha256: ecdff46d914d8002a3d48c3b312df9b237ce8ed3de5c1d34ee9300af00f19f53
+    md5: 6fcb76f804eb93bf1db9d259629fd52a
+    sha256: de9b62dafd21aa00bcf231d0240d27d1840776cfe08bfb0d21a85fae107454f1
   category: main
   optional: false
 - name: brotli-python
@@ -3604,51 +3604,51 @@ package:
   category: main
   optional: false
 - name: dateparser
-  version: 1.4.2
+  version: 1.4.3
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
+    python: '>=3.11'
     python-dateutil: '>=2.7.0'
     pytz: '>=2024.2'
     regex: '>=2024.9.11'
     tzlocal: '>=0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.2-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.3-pyh5ded981_0.conda
   hash:
-    md5: 2197e362ec4e51408956030a457ad09f
-    sha256: 183fc95ed3ce2cd8d1f414532d440d648baf314351005efaa2dcfb7033a79f6c
+    md5: 1ff16017992b6683a6b4d0ace93992c7
+    sha256: 3ec9dd85b08cab2428f99060d340b0c6122b51253bc70382c75ba0c80e677418
   category: main
   optional: false
 - name: dateparser
-  version: 1.4.2
+  version: 1.4.3
   manager: conda
   platform: linux-aarch64
   dependencies:
-    python: '>=3.10'
+    python: '>=3.11'
     python-dateutil: '>=2.7.0'
     pytz: '>=2024.2'
     regex: '>=2024.9.11'
     tzlocal: '>=0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.2-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.3-pyh5ded981_0.conda
   hash:
-    md5: 2197e362ec4e51408956030a457ad09f
-    sha256: 183fc95ed3ce2cd8d1f414532d440d648baf314351005efaa2dcfb7033a79f6c
+    md5: 1ff16017992b6683a6b4d0ace93992c7
+    sha256: 3ec9dd85b08cab2428f99060d340b0c6122b51253bc70382c75ba0c80e677418
   category: main
   optional: false
 - name: dateparser
-  version: 1.4.2
+  version: 1.4.3
   manager: conda
   platform: osx-arm64
   dependencies:
-    python: '>=3.10'
+    python: '>=3.11'
     python-dateutil: '>=2.7.0'
     pytz: '>=2024.2'
     regex: '>=2024.9.11'
     tzlocal: '>=0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.2-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.3-pyh5ded981_0.conda
   hash:
-    md5: 2197e362ec4e51408956030a457ad09f
-    sha256: 183fc95ed3ce2cd8d1f414532d440d648baf314351005efaa2dcfb7033a79f6c
+    md5: 1ff16017992b6683a6b4d0ace93992c7
+    sha256: 3ec9dd85b08cab2428f99060d340b0c6122b51253bc70382c75ba0c80e677418
   category: main
   optional: false
 - name: dbus
@@ -18129,11 +18129,11 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-64/xorg-xorgproto-2025.1-h280c20c_1.conda
+    libgcc: '>=15'
+  url: https://conda.anaconda.org/conda-forge/linux-64/xorg-xorgproto-2025.1-hebe6cf0_2.conda
   hash:
-    md5: 3b51576511038b50fdbd05245e22e4b1
-    sha256: 051c6088bf2381840fcf8764737b829cc6c5f793718d2417d097d6e3b153eba9
+    md5: 7386d38083163c5b5c4a92a1582daaef
+    sha256: 28be920cbb36bb674f66a23f368b67733dbbb89b2321e5ed7266d9b415156795
   category: main
   optional: false
 - name: xorg-xorgproto
@@ -18141,11 +18141,11 @@ package:
   manager: conda
   platform: linux-aarch64
   dependencies:
-    libgcc: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/xorg-xorgproto-2025.1-h80f16a2_1.conda
+    libgcc: '>=15'
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/xorg-xorgproto-2025.1-h29ee22c_2.conda
   hash:
-    md5: f2fb3e02f33803df14d7bf2a63266aa6
-    sha256: a2616bc01953c1f59d45eb4d5802b13edc24e8b4d7f1fc53ab34f3fd65040168
+    md5: 21f045a1238b059c7b670544a8c19d6b
+    sha256: af4fb5c073c9eda3f9105101c89ee90934ac2777f294a09f729500d825e8f2e4
   category: main
   optional: false
 - name: xsel
