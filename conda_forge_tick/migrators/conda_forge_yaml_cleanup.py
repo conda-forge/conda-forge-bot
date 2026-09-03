@@ -233,7 +233,7 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 pagefile_list.append(
                     {
                         "os": "linux",
-                        "value": int(linux_swapfile_size.removesuffix("GiB")),
+                        "value": int(str(linux_swapfile_size).removesuffix("GiB")),
                     }
                 )
             except ValueError:
@@ -241,7 +241,7 @@ class CondaForgeYAMLCleanup(MiniMigrator):
         # SET_PAGEFILE is True for 16 GiB
         if win_set_pagefile is not None:
             pagefile_list.append(
-                {"os": "win", "value": 16 if win_set_pagefile == "True" else 0}
+                {"os": "win", "value": 16 if str(win_set_pagefile) == "True" else 0}
             )
         if pagefile_list:
             cfg.setdefault("workflow_settings", {})["pagefile_size"] = pagefile_list
