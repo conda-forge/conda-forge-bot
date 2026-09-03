@@ -2416,36 +2416,36 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.03.11.37.26
+  version: 2026.09.03.21.01.23
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.03.11.37.26-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.03.21.01.23-hd8ed1ab_0.conda
   hash:
-    md5: 87bfe95e1e02eff9db795e5610b04148
-    sha256: f14c80319be5a2380ba7624a49a0844a43f8f2479a649c8d5adb8ae707a9303a
+    md5: 7258ad670e7d15e072c197d8ebd55001
+    sha256: ac32eaac0e127b3feddd36fbfb15603aa03e804f7196afd7bd9cef1e2ffc2a6d
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.03.11.37.26
+  version: 2026.09.03.21.01.23
   manager: conda
   platform: linux-aarch64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.03.11.37.26-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.03.21.01.23-hd8ed1ab_0.conda
   hash:
-    md5: 87bfe95e1e02eff9db795e5610b04148
-    sha256: f14c80319be5a2380ba7624a49a0844a43f8f2479a649c8d5adb8ae707a9303a
+    md5: 7258ad670e7d15e072c197d8ebd55001
+    sha256: ac32eaac0e127b3feddd36fbfb15603aa03e804f7196afd7bd9cef1e2ffc2a6d
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.03.11.37.26
+  version: 2026.09.03.21.01.23
   manager: conda
   platform: osx-arm64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.03.11.37.26-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.03.21.01.23-hd8ed1ab_0.conda
   hash:
-    md5: 87bfe95e1e02eff9db795e5610b04148
-    sha256: f14c80319be5a2380ba7624a49a0844a43f8f2479a649c8d5adb8ae707a9303a
+    md5: 7258ad670e7d15e072c197d8ebd55001
+    sha256: ac32eaac0e127b3feddd36fbfb15603aa03e804f7196afd7bd9cef1e2ffc2a6d
   category: main
   optional: false
 - name: conda-index
@@ -15439,43 +15439,43 @@ package:
   category: main
   optional: false
 - name: simdjson
-  version: 4.6.9
+  version: 4.6.10
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-4.6.9-h4dbf13b_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-4.6.10-h4dbf13b_0.conda
   hash:
-    md5: 53a8ff86f8bd6f5d2ea089df06836fdc
-    sha256: 58d3bd2face0c19f8680c9da0cd7df4bcbc5e32439f00f133986238783d0e26a
+    md5: 53ba5412feec78cdf289bcdc660bf071
+    sha256: ae6b7ec328ddb270d055835b62fe2e563251d71fb2fbae0d46e1721385649453
   category: main
   optional: false
 - name: simdjson
-  version: 4.6.9
+  version: 4.6.10
   manager: conda
   platform: linux-aarch64
   dependencies:
     libgcc: '>=15'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-aarch64/simdjson-4.6.9-h45ce4d5_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-aarch64/simdjson-4.6.10-h45ce4d5_0.conda
   hash:
-    md5: f1c7c9debed282897d972a031b3da60c
-    sha256: 9c81c9d8d84213875434ed673a520425b79aa3f1e0d66916a80e000ba6b034e2
+    md5: 28379927576f293409668111acba50f6
+    sha256: f47e131a5467c585fbd2278484a5c34a8cbb40b8749ba1588ae6af84626fdd17
   category: main
   optional: false
 - name: simdjson
-  version: 4.6.9
+  version: 4.6.10
   manager: conda
   platform: osx-arm64
   dependencies:
     __osx: '>=11.0'
     libcxx: '>=21'
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/simdjson-4.6.9-hfbe1efa_0.conda
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/simdjson-4.6.10-hfbe1efa_0.conda
   hash:
-    md5: 1df792a337dc7d1a940bb32083d63210
-    sha256: 3f2e7a3d3fe479c4216a588202effbcc5496a41f6ae42ed294fb21513254cfc8
+    md5: 51c5c4206aa6fe893f208541089a4e93
+    sha256: 0eda36edaf657184ccfb989b659cd9d8653528f87c046ff8a783405799dcf6f0
   category: main
   optional: false
 - name: six
@@ -16990,48 +16990,45 @@ package:
   category: main
   optional: false
 - name: vcs_versioning
-  version: 2.3.2
+  version: 2.3.4
   manager: conda
   platform: linux-64
   dependencies:
     packaging: '>=26.2'
     python: '>=3.11'
-    tomli: '>=1'
     typing_extensions: '>=4.1'
-  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.3.2-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.3.4-pyh5ded981_0.conda
   hash:
-    md5: 46a0057853085737c284ed29df825945
-    sha256: 927b9e738ff4a242f84e6dab767e176489db86738f4238fc48606543a293f786
+    md5: 935abb1ac9af6257ea25aab6b667353a
+    sha256: 5ae074d3d15d9a7654b7d7709dd006fbc916c00eaf1081773d0da4c3fed1fa79
   category: main
   optional: false
 - name: vcs_versioning
-  version: 2.3.2
+  version: 2.3.4
   manager: conda
   platform: linux-aarch64
   dependencies:
     packaging: '>=26.2'
     python: '>=3.11'
-    tomli: '>=1'
     typing_extensions: '>=4.1'
-  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.3.2-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.3.4-pyh5ded981_0.conda
   hash:
-    md5: 46a0057853085737c284ed29df825945
-    sha256: 927b9e738ff4a242f84e6dab767e176489db86738f4238fc48606543a293f786
+    md5: 935abb1ac9af6257ea25aab6b667353a
+    sha256: 5ae074d3d15d9a7654b7d7709dd006fbc916c00eaf1081773d0da4c3fed1fa79
   category: main
   optional: false
 - name: vcs_versioning
-  version: 2.3.2
+  version: 2.3.4
   manager: conda
   platform: osx-arm64
   dependencies:
     packaging: '>=26.2'
     python: '>=3.11'
-    tomli: '>=1'
     typing_extensions: '>=4.1'
-  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.3.2-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.3.4-pyh5ded981_0.conda
   hash:
-    md5: 46a0057853085737c284ed29df825945
-    sha256: 927b9e738ff4a242f84e6dab767e176489db86738f4238fc48606543a293f786
+    md5: 935abb1ac9af6257ea25aab6b667353a
+    sha256: 5ae074d3d15d9a7654b7d7709dd006fbc916c00eaf1081773d0da4c3fed1fa79
   category: main
   optional: false
 - name: virtualenv
