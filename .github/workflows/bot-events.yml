@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: free disk space
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
         with:
           remove_android: true
           remove_dotnet: true
@@ -59,7 +59,7 @@ jobs:
           path: conda-forge-bot
           token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
           environment-file: conda-forge-bot/conda-lock.yml
           environment-name: conda-forge-bot
@@ -78,6 +78,8 @@ jobs:
             --no-pull-container
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
       - name: react to event
         if: success() && ! env.CI_SKIP
@@ -98,6 +100,8 @@ jobs:
 
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
           # emptied at the beginning and end of each run, used by Python tempdir
           TMPDIR: ${{ runner.temp }}

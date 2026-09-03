@@ -28,6 +28,7 @@ from conda_forge_tick.git_utils import (
     GitPlatformError,
     RepositoryNotFoundError,
     _get_pth_blob_sha_and_content,
+    _retry_sequence,
     delete_file_via_gh_api,
     github_client,
     push_file_via_gh_api,
@@ -1803,6 +1804,7 @@ def test_trim_pr_json_keys_src():
     not conda_forge_tick.global_sensitive_env.classified_info.get("BOT_TOKEN", None),
     reason="No token for live tests.",
 )
+@pytest.mark.mongodb
 def test_git_utils_push_and_delete_file_via_gh_api():
     uid = uuid.uuid4().hex
     node = f"test_file_h{uid}"
@@ -1854,3 +1856,23 @@ def test_git_utils_push_and_delete_file_via_gh_api():
                     break
                 except Exception:
                     pass
+
+
+@pytest.mark.skipif(
+    condition="BOT_APP_ID" not in conda_forge_tick.global_sensitive_env.classified_info
+    or "BOT_PRIVATE_KEY" not in conda_forge_tick.global_sensitive_env.classified_info,
+    reason="Bot app ID and private key not in env.",
+)
+@pytest.mark.mongodb
+def test_git_utils_bot_app_token():
+    gh = github_client(with_app_token=True)
+    assert gh is not None
+    assert gh.rate_limiting_resettime != 0
+
+
+def test_git_utils_retry_sequence():
+    start = time.time()
+    for _ in _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=2):
+        pass
+    end = time.time()
+    assert end - start < 20 * 2

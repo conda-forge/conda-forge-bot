@@ -3,15 +3,19 @@
 import base64
 import copy
 import enum
+import io
 import logging
 import math
+import os
 import secrets
 import subprocess
+import sys
 import textwrap
 import threading
 import time
 from abc import ABC, abstractmethod
 from collections.abc import Iterator, Sequence
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime
 from email import utils
 from functools import cached_property
@@ -53,6 +57,8 @@ backoff._decorator._is_event_loop = lambda: False
 
 GITHUB3_CLIENT = threading.local()
 GITHUB_CLIENT = threading.local()
+GITHUB_CLIENT.APP_TOKEN = None
+GITHUB_CLIENT.APP_TOKEN_RESET_TIME = None
 
 MAX_GITHUB_TIMEOUT = 60
 
@@ -89,6 +95,112 @@ PR_KEYS_TO_KEEP = {
 RNG = secrets.SystemRandom()
 
 
+def get_bot_app_token():
+    """Get an app token for the bot.
+
+    This function caches the token and only returns a new one when the current
+    one is expired or about to expire in the next minute.
+
+    Returns
+    -------
+    token: str
+        The app token.
+    """
+    # add a minute to make sure token doesn't expire
+    # while we are using it
+    now = time.time()
+    now_plus_1min = now + 60
+    if (
+        GITHUB_CLIENT.APP_TOKEN_RESET_TIME is None
+        or GITHUB_CLIENT.APP_TOKEN_RESET_TIME <= now_plus_1min
+    ):  # type: ignore[unreachable]
+        with sensitive_env() as env:
+            token = _generate_bot_app_token(
+                env["BOT_APP_ID"],
+                env["BOT_PRIVATE_KEY"].encode(),
+            )
+        if token is not None:
+            try:
+                GITHUB_CLIENT.APP_TOKEN_RESET_TIME = github.Github(
+                    auth=github.Auth.Token(token)
+                ).rate_limiting_resettime
+            except Exception:
+                logger.exception("Bot app token did not generate proper reset time!")
+                token = None
+        else:
+            logger.error("Bot app token could not be made!")
+
+        GITHUB_CLIENT.APP_TOKEN = token
+
+    assert GITHUB_CLIENT.APP_TOKEN is not None, "Could not generate bot app token!"
+
+    return GITHUB_CLIENT.APP_TOKEN
+
+
+def _generate_bot_app_token(app_id, raw_pem):
+    """Generate an app token for the bot.
+
+    Parameters
+    ----------
+    app_id : str
+        The github app ID.
+    raw_pem : bytes
+        An app private key as bytes.
+
+    Returns
+    -------
+    gh_token : str
+        The github token. May return None if there is an error.
+    """
+    if "GITHUB_ACTIONS" in os.environ and os.environ["GITHUB_ACTIONS"] == "true":
+        sys.stdout.flush()
+        print(f"::add-mask::{raw_pem}", flush=True)
+        print(f"::add-mask::{raw_pem!r}", flush=True)
+
+    try:
+        f = io.StringIO()
+        if raw_pem[0:1] != b"-":
+            with redirect_stdout(f), redirect_stderr(f):
+                raw_pem = base64.b64decode(raw_pem)
+            if (
+                "GITHUB_ACTIONS" in os.environ
+                and os.environ["GITHUB_ACTIONS"] == "true"
+            ):
+                sys.stdout.flush()
+                print(f"::add-mask::{raw_pem}", flush=True)  # type: ignore[str-bytes-safe]
+                print(f"::add-mask::{raw_pem!r}", flush=True)
+
+        if isinstance(raw_pem, bytes):
+            with redirect_stdout(f), redirect_stderr(f):
+                raw_pem = raw_pem.decode()
+            if (
+                "GITHUB_ACTIONS" in os.environ
+                and os.environ["GITHUB_ACTIONS"] == "true"
+            ):
+                sys.stdout.flush()
+                print(f"::add-mask::{raw_pem}", flush=True)
+
+        with redirect_stdout(f), redirect_stderr(f):
+            gh_auth = github.Auth.AppAuth(app_id=app_id, private_key=raw_pem)
+
+        with redirect_stdout(f), redirect_stderr(f):
+            integration = github.GithubIntegration(auth=gh_auth)
+
+        with redirect_stdout(f), redirect_stderr(f):
+            installation = integration.get_org_installation("conda-forge")
+
+        with redirect_stdout(f), redirect_stderr(f):
+            gh_token = integration.get_access_token(installation.id).token
+        if "GITHUB_ACTIONS" in os.environ and os.environ["GITHUB_ACTIONS"] == "true":
+            sys.stdout.flush()
+            print(f"::add-mask::{gh_token}", flush=True)
+
+    except Exception:
+        gh_token = None
+
+    return gh_token
+
+
 def get_bot_token() -> str:
     """Get the bot token from the environment.
 
@@ -116,16 +228,27 @@ def github3_client() -> github3.GitHub:
     return GITHUB3_CLIENT.client
 
 
-def github_client() -> github.Github:
+def github_client(with_app_token: bool = False) -> github.Github:
     """Get the PyGithub client.
 
     This will be removed in the future, use the GitHubBackend class instead.
+
+    Parameters
+    ----------
+    with_app_token
+        If `True`, use an app token instead of the bot's token.
 
     Returns
     -------
     github.Github
         The PyGithub client.
     """
+    if with_app_token and "BOT_INTEGRATION_TESTING" not in os.environ:
+        return github.Github(
+            auth=github.Auth.Token(get_bot_app_token()),
+            per_page=100,
+        )
+
     if not hasattr(GITHUB_CLIENT, "client"):
         GITHUB_CLIENT.client = github.Github(
             auth=github.Auth.Token(get_bot_token()),
@@ -1836,14 +1959,14 @@ def close_out_dirty_prs(
     return None
 
 
-def _retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=60):
+def _retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
     for i in range(num_tries):
-        start = factor * base**i
-        end = factor * base ** (i + 1)
+        start = factor * (base**i)
+        end = start * base
         if end - start > max_wait:
             end = start + max_wait
-        time.sleep(RNG.uniform(start, end))
-        yield i
+        time.sleep(RNG.uniform(0, end - start))
+        yield i, num_tries
 
 
 def _get_pth_blob_sha_and_content(
@@ -1876,10 +1999,9 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     with open(pth) as f:
         data = f.read()
 
-    ntries = 20
-    for tr in _retry_sequence(num_tries=ntries):
+    for tr, ntries in _retry_sequence():
         try:
-            gh = github_client()
+            gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
 
             sha, cnt = _get_pth_blob_sha_and_content(pth, repo)
@@ -1925,10 +2047,9 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     msg : str
         The commit message.
     """
-    ntries = 20
-    for tr in _retry_sequence(num_tries=ntries):
+    for tr, ntries in _retry_sequence():
         try:
-            gh = github_client()
+            gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
 
             sha, _ = _get_pth_blob_sha_and_content(pth, repo)

@@ -32,3 +32,5 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+      BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+      BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}

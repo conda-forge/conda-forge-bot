@@ -23,6 +23,10 @@ on:
         required: true
       BOT_TOKEN:
         required: true
+      BOT_APP_ID:
+        required: true
+      BOT_PRIVATE_KEY:
+        required: true
 
 env:
   PY_COLORS: "1"
@@ -36,13 +40,13 @@ jobs:
       actions: write  # for deleting cache entries
       contents: read
     env:
-      NUM_SPLITS: 4
+      NUM_SPLITS: 8
     strategy:
       # continue running the tests even if one of the groups fails
       fail-fast: false
       matrix:
         # if change the number of groups here, also change number of splits env var
-        group: [1, 2, 3, 4]
+        group: [1, 2, 3, 4, 5, 6, 7, 8]
     defaults:
       run:
         shell: bash -leo pipefail {0}
@@ -50,7 +54,7 @@ jobs:
     steps:
       - name: free disk space
         if: ${{ inputs.skip != 'true' }}
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
         with:
           remove_android: true
           remove_dotnet: true
@@ -81,7 +85,7 @@ jobs:
           mv input-lockfile/${{ inputs.lockfile }} conda-lock.yml
           rm -rf input-lockfile
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
@@ -127,7 +131,7 @@ jobs:
 
       - name: build docker image
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
-        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2.13
+        uses: redhat-actions/buildah-build@719e3c40d8af9790c23eca13f7daa339f2867034 # v3.1.0
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: test
@@ -141,7 +145,7 @@ jobs:
 
       - name: push image to docker
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
-        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
+        uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3.0.0
         with:
           image: conda-forge-tick
           tags: test
@@ -168,9 +172,6 @@ jobs:
           if [[ -f .test_durations ]]; then
             cp .test_durations .test_durations.${{ matrix.group }}
           fi
-          ls -lah .test_durations*
-          echo " "
-          cat .test_durations*
 
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
@@ -197,6 +198,8 @@ jobs:
         env:
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -233,7 +236,7 @@ jobs:
     steps:
       - name: free disk space
         if: ${{ inputs.skip != 'true' }}
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
         with:
           remove_android: true
           remove_dotnet: true
@@ -264,7 +267,7 @@ jobs:
           mv input-lockfile/${{ inputs.lockfile }} conda-lock.yml
           rm -rf input-lockfile
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
@@ -324,6 +327,13 @@ jobs:
             test-durations-${{ github.ref }}-
             test-durations-
 
+      - name: post-process test durations
+        if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
+        run: |
+          if [[ -f .test_durations ]]; then
+            cp .test_durations .test_durations.mongodb
+          fi
+
       - name: run pytest
         if: ${{ inputs.skip != 'true' && !env.CI_SKIP }}
         run: |
@@ -352,6 +362,8 @@ jobs:
           MONGODB_CONNECTION_STRING: "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -403,7 +415,7 @@ jobs:
           mv input-lockfile/${{ inputs.lockfile }} conda-lock.yml
           rm -rf input-lockfile
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         if: ${{ inputs.skip != 'true' }}
         with:
           environment-file: conda-lock.yml
@@ -469,6 +481,6 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: determine success
-        uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
+        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35 # v1.3.0
         with:
           jobs: ${{ toJSON(needs) }}

@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: free disk space
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
         with:
           remove_android: true
           remove_dotnet: true
@@ -51,7 +51,7 @@ jobs:
           ref: ${{ steps.latest_release.outputs.tag_name }}
           path: conda-forge-bot
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
           environment-file: conda-forge-bot/conda-lock.yml
           environment-name: conda-forge-bot
@@ -66,6 +66,10 @@ jobs:
         if: success() && ! env.CI_SKIP
         run: |
           source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
       - name: run sync
         if: success() && ! env.CI_SKIP
@@ -80,6 +84,9 @@ jobs:
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
   bot-cache-trigger:
     needs: bot-cache
@@ -91,7 +98,7 @@ jobs:
 
     steps:
       - name: free disk space
-        uses: endersonmenezes/free-disk-space@7901478139cff6e9d44df5972fd8ab8fcade4db1 # v3
+        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
         with:
           remove_android: true
           remove_dotnet: true
@@ -112,7 +119,7 @@ jobs:
           ref: ${{ steps.latest_release.outputs.tag_name }}
           path: conda-forge-bot
 
-      - uses: mamba-org/setup-micromamba@ce51e99f4bb8a82ab7158c4dc59ef4634c59c4f9 # v3.1.0
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
           environment-file: conda-forge-bot/conda-lock.yml
           environment-name: conda-forge-bot
@@ -127,6 +134,10 @@ jobs:
         if: success() && ! env.CI_SKIP
         run: |
           source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
 
       - name: trigger next job
         uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2
