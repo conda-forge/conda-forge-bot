@@ -134,3 +134,48 @@ provider:
     )
 
     assert cfyaml.read_text() == input_yaml
+
+
+@pytest.mark.parametrize("recipe_version", [0, 1])
+def test_cross_to_native_remove_section(tmp_path: Path, recipe_version: int) -> None:
+    """Test cross-builds with just one entry."""
+    in_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple.yaml"
+    ).read_text()
+    out_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple_correct.yaml"
+    ).read_text()
+
+    input_yaml = """\
+build_platform:
+  osx_arm64: osx_64
+
+provider:
+  osx_arm64: default
+"""
+
+    cfyaml = tmp_path / "conda-forge.yml"
+    cfyaml.write_text(input_yaml)
+
+    run_test_migration(
+        m=VERSION_CF,
+        inp=in_yaml,
+        output=out_yaml,
+        kwargs={"new_version": "0.9"},
+        prb="Dependencies have been updated if changed",
+        mr_out={
+            "migrator_name": Version.name,
+            "migrator_version": Version.migrator_version,
+            "version": "0.9",
+        },
+        tmp_path=tmp_path,
+        recipe_version=recipe_version,
+    )
+
+    assert (
+        cfyaml.read_text()
+        == """\
+provider:
+  osx_arm64: default
+"""
+    )

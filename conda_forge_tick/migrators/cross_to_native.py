@@ -55,5 +55,9 @@ class CrossToNativeMigrator(MiniMigrator):
             del cfyaml["build_platform"][platform]
             cfyaml.setdefault("provider", {})[platform] = "default"
 
+        # delete leftover empty section
+        if cfyaml.get("build_platform", True) == {}:
+            del cfyaml["build_platform"]
+
         with open(cfyaml_path, "w") as fp:
             yaml_safe_dump(cfyaml, fp)
