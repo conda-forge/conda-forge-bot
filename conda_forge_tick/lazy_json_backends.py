@@ -65,6 +65,16 @@ CF_TICK_GRAPH_DATA_HASHMAPS = [
 CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS = 5
 
 
+def lazy_json_retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
+    for i in range(num_tries):
+        start = factor * (base**i)
+        end = start * base
+        if end - start > max_wait:
+            end = start + max_wait
+        time.sleep(RNG.uniform(0, end - start))
+        yield i, num_tries
+
+
 def get_sharded_path(file_path, n_dirs=CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS):
     """Compute a sharded location for the LazyJson file."""
     top_dir, file_name = os.path.split(file_path)
@@ -353,10 +363,6 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
     hashmap data across backends.
     """
 
-    _exp_backoff_base: float = 1.5
-    _exp_backoff_ntries: int = 17
-    _exp_backoff_rfrac = 0.5
-
     def __init__(self):
         from conda_forge_tick.git_utils import github_client
 
@@ -402,8 +408,8 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
             "GithubAPILazyJsonBackend SET: (%s, %s) w/ path %s", name, key, pth
         )
 
-        # exponential backoff will be self._exp_backoff_base**tr
-        for tr in range(self._exp_backoff_ntries):
+        # exponential backoff
+        for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
                     _cnts = self._repo.get_contents(pth)
@@ -435,21 +441,15 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                 logger.warning(
                     "failed to push '%s' - trying %d more times",
                     filename,
-                    self._exp_backoff_ntries - tr - 1,
+                    ntries - tr - 1,
                 )
-                if tr == self._exp_backoff_ntries - 1:
+                if tr == ntries - 1:
                     logger.warning(
                         "failed to push '%s'",
                         filename,
                         exc_info=e,
                     )
                     raise e
-                else:
-                    interval = self._exp_backoff_base**tr
-                    interval = self._exp_backoff_rfrac * interval + (
-                        self._exp_backoff_rfrac * RNG.uniform(0, 1) * interval
-                    )
-                    time.sleep(interval)
 
     def hmset(self, name: str, mapping: Mapping[str, str]) -> None:
         for key, value in mapping.items():
@@ -481,8 +481,8 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
             "GithubAPILazyJsonBackend DEL: (%s, %s) w/ path %s", name, key, pth
         )
 
-        # exponential backoff will be self._exp_backoff_base**tr
-        for tr in range(self._exp_backoff_ntries):
+        # exponential backoff
+        for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
                     _cnts = self._repo.get_contents(pth)
@@ -502,21 +502,15 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                 logger.warning(
                     "failed to delete '%s' - trying %d more times",
                     filename,
-                    self._exp_backoff_ntries - tr - 1,
+                    ntries - tr - 1,
                 )
-                if tr == self._exp_backoff_ntries - 1:
+                if tr == ntries - 1:
                     logger.warning(
                         "failed to delete '%s'",
                         filename,
                         exc_info=e,
                     )
                     raise e
-                else:
-                    interval = self._exp_backoff_base**tr
-                    interval = self._exp_backoff_rfrac * interval + (
-                        self._exp_backoff_rfrac * RNG.uniform(0, 1) * interval
-                    )
-                    time.sleep(interval)
 
     def hdel(self, name: str, keys: Iterable[str]) -> None:
         for key in keys:
@@ -543,8 +537,8 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
             "GithubAPILazyJsonBackend GET: (%s, %s) w/ path %s", name, key, pth
         )
 
-        # exponential backoff will be self._exp_backoff_base**tr
-        for tr in range(self._exp_backoff_ntries):
+        # exponential backoff
+        for tr, ntries in lazy_json_retry_sequence():
             try:
                 cnts = requests.get(
                     f"https://api.github.com/repos/{settings().graph_github_backend_repo}/contents/{pth}",
@@ -556,21 +550,15 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                 logger.warning(
                     "failed to pull '%s' - trying %d more times",
                     pth,
-                    self._exp_backoff_ntries - tr - 1,
+                    ntries - tr - 1,
                 )
-                if tr == self._exp_backoff_ntries - 1:
+                if tr == ntries - 1:
                     logger.warning(
                         "failed to pull '%s'",
                         pth,
                         exc_info=e,
                     )
                     raise e
-                else:
-                    interval = self._exp_backoff_base**tr
-                    interval = self._exp_backoff_rfrac * interval + (
-                        self._exp_backoff_rfrac * RNG.uniform(0, 1) * interval
-                    )
-                    time.sleep(interval)
 
         assert False, "There is at least one try, so this cannot be reached."
 
