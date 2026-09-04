@@ -37,6 +37,7 @@ from requests.structures import CaseInsensitiveDict
 from conda_forge_tick import sensitive_env
 from conda_forge_tick.lazy_json_backends import (
     LazyJson,
+    _retry_sequence,
     _test_and_raise_besides_file_not_exists,
 )
 
@@ -1957,16 +1958,6 @@ def close_out_dirty_prs(
         return d
 
     return None
-
-
-def _retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
-    for i in range(num_tries):
-        start = factor * (base**i)
-        end = start * base
-        if end - start > max_wait:
-            end = start + max_wait
-        time.sleep(RNG.uniform(0, end - start))
-        yield i, num_tries
 
 
 def _get_pth_blob_sha_and_content(
