@@ -1,30 +1,38 @@
+from pathlib import Path
+
 import networkx as nx
 import pytest
 from test_migrators import run_test_migration
 
-from conda_forge_tick.migrators import CrossToNativeMigrator
+from conda_forge_tick.migrators import CrossToNativeMigrator, Version
 
 TOTAL_GRAPH = nx.DiGraph()
 TOTAL_GRAPH.graph["outputs_lut"] = {}
-cross_to_native_migrator = CrossToNativeMigrator(total_graph=TOTAL_GRAPH)
+VERSION_CF = Version(
+    set(),
+    piggy_back_migrations=[CrossToNativeMigrator()],
+    total_graph=TOTAL_GRAPH,
+)
 
-
-TEST_YAML = """\
-{% set version = "1.2.3" %}
-{% set build = @BUILD@ %}
-
-package:
-  name: test
-  version: {{ version }}
-
-build:
-  number: {{ build }}
-"""
+YAML_PATHS = [
+    Path(__file__).parent / "test_yaml",
+    Path(__file__).parent / "test_v1_yaml",
+]
 
 
 @pytest.mark.parametrize("provider", [None, "default", "github_actions"])
-def test_cross_to_native(tmp_path, provider: str | None):
+@pytest.mark.parametrize("recipe_version", [0, 1])
+def test_cross_to_native(
+    tmp_path: Path, provider: str | None, recipe_version: int
+) -> None:
     """Test successfully migrating cross to native."""
+    in_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple.yaml"
+    ).read_text()
+    out_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple_correct.yaml"
+    ).read_text()
+
     input_yaml = """\
 build_platform:
   linux_aarch64: linux_64
@@ -42,17 +50,18 @@ provider:
     cfyaml.write_text(input_yaml)
 
     run_test_migration(
-        m=cross_to_native_migrator,
-        inp=TEST_YAML.replace("@BUILD@", "1"),
-        output=TEST_YAML.replace("@BUILD@", "2"),
-        prb="GitHub Actions provide native runners for linux_aarch64 builds",
-        kwargs={},
+        m=VERSION_CF,
+        inp=in_yaml,
+        output=out_yaml,
+        kwargs={"new_version": "0.9"},
+        prb="Dependencies have been updated if changed",
         mr_out={
-            "migrator_name": "CrossToNativeMigrator",
-            "migrator_version": 1,
-            "name": "Cross-to-native Migrator",
+            "migrator_name": Version.name,
+            "migrator_version": Version.migrator_version,
+            "version": "0.9",
         },
         tmp_path=tmp_path,
+        recipe_version=recipe_version,
     )
 
     expected_providers = ""
@@ -74,8 +83,16 @@ provider:
 
 
 @pytest.mark.parametrize("provider_platform", ["linux_64", "linux_aarch64"])
-def test_no_cross(tmp_path, provider_platform: str):
+@pytest.mark.parametrize("recipe_version", [0, 1])
+def test_no_cross(tmp_path: Path, provider_platform: str, recipe_version: int) -> None:
     """Test package with no aarch64 build and with native aarch64 build."""
+    in_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple.yaml"
+    ).read_text()
+    out_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple_correct.yaml"
+    ).read_text()
+
     input_yaml = f"""\
 provider:
   {provider_platform}: default
@@ -85,19 +102,33 @@ provider:
     cfyaml.write_text(input_yaml)
 
     run_test_migration(
-        m=cross_to_native_migrator,
-        inp=TEST_YAML.replace("@BUILD@", "1"),
-        output="",
-        prb=None,
-        kwargs={},
-        mr_out=None,
+        m=VERSION_CF,
+        inp=in_yaml,
+        output=out_yaml,
+        kwargs={"new_version": "0.9"},
+        prb="Dependencies have been updated if changed",
+        mr_out={
+            "migrator_name": Version.name,
+            "migrator_version": Version.migrator_version,
+            "version": "0.9",
+        },
         tmp_path=tmp_path,
-        should_filter=True,
+        recipe_version=recipe_version,
     )
 
+    assert cfyaml.read_text() == input_yaml
 
-def test_azure(tmp_path):
+
+@pytest.mark.parametrize("recipe_version", [0, 1])
+def test_azure(tmp_path: Path, recipe_version: int) -> None:
     """Test package using non-GHA runner."""
+    in_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple.yaml"
+    ).read_text()
+    out_yaml = (
+        YAML_PATHS[recipe_version] / "version_cfyaml_cleanup_simple_correct.yaml"
+    ).read_text()
+
     input_yaml = """\
 build_platform:
   linux_aarch64: linux_64
@@ -112,12 +143,18 @@ provider:
     cfyaml.write_text(input_yaml)
 
     run_test_migration(
-        m=cross_to_native_migrator,
-        inp=TEST_YAML.replace("@BUILD@", "1"),
-        output="",
-        prb=None,
-        kwargs={},
-        mr_out=None,
+        m=VERSION_CF,
+        inp=in_yaml,
+        output=out_yaml,
+        kwargs={"new_version": "0.9"},
+        prb="Dependencies have been updated if changed",
+        mr_out={
+            "migrator_name": Version.name,
+            "migrator_version": Version.migrator_version,
+            "version": "0.9",
+        },
         tmp_path=tmp_path,
-        should_filter=True,
+        recipe_version=recipe_version,
     )
+
+    assert cfyaml.read_text() == input_yaml

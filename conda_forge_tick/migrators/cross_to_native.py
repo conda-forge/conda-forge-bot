@@ -1,12 +1,10 @@
 from pathlib import Path
 from typing import Any
 
-from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
-from conda_forge_tick.migrators.core import Migrator
+from conda_forge_tick.migrators.core import MiniMigrator
 from conda_forge_tick.migrators_types import (
     AttrsTypedDict,
     CondaForgeYamlContents,
-    MigrationUidTypedDict,
 )
 from conda_forge_tick.utils import (
     yaml_safe_dump,
@@ -14,10 +12,8 @@ from conda_forge_tick.utils import (
 )
 
 
-class CrossToNativeMigrator(Migrator):
-    name = "Cross-to-native Migrator"
-    rerender = True
-    migrator_version = 1
+class CrossToNativeMigrator(MiniMigrator):
+    allowed_schema_versions = {0, 1}
 
     # platforms to migrate
     _platforms = {"linux_aarch64"}
@@ -33,10 +29,9 @@ class CrossToNativeMigrator(Migrator):
             provider == "default" and build_platform in self._gha_platforms
         )
 
-    def filter_not_in_migration(
-        self, attrs: AttrsTypedDict, not_bad_str_start: str = ""
-    ) -> bool:
-        if super().filter_not_in_migration(attrs, not_bad_str_start):
+    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
+        """Remove recipes without a conda-forge.yml file that has the keys to remove or change."""
+        if super().filter(attrs):
             return True
 
         # TODO: check if there are any relevant cross-targets
@@ -44,21 +39,9 @@ class CrossToNativeMigrator(Migrator):
         for platform in self._platforms:
             if self._migrate_platform(platform, cfyaml):
                 return False
-
         return True
 
-    def migrate(
-        self, recipe_dir: str, attrs: AttrsTypedDict, **kwargs: Any
-    ) -> MigrationUidTypedDict:
-        # Only v0 recipes are supported, the handful of v1 recipes is not worth the complexity.
-        recipe_file = next(
-            filter(
-                lambda x: x.exists(),
-                (Path(recipe_dir) / "recipe.yaml", Path(recipe_dir) / "meta.yaml"),
-            )
-        )
-        self.set_build_number(recipe_file)
-
+    def migrate(self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any) -> None:
         cfyaml_path = Path(recipe_dir) / "../conda-forge.yml"
         with open(cfyaml_path) as fp:
             cfyaml = yaml_safe_load(fp)
@@ -72,32 +55,3 @@ class CrossToNativeMigrator(Migrator):
 
         with open(cfyaml_path, "w") as fp:
             yaml_safe_dump(cfyaml, fp)
-        return self.migrator_uid(attrs)
-
-    def pr_body(
-        self, feedstock_ctx: ClonedFeedstockContext, add_label_text: bool = True
-    ) -> str:
-        body = super().pr_body(feedstock_ctx)
-        body = body.format(
-            f"""\
-GitHub Actions provide native runners for {", ".join(self._platforms)} builds.
-This migrator will attempt to switch from cross-compilation to native build.
-"""
-        )
-        return body
-
-    def commit_message(self, feedstock_ctx: FeedstockContext) -> str:
-        return "Migrate cross-compilation to native build"
-
-    def pr_title(self, feedstock_ctx: FeedstockContext) -> str:
-        return "Migrate cross-compilation to native build"
-
-    def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
-        return f"cross-to-native-{self.migrator_version}"
-
-    def migrator_uid(self, attrs: AttrsTypedDict) -> MigrationUidTypedDict:
-        if self.name is None:
-            raise ValueError("name is None")
-        n = super().migrator_uid(attrs)
-        n["name"] = self.name
-        return n
