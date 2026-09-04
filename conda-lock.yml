@@ -1105,7 +1105,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.87
+  version: 1.43.88
   manager: conda
   platform: linux-64
   dependencies:
@@ -1113,14 +1113,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.87-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.88-pyhd8ed1ab_0.conda
   hash:
-    md5: 6fcb76f804eb93bf1db9d259629fd52a
-    sha256: de9b62dafd21aa00bcf231d0240d27d1840776cfe08bfb0d21a85fae107454f1
+    md5: 1aa61f8701378688b720c3fba469cb6e
+    sha256: 6e438c78936a1ea4436f4005ab259f43dc89c03bf2276a0dde9a5d50e7a37afd
   category: main
   optional: false
 - name: botocore
-  version: 1.43.87
+  version: 1.43.88
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -1128,14 +1128,14 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.87-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.88-pyhd8ed1ab_0.conda
   hash:
-    md5: 6fcb76f804eb93bf1db9d259629fd52a
-    sha256: de9b62dafd21aa00bcf231d0240d27d1840776cfe08bfb0d21a85fae107454f1
+    md5: 1aa61f8701378688b720c3fba469cb6e
+    sha256: 6e438c78936a1ea4436f4005ab259f43dc89c03bf2276a0dde9a5d50e7a37afd
   category: main
   optional: false
 - name: botocore
-  version: 1.43.87
+  version: 1.43.88
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -1143,10 +1143,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.87-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.88-pyhd8ed1ab_0.conda
   hash:
-    md5: 6fcb76f804eb93bf1db9d259629fd52a
-    sha256: de9b62dafd21aa00bcf231d0240d27d1840776cfe08bfb0d21a85fae107454f1
+    md5: 1aa61f8701378688b720c3fba469cb6e
+    sha256: 6e438c78936a1ea4436f4005ab259f43dc89c03bf2276a0dde9a5d50e7a37afd
   category: main
   optional: false
 - name: brotli-python
@@ -2272,7 +2272,7 @@ package:
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.18.7
+  version: 0.18.8
   manager: conda
   platform: linux-64
   dependencies:
@@ -2295,14 +2295,14 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.7-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.8-pyhd8ed1ab_0.conda
   hash:
-    md5: 100420d47a516e1905504a241a44a313
-    sha256: dc716da34ad5e1ca1546e111d6af3b7844d8c24b3909c0c43a07d90053ae6e01
+    md5: f2145138fec649202d330f17c7b82ef6
+    sha256: 5f301fcb80d40bfbd3c113e1ba4a4b7428c18b174af8e850428c5e0a21bc564d
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.18.7
+  version: 0.18.8
   manager: conda
   platform: linux-aarch64
   dependencies:
@@ -2325,14 +2325,14 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.7-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.8-pyhd8ed1ab_0.conda
   hash:
-    md5: 100420d47a516e1905504a241a44a313
-    sha256: dc716da34ad5e1ca1546e111d6af3b7844d8c24b3909c0c43a07d90053ae6e01
+    md5: f2145138fec649202d330f17c7b82ef6
+    sha256: 5f301fcb80d40bfbd3c113e1ba4a4b7428c18b174af8e850428c5e0a21bc564d
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.18.7
+  version: 0.18.8
   manager: conda
   platform: osx-arm64
   dependencies:
@@ -2355,10 +2355,10 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.7-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.8-pyhd8ed1ab_0.conda
   hash:
-    md5: 100420d47a516e1905504a241a44a313
-    sha256: dc716da34ad5e1ca1546e111d6af3b7844d8c24b3909c0c43a07d90053ae6e01
+    md5: f2145138fec649202d330f17c7b82ef6
+    sha256: 5f301fcb80d40bfbd3c113e1ba4a4b7428c18b174af8e850428c5e0a21bc564d
   category: main
   optional: false
 - name: conda-forge-metadata
