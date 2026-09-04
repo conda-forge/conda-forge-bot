@@ -303,6 +303,22 @@
       "default": true,
       "description": "Automatically remake untouched bot PRs with conflicts.",
       "title": "Remake Prs With Conflicts"
+    },
+    "rebuild_on_update": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "List of packages to watch on the conda-forge channel. When a watched\npackage publishes a new version, the bot opens a rebuild PR on this\nfeedstock (build number bump only, no recipe changes). This is for\nfeedstocks that must be rebuilt when a build-only dependency - most\ncommonly a compiler such as `go-nocgo` - updates.\n\nThese PRs are never auto-merged, regardless of the `automerge` setting.\nExample:\n\n```yaml\nbot:\n    rebuild_on_update:\n        - go-nocgo\n```",
+      "title": "Rebuild On Update"
     }
   },
   "title": "BotConfig",
