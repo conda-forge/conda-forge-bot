@@ -43,7 +43,7 @@ VERY_FLAKY_TEST = "This test case is more flaky than usual."
         ("jinja2sha", "2.4.1"),
         ("r", "1.3_2"),
         pytest.param(
-            "multisrclist", "2.25.0", marks=pytest.mark.xfail(reason="VERY_FLAKY_TEST")
+            "multisrclist", "2.25.0", marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST)
         ),
         ("jinja2selsha", "4.7.2"),
         ("jinja2nameshasel", "4.7.2"),
