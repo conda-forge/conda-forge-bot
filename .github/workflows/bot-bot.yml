@@ -55,8 +55,8 @@ jobs:
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: prep for bot run
         if: success() && ! env.CI_SKIP
@@ -70,8 +70,8 @@ jobs:
           conda-forge-tick prep-auto-tick
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
           MEMORY_LIMIT_GB: 7
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
@@ -89,8 +89,8 @@ jobs:
           conda-forge-tick deploy-to-github --dirs-to-deploy=pr_json,version_pr_info,pr_info
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: reclone graph
@@ -100,8 +100,8 @@ jobs:
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: run migrations
         if: success() && ! env.CI_SKIP
@@ -115,8 +115,8 @@ jobs:
           conda-forge-tick auto-tick
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
           MEMORY_LIMIT_GB: 7
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
@@ -139,8 +139,8 @@ jobs:
           conda-forge-tick deploy-to-github --dirs-to-ignore=pr_json
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail
