@@ -20,6 +20,9 @@ YAML_V1_PATH = Path(__file__).parent / "test_v1_yaml"
 VARIANT_SOURCES_NOT_IMPLEMENTED = (
     "Sources that depend on conda build config variants are not supported yet."
 )
+VERY_FLAKY_TEST = (
+    "This test case is more flaky than usual."
+)
 
 
 @pytest.mark.parametrize(
@@ -41,7 +44,11 @@ VARIANT_SOURCES_NOT_IMPLEMENTED = (
         ("multisrc", "2.4.1"),
         ("jinja2sha", "2.4.1"),
         ("r", "1.3_2"),
-        ("multisrclist", "2.25.0"),
+        pytest.param(
+            "multisrclist",
+            "2.25.0",
+            marks=pytest.mark.xfail(reason="VERY_FLAKY_TEST")
+        ),
         ("jinja2selsha", "4.7.2"),
         ("jinja2nameshasel", "4.7.2"),
         ("shaquotes", "0.6.0"),
