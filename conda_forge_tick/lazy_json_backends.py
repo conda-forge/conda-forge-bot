@@ -65,7 +65,7 @@ CF_TICK_GRAPH_DATA_HASHMAPS = [
 CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS = 5
 
 
-def _retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
+def lazy_json_retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
     for i in range(num_tries):
         start = factor * (base**i)
         end = start * base
@@ -409,7 +409,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         )
 
         # exponential backoff
-        for tr, ntries in _retry_sequence():
+        for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
                     _cnts = self._repo.get_contents(pth)
@@ -482,7 +482,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         )
 
         # exponential backoff
-        for tr, ntries in _retry_sequence():
+        for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
                     _cnts = self._repo.get_contents(pth)
@@ -538,7 +538,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         )
 
         # exponential backoff
-        for tr, ntries in _retry_sequence():
+        for tr, ntries in lazy_json_retry_sequence():
             try:
                 cnts = requests.get(
                     f"https://api.github.com/repos/{settings().graph_github_backend_repo}/contents/{pth}",
