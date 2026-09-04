@@ -23,6 +23,9 @@ from .cross_compile import (
     UpdateCMakeArgsWinMigrator,
     UpdateConfigSubGuessMigrator,
 )
+from .cross_to_native import (
+    CrossToNativeMigrator,
+)
 from .cstdlib import StdlibMigrator
 from .dep_updates import DependencyUpdateMigrator
 from .duplicate_lines import DuplicateLinesCleanup
