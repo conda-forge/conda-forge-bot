@@ -394,6 +394,12 @@ def _is_solvability_check_needed(
         migrator, "force_pr_after_solver_attempts", FORCE_PR_AFTER_SOLVER_ATTEMPTS
     )
     should_automerge = _should_automerge(migrator, context)
+    in_cycle = context.feedstock_name in nx.descendants(
+        migrator.graph, context.feedstock_name
+    )
+    in_top_level = context.feedstock_name in getattr(migrator, "top_level", set())
+    is_main_branch = base_branch == "master" or base_branch == "main"
+    in_bootstrap_mappings = context.feedstock_name not in BOOTSTRAP_MAPPINGS
 
     logger.info(
         textwrap.dedent(
@@ -408,22 +414,23 @@ def _is_solvability_check_needed(
                 migrator_check_solvable: {migrator_check_solvable}
             pre_pr_migrator_attempts: {pr_attempts}
             force_pr_after_solver_attempts: {max_pr_attempts}
+            cycle: {in_cycle}
+            top-level: {in_top_level}
+            main branch: {is_main_branch}
+            bootstrap mappings: {in_bootstrap_mappings}
             """
         )
     )
 
     return (
         context.feedstock_name != "conda-forge-pinning"
-        and (base_branch == "master" or base_branch == "main")
+        and is_main_branch
         # feedstocks that have problematic bootstrapping will not always be solvable
-        and context.feedstock_name not in BOOTSTRAP_MAPPINGS
+        and (not in_bootstrap_mappings)
         # stuff in cycles always goes
-        and (
-            context.feedstock_name
-            not in nx.descendants(migrator.graph, context.feedstock_name)
-        )
+        and (not in_cycle)
         # stuff at the top always goes
-        and context.feedstock_name not in getattr(migrator, "top_level", set())
+        and (not in_top_level)
         # either the migrator or the feedstock has to request solver checks
         and (migrator_check_solvable or context.check_solvable)
         # we try up to max_pr_attempts times, and then we just skip
