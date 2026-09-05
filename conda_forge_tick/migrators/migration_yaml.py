@@ -837,10 +837,9 @@ def all_noarch(attrs, only_python=False):
             # if no outputs, look at top-level
             (not meta_yaml.get("outputs", []))
             or (
-                # if outputs, only check top-level if it has requirements
+                # if outputs and top-level defines a package, check top-level
                 meta_yaml.get("outputs", [])
-                and (meta_yaml.get("requirements", {}) or {}).get("run", [])
-                or []
+                and ((meta_yaml.get("requirements", {}) or {}).get("run", []) or [])
             )
         ):
             all_noarch = all_noarch and (
