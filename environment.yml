@@ -2,9 +2,7 @@ name: conda-forge-bot
 channels:
   - conda-forge
 platforms:
-  - osx-arm64
   - linux-64
-  - linux-aarch64
 dependencies:
   - attrs
   - backoff
