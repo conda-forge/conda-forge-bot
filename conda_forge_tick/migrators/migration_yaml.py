@@ -833,11 +833,23 @@ def all_noarch(attrs, only_python=False):
                     )
                 )
 
-        all_noarch = all_noarch and (
-            "noarch" in global_build
-            or global_build.get("python_version_independent", False)
-            or (global_build.get("python", {}) or {}).get("version_independent", False)
-        )
+        if (
+            # if no outputs, look at top-level
+            (not meta_yaml.get("outputs", []))
+            or (
+                # if outputs, only check top-level if it has requirements
+                meta_yaml.get("outputs", [])
+                and (meta_yaml.get("requirements", {}) or {}).get("run", [])
+                or []
+            )
+        ):
+            all_noarch = all_noarch and (
+                "noarch" in global_build
+                or global_build.get("python_version_independent", False)
+                or (global_build.get("python", {}) or {}).get(
+                    "version_independent", False
+                )
+            )
     else:
         reqs = (
             meta_yaml.get("requirements", {}).get("host", [])
