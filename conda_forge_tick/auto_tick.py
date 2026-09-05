@@ -399,7 +399,7 @@ def _is_solvability_check_needed(
     )
     in_top_level = context.feedstock_name in getattr(migrator, "top_level", set())
     is_main_branch = base_branch == "master" or base_branch == "main"
-    in_bootstrap_mappings = context.feedstock_name not in BOOTSTRAP_MAPPINGS
+    in_bootstrap_mappings = context.feedstock_name in BOOTSTRAP_MAPPINGS
 
     logger.info(
         textwrap.dedent(
