@@ -822,8 +822,9 @@ def all_noarch(attrs, only_python=False):
     all_noarch = True
 
     if not only_python:
-        if meta_yaml.get("outputs", []):
-            for output in meta_yaml.get("outputs", []):
+        outputs = meta_yaml.get("outputs", []) or []
+        if outputs:
+            for output in outputs:
                 _build = _combine_build(output.get("build", {}) or {}, global_build)
                 all_noarch = all_noarch and (
                     "noarch" in _build
@@ -851,8 +852,8 @@ def all_noarch(attrs, only_python=False):
             )
     else:
         reqs = (
-            meta_yaml.get("requirements", {}).get("host", [])
-            or meta_yaml.get("requirements", {}).get("build", [])
+            (meta_yaml.get("requirements", {}) or {}).get("host", [])
+            or (meta_yaml.get("requirements", {}) or {}).get("build", [])
             or []
         )
         if any(_req_is_python(req) for req in reqs):
@@ -870,7 +871,7 @@ def all_noarch(attrs, only_python=False):
             _build = _combine_build(output.get("build", {}) or {}, global_build)
 
             # some nodes have a list here
-            _reqs = output.get("requirements", {})
+            _reqs = output.get("requirements", {}) or {}
             if not isinstance(_reqs, list):
                 _reqs = _reqs.get("host", []) or _reqs.get("build", []) or []
 
