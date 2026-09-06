@@ -252,6 +252,7 @@ def populate_feedstock_attributes(
     conda_forge_yaml: str | None = None,
     mark_not_archived: bool = False,
     feedstock_dir: str | Path | None = None,
+    use_container: bool | None = None,
 ) -> dict[str, typing.Any]:
     """
     Parse the various configuration information into the node_attrs of a feedstock.
@@ -274,6 +275,11 @@ def populate_feedstock_attributes(
     feedstock_dir
         The directory where the feedstock is located. If None, some information
         will not be available.
+    use_container : bool, optional
+        Whether to use a container to run the version parsing.
+        If None, the function will use a container if the environment
+        variable `CF_FEEDSTOCK_OPS_IN_CONTAINER` is 'false'. This feature can be
+        used to avoid container in container calls.
 
     Returns
     -------
@@ -379,6 +385,7 @@ def populate_feedstock_attributes(
                                 recipe_dir,
                                 "conda_build_config.yaml",
                             ),
+                            use_container=use_container,
                         ),
                     )
                     variant_yamls[-1]["schema_version"] = 0
@@ -393,6 +400,7 @@ def populate_feedstock_attributes(
                             recipe_yaml,
                             platform_arch=platform_arch,
                             cbc_path=cbc_path,
+                            use_container=use_container,
                         ),
                     )
                     variant_yamls[-1]["schema_version"] = variant_yamls[-1].get(
@@ -703,6 +711,7 @@ def load_feedstock_local(
             conda_forge_yaml=conda_forge_yaml,
             mark_not_archived=mark_not_archived,
             feedstock_dir=feedstock_dir,
+            use_container=False,
         )
 
 
