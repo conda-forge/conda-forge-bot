@@ -438,6 +438,7 @@ extra:
         ("update-grayskull", out_yml_pyquil),
     ],
 )
+@pytest.mark.mongodb
 def test_update_deps_version_pyquil(caplog, tmp_path, update_kind, out_yml):
     caplog.set_level(
         logging.DEBUG,
