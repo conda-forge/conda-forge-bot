@@ -12,9 +12,9 @@
       "enum": [
         "hint",
         "hint-all",
-        "hint-source",
+        "hint-grayskull",
         "update-all",
-        "update-source",
+        "update-grayskull",
         "disabled"
       ],
       "title": "BotConfigInspectionChoice",

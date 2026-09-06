@@ -16,9 +16,9 @@ class BotConfigAutoMergeChoice(StrEnum):
 class BotConfigInspectionChoice(StrEnum):
     HINT = "hint"
     HINT_ALL = "hint-all"
-    HINT_SOURCE = "hint-source"
+    HINT_GRAYSKULL = "hint-grayskull"
     UPDATE_ALL = "update-all"
-    UPDATE_SOURCE = "update-source"
+    UPDATE_GRAYSKULL = "update-grayskull"
     DISABLED = "disabled"
 
 
