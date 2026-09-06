@@ -944,6 +944,7 @@ extra:
         )
     ],
 )
+@pytest.mark.mongodb
 def test_update_deps_version_v1(
     update_kind: UpdateKind,
     original_recipe: str,
