@@ -65,11 +65,11 @@ def _get_yaml_parser(typ="jinja2"):
 
     _DummyRepresenter.add_representer(type(None), represent_none)
     parser.Representer = _DummyRepresenter
+    parser.representer.add_representer(type(None), represent_none)
 
     # do not use yaml anchors
     parser.representer.ignore_aliases = lambda x: True
 
-    parser.representer.add_representer(type(None), represent_none)
     return parser
 
 
