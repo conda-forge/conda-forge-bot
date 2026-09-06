@@ -8,6 +8,7 @@ import networkx as nx
 import pytest
 from test_migrators import run_test_migration
 
+from conda_forge_tick.feedstock_parser import load_feedstock_local
 from conda_forge_tick.lazy_json_backends import load
 from conda_forge_tick.migrators import DependencyUpdateMigrator, Version
 from conda_forge_tick.recipe_parser import CondaMetaYAML
@@ -184,6 +185,8 @@ def test_get_dep_updates_and_hints_praw():
         },
         "new_version": "7.7.0",
     }
+    attrs = load_feedstock_local("praw", attrs, meta_yaml=praw_recipe)
+
     with tempfile.TemporaryDirectory() as tmpdir:
         recipe = Path(tmpdir) / "meta.yaml"
         recipe.write_text(praw_recipe)
@@ -197,7 +200,7 @@ def test_get_dep_updates_and_hints_praw():
         )
 
     print(res[0], res[1], flush=True)
-    assert "websocket" in res[1]
+    assert "python >={{ python_min }}" in res[1]
 
 
 @pytest.mark.parametrize("disabled_param", ["disabled"])
@@ -258,116 +261,12 @@ extra:
 """
 
 
-out_yml_all = """\
-{% set version = "2.3.0" %}
-
-package:
-  name: depfinder
-  version: {{ version }}
-
-source:
-  url: https://pypi.io/packages/source/d/depfinder/depfinder-{{ version }}.tar.gz
-  sha256: 2694acbc8f7d94ca9bae55b8dc5b4860d5bc253c6a377b3b8ce63fb5bffa4000
-
-build:
-  number: 0
-  noarch: python
-  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
-  entry_points:
-    - depfinder = depfinder.cli:cli
-
-requirements:
-  host:
-    # Python version is limited by stdlib-list.
-    - python <3.9
-    - pip
-  run:
-    - pyyaml
-    - python <3.9
-    - stdlib-list
-
-test:
-  commands:
-    - depfinder -h
-  imports:
-    - depfinder
-
-about:
-  home: http://github.com/ericdill/depfinder
-  license: BSD-3-Clause
-  license_file: LICENSE
-  summary: Find all the unique imports in your library
-
-extra:
-  recipe-maintainers:
-    - ericdill
-    - mariusvniekerk
-    - tonyfast
-    - ocefpaf
-"""
-
-out_yml_src = """\
-{% set version = "2.3.0" %}
-
-package:
-  name: depfinder
-  version: {{ version }}
-
-source:
-  url: https://pypi.io/packages/source/d/depfinder/depfinder-{{ version }}.tar.gz
-  sha256: 2694acbc8f7d94ca9bae55b8dc5b4860d5bc253c6a377b3b8ce63fb5bffa4000
-
-build:
-  number: 0
-  noarch: python
-  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
-  entry_points:
-    - depfinder = depfinder.cli:cli
-
-requirements:
-  host:
-    # Python version is limited by stdlib-list.
-    - python <3.9
-    - pip
-  run:
-    - pyyaml
-    - python <3.9
-    - stdlib-list
-
-test:
-  commands:
-    - depfinder -h
-  imports:
-    - depfinder
-
-about:
-  home: http://github.com/ericdill/depfinder
-  license: BSD-3-Clause
-  license_file: LICENSE
-  summary: Find all the unique imports in your library
-
-extra:
-  recipe-maintainers:
-    - ericdill
-    - mariusvniekerk
-    - tonyfast
-    - ocefpaf
-"""
-
-
 @pytest.mark.parametrize(
     "update_kind,out_yml",
     [
         ("update-grayskull", out_yml_gs),
-        ("update-all", out_yml_all),
-        (
-            "update-source",
-            out_yml_src,
-        ),
+        ("update-all", out_yml_gs),
     ],
-)
-@pytest.mark.xfail(
-    reason="depfinder sometimes fails due to bad import to package mapping"
 )
 def test_update_deps_version(caplog, tmp_path, update_kind, out_yml):
     caplog.set_level(
@@ -495,8 +394,8 @@ requirements:
   run:
     - importlib-metadata >=3.7.3,<4.0.0
     - lark >=0.11.1,<0.12.0
-    - networkx >=2.5,<3.0
-    - numpy >=1.20,<2.0
+    - networkx >=2.5.0,<3.0.0
+    - numpy >=1.20.0,<2.0.0
     - python >=3.7,<4.0
     - qcs-api-client >=0.8.1,<0.21.0
     - retry >=0.9.2,<0.10.0
@@ -533,7 +432,6 @@ extra:
 """  # noqa
 
 
-@pytest.mark.xfail()
 @pytest.mark.parametrize(
     "update_kind,out_yml",
     [
@@ -833,7 +731,7 @@ def test_apply_dep_update_v1(
             {
                 "host": {
                     "cf_minus_df": {"python <3.9"},
-                    "df_minus_cf": {"python {{ python_min }}.*"},
+                    "df_minus_cf": {"python {{ python_min }}"},
                 },
                 "run": {
                     "cf_minus_df": {"python <3.9", "stdlib-list"},
