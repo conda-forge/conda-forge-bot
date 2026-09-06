@@ -8,18 +8,17 @@ import networkx as nx
 import pytest
 from test_migrators import run_test_migration
 
+from conda_forge_tick.feedstock_parser import load_feedstock_local
 from conda_forge_tick.lazy_json_backends import load
 from conda_forge_tick.migrators import DependencyUpdateMigrator, Version
 from conda_forge_tick.recipe_parser import CondaMetaYAML
 from conda_forge_tick.update_deps import (
     DepComparison,
-    _merge_dep_comparisons_sec,
     _modify_package_name_from_github,
     _update_sec_deps,
     apply_dep_update,
     generate_dep_hint,
     get_dep_updates_and_hints,
-    get_depfinder_comparison,
     get_grayskull_comparison,
     make_grayskull_recipe,
 )
@@ -31,51 +30,6 @@ VERSION = Version(
     piggy_back_migrations=[DependencyUpdateMigrator(set())],
     total_graph=TOTAL_GRAPH,
 )
-
-
-@pytest.mark.parametrize(
-    "dp1,dp2,m",
-    [
-        ({}, {}, {}),
-        (
-            {"df_minus_cf": {"a"}},
-            {},
-            {"df_minus_cf": {"a"}},
-        ),
-        (
-            {},
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a"}},
-        ),
-        (
-            {"df_minus_cf": {"a"}},
-            {"cf_minus_df": {"b"}},
-            {"df_minus_cf": {"a"}, "cf_minus_df": {"b"}},
-        ),
-        (
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"c", "d"}, "cf_minus_df": {"b"}},
-            {"df_minus_cf": {"a", "c", "d"}, "cf_minus_df": {"b"}},
-        ),
-        (
-            {"df_minus_cf": {"c", "d"}, "cf_minus_df": {"b"}},
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a", "c", "d"}, "cf_minus_df": {"b"}},
-        ),
-        (
-            {"df_minus_cf": {"a >=2"}},
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a >=2"}},
-        ),
-        (
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a >=2"}},
-            {"df_minus_cf": {"a"}},
-        ),
-    ],
-)
-def test_merge_dep_comparisons(dp1, dp2, m):
-    assert m == _merge_dep_comparisons_sec(dp1, dp2)
 
 
 def test_generate_dep_hint():
@@ -140,6 +94,7 @@ def test_get_grayskull_comparison():
     assert any(_d.startswith("python") for _d in d["run"]["df_minus_cf"])
 
 
+@pytest.mark.mongodb
 def test_update_run_deps():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
@@ -161,26 +116,6 @@ def test_update_run_deps():
     print("\n" + recipe.dumps())
     assert updated_deps
     assert "python >={{ python_min }}" in recipe.dumps()
-
-
-@pytest.mark.xfail(
-    reason="depfinder sometimes fails due to bad import to package mapping"
-)
-def test_get_depfinder_comparison():
-    with open(
-        os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
-    ) as f:
-        attrs = load(f)
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        pth = os.path.join(tmpdir, "meta.yaml")
-        with open(pth, "w") as fp:
-            fp.write(attrs["raw_meta_yaml"])
-
-        d = get_depfinder_comparison(tmpdir, attrs, {"conda"})
-        print(d)
-    assert d["run"] == {"df_minus_cf": {"pyyaml"}}
-    assert "host" not in d
 
 
 praw_recipe = """\
@@ -251,6 +186,8 @@ def test_get_dep_updates_and_hints_praw():
         },
         "new_version": "7.7.0",
     }
+    attrs = load_feedstock_local("praw", attrs, meta_yaml=praw_recipe)
+
     with tempfile.TemporaryDirectory() as tmpdir:
         recipe = Path(tmpdir) / "meta.yaml"
         recipe.write_text(praw_recipe)
@@ -264,7 +201,7 @@ def test_get_dep_updates_and_hints_praw():
         )
 
     print(res[0], res[1], flush=True)
-    assert "websocket" in res[1]
+    assert "python >={{ python_min }}" in res[1]
 
 
 @pytest.mark.parametrize("disabled_param", ["disabled"])
@@ -325,116 +262,12 @@ extra:
 """
 
 
-out_yml_all = """\
-{% set version = "2.3.0" %}
-
-package:
-  name: depfinder
-  version: {{ version }}
-
-source:
-  url: https://pypi.io/packages/source/d/depfinder/depfinder-{{ version }}.tar.gz
-  sha256: 2694acbc8f7d94ca9bae55b8dc5b4860d5bc253c6a377b3b8ce63fb5bffa4000
-
-build:
-  number: 0
-  noarch: python
-  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
-  entry_points:
-    - depfinder = depfinder.cli:cli
-
-requirements:
-  host:
-    # Python version is limited by stdlib-list.
-    - python <3.9
-    - pip
-  run:
-    - pyyaml
-    - python <3.9
-    - stdlib-list
-
-test:
-  commands:
-    - depfinder -h
-  imports:
-    - depfinder
-
-about:
-  home: http://github.com/ericdill/depfinder
-  license: BSD-3-Clause
-  license_file: LICENSE
-  summary: Find all the unique imports in your library
-
-extra:
-  recipe-maintainers:
-    - ericdill
-    - mariusvniekerk
-    - tonyfast
-    - ocefpaf
-"""
-
-out_yml_src = """\
-{% set version = "2.3.0" %}
-
-package:
-  name: depfinder
-  version: {{ version }}
-
-source:
-  url: https://pypi.io/packages/source/d/depfinder/depfinder-{{ version }}.tar.gz
-  sha256: 2694acbc8f7d94ca9bae55b8dc5b4860d5bc253c6a377b3b8ce63fb5bffa4000
-
-build:
-  number: 0
-  noarch: python
-  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
-  entry_points:
-    - depfinder = depfinder.cli:cli
-
-requirements:
-  host:
-    # Python version is limited by stdlib-list.
-    - python <3.9
-    - pip
-  run:
-    - pyyaml
-    - python <3.9
-    - stdlib-list
-
-test:
-  commands:
-    - depfinder -h
-  imports:
-    - depfinder
-
-about:
-  home: http://github.com/ericdill/depfinder
-  license: BSD-3-Clause
-  license_file: LICENSE
-  summary: Find all the unique imports in your library
-
-extra:
-  recipe-maintainers:
-    - ericdill
-    - mariusvniekerk
-    - tonyfast
-    - ocefpaf
-"""
-
-
 @pytest.mark.parametrize(
     "update_kind,out_yml",
     [
         ("update-grayskull", out_yml_gs),
-        ("update-all", out_yml_all),
-        (
-            "update-source",
-            out_yml_src,
-        ),
+        ("update-all", out_yml_gs),
     ],
-)
-@pytest.mark.xfail(
-    reason="depfinder sometimes fails due to bad import to package mapping"
 )
 def test_update_deps_version(caplog, tmp_path, update_kind, out_yml):
     caplog.set_level(
@@ -562,8 +395,8 @@ requirements:
   run:
     - importlib-metadata >=3.7.3,<4.0.0
     - lark >=0.11.1,<0.12.0
-    - networkx >=2.5,<3.0
-    - numpy >=1.20,<2.0
+    - networkx >=2.5.0,<3.0.0
+    - numpy >=1.20.0,<2.0.0
     - python >=3.7,<4.0
     - qcs-api-client >=0.8.1,<0.21.0
     - retry >=0.9.2,<0.10.0
@@ -600,13 +433,13 @@ extra:
 """  # noqa
 
 
-@pytest.mark.xfail()
 @pytest.mark.parametrize(
     "update_kind,out_yml",
     [
         ("update-grayskull", out_yml_pyquil),
     ],
 )
+@pytest.mark.mongodb
 def test_update_deps_version_pyquil(caplog, tmp_path, update_kind, out_yml):
     caplog.set_level(
         logging.DEBUG,
@@ -900,7 +733,7 @@ def test_apply_dep_update_v1(
             {
                 "host": {
                     "cf_minus_df": {"python <3.9"},
-                    "df_minus_cf": {"python {{ python_min }}.*"},
+                    "df_minus_cf": {"python {{ python_min }}"},
                 },
                 "run": {
                     "cf_minus_df": {"python <3.9", "stdlib-list"},
@@ -943,6 +776,7 @@ def test_apply_dep_update_v1(
     ],
     ids=["depfinder", "azure-mgmt-synapse"],
 )
+@pytest.mark.mongodb
 def test_get_grayskull_comparison_full(
     attrs: dict, expected_dep_comparison: DepComparison
 ):

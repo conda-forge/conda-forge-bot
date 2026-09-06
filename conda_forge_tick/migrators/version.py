@@ -430,7 +430,7 @@ class Version(Migrator):
             feedstock_ctx.attrs,
             ["conda-forge.yml", "bot", "inspection"],
             {},
-            "disabled",
+            "hint",
         )
         logger.info("bot.inspection: %s", update_deps)
 
@@ -461,7 +461,7 @@ class Version(Migrator):
             hint = "\n\nDependency Analysis\n--------------------\n\n"
             hint += (
                 "We couldn't run dependency analysis due to an internal "
-                "error in the bot, depfinder, or grayskull. :/ "
+                "error in the bot or grayskull. :/ "
                 "Help is very welcome!"
             )
 
