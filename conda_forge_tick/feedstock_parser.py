@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Union
 
 import requests
-import yaml
 from conda_forge_feedstock_ops.container_utils import (
     get_default_log_level_args,
     run_container_operation,
@@ -39,6 +38,7 @@ from conda_forge_tick.utils import (
     parse_meta_yaml,
     parse_recipe_yaml,
     sanitize_string,
+    yaml_safe_load,
 )
 
 logger = logging.getLogger(__name__)
@@ -331,7 +331,7 @@ def populate_feedstock_attributes(
     if isinstance(conda_forge_yaml, str):
         try:
             node_attrs["conda-forge.yml"] = {
-                k: v for k, v in yaml.safe_load(conda_forge_yaml).items()
+                k: v for k, v in yaml_safe_load(conda_forge_yaml).items()
             }
         except Exception as e:
             import traceback

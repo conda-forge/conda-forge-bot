@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 598a3e5e32abd006a684d0b8522c8be22d68139df229cbc8fd34a02db2a578a9
+    linux-64: a93685689badc32621ece7924eb4f1dfbd6a7b37d04361d3b0db0b170d7df105
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -3836,11 +3836,11 @@ package:
     blinker: ''
     cryptography: ''
     pyjwt: '>=1.0.0'
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/oauthlib-3.3.1-pyhd8ed1ab_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/oauthlib-3.3.1-pyh5ded981_1.conda
   hash:
-    md5: d4f3f31ee39db3efecb96c0728d4bdbf
-    sha256: dfa8222df90736fa13f8896f5a573a50273af8347542d412c3bd1230058e56a5
+    md5: 5878c9a87282fd74d4913ee8c3952ed0
+    sha256: 6de209e142b5e41f4c2cd52c45f5552e5675333283c629d50aa05f1e80f9bbcb
   category: main
   optional: false
 - name: openssl
@@ -4457,12 +4457,12 @@ package:
     dnspython: <3.0.0,>=2.7.0
     libgcc: '>=15'
     libstdcxx: '>=15'
-    python: '>=3.12,<3.13.0a0'
+    python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.0-py312ha6a3dbb_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.0-py312h1064dfc_2.conda
   hash:
-    md5: 1ffcbdcb07326130376bd3ca0819cf60
-    sha256: e5004be5d61cd20c0d31e6ccfb2551db58a238e77fee82b450f01504e08d2c6d
+    md5: 55542bf4a02cadc405b4cb3ba692a3c6
+    sha256: 9c1cb747463c66e5f778865f859f021472d1b7a8f6d1a5145547958dbe669ef9
   category: main
   optional: false
 - name: pynacl
