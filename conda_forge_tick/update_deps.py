@@ -15,7 +15,6 @@ from grayskull.utils import generate_recipe
 from ruamel.yaml import YAML
 from souschef.recipe import Recipe
 
-# from conda_forge_tick.depfinder_api import simple_import_to_pkg_map
 from conda_forge_tick.feedstock_parser import load_feedstock
 from conda_forge_tick.recipe_parser import CONDA_SELECTOR, CondaMetaYAML
 from conda_forge_tick.utils import get_recipe_schema_version
