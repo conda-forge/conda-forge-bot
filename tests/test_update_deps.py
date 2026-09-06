@@ -94,6 +94,7 @@ def test_get_grayskull_comparison():
     assert any(_d.startswith("python") for _d in d["run"]["df_minus_cf"])
 
 
+@pytest.mark.mongodb
 def test_update_run_deps():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
@@ -775,6 +776,7 @@ def test_apply_dep_update_v1(
     ],
     ids=["depfinder", "azure-mgmt-synapse"],
 )
+@pytest.mark.mongodb
 def test_get_grayskull_comparison_full(
     attrs: dict, expected_dep_comparison: DepComparison
 ):
