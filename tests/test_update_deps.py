@@ -13,13 +13,11 @@ from conda_forge_tick.migrators import DependencyUpdateMigrator, Version
 from conda_forge_tick.recipe_parser import CondaMetaYAML
 from conda_forge_tick.update_deps import (
     DepComparison,
-    _merge_dep_comparisons_sec,
     _modify_package_name_from_github,
     _update_sec_deps,
     apply_dep_update,
     generate_dep_hint,
     get_dep_updates_and_hints,
-    get_depfinder_comparison,
     get_grayskull_comparison,
     make_grayskull_recipe,
 )
@@ -31,51 +29,6 @@ VERSION = Version(
     piggy_back_migrations=[DependencyUpdateMigrator(set())],
     total_graph=TOTAL_GRAPH,
 )
-
-
-@pytest.mark.parametrize(
-    "dp1,dp2,m",
-    [
-        ({}, {}, {}),
-        (
-            {"df_minus_cf": {"a"}},
-            {},
-            {"df_minus_cf": {"a"}},
-        ),
-        (
-            {},
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a"}},
-        ),
-        (
-            {"df_minus_cf": {"a"}},
-            {"cf_minus_df": {"b"}},
-            {"df_minus_cf": {"a"}, "cf_minus_df": {"b"}},
-        ),
-        (
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"c", "d"}, "cf_minus_df": {"b"}},
-            {"df_minus_cf": {"a", "c", "d"}, "cf_minus_df": {"b"}},
-        ),
-        (
-            {"df_minus_cf": {"c", "d"}, "cf_minus_df": {"b"}},
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a", "c", "d"}, "cf_minus_df": {"b"}},
-        ),
-        (
-            {"df_minus_cf": {"a >=2"}},
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a >=2"}},
-        ),
-        (
-            {"df_minus_cf": {"a"}},
-            {"df_minus_cf": {"a >=2"}},
-            {"df_minus_cf": {"a"}},
-        ),
-    ],
-)
-def test_merge_dep_comparisons(dp1, dp2, m):
-    assert m == _merge_dep_comparisons_sec(dp1, dp2)
 
 
 def test_generate_dep_hint():
@@ -161,26 +114,6 @@ def test_update_run_deps():
     print("\n" + recipe.dumps())
     assert updated_deps
     assert "python >={{ python_min }}" in recipe.dumps()
-
-
-@pytest.mark.xfail(
-    reason="depfinder sometimes fails due to bad import to package mapping"
-)
-def test_get_depfinder_comparison():
-    with open(
-        os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
-    ) as f:
-        attrs = load(f)
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        pth = os.path.join(tmpdir, "meta.yaml")
-        with open(pth, "w") as fp:
-            fp.write(attrs["raw_meta_yaml"])
-
-        d = get_depfinder_comparison(tmpdir, attrs, {"conda"})
-        print(d)
-    assert d["run"] == {"df_minus_cf": {"pyyaml"}}
-    assert "host" not in d
 
 
 praw_recipe = """\
