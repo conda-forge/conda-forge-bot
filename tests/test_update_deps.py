@@ -61,6 +61,7 @@ def test_generate_dep_hint():
     assert "but not in the meta.yaml" not in hint
 
 
+@pytest.mark.mongodb
 def test_make_grayskull_recipe():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
@@ -72,6 +73,7 @@ def test_make_grayskull_recipe():
     assert attrs["version"] in recipe
 
 
+@pytest.mark.mongodb
 def test_make_grayskull_recipe_github_url():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "ngmix.json"),
@@ -178,6 +180,7 @@ extra:
 """
 
 
+@pytest.mark.mongodb
 def test_get_dep_updates_and_hints_praw():
     attrs = {
         "name": "praw",
@@ -269,6 +272,7 @@ extra:
         ("update-all", out_yml_gs),
     ],
 )
+@pytest.mark.mongodb
 def test_update_deps_version(caplog, tmp_path, update_kind, out_yml):
     caplog.set_level(
         logging.DEBUG,
@@ -988,6 +992,7 @@ def test_jsii_package_name_resolution():
     assert resolved_name == "jsii"
 
 
+@pytest.mark.mongodb
 def test_get_grayskull_comparison_v1_python_min_mismatch():
     """Test that get_grayskull_comparison works for v1 recipes using python_min.
 
