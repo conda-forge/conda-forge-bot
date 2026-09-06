@@ -15,8 +15,9 @@ import traceback
 import typing
 import warnings
 from collections import defaultdict
-from collections.abc import Iterable, Mapping, MutableMapping, Sequence
+from collections.abc import Iterable, Mapping, MutableMapping, MutableSequence, Sequence
 from pathlib import Path
+from types import MethodType
 from typing import (
     Any,
     ContextManager,
@@ -36,6 +37,7 @@ from conda_forge_feedstock_ops.container_utils import (
     should_use_container,
 )
 from rattler_build_conda_compat.outputs import flatten_staging_inheritance
+from ruamel.yaml.comments import CommentedMap
 
 from . import sensitive_env
 from .lazy_json_backends import LazyJson
@@ -181,6 +183,71 @@ def fold_log_lines(title):
         if os.environ.get("GITHUB_ACTIONS", "false") == "true":
             LOG_LINES_FOLDED = False
             print("::endgroup::", flush=True)
+
+
+# from https://stackoverflow.com/a/40227545
+def _recursive_sort_data_by_keys(d):
+    try:
+        if isinstance(d, CommentedMap):
+            return d.sort()
+    except AttributeError:
+        pass
+
+    if isinstance(d, Mapping):
+        # could use dict in newer python versions
+        res = CommentedMap()
+        for k in sorted(d.keys()):
+            res[k] = _recursive_sort_data_by_keys(d[k])
+        return res
+    if isinstance(d, MutableSequence):
+        for idx, elem in enumerate(d):
+            d[idx] = _recursive_sort_data_by_keys(elem)
+    return d
+
+
+def get_yaml_parser(typ="rt", sort_keys=False):
+    """Get a yaml parser.
+
+    Parameters
+    ----------
+    typ : str
+        The type of parser (e.g., 'rt', 'safe', 'jinja2').
+    sort_keys : bool
+        If True, sort keys on output.
+
+    Returns
+    -------
+    parser
+        A `ruamel.yaml.YAML` instance.
+    """
+    parser = ruamel.yaml.YAML(typ=typ)  # spellchecker:disable-line
+    parser.indent(mapping=2, sequence=4, offset=2)
+    parser.width = 320
+    parser.preserve_quotes = True
+    parser.default_flow_style = False
+    # do not use yaml anchors
+    parser.representer.ignore_aliases = lambda x: True
+
+    if sort_keys:
+        orig_dump = parser.dump
+
+        def dump(self, *args, **kwargs):
+            args = list(args)
+            args[0] = _recursive_sort_data_by_keys(args[0])
+            args = tuple(args)
+            orig_dump(*args, **kwargs)
+
+        parser.dump = MethodType(dump, parser)
+
+    def dumps(self, data):
+        s = io.StringIO()
+        self.dump(data, s)
+        return s.getvalue()
+
+    parser.dumps = MethodType(dumps, parser)
+    parser.loads = parser.load
+
+    return parser
 
 
 def yaml_safe_load(stream):

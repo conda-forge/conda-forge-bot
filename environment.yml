@@ -62,7 +62,6 @@ dependencies:
   - tqdm
   - wget
   - wurlitzer
-  - yaml
   - pip
   - pytest =9
   - pytest-xprocess

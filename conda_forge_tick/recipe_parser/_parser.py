@@ -51,14 +51,24 @@ def _get_yaml_parser(typ="jinja2"):
     """Yaml parser that is jinja2 aware."""
     # using a function here so settings are always the same
 
-    def represent_none(self, data):
-        return self.represent_scalar("tag:yaml.org,2002:null", "")
-
     parser = YAML(typ=typ)  # spellchecker:disable-line
     parser.indent(mapping=2, sequence=4, offset=2)
     parser.width = 320
     parser.preserve_quotes = True
+
+    # represent None as an empty string
+    class _DummyRepresenter(parser.Representer):  # type: ignore[name-defined]
+        pass
+
+    def represent_none(self, data):
+        return self.represent_scalar("tag:yaml.org,2002:null", "")
+
+    _DummyRepresenter.add_representer(type(None), represent_none)
+    parser.Representer = _DummyRepresenter
+
+    # do not use yaml anchors
     parser.representer.ignore_aliases = lambda x: True
+
     parser.representer.add_representer(type(None), represent_none)
     return parser
 

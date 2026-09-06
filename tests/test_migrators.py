@@ -7,7 +7,6 @@ from pathlib import Path
 
 import networkx as nx
 import pytest
-import yaml
 
 from conda_forge_tick.contexts import ClonedFeedstockContext
 from conda_forge_tick.feedstock_parser import populate_feedstock_attributes
@@ -24,6 +23,8 @@ from conda_forge_tick.utils import (
     frozen_to_json_friendly,
     parse_meta_yaml,
     parse_recipe_yaml,
+    yaml_safe_dump,
+    yaml_safe_load,
 )
 
 sample_yaml_rebuild = """
@@ -508,7 +509,7 @@ def run_test_migration(
         recipe_path.joinpath("recipe.yaml").write_text(inp)
 
         build_variants = (
-            yaml.safe_load(conda_build_config) if conda_build_config else {}
+            yaml_safe_load(conda_build_config) if conda_build_config else {}
         )
 
         if "target_platform" not in build_variants:
@@ -527,7 +528,7 @@ def run_test_migration(
                 for value in assignment_map.values()
             )
             tmp_path.joinpath(f".ci_support/{variant_name}_.yaml").write_text(
-                yaml.dump({k: [v] for k, v in assignment_map.items()})
+                yaml_safe_dump({k: [v] for k, v in assignment_map.items()})
             )
     else:
         raise ValueError(f"Unsupported recipe version: {recipe_version}")
@@ -917,7 +918,7 @@ def test_all_noarch(meta, is_all_noarch):
             False,
         ),
         (
-            yaml.load(
+            yaml_safe_load(
                 """\
 schema_version: 1
 
@@ -1091,7 +1092,6 @@ extra:
     - martin-g
     - h-vetinari
 """,
-                yaml.SafeLoader,
             ),
             True,
         ),
