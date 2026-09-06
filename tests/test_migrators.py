@@ -23,7 +23,7 @@ from conda_forge_tick.utils import (
     frozen_to_json_friendly,
     parse_meta_yaml,
     parse_recipe_yaml,
-    yaml_safe_dump,
+    yaml_safe_dumps,
     yaml_safe_load,
 )
 
@@ -528,7 +528,7 @@ def run_test_migration(
                 for value in assignment_map.values()
             )
             tmp_path.joinpath(f".ci_support/{variant_name}_.yaml").write_text(
-                yaml_safe_dump({k: [v] for k, v in assignment_map.items()})
+                yaml_safe_dumps({k: [v] for k, v in assignment_map.items()})
             )
     else:
         raise ValueError(f"Unsupported recipe version: {recipe_version}")

@@ -262,6 +262,15 @@ def yaml_safe_dump(data, stream=None):
     return yaml.dump(data, stream=stream)
 
 
+def yaml_safe_dumps(data):
+    """Dump a yaml object to a string."""
+    yaml = ruamel.yaml.YAML(typ="safe", pure=True)
+    yaml.default_flow_style = False
+    s = io.StringIO()
+    yaml.dump(data, stream=s)
+    return s.getvalue()
+
+
 def _render_meta_yaml(text: str, for_pinning: bool = False, **kwargs) -> str:
     """Render the meta.yaml with Jinja2 variables.
 
