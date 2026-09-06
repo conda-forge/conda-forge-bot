@@ -264,10 +264,8 @@ def yaml_safe_dump(data, stream=None):
 
 def yaml_safe_dumps(data):
     """Dump a yaml object to a string."""
-    yaml = ruamel.yaml.YAML(typ="safe", pure=True)
-    yaml.default_flow_style = False
     s = io.StringIO()
-    yaml.dump(data, stream=s)
+    yaml_safe_dump(data, stream=s)
     return s.getvalue()
 
 
