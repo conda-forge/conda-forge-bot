@@ -1,14 +1,12 @@
 from pathlib import Path
 from typing import Any
 
+from ruamel.yaml import YAML
+
 from conda_forge_tick.migrators.core import MiniMigrator
 from conda_forge_tick.migrators_types import (
     AttrsTypedDict,
     CondaForgeYamlContents,
-)
-from conda_forge_tick.utils import (
-    yaml_safe_dump,
-    yaml_safe_load,
 )
 
 
@@ -45,8 +43,11 @@ class CrossToNativeMigrator(MiniMigrator):
 
     def migrate(self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any) -> None:
         cfyaml_path = Path(recipe_dir) / "../conda-forge.yml"
+        # copied from conda_forge_yaml_cleanup.py
+        yaml = YAML()
+        yaml.indent(mapping=2, sequence=4, offset=2)
         with open(cfyaml_path) as fp:
-            cfyaml = yaml_safe_load(fp)
+            cfyaml = yaml.load(fp.read())
 
         for platform in self._platform_providers:
             if not self._migrate_platform(platform, cfyaml):
@@ -60,4 +61,4 @@ class CrossToNativeMigrator(MiniMigrator):
             del cfyaml["build_platform"]
 
         with open(cfyaml_path, "w") as fp:
-            yaml_safe_dump(cfyaml, fp)
+            yaml.dump(cfyaml, fp)

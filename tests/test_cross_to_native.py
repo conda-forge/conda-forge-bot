@@ -152,6 +152,12 @@ build_platform:
 
 provider:
   osx_arm64: default
+
+workflow_settings:
+  store_build_artifacts:
+    # do not remove this comment
+    - os: [linux, osx]
+      value: true
 """
 
     cfyaml = tmp_path / "conda-forge.yml"
@@ -177,5 +183,11 @@ provider:
         == """\
 provider:
   osx_arm64: default
+
+workflow_settings:
+  store_build_artifacts:
+    # do not remove this comment
+    - os: [linux, osx]
+      value: true
 """
     )
