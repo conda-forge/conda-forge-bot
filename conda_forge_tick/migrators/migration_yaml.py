@@ -798,6 +798,10 @@ def _req_is_python(req):
     return PIN_SEP_PAT.split(req)[0].strip().lower() == "python"
 
 
+def _req_is_not_exactly_python(req):
+    return req.lower().strip() != "python"
+
+
 def _combine_build(output_build, global_build):
     build = copy.deepcopy(global_build)
     build.update(output_build)
@@ -805,43 +809,80 @@ def _combine_build(output_build, global_build):
 
 
 def all_noarch(attrs, only_python=False):
+    """Test if a recipe is all noarch.
+
+    An all noarch recipe is one in which all builds are some form of noarch.
+
+    If only_python is True, then each build must be `noarch: python`,
+    `python_version_independent` or not depend on `python` (without
+    any other constraints) in host.
+    """
     meta_yaml = attrs.get("meta_yaml", {}) or {}
     global_build = meta_yaml.get("build", {}) or {}
+    all_noarch = True
 
     if not only_python:
-        outputs = meta_yaml.get("outputs", [])
-        if meta_yaml.get("outputs", []):
-            return all(
-                "noarch" in _combine_build(output.get("build", {}) or {}, global_build)
-                for output in outputs
-            )
+        outputs = meta_yaml.get("outputs", []) or []
+        if outputs:
+            for output in outputs:
+                _build = _combine_build(output.get("build", {}) or {}, global_build)
+                all_noarch = all_noarch and (
+                    "noarch" in _build
+                    or _build.get("python_version_independent", False)
+                    or (_build.get("python", {}) or {}).get(
+                        "version_independent", False
+                    )
+                )
 
-        return "noarch" in global_build
+        if (
+            # if no outputs, look at top-level
+            (not meta_yaml.get("outputs", []))
+            or (
+                # if outputs and top-level defines a package, check top-level
+                meta_yaml.get("outputs", [])
+                and ((meta_yaml.get("requirements", {}) or {}).get("run", []) or [])
+            )
+        ):
+            all_noarch = all_noarch and (
+                "noarch" in global_build
+                or global_build.get("python_version_independent", False)
+                or (global_build.get("python", {}) or {}).get(
+                    "version_independent", False
+                )
+            )
     else:
         reqs = (
-            meta_yaml.get("requirements", {}).get("host", [])
-            or meta_yaml.get("requirements", {}).get("build", [])
+            (meta_yaml.get("requirements", {}) or {}).get("host", [])
+            or (meta_yaml.get("requirements", {}) or {}).get("build", [])
             or []
         )
         if any(_req_is_python(req) for req in reqs):
-            all_noarch = "python" == global_build.get("noarch", None)
-        else:
-            all_noarch = True
+            all_noarch = all_noarch and (
+                ("python" == global_build.get("noarch", None))
+                or global_build.get("python_version_independent", False)
+                or (global_build.get("python", {}) or {}).get(
+                    "version_independent", False
+                )
+                or all(_req_is_not_exactly_python(req) for req in reqs)
+            )
 
         for output in meta_yaml.get("outputs", []):
             # some nodes have None
             _build = _combine_build(output.get("build", {}) or {}, global_build)
 
             # some nodes have a list here
-            _reqs = output.get("requirements", {})
+            _reqs = output.get("requirements", {}) or {}
             if not isinstance(_reqs, list):
                 _reqs = _reqs.get("host", []) or _reqs.get("build", []) or []
 
             if any(_req_is_python(req) for req in _reqs):
-                _all_noarch = "python" == _build.get("noarch", None)
-            else:
-                _all_noarch = True
-
-            all_noarch = all_noarch and _all_noarch
+                all_noarch = all_noarch and (
+                    ("python" == _build.get("noarch", None))
+                    or _build.get("python_version_independent", False)
+                    or (_build.get("python", {}) or {}).get(
+                        "version_independent", False
+                    )
+                    or all(_req_is_not_exactly_python(req) for req in _reqs)
+                )
 
     return all_noarch

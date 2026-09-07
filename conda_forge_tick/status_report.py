@@ -13,7 +13,6 @@ import networkx as nx
 import orjson
 import requests
 import tqdm
-import yaml
 from conda.models.version import VersionOrder
 from graphviz import Source
 
@@ -40,6 +39,7 @@ from conda_forge_tick.utils import (
     load_existing_graph,
     pr_can_be_archived,
     sanitize_string,
+    yaml_safe_load,
 )
 from conda_forge_tick.version_filters import filter_version
 
@@ -506,7 +506,7 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
             or isinstance(migrator, Migrator)
         ) and not isinstance(migrator, Version):
             if isinstance(migrator, GraphMigrator):
-                mgconf = yaml.safe_load(getattr(migrator, "yaml_contents", "{}")).get(
+                mgconf = yaml_safe_load(getattr(migrator, "yaml_contents", "{}")).get(
                     "__migrator",
                     {},
                 )

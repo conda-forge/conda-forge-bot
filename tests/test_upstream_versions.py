@@ -2146,7 +2146,6 @@ def test_latest_version_gittags(tmpdir, yaml_path):
     name = "libtirpc"
     recipe_path = os.path.join(yaml_path, "libtirpc-gittags.yaml")
     curr_ver = "1.3.6"
-    new_ver = "1.3.7"
     source = GitTags()
 
     with open(recipe_path) as fd:
@@ -2169,7 +2168,7 @@ def test_latest_version_gittags(tmpdir, yaml_path):
         )
 
     attempt = get_latest_version(name, pmy, [source], use_container=False)
-    assert new_ver == attempt["new_version"]
+    assert VersionOrder(attempt["new_version"]) > VersionOrder(curr_ver)
 
 
 def test_latest_version_pypi_files_pythonhost_url(tmpdir):

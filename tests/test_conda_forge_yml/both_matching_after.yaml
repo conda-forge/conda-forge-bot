@@ -1,0 +1,20 @@
+workflow_settings:
+  store_build_artifacts: true
+  free_disk_space: quick
+  pagefile_size:
+    - os: linux
+      value: 0
+    - os: win
+      value: 0
+  build_workspace_dir:
+    - provider: azure
+      os: win
+      value: D:\bld
+  tools_install_dir:
+    - provider: azure
+      os: win
+      value: C:\miniforge3
+  resize_partitions:
+    - provider: github_actions
+      os: win
+      value: false

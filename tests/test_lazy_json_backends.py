@@ -27,6 +27,7 @@ from conda_forge_tick.lazy_json_backends import (
     get_lazy_json_primary_backend,
     get_sharded_path,
     lazy_json_override_backends,
+    lazy_json_retry_sequence,
     lazy_json_snapshot,
     lazy_json_transaction,
     load,
@@ -1141,3 +1142,11 @@ def test_lazy_json_file_read_only_backend(tmpdir):
             conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_USE_FILE_CACHE = (
                 old_cache
             )
+
+
+def test_lazy_json_lazy_json_retry_sequence():
+    start = time.time()
+    for _ in lazy_json_retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=2):
+        pass
+    end = time.time()
+    assert end - start < 20 * 2

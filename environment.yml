@@ -2,11 +2,8 @@ name: conda-forge-bot
 channels:
   - conda-forge
 platforms:
-  - osx-arm64
   - linux-64
-  - linux-aarch64
 dependencies:
-  - attrs
   - backoff
   - bcrypt
   - cachecontrol
@@ -14,20 +11,17 @@ dependencies:
   - click
   - conda >=25
   - conda-build >=25
-  - conda-lock
-  - conda-forge-feedstock-ops >=0.16.0
+  - conda-forge-feedstock-ops >=0.19.1
+  - conda-forge-metadata >=2026.9.5
   - conda-forge-pinning
   - conda-libmamba-solver
-  - conda-forge-metadata >=0.15.0
+  - conda-lock
   - conda-package-handling
+  - conda-recipe-manager >=0.10.6
   - conda-smithy >=2026.5.29
-  - conda-build >=3.24.0
-  - conda-recipe-manager >=0.6.1
   - curl
   - dateparser
-  - depfinder >=2.11.0
   - distributed
-  - fastapi
   - feedparser
   - frozendict
   - git !=2.50
@@ -36,19 +30,18 @@ dependencies:
   - jinja2
   - lockfile
   - mamba >=0.23
-  - mitmproxy
   - msgpack-python
   - networkx !=2.8.1
   - orjson
   - packaging
   - psutil
-  - pydantic
+  - py-rattler>=0.22.0,<0.26.0a0
+  - pydantic >=2.13
   - pydantic-extra-types
-  - pydantic-settings
+  - pydantic-settings >=2.15
   - pygithub
   - pymongo
   - pynamodb
-  - python=3.12
   - python-dateutil
   - python-graphviz
   - rattler-build >=0.74,<0.75.0a0
@@ -64,19 +57,20 @@ dependencies:
   - tqdm
   - wget
   - wurlitzer
-  - yaml
+  # build
+  - python=3.12
   - pip
-  - pytest =9
-  - pytest-xprocess
+  - python-build
+  - setuptools_scm >=8
+  # test
   - codecov
-  - requests-mock
+  - mypy
   - pre-commit
-  - py-rattler>=0.22.0,<0.26.0a0
-  - pytest-xdist
+  - pytest =9
   - pytest-cov
   - pytest-env
   - pytest-retry
   - pytest-split
-  - setuptools_scm >=8
-  - python-build
-  - mypy
+  - pytest-xdist
+  - pytest-xprocess
+  - requests-mock

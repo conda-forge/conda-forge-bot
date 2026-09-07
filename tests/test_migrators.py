@@ -1,3 +1,4 @@
+import copy
 import itertools
 import json
 import os
@@ -7,7 +8,6 @@ from pathlib import Path
 
 import networkx as nx
 import pytest
-import yaml
 
 from conda_forge_tick.contexts import ClonedFeedstockContext
 from conda_forge_tick.feedstock_parser import populate_feedstock_attributes
@@ -24,6 +24,8 @@ from conda_forge_tick.utils import (
     frozen_to_json_friendly,
     parse_meta_yaml,
     parse_recipe_yaml,
+    yaml_safe_dumps,
+    yaml_safe_load,
 )
 
 sample_yaml_rebuild = """
@@ -490,6 +492,7 @@ def run_test_migration(
     make_body: bool = False,
     recipe_version: int = 0,
     conda_build_config: str | None = None,
+    allowed_text_replacements: list[dict] | None = None,
 ):
     recipe_path = tmp_path / "recipe"
 
@@ -508,7 +511,7 @@ def run_test_migration(
         recipe_path.joinpath("recipe.yaml").write_text(inp)
 
         build_variants = (
-            yaml.safe_load(conda_build_config) if conda_build_config else {}
+            yaml_safe_load(conda_build_config) if conda_build_config else {}
         )
 
         if "target_platform" not in build_variants:
@@ -527,7 +530,7 @@ def run_test_migration(
                 for value in assignment_map.values()
             )
             tmp_path.joinpath(f".ci_support/{variant_name}_.yaml").write_text(
-                yaml.dump({k: [v] for k, v in assignment_map.items()})
+                yaml_safe_dumps({k: [v] for k, v in assignment_map.items()})
             )
     else:
         raise ValueError(f"Unsupported recipe version: {recipe_version}")
@@ -631,12 +634,23 @@ def run_test_migration(
         actual_output = recipe_path.joinpath("meta.yaml").read_text()
     else:
         actual_output = recipe_path.joinpath("recipe.yaml").read_text()
+
+    all_possible_outputs = [output]
+    if allowed_text_replacements:
+        for rpl_dict in allowed_text_replacements:
+            new_output = copy.copy(output)
+            for k, v in rpl_dict.items():
+                new_output = new_output.replace(k, v)
+            all_possible_outputs.append(new_output)
+
     # strip jinja comments
     pat = re.compile(r"{#.*#}")
     actual_output = pat.sub("", actual_output)
-    output = pat.sub("", output)
+    all_possible_outputs = [pat.sub("", op) for op in all_possible_outputs]
 
-    assert actual_output == output
+    if not any(actual_output == op for op in all_possible_outputs):
+        for op in all_possible_outputs:
+            assert actual_output == op
 
     if prb_from_m and prb:
         assert prb in prb_from_m
@@ -915,6 +929,184 @@ def test_all_noarch(meta, is_all_noarch):
  }"""
             ),
             False,
+        ),
+        (
+            yaml_safe_load(
+                """\
+schema_version: 1
+
+context:
+  version: "5.1.0"
+  # the last non-0 micro version was 4.4.2.1 in 2016
+  version_with_py_micro: "${{ version }}.0"
+  lib: ${{ "" if unix else "Library/" }}
+  python_check_max: "3.14"
+
+recipe:
+  name: z3prover
+  version: ${{ version }}
+
+source:
+  url: https://github.com/Z3Prover/z3/archive/refs/tags/z3-${{ version }}.tar.gz
+  sha256: c433e1add0431c5edf1644bd9951c40588024d2d288f0e4215e5fcb6e3b4277d
+  patches:
+    - patches/0001-avoid-custom-re-build-commands-and-data-files.patch
+
+build:
+  number: 1
+  variant:
+    # we don't want separate jobs if the newest python is in release candidate phase
+    ignore_keys:
+      - channel_sources
+
+outputs:
+  - package:
+      name: libz3
+    build:
+      script:
+        - build_lib
+    requirements:
+      build:
+        # even for native builds, so we can uniformly use
+        # -DPython3_EXECUTABLE=${BUILD_PREFIX}/bin/python in build_py.sh
+        - python *
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+        - cmake
+        - ninja
+      host:
+        - python *
+      ignore_run_exports:
+        by_name:
+          - python
+          - python_abi
+      run_exports:
+        - ${{ pin_subpackage("libz3", upper_bound='x.x') }}
+      run_constraints:
+        - z3prover ==${{ version }}
+
+    tests:
+      - package_contents:
+          files:
+            # libraries
+            - if: linux
+              then:
+                - lib/libz3.so
+                - lib/libz3.so.${{ version }}*
+            - if: osx
+              then:
+                - lib/libz3.dylib
+                - lib/libz3.${{ version }}*.dylib
+            - if: win
+              then:
+                - Library/bin/libz3.dll
+                - Library/lib/libz3.lib
+            # binaries
+            - if: unix
+              then:
+                - bin/z3
+              else:
+                - Library/bin/z3.exe
+            # headers
+            - ${{ lib }}include/z3_algebraic.h
+            - ${{ lib }}include/z3_api.h
+            - ${{ lib }}include/z3_ast_containers.h
+            - ${{ lib }}include/z3_fixedpoint.h
+            - ${{ lib }}include/z3_fpa.h
+            - ${{ lib }}include/z3.h
+            - ${{ lib }}include/z3++.h
+            - ${{ lib }}include/z3_macros.h
+            - ${{ lib }}include/z3_optimization.h
+            - ${{ lib }}include/z3_polynomial.h
+            - ${{ lib }}include/z3_rcf.h
+            - ${{ lib }}include/z3_v1.h
+            - ${{ lib }}include/z3_spacer.h
+            - ${{ lib }}include/z3_version.h
+            # cmake & pkgconfig metadata
+            - ${{ lib }}lib/cmake/z3/Z3Targets.cmake
+            - ${{ lib }}lib/cmake/z3/Z3Targets-release.cmake
+            - ${{ lib }}lib/cmake/z3/Z3Config.cmake
+            - ${{ lib }}lib/cmake/z3/Z3ConfigVersion.cmake
+            - ${{ lib }}lib/pkgconfig/z3.pc
+      - script:
+          - z3 --help
+
+  - package:
+      name: z3-solver
+      version: ${{ version_with_py_micro }}
+    build:
+      skip: not is_python_min
+      python:
+        version_independent: true
+      script:
+        file: build_py
+    requirements:
+      build:
+        # even for native builds, so we can uniformly use
+        # -DPython3_EXECUTABLE=${BUILD_PREFIX}/bin/python in build_py.sh
+        - python ${{ python_min }}.*
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+        - cmake
+        - ninja
+      host:
+        - ${{ pin_subpackage("libz3", exact=True) }}
+        - python ${{ python_min }}.*
+        - setuptools
+        - pip
+      run:
+        - ${{ pin_subpackage("libz3", exact=True) }}
+        - python >=${{ python_min }}
+    tests:
+      - package_contents:
+          site_packages:
+            - z3_solver-${{ version_with_py_micro }}.dist-info/METADATA
+      - python:
+          imports:
+            - z3
+          pip_check: true
+          python_version:
+            - ${{ python_min }}.*
+            - ${{ python_check_max }}.*
+      - files:
+          recipe:
+            - test_z3.py
+        requirements:
+          run:
+            - pytest
+            - python !=${{ python_min }}.*
+        script:
+          - pytest -vv --tb=long --color=yes
+
+  - package:
+      # compatibility for previous name of library
+      name: z3prover
+    requirements:
+      host:
+        - ${{ pin_subpackage("libz3", exact=True) }}
+      run:
+        - ${{ pin_subpackage("libz3", exact=True) }}
+      run_exports:
+        - ${{ pin_subpackage("libz3", upper_bound='x.x') }}
+    tests:
+      - script:
+          - z3 --help
+
+about:
+  license: MIT
+  license_file: LICENSE.txt
+  summary: The Z3 Theorem Prover
+  homepage: https://github.com/Z3Prover/z3
+  repository: https://github.com/Z3Prover/z3
+  documentation: https://github.com/Z3Prover/z3/wiki#background
+
+extra:
+  recipe-maintainers:
+    - martin-g
+    - h-vetinari
+""",
+            ),
+            True,
         ),
     ],
 )

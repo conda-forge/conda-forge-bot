@@ -56,8 +56,8 @@ jobs:
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: list migrators
         if: success() && ! env.CI_SKIP
@@ -70,8 +70,8 @@ jobs:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: upload migrator list
@@ -145,8 +145,8 @@ jobs:
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: make migrators
         if: success() && ! env.CI_SKIP
@@ -161,8 +161,8 @@ jobs:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: deploy
@@ -174,8 +174,8 @@ jobs:
           conda-forge-tick deploy-to-github
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: upload migrator list
@@ -245,8 +245,8 @@ jobs:
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: download old migrator list
         if: success() && ! env.CI_SKIP
@@ -280,8 +280,8 @@ jobs:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: deploy
@@ -293,8 +293,8 @@ jobs:
           conda-forge-tick deploy-to-github
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail

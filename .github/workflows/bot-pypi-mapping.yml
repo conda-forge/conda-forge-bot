@@ -55,8 +55,8 @@ jobs:
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: build import to package mapping
         if: success() && ! env.CI_SKIP
@@ -66,8 +66,8 @@ jobs:
           conda-forge-tick make-import-to-package-mapping
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: build pypi mapping
         if: success() && ! env.CI_SKIP
@@ -77,8 +77,8 @@ jobs:
           conda-forge-tick make-mappings
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: deploy
         if: github.ref == 'refs/heads/main' && ! cancelled() && ! env.CI_SKIP
@@ -89,8 +89,8 @@ jobs:
           conda-forge-tick deploy-to-github
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
-          BOT_APP_ID: ${{ secrets.CF_CURATOR_APP_ID }}
-          BOT_PRIVATE_KEY: ${{ secrets.CF_CURATOR_PRIVATE_KEY }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail
