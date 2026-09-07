@@ -4,8 +4,6 @@ channels:
 platforms:
   - linux-64
 dependencies:
-  - attrs
-  - anyio <4.15
   - backoff
   - bcrypt
   - cachecontrol
@@ -13,15 +11,14 @@ dependencies:
   - click
   - conda >=25
   - conda-build >=25
-  - conda-lock
-  - conda-forge-feedstock-ops >=0.16.0
+  - conda-forge-feedstock-ops >=0.18.8
+  - conda-forge-metadata >=2026.9.3
   - conda-forge-pinning
   - conda-libmamba-solver
-  - conda-forge-metadata >=0.15.0
+  - conda-lock
   - conda-package-handling
+  - conda-recipe-manager >=0.10.6
   - conda-smithy >=2026.5.29
-  - conda-build >=3.24.0
-  - conda-recipe-manager >=0.6.1
   - curl
   - dateparser
   - distributed
@@ -40,13 +37,13 @@ dependencies:
   - orjson
   - packaging
   - psutil
+  - py-rattler>=0.22.0,<0.26.0a0
   - pydantic
   - pydantic-extra-types
   - pydantic-settings
   - pygithub
   - pymongo
   - pynamodb
-  - python=3.12
   - python-dateutil
   - python-graphviz
   - rattler-build >=0.74,<0.75.0a0
@@ -62,18 +59,20 @@ dependencies:
   - tqdm
   - wget
   - wurlitzer
+  # build
+  - python=3.12
   - pip
-  - pytest =9
-  - pytest-xprocess
+  - python-build
+  - setuptools_scm >=8
+  # test
   - codecov
-  - requests-mock
+  - mypy
   - pre-commit
-  - py-rattler>=0.22.0,<0.26.0a0
-  - pytest-xdist
+  - pytest =9
   - pytest-cov
   - pytest-env
   - pytest-retry
   - pytest-split
-  - setuptools_scm >=8
-  - python-build
-  - mypy
+  - pytest-xdist
+  - pytest-xprocess
+  - requests-mock
