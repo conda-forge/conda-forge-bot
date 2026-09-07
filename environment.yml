@@ -11,8 +11,8 @@ dependencies:
   - click
   - conda >=25
   - conda-build >=25
-  - conda-forge-feedstock-ops >=0.18.8
-  - conda-forge-metadata >=2026.9.3
+  - conda-forge-feedstock-ops >=0.18.9
+  - conda-forge-metadata >=2026.9.5
   - conda-forge-pinning
   - conda-libmamba-solver
   - conda-lock
