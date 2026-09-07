@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: a93685689badc32621ece7924eb4f1dfbd6a7b37d04361d3b0db0b170d7df105
+    linux-64: 3cde26e48a9c8d057f8e474af914ac63358e146df7ee0aa486ef8dffa2f6a7ca
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -3810,7 +3810,7 @@ package:
   category: main
   optional: false
 - name: numpy
-  version: 2.5.2
+  version: 2.5.3
   manager: conda
   platform: linux-64
   dependencies:
@@ -3822,10 +3822,10 @@ package:
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/numpy-2.5.2-py312he827f4e_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/numpy-2.5.3-py312he827f4e_0.conda
   hash:
-    md5: e70abe6ab4c60ecb6a51e67903bcec07
-    sha256: be778735f693d6c1e9b877d7a28fd7d9e8c0d695c5b93a4dd5b8ec4a4317ca13
+    md5: 5abf073f2cf066f2f3d28229b3cbe94d
+    sha256: 5b0e4c7757a2df883c5615a8f64bc4c113c4cd303ae6caa3ada5d397d114ce2a
   category: main
   optional: false
 - name: oauthlib
@@ -5213,10 +5213,10 @@ package:
     jeepney: '>=0.6'
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/secretstorage-3.5.0-py312h7900ff3_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/secretstorage-3.5.0-py312h7900ff3_2.conda
   hash:
-    md5: ed8bab48a297198671f974ac267d2971
-    sha256: 46d86d9e29d0c926e204cdfeef7f05078fc76980f6ca44993c38ec42441c1973
+    md5: d65c8e382280bb9758c23e20dc91b8d5
+    sha256: 4006e8ffa0d05f3b49ad713ba65163379bf8473e395a4e33b6efed04dc4689a9
   category: main
   optional: false
 - name: semver
