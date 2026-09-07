@@ -85,6 +85,7 @@ def test_make_grayskull_recipe_github_url():
     assert attrs["version"] in recipe
 
 
+@pytest.mark.mongodb
 def test_get_grayskull_comparison():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),

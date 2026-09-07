@@ -66,6 +66,8 @@ jobs:
         if: ${{ steps.should-run.outputs.should-run == 'true' }}
         working-directory: conda-forge-bot
         run: |
+          # need this for the tests
+          micromamba install mitmproxy fastapi
           # put pinnings at old version for testing
           micromamba install conda-forge-pinning==2026.08.04.15.04.25
           pip install --no-deps --no-build-isolation -e .
