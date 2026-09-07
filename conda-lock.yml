@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 06e85fe75f6e278faf9f1001aa658f68f723a7216011fdc835de682a479d953f
+    linux-64: e853dfb1fa162bc74fa6e14b216b34e528bd284518ccfcf31f74a639c8fdc2ea
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -1298,32 +1298,6 @@ package:
     sha256: bb826ff403b8195467e7cd5f504bc14767b424dac27bb225508ca2c1852554b2
   category: main
   optional: false
-- name: email-validator
-  version: 2.3.0
-  manager: conda
-  platform: linux-64
-  dependencies:
-    dnspython: '>=2.0.0'
-    idna: '>=2.0.0'
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/email-validator-2.3.0-pyhd8ed1ab_0.conda
-  hash:
-    md5: 3bc0ac31178387e8ed34094d9481bfe8
-    sha256: c37320864c35ef996b0e02e289df6ee89582d6c8e233e18dc9983375803c46bb
-  category: main
-  optional: false
-- name: email_validator
-  version: 2.3.0
-  manager: conda
-  platform: linux-64
-  dependencies:
-    email-validator: '>=2.3.0,<2.3.1.0a0'
-  url: https://conda.anaconda.org/conda-forge/noarch/email_validator-2.3.0-hd8ed1ab_0.conda
-  hash:
-    md5: 2452e434747a6b742adc5045f2182a8e
-    sha256: 6a518e00d040fcad016fb2dde29672aa3476cd9ae33ea5b7b257222e66037d89
-  category: main
-  optional: false
 - name: ensureconda
   version: 1.6.0
   manager: conda
@@ -1402,76 +1376,6 @@ package:
   hash:
     md5: a57b4be42619213a94f31d2c69c5dda7
     sha256: 1acc6a420efc5b64c384c1f35f49129966f8a12c93b4bb2bdc30079e5dc9d8a8
-  category: main
-  optional: false
-- name: fastapi
-  version: 0.141.1
-  manager: conda
-  platform: linux-64
-  dependencies:
-    fastapi-core: ==0.141.1
-    email_validator: ''
-    fastapi-cli: ''
-    fastar: ''
-    httpx: ''
-    jinja2: ''
-    pydantic-extra-types: ''
-    pydantic-settings: ''
-    python-multipart: ''
-    uvicorn-standard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-0.141.1-h76d476e_0.conda
-  hash:
-    md5: f17ba6ff4f4bd297242b084e798f2b98
-    sha256: e02b67926bf38b65c05761914981939b9f06e252b5a06f4fe1e803c6ba0692a2
-  category: main
-  optional: false
-- name: fastapi-cli
-  version: 0.0.32
-  manager: conda
-  platform: linux-64
-  dependencies:
-    python: ''
-    rich-toolkit: '>=0.14.8'
-    tomli: '>=2.0.0'
-    typer: '>=0.16'
-    uvicorn-standard: '>=0.15.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-cli-0.0.32-pyhcf101f3_0.conda
-  hash:
-    md5: 873835dd2a01dd8844086f1cde2067ce
-    sha256: 904e4b2abe0345ac9a51d2f64b716918ef3a9ad496252f8874864fb0ffbe8d31
-  category: main
-  optional: false
-- name: fastapi-core
-  version: 0.141.1
-  manager: conda
-  platform: linux-64
-  dependencies:
-    python: ''
-    annotated-doc: '>=0.0.2'
-    starlette: '>=0.46.0'
-    typing_extensions: '>=4.8.0'
-    typing-inspection: '>=0.4.2'
-    pydantic: '>=2.9.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/fastapi-core-0.141.1-pyhcf101f3_0.conda
-  hash:
-    md5: a81b247d4f26223a8cfe8b502f24f8a0
-    sha256: c25dbc0fc05f8040bdab76c2d98cd5e43a7b96dc2d1a6aebe2dce10b864e211b
-  category: main
-  optional: false
-- name: fastar
-  version: 0.12.0
-  manager: conda
-  platform: linux-64
-  dependencies:
-    python: ''
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=15'
-    zstd: '>=1.5.7,<1.6.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/fastar-0.12.0-py312h15b83fc_0.conda
-  hash:
-    md5: e41be4799f33feee91edc6ff1875dcba
-    sha256: 1ba2ea1d90f5159677652a02b4e5e93cbfb5b89df5433b1c01b8fa6035bee8ea
   category: main
   optional: false
 - name: feedparser
@@ -2025,21 +1929,6 @@ package:
   hash:
     md5: 4f14640d58e2cc0aa0819d9d8ba125bb
     sha256: 04d49cb3c42714ce533a8553986e1642d0549a05dc5cc48e0d43ff5be6679a5b
-  category: main
-  optional: false
-- name: httptools
-  version: 0.8.0
-  manager: conda
-  platform: linux-64
-  dependencies:
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=15'
-    python: '>=3.12,<3.13.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/httptools-0.8.0-py312h5cc1888_2.conda
-  hash:
-    md5: fdac771c107934b63a0ae7917cf0319c
-    sha256: d9de04bdef72fd32fbdcfbb2a1f334b2305a3ad0f6dc6e10c83f32d6570a5582
   category: main
   optional: false
 - name: httpx
@@ -3221,19 +3110,6 @@ package:
   hash:
     md5: 74a0a409d9f4561265d36b789d3f398a
     sha256: aa58bbba56644ffd062a4a9b358782c5eb7560ccead2ab8f7c5c6ede0a7d33a6
-  category: main
-  optional: false
-- name: libuv
-  version: 1.52.1
-  manager: conda
-  platform: linux-64
-  dependencies:
-    libgcc: '>=14'
-    __glibc: '>=2.17,<3.0.a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libuv-1.52.1-h280c20c_1.conda
-  hash:
-    md5: 01c4ed87826af55996768af6dbc936b4
-    sha256: 67761d0206f84140047a367eaf9befe03a7e157a29ee25aee0047b40801cc6b6
   category: main
   optional: false
 - name: libwebp-base
@@ -4531,18 +4407,6 @@ package:
     sha256: 93eefb027858ef06d03e21560b704a4dd9f0a6e4fadeb332c601c16ff5bc54e8
   category: main
   optional: false
-- name: python-multipart
-  version: 0.0.32
-  manager: conda
-  platform: linux-64
-  dependencies:
-    python: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/python-multipart-0.0.32-pyhcf101f3_0.conda
-  hash:
-    md5: f54d00b369042e8e0e235b1a1a817487
-    sha256: 7dde902994a99993b616d597783fcd0ce3265a550feffbd0890b1329c9dff7e0
-  category: main
-  optional: false
 - name: python-utils
   version: 4.0.1
   manager: conda
@@ -4788,21 +4652,6 @@ package:
   hash:
     md5: 0242025a3c804966bf71aa04eee82f66
     sha256: 3d6ba2c0fcdac3196ba2f0615b4104e532525ffa1335b50a2878be5ff488814a
-  category: main
-  optional: false
-- name: rich-toolkit
-  version: 0.20.4
-  manager: conda
-  platform: linux-64
-  dependencies:
-    python: ''
-    rich: '>=13.7.1'
-    click: '>=8.1.7'
-    typing_extensions: '>=4.12.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/rich-toolkit-0.20.4-pyh5ded981_0.conda
-  hash:
-    md5: a9cd9ca327278f91f8d9f4c55a66cc68
-    sha256: ae627322ad4236cb6013288945c890f557f059ea63e1be6285aa2c57edb14c34
   category: main
   optional: false
 - name: ripgrep
@@ -5084,20 +4933,6 @@ package:
   hash:
     md5: 5e32ceeb7b9514ce4730565052829dbd
     sha256: 5fca627690d56c6f87a9dabafceee54cb75d7da392309bb080333948c048365a
-  category: main
-  optional: false
-- name: starlette
-  version: 1.6.0
-  manager: conda
-  platform: linux-64
-  dependencies:
-    anyio: '>=3.6.2,<5'
-    python: ''
-    typing_extensions: '>=4.10.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/starlette-1.6.0-pyhcf101f3_0.conda
-  hash:
-    md5: 7b7d3f2bcca2be53635bd4f1166b04a7
-    sha256: 6074c6d74e86b156a61ff37f2c3f7a29bd188f05d5f490d88db96131eb945e95
   category: main
   optional: false
 - name: stdlib-list
@@ -5447,57 +5282,6 @@ package:
     sha256: 1f3c729e38c238bc69ace0d79e59d20a96cd15962d370458967a3bd12857ce02
   category: main
   optional: false
-- name: uvicorn
-  version: 0.52.4
-  manager: conda
-  platform: linux-64
-  dependencies:
-    __unix: ''
-    click: '>=7.0'
-    h11: '>=0.8'
-    python: ''
-    typing_extensions: '>=4.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/uvicorn-0.52.4-pyhc90fa1f_0.conda
-  hash:
-    md5: 2bf4d228f4df09d3e2ebee46f3a9129e
-    sha256: b74765ebebe0da43b9e0ec1d9bedc881125304ffbebd86018dcb6d7a4e2d2ee4
-  category: main
-  optional: false
-- name: uvicorn-standard
-  version: 0.52.4
-  manager: conda
-  platform: linux-64
-  dependencies:
-    __unix: ''
-    uvicorn: ==0.52.4
-    websockets: '>=10.4'
-    httptools: '>=0.6.3'
-    watchfiles: '>=0.20'
-    python-dotenv: '>=0.13'
-    pyyaml: '>=5.1'
-    uvloop: '>=0.15.1'
-  url: https://conda.anaconda.org/conda-forge/noarch/uvicorn-standard-0.52.4-h9be8d4e_0.conda
-  hash:
-    md5: 5b6380d0fb9f2615be1bd3481650b83d
-    sha256: 73f5af72e048c7ccb974431247a2da54f61e2ee65584fcadb5a1a8a528f58358
-  category: main
-  optional: false
-- name: uvloop
-  version: 0.22.1
-  manager: conda
-  platform: linux-64
-  dependencies:
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-    libuv: '>=1.51.0,<2.0a0'
-    python: '>=3.12,<3.13.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/uvloop-0.22.1-py312h4c3975b_1.conda
-  hash:
-    md5: bdfc3f5345f9a16c63ba18e50c292e08
-    sha256: 15714d471fcba83c76930f49c4de0ebb5589f9b90d9eab52b1e7fc1478474891
-  category: main
-  optional: false
 - name: vcs_versioning
   version: 2.3.4
   manager: conda
@@ -5543,22 +5327,6 @@ package:
     sha256: eee2ce81cb8103049fd4d1b5b485f499115866fb34b2579971b94e00a6c0eac8
   category: main
   optional: false
-- name: watchfiles
-  version: 1.2.0
-  manager: conda
-  platform: linux-64
-  dependencies:
-    python: ''
-    anyio: '>=3.0.0'
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/watchfiles-1.2.0-py312h192e038_1.conda
-  hash:
-    md5: 2631cc5eddeb5d1b230d7e2e2a5f9a71
-    sha256: 031a34fd258fe876c78bc382b719733b670b6704d875377adf3d74cd15cdeb88
-  category: main
-  optional: false
 - name: wayland
   version: 1.26.0
   manager: conda
@@ -5573,21 +5341,6 @@ package:
   hash:
     md5: 88a47e22b53e50865b1cabe2eb648352
     sha256: df65b987979e6d7f88e756494da5a230d4f2d08d17437d04eecd35559c3a04e4
-  category: main
-  optional: false
-- name: websockets
-  version: '17.1'
-  manager: conda
-  platform: linux-64
-  dependencies:
-    python: ''
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=15'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/websockets-17.1-py312h89dfda2_1.conda
-  hash:
-    md5: 15b2c6ec2617574df62a4d4ffac4ec38
-    sha256: 4c5e4988a6a9b90187474b3b68bc65c7f76068b42b8bbe7febae4fb096bee5c3
   category: main
   optional: false
 - name: wget

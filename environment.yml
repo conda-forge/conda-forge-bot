@@ -22,7 +22,6 @@ dependencies:
   - curl
   - dateparser
   - distributed
-  - fastapi
   - feedparser
   - frozendict
   - git !=2.50
