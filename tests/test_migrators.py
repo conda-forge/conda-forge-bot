@@ -648,7 +648,9 @@ def run_test_migration(
     actual_output = pat.sub("", actual_output)
     all_possible_outputs = [pat.sub("", op) for op in all_possible_outputs]
 
-    assert any(actual_output == op for op in all_possible_outputs)
+    if not any(actual_output == op for op in all_possible_outputs):
+        for op in all_possible_outputs:
+            assert actual_output == op
 
     if prb_from_m and prb:
         assert prb in prb_from_m
