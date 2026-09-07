@@ -88,6 +88,7 @@ class MigrationUidTypedDict(TypedDict, total=False):
     name: str
     migrator_object_version: int
     pin_version: str
+    rebuild_on_update: dict[str, str]
     static_libs: str
     # Used by version migrators
     version: str
