@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: e853dfb1fa162bc74fa6e14b216b34e528bd284518ccfcf31f74a639c8fdc2ea
+    linux-64: d91e39c2cb7931934d14d255fa99f2ad7aecd3c8b3103201c31db84a88a7f145
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -715,33 +715,34 @@ package:
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.18.9
+  version: 0.19.1
   manager: conda
   platform: linux-64
   dependencies:
+    python: ''
     boltons: '>=23.0.0'
     click: ''
     conda: ''
     conda-build: '>=3.27'
-    conda-forge-metadata: '>=0.11.0'
+    conda-forge-metadata: '>=2026.9.5'
     conda-package-handling: ''
-    conda-recipe-manager: '>=0.10.6'
+    conda-recipe-manager: ''
     conda-smithy: '>=2026'
     orjson: ''
     pixi: ''
     py-rattler: '>=0.22.0,<0.26a0'
-    pydantic-settings: '>=2.8.1,<3.0.0'
-    python: '>=3.11'
+    pydantic: '>=2.13'
+    pydantic-settings: '>=2.15.0,<3.0.0'
     rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
     requests: ''
     ruamel.yaml: ''
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.18.9-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.19.1-pyh5ded981_1.conda
   hash:
-    md5: 7530b376e4bd503fa48ddb84b1c41b68
-    sha256: fcaa5420ee3fc0123ffeafe7fe7b285613e173138501afc5a744a50b0959210a
+    md5: a449e373b584b2c1e1bb6efd629a6aed
+    sha256: 770e9b5256a0db576fc4b704f323fe95045f6c83d89b914d4e3db030749a05a4
   category: main
   optional: false
 - name: conda-forge-metadata
