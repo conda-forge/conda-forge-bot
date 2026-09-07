@@ -1,3 +1,4 @@
+import copy
 import itertools
 import json
 import os
@@ -491,6 +492,7 @@ def run_test_migration(
     make_body: bool = False,
     recipe_version: int = 0,
     conda_build_config: str | None = None,
+    allowed_text_replacements: list[dict] | None = None,
 ):
     recipe_path = tmp_path / "recipe"
 
@@ -632,12 +634,21 @@ def run_test_migration(
         actual_output = recipe_path.joinpath("meta.yaml").read_text()
     else:
         actual_output = recipe_path.joinpath("recipe.yaml").read_text()
+
+    all_possible_outputs = [output]
+    if allowed_text_replacements:
+        for rpl_dict in allowed_text_replacements:
+            new_output = copy.copy(output)
+            for k, v in rpl_dict.items():
+                new_output = new_output.replace(k, v)
+            all_possible_outputs.append(new_output)
+
     # strip jinja comments
     pat = re.compile(r"{#.*#}")
     actual_output = pat.sub("", actual_output)
-    output = pat.sub("", output)
+    all_possible_outputs = [pat.sub("", op) for op in all_possible_outputs]
 
-    assert actual_output == output
+    assert any(actual_output == op for op in all_possible_outputs)
 
     if prb_from_m and prb:
         assert prb in prb_from_m
