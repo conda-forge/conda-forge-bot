@@ -90,6 +90,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: update feedstock version
+        if: ${{ (! env.CI_SKIP) && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
         uses: beckermr/update-feedstock-version@ed22f75e867861aed79d4e8cd0a41d65af6ccc40 # v4
         with:
           feedstock: conda-forge-tick-feedstock
