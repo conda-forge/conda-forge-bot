@@ -6,10 +6,7 @@ from conda_forge_tick.migrators_types import (
     AttrsTypedDict,
     CondaForgeYamlContents,
 )
-from conda_forge_tick.utils import (
-    yaml_safe_dump,
-    yaml_safe_load,
-)
+from conda_forge_tick.utils import get_yaml_parser
 
 
 class CrossToNativeMigrator(MiniMigrator):
@@ -45,8 +42,9 @@ class CrossToNativeMigrator(MiniMigrator):
 
     def migrate(self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any) -> None:
         cfyaml_path = Path(recipe_dir) / "../conda-forge.yml"
+        yaml = get_yaml_parser()
         with open(cfyaml_path) as fp:
-            cfyaml = yaml_safe_load(fp)
+            cfyaml = yaml.load(fp.read())
 
         for platform in self._platform_providers:
             if not self._migrate_platform(platform, cfyaml):
@@ -60,4 +58,4 @@ class CrossToNativeMigrator(MiniMigrator):
             del cfyaml["build_platform"]
 
         with open(cfyaml_path, "w") as fp:
-            yaml_safe_dump(cfyaml, fp)
+            yaml.dump(cfyaml, fp)

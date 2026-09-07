@@ -76,15 +76,15 @@ provider:
 
     expected_providers = ""
     if provider is not None:
-        expected_providers += f"  linux_64: {provider}\n"
+        expected_providers += f"""\
+  linux_64: {provider}
+  osx_64: {provider}
+  win_64: {provider}
+"""
     if provider != "azure":
         expected_providers += "  linux_aarch64: default\n"
-    if provider is not None:
-        expected_providers += f"  osx_64: {provider}\n"
     if provider != "github_actions":
         expected_providers += "  osx_arm64: default\n"
-    if provider is not None:
-        expected_providers += f"  win_64: {provider}\n"
 
     assert (
         cfyaml.read_text()
@@ -152,6 +152,12 @@ build_platform:
 
 provider:
   osx_arm64: default
+
+workflow_settings:
+  store_build_artifacts:
+    # do not remove this comment
+    - os: [linux, osx]
+      value: true
 """
 
     cfyaml = tmp_path / "conda-forge.yml"
@@ -177,5 +183,11 @@ provider:
         == """\
 provider:
   osx_arm64: default
+
+workflow_settings:
+  store_build_artifacts:
+    # do not remove this comment
+    - os: [linux, osx]
+      value: true
 """
     )
