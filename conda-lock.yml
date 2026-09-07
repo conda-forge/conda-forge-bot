@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: abe995399d0d11edb858a2c5fc16e62014714f7f36183be094d2e48bdf510851
+    linux-64: 3cde26e48a9c8d057f8e474af914ac63358e146df7ee0aa486ef8dffa2f6a7ca
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -110,18 +110,18 @@ package:
   category: main
   optional: false
 - name: anyio
-  version: 4.15.0
+  version: 4.14.2
   manager: conda
   platform: linux-64
   dependencies:
     exceptiongroup: '>=1.0.2'
     idna: '>=2.8'
-    python: '>=3.11'
+    python: '>=3.10'
     typing_extensions: '>=4.5'
-  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.15.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/anyio-4.14.2-pyhcf101f3_0.conda
   hash:
-    md5: 28190db0e223089024a41b06c11af36e
-    sha256: 35fefb7c4bc39bca28d8764b4f59bd7b739c47e3af8e5e20ee22621db0c594b3
+    md5: fb568fbae6908ba86a090a85a089d11f
+    sha256: e36998c5e860e26b22e5dbcd5726dd0c4eabad949c84d383cad8512757bbf6a1
   category: main
   optional: false
 - name: appdirs
