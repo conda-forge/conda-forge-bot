@@ -91,7 +91,7 @@ jobs:
 
       - name: update feedstock version
         if: ${{ (! env.CI_SKIP) && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
-        uses: beckermr/update-feedstock-version@afbac79908156f5078a557a9fd6f9ef1d59ddfde # v5
+        uses: beckermr/update-feedstock-version@61376ddcd677e36c8163da2948afad309c2436f3 # v7
         with:
           feedstock: conda-forge-tick-feedstock
           version: ${{ steps.version.outputs.NEXT }}
