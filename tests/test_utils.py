@@ -168,6 +168,21 @@ def test_prune_keeps_ancestors_needed_elsewhere(blas_like_graph):
     assert {"openblas", "mpich", "blis", "libhwloc"}.isdisjoint(G.nodes)
 
 
+def test_prune_keep_retains_listed_ancestors_and_their_deps(blas_like_graph):
+    G = blas_like_graph
+
+    prune(G, "blas", keep=["mkl"])
+
+    # mkl is kept even though it is exclusive to blas, and so is its private
+    # dependency tbb
+    assert {"mkl", "tbb"} <= set(G.nodes)
+    assert ("tbb", "mkl") in G.edges
+    # the mkl -> blas edge survives too: edges from `keep` nodes are not cut
+    assert ("mkl", "blas") in G.edges
+    # the other implementations are still pruned
+    assert {"openblas", "mpich", "blis", "libhwloc"}.isdisjoint(G.nodes)
+
+
 def test_prune_handles_cycle_through_node_id():
     G = nx.DiGraph()
     # blas and lapack feedstocks (from the POV of the bot metadata) form a cycle

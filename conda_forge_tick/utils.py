@@ -15,7 +15,14 @@ import traceback
 import typing
 import warnings
 from collections import defaultdict
-from collections.abc import Iterable, Mapping, MutableMapping, MutableSequence, Sequence
+from collections.abc import (
+    Collection,
+    Iterable,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from pathlib import Path
 from types import MethodType
 from typing import (
@@ -1346,7 +1353,7 @@ def pluck(G: nx.DiGraph, node_id: Any) -> None:
         G.add_edges_from(new_edges)
 
 
-def prune(G: nx.DiGraph, node_id: Any) -> None:
+def prune(G: nx.DiGraph, node_id: Any, keep: Collection[Any] = ()) -> None:
     """Remove a node's ancestors that are not needed anywhere else in the graph.
 
     Ancestors of ``node_id`` are its (transitive) dependencies. This function cuts
@@ -1368,16 +1375,24 @@ def prune(G: nx.DiGraph, node_id: Any) -> None:
     ----------
     G : networkx.DiGraph
     node_id : hashable
+    keep : collection of hashable, optional
+        Nodes to exclude from pruning operation.
     """
     if node_id not in G.nodes:
         return
 
+    keep = set(keep)
+
     ancestors = nx.ancestors(G, node_id)
     # if node_id is part of a cycle, ensure it's not considered its own ancestor
     ancestors.discard(node_id)
+    # also remove nodes we want to keep regardless
+    ancestors.difference_update(keep)
 
-    # the main cut: remove the all the dependency edges that feed into node_id
-    G.remove_edges_from([(pred, node_id) for pred in list(G.predecessors(node_id))])
+    # the main cut: remove all the dependency edges that feed into node_id (modulo `keep`)
+    G.remove_edges_from(
+        [(pred, node_id) for pred in list(G.predecessors(node_id)) if pred not in keep],
+    )
 
     # clean-up afterwards: determine which nodes can now be dropped from the graph.
     # A given node is still needed if it's a transitive dependency of something other

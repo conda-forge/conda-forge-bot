@@ -137,10 +137,8 @@ def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
     # special handling for meta-packages
     if "blas" in graph.nodes("payload"):
         # blas has many implementations, and its feedstock depends on all of them;
-        # for arch migrations, we generally only need/want blas & openblas.
-        prune(graph, "blas")
-        # restore minimal required edges
-        graph.add_edges_from([("lapack", "blas"), ("openblas", "blas")])
+        # for arch migrations, we generally only need/want lapack & openblas.
+        prune(graph, "blas", keep=["lapack", "openblas"])
 
 
 class ArchRebuild(GraphMigrator):
