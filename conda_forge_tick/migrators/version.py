@@ -14,6 +14,7 @@ from typing import Any, Literal
 import conda.exceptions
 import networkx as nx
 from conda.models.version import VersionOrder
+from conda_forge_feedstock_ops.update_version import update_version
 from rattler_build_conda_compat.loader import load_yaml
 
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
@@ -25,7 +26,6 @@ from conda_forge_tick.migrators_types import (
 )
 from conda_forge_tick.models.pr_info import MigratorName
 from conda_forge_tick.update_deps import get_dep_updates_and_hints
-from conda_forge_tick.update_recipe import update_version, update_version_v1
 from conda_forge_tick.utils import (
     get_keys_default,
     get_recipe_schema_version,
@@ -276,31 +276,23 @@ class Version(Migrator):
         version = attrs.get("version_pr_info", {}).get("new_version", None)  # type: ignore
 
         recipe_dir = Path(recipe_dir)
+        updated, errors = update_version(
+            str(recipe_dir.parent),
+            version,
+            hash_type=hash_type,
+        )
         recipe_path_v0 = recipe_dir / "meta.yaml"
         recipe_path_v1 = recipe_dir / "recipe.yaml"
         if recipe_path_v0.exists():
-            raw_meta_yaml = recipe_path_v0.read_text()
             recipe_path = recipe_path_v0
-            updated_meta_yaml, errors = update_version(
-                raw_meta_yaml,
-                version,
-                hash_type=hash_type,
-            )
         elif recipe_path_v1.exists():
             recipe_path = recipe_path_v1
-            updated_meta_yaml, errors = update_version_v1(
-                # we need to give the "feedstock_dir" (not recipe dir)
-                str(recipe_dir.parent),
-                version,
-                hash_type=hash_type,
-            )
         else:
             raise FileNotFoundError(
                 f"Neither {recipe_path_v0} nor {recipe_path_v1} exists in {recipe_dir}",
             )
 
-        if len(errors) == 0 and updated_meta_yaml is not None:
-            recipe_path.write_text(updated_meta_yaml)
+        if len(errors) == 0 and updated:
             self.set_build_number(recipe_path)
 
             return super().migrate(str(recipe_dir), attrs)
