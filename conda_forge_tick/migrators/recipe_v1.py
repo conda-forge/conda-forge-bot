@@ -4,12 +4,12 @@ import typing
 from pathlib import Path
 from typing import Any
 
+from conda_forge_feedstock_ops.yaml import get_yaml_parser
 from jinja2 import Environment
 from jinja2.nodes import And, Compare, Node, Not
 from jinja2.parser import Parser
 
 from conda_forge_tick.migrators.core import MiniMigrator
-from conda_forge_tick.recipe_parser._parser import _get_yaml_parser
 
 if typing.TYPE_CHECKING:
     from ..migrators_types import AttrsTypedDict
@@ -200,7 +200,7 @@ class CombineV1ConditionsMigrator(MiniMigrator):
 
     def migrate(self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any) -> None:
         recipe_path = Path(recipe_dir) / "recipe.yaml"
-        parser = _get_yaml_parser(typ="rt")
+        parser = get_yaml_parser(typ="rt")
         if recipe_path.exists():
             with recipe_path.open() as f:
                 yaml = parser.load(f)
