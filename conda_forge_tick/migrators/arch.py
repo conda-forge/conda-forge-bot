@@ -23,6 +23,7 @@ from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import (
     as_iterable,
     pluck,
+    prune,
     yaml_safe_dump,
     yaml_safe_load,
 )
@@ -132,6 +133,14 @@ def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
             _fold_noarch_node(graph, outputs_lut, node)
     # post-plucking cleanup
     graph.remove_edges_from(nx.selfloop_edges(graph))
+
+    # special handling for meta-packages
+    if "blas" in graph.nodes("payload"):
+        # blas has many implementations, and its feedstock depends on all of them;
+        # for arch migrations, we generally only need/want blas & openblas.
+        prune(graph, "blas")
+        # restore minimal required edges
+        graph.add_edges_from([("lapack", "blas"), ("openblas", "blas")])
 
 
 class ArchRebuild(GraphMigrator):
