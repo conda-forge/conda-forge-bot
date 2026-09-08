@@ -9,8 +9,8 @@ dependencies:
   - cachecontrol
   - cachetools
   - click
-  - conda >=25
-  - conda-build >=25
+  - conda >=26
+  - conda-build >=26
   - conda-forge-feedstock-ops >=0.20.0
   - conda-forge-metadata >=2026.9.5
   - conda-forge-pinning
@@ -44,7 +44,7 @@ dependencies:
   - pynamodb
   - python-dateutil
   - python-graphviz
-  - rattler-build >=0.74,<0.76
+  - rattler-build >=0.74,<0.76.0a0
   - rattler-build-conda-compat >=1.4.13,<2
   - requests
   - ruamel.yaml
