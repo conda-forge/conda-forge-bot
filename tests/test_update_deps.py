@@ -6,12 +6,12 @@ from typing import Literal
 
 import networkx as nx
 import pytest
+from conda_forge_feedstock_ops.recipe_parser import CondaMetaYAML
 from test_migrators import run_test_migration
 
 from conda_forge_tick.feedstock_parser import load_feedstock_local
 from conda_forge_tick.lazy_json_backends import load
 from conda_forge_tick.migrators import DependencyUpdateMigrator, Version
-from conda_forge_tick.recipe_parser import CondaMetaYAML
 from conda_forge_tick.update_deps import (
     DepComparison,
     _modify_package_name_from_github,

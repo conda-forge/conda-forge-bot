@@ -10,13 +10,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
+from conda_forge_feedstock_ops.recipe_parser import CONDA_SELECTOR, CondaMetaYAML
 from grayskull.config import Configuration
 from grayskull.utils import generate_recipe
 from ruamel.yaml import YAML
 from souschef.recipe import Recipe
 
 from conda_forge_tick.feedstock_parser import load_feedstock
-from conda_forge_tick.recipe_parser import CONDA_SELECTOR, CondaMetaYAML
 from conda_forge_tick.utils import get_recipe_schema_version
 
 try:

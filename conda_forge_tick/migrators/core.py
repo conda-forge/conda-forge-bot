@@ -15,10 +15,10 @@ from pathlib import Path
 from typing import Any, Literal
 
 import networkx as nx
+from conda_forge_feedstock_ops.update_build_number import update_build_number
 
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
 from conda_forge_tick.lazy_json_backends import LazyJson
-from conda_forge_tick.update_recipe import update_build_number, v1_recipe
 from conda_forge_tick.utils import (
     frozen_to_json_friendly,
     get_bot_run_url,
@@ -833,21 +833,7 @@ class Migrator:
         filename : str
             Path the the meta.yaml
         """
-        filename = Path(filename)
-        if filename.name == "recipe.yaml":
-            filename.write_text(
-                v1_recipe.update_build_number(filename, self.new_build_number)
-            )
-        else:
-            raw = filename.read_text()
-
-            new_myaml = update_build_number(
-                raw,
-                self.new_build_number,
-                build_patterns=self.build_patterns,
-            )
-
-            filename.write_text(new_myaml)
+        update_build_number(filename, self.new_build_number)
 
     def new_build_number(self, old_number: int) -> int:
         """Determine the new build number to use.
