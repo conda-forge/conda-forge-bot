@@ -1376,17 +1376,18 @@ def prune(G: nx.DiGraph, node_id: Any, keep: Collection[Any] = ()) -> None:
     G : networkx.DiGraph
     node_id : hashable
     keep : collection of hashable, optional
-        Nodes to exclude from pruning operation.
+        Nodes to exclude from pruning operation (also extends to their own ancestors!).
     """
     if node_id not in G.nodes:
         return
 
     keep = set(keep)
 
+    # the ancestors of node_id are potentially in scope for removal
     ancestors = nx.ancestors(G, node_id)
     # if node_id is part of a cycle, ensure it's not considered its own ancestor
     ancestors.discard(node_id)
-    # also remove nodes we want to keep regardless
+    # also remove `keep` nodes from the list of candidates for removal
     ancestors.difference_update(keep)
 
     # the main cut: remove all the dependency edges that feed into node_id (modulo `keep`)
