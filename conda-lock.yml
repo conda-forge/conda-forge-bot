@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 46f82920ac2bbd5367e83aa8bee8e39df9e2d4541a3a2eee2c39e364232e511c
+    linux-64: f8eba9fb48b92b1533f1508c5fd71edd6ba20b78aba71f7b306067cc0109cea1
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -715,18 +715,19 @@ package:
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.19.1
+  version: 0.20.0
   manager: conda
   platform: linux-64
   dependencies:
     boltons: '>=23.0.0'
     click: ''
-    conda: ''
-    conda-build: '>=3.27'
+    conda: '>=26'
+    conda-build: '>=26'
     conda-forge-metadata: '>=2026.9.5'
     conda-package-handling: ''
-    conda-recipe-manager: ''
+    conda-recipe-manager: '>=0.10.6'
     conda-smithy: '>=2026'
+    jinja2: ''
     orjson: ''
     pixi: ''
     py-rattler: '>=0.22.0,<0.26a0'
@@ -739,10 +740,10 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.19.1-pyh5ded981_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.20.0-pyh5ded981_0.conda
   hash:
-    md5: a449e373b584b2c1e1bb6efd629a6aed
-    sha256: 770e9b5256a0db576fc4b704f323fe95045f6c83d89b914d4e3db030749a05a4
+    md5: e439cab5f7594c03c69c954d63dec8ae
+    sha256: 7ce85f289a8443122ba75e6a95b81f8ae897fdc1b5ef5a439f2b6e993869bc1c
   category: main
   optional: false
 - name: conda-forge-metadata
@@ -915,23 +916,22 @@ package:
   category: main
   optional: false
 - name: conda-pypi
-  version: 0.11.0
+  version: 0.12.0
   manager: conda
   platform: linux-64
   dependencies:
-    conda-index: '>=0.11.0'
+    conda-index: '>=0.12.0'
     conda-package-streaming: '>=0.11'
     packaging: ''
-    pip: '>=23.0.1'
     platformdirs: ''
     python: '>=3.11'
     python-build: ''
     python-installer: '>=1.0'
     unearth: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-pypi-0.11.0-pyh5ded981_2.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-pypi-0.12.0-pyh5ded981_0.conda
   hash:
-    md5: d00669954b34487bd3f60297d2c7e5b3
-    sha256: 57721a79a37837fc576bed40c5f927a6b9e827a9f446f0ac0132fb7503c8ac87
+    md5: e294f0e16705c5678d8faf71636a5455
+    sha256: 5c41f9946b00966e1c216697ed34219bf054cb1c2fc9a41d2934bdce0c15c48c
   category: main
   optional: false
 - name: conda-rattler-solver
@@ -3681,12 +3681,13 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libgcc-ng: '>=12'
-    libxcrypt: '>=4.4.36'
-  url: https://conda.anaconda.org/conda-forge/linux-64/perl-5.32.1-7_hd590300_perl5.conda
+    __glibc: '>=2.17,<3.0.a0'
+    libgcc: '>=14'
+    libxcrypt: '>=4.4.38'
+  url: https://conda.anaconda.org/conda-forge/linux-64/perl-5.32.1-8_hb03c661_perl5.conda
   hash:
-    md5: f2cfec9406850991f4e3d960cc9e3321
-    sha256: 9ec32b6936b0e37bcb0ed34f22ec3116e75b3c0964f9f50ecea5f58734ed6ce9
+    md5: 2d74083a0899b26de3e7fb88847ad7aa
+    sha256: c28544715a24f12409748a97412e1fa27a4a09f8d3623a629bf3486ad03b23cd
   category: main
   optional: false
 - name: pexpect
@@ -4705,10 +4706,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/ruamel.yaml.clib-0.2.15-py312h1b36aeb_4.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/ruamel.yaml.clib-0.2.15-py312h1b36aeb_5.conda
   hash:
-    md5: bd9715f58fd5764026fc4f883ffaac4b
-    sha256: f02b4d207579119bf7b1606624e766cf06bf3855358698288855a5856fad98bd
+    md5: 47553dd4725a43ef82aadf8f74f6f89c
+    sha256: aa66c32c339873a147da91adc07c7f09fb818dc4c9d86d1173bbef00ad136f5d
   category: main
   optional: false
 - name: ruamel.yaml.jinja2
