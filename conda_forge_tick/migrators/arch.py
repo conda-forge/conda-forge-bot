@@ -312,12 +312,13 @@ class _CrossCompileRebuild(GraphMigrator):
 
     ignored_packages: set[str] = set()
     excluded_dependencies: set[str] = set()
-    arches: dict = {}
+    build_platform: dict[str, str] = {}
+    arches: dict[str, str] = {}
 
-    @property
-    def additional_keys(self):
+    def additional_keys(self, attrs: AttrsTypedDict) -> dict[str, dict[str, str] | str]:
         return {
-            "build_platform": self.build_platform,  # type: ignore[attr-defined]
+            "build_platform": self.build_platform,
+            "provider": self.arches,
             "test": "native_and_emulated",
         }
 
@@ -448,7 +449,7 @@ class _CrossCompileRebuild(GraphMigrator):
 
             # we should do this recursively but the cf yaml is usually
             # one key deep so this is fine
-            for k, v in self.additional_keys.items():
+            for k, v in self.additional_keys(attrs).items():
                 if isinstance(v, dict):
                     if k not in y:
                         y[k] = {}
@@ -474,9 +475,9 @@ class OSXArm(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {"osx_arm64": "osx_64"}
+    build_platform = {}  # equivalent to {"osx_arm64": "osx_arm64"} i.e. native
     pkg_list_filename = "osx_arm64.txt"
-    arches = {"osx_arm64": "osx_64"}
+    arches = {"osx_arm64": "default"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "arm osx addition")
@@ -517,11 +518,27 @@ class WinArm64(_CrossCompileRebuild):
     migrator_version = 1
     build_platform = {"win_arm64": "win_64"}
     pkg_list_filename = "win_arm64.txt"
-    arches = {"win_arm64": "win_64"}
+    arches = {"win_arm64": "default"}
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support windows arm64 platform")
         super().__init__(*args, **kwargs)
+
+    def additional_keys(self, attrs: AttrsTypedDict):
+        """
+        Python packages need to be compiled natively, since
+        cross-python will not probably exist for win-arm64.
+        """
+        keys = super().additional_keys(attrs)
+        for req in attrs["requirements"]["host"]:
+            if req.split()[0] == "python":
+                use_native = True
+                break
+        else:
+            use_native = False
+        if use_native:
+            keys["build_platform"] = {}  # an empty build_platform makes it native
+        return keys
 
     def pr_title(self, feedstock_ctx: FeedstockContext) -> str:
         title = "Support Windows ARM64 platform"
