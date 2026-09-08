@@ -1353,16 +1353,16 @@ def pluck(G: nx.DiGraph, node_id: Any) -> None:
         G.add_edges_from(new_edges)
 
 
-def prune(G: nx.DiGraph, node_id: Any, keep: Collection[Any] = ()) -> None:
-    """Remove a node's ancestors that are not needed anywhere else in the graph.
+def prune(G: nx.DiGraph, node_ids: Collection[Any], keep: Collection[Any] = ()) -> None:
+    """Remove ancestors of given nodes that are not needed anywhere else in the graph.
 
-    Ancestors of ``node_id`` are its (transitive) dependencies. This function cuts
-    the dependency edges feeding into ``node_id`` and then drops every ancestor that,
-    after that cut, can no longer reach the rest of the graph along directed edges --
-    i.e. every ancestor that was needed *only* to build ``node_id``.
+    Ancestors of a node are its (transitive) dependencies. This function cuts the
+    dependency edges feeding into each of ``node_ids`` and then drops every ancestor
+    that, after that cut, can no longer reach the rest of the graph along directed
+    edges -- i.e. every ancestor that was needed *only* to build one of ``node_ids``.
 
     Ancestors that are still a (transitive) dependency of some other retained node are
-    kept, as is ``node_id`` itself and everything that depends on it.
+    kept, as are the ``node_ids`` themselves and everything that depends on them.
 
     The motivating use case is metapackages such as ``blas``: an arch migration
     wants ``blas`` and its genuinely shared dependencies, but not the pile of
@@ -1374,32 +1374,38 @@ def prune(G: nx.DiGraph, node_id: Any, keep: Collection[Any] = ()) -> None:
     Parameters
     ----------
     G : networkx.DiGraph
-    node_id : hashable
+    node_ids : collection of hashable
+        The nodes whose exclusive ancestors should be pruned. Any node in node_ids
+        is itself not removed, even if it is an ancestor of another node to be pruned.
     keep : collection of hashable, optional
         Nodes to exclude from pruning operation (also extends to their own ancestors!).
     """
-    if node_id not in G.nodes:
+    node_ids = {n for n in node_ids if n in G.nodes}
+    if not node_ids:
         return
 
     keep = set(keep)
 
-    # the ancestors of node_id are potentially in scope for removal
-    ancestors = nx.ancestors(G, node_id)
-    # if node_id is part of a cycle, ensure it's not considered its own ancestor
-    ancestors.discard(node_id)
+    # the ancestors of any of node_ids are potentially in scope for removal
+    ancestors: set[Any] = set()
+    for n in node_ids:
+        ancestors |= nx.ancestors(G, n)
+    # ensures that node_ids are never considered for removal; this also helps
+    # breaks any eventual cycles that a node_id may be a part of
+    ancestors.difference_update(node_ids)
     # also remove `keep` nodes from the list of candidates for removal
     ancestors.difference_update(keep)
 
-    # the main cut: remove all the dependency edges that feed into node_id (modulo `keep`)
+    # the main cut: remove all the dependency edges feeding into the node_ids (modulo `keep`)
     G.remove_edges_from(
-        [(pred, node_id) for pred in list(G.predecessors(node_id)) if pred not in keep],
+        [(p, n) for n in node_ids for p in list(G.predecessors(n)) if p not in keep]
     )
 
     # clean-up afterwards: determine which nodes can now be dropped from the graph.
     # A given node is still needed if it's a transitive dependency of something other
-    # than node_id's ancestors. Since the direction of the edges is from parent to child,
+    # than node_ids' ancestors. Since the direction of the edges is from parent to child,
     # this means we need to search the reversed graph, i.e. all (grand^N-)parents of
-    # `G.nodes - ancestors`; nodes which aren't reached existed only to build node_id.
+    # `G.nodes - ancestors`; nodes which aren't reached existed only to build a node_id.
     # There's no deep reason for choosing `bfs_layers` (breadth-first search), except that
     # it's the only traversal function that returns nodes and allows multiple sources at once,
     # c.f. https://networkx.org/documentation/stable/reference/algorithms/traversal.html
@@ -1411,8 +1417,13 @@ def prune(G: nx.DiGraph, node_id: Any, keep: Collection[Any] = ()) -> None:
     )
     G.remove_nodes_from(ancestors - still_needed)
 
-    # sanity check: drop anything that got detached from node_id's component by the removal
-    reachables = nx.node_connected_component(G.to_undirected(as_view=True), node_id)
+    # sanity check: drop anything that got detached from the components containing node_ids
+    reachables = set().union(
+        *(
+            nx.node_connected_component(G.to_undirected(as_view=True), n)
+            for n in node_ids
+        ),
+    )
     G.remove_nodes_from(G.nodes - reachables)
 
 

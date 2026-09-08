@@ -138,7 +138,7 @@ def blas_like_graph():
 def test_prune_removes_exclusive_ancestors(blas_like_graph):
     G = blas_like_graph
 
-    prune(G, "blas")
+    prune(G, ["blas"])
 
     # blas and its children survive, as do the shared deps (needed by numpy/scipy)
     assert set(G.nodes) == {"blas", "numpy", "scipy", "zlib", "zstd"}
@@ -158,7 +158,7 @@ def test_prune_keeps_ancestors_needed_elsewhere(blas_like_graph):
     # tbb, transitively) must be kept even though blas no longer needs it
     G.add_edge("mkl", "numpy")
 
-    prune(G, "blas")
+    prune(G, ["blas"])
 
     assert set(G.nodes) == {"blas", "numpy", "scipy", "zlib", "zstd", "mkl", "tbb"}
     assert ("tbb", "mkl") in G.edges
@@ -171,7 +171,7 @@ def test_prune_keeps_ancestors_needed_elsewhere(blas_like_graph):
 def test_prune_keep_retains_listed_ancestors_and_their_deps(blas_like_graph):
     G = blas_like_graph
 
-    prune(G, "blas", keep=["mkl"])
+    prune(G, ["blas"], keep=["mkl"])
 
     # mkl is kept even though it is exclusive to blas, and so is its private
     # dependency tbb
@@ -192,13 +192,42 @@ def test_prune_handles_cycle_through_node_id():
     # numpy depends on blas and lapack
     G.add_edges_from([("blas", "numpy"), ("lapack", "numpy")])
 
-    prune(G, "blas")
+    prune(G, ["blas"])
 
     # lapack is part of the cycle but is still needed by numpy -> kept;
     # mkl was exclusive to blas -> pruned
     assert set(G.nodes) == {"blas", "lapack", "numpy"}
     assert ("lapack", "blas") not in G.edges
     assert {("blas", "lapack"), ("blas", "numpy"), ("lapack", "numpy")} <= set(G.edges)
+
+
+def test_prune_multiple_nodes(blas_like_graph):
+    G = blas_like_graph
+    # a second metapackage sharing a dependency (zstd) with blas
+    G.add_edges_from([("mpi", "mpi_meta"), ("zstd", "mpi_meta"), ("mpi_meta", "scipy")])
+
+    prune(G, ["blas", "mpi_meta"])
+
+    # both metapackages plus the shared deps (still needed by numpy/scipy) survive
+    assert set(G.nodes) == {"blas", "mpi_meta", "numpy", "scipy", "zlib", "zstd"}
+    # every exclusive implementation/dependency is gone
+    assert {"openblas", "mkl", "mpich", "blis", "tbb", "libhwloc", "mpi"}.isdisjoint(
+        G.nodes
+    )
+
+
+def test_prune_multiple_nodes_one_depending_on_another():
+    G = nx.DiGraph()
+    # meta_low is itself a dependency of meta_high
+    G.add_edges_from([("meta_low", "meta_high"), ("priv", "meta_low")])
+    G.add_edges_from([("meta_high", "app"), ("meta_low", "app")])
+
+    prune(G, ["meta_low", "meta_high"])
+
+    # meta_low is an ancestor of meta_high but arguments to prune are always kept
+    assert set(G.nodes) == {"meta_low", "meta_high", "app"}
+    # its private dependency is removed though
+    assert "priv" not in G.nodes
 
 
 def test_load_graph():
