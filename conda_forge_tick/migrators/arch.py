@@ -139,6 +139,9 @@ def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
         # blas has many implementations, and its feedstock depends on all of them;
         # for arch migrations, we generally only need/want lapack & openblas.
         prune(graph, "blas", keep=["lapack", "openblas"])
+        # lapack->blas is a genuine edge; blas->lapack is the bot getting confused
+        # by outputs with the same name that are being built on several feedstocks
+        graph.remove_edges_from([("blas", "lapack")])
 
 
 class ArchRebuild(GraphMigrator):
