@@ -43,13 +43,13 @@ from conda_forge_feedstock_ops.container_utils import (
     run_container_operation,
     should_use_container,
 )
+from conda_forge_feedstock_ops.recipe_parser import CondaMetaYAML
 from rattler_build_conda_compat.outputs import flatten_staging_inheritance
 from ruamel.yaml.comments import CommentedMap
 
 from . import sensitive_env
 from .lazy_json_backends import LazyJson
 from .migrators_types import AttrsTypedDict
-from .recipe_parser import CondaMetaYAML
 from .settings import ENV_CONDA_FORGE_ORG, ENV_GRAPH_GITHUB_BACKEND_REPO, settings
 
 if typing.TYPE_CHECKING:
