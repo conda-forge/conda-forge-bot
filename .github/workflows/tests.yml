@@ -26,7 +26,7 @@ jobs:
         id: merge-queue-ci-skipper
         uses: cariad-tech/merge-queue-ci-skipper@cf80db21fc70244e36487acc531b3f1118889b0a
         with:
-            secret: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+            secret: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
 
   tests:
     name: tests
@@ -174,7 +174,7 @@ jobs:
             tests
         env:
           RUN_URL: ""
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
@@ -320,7 +320,7 @@ jobs:
         env:
           MONGODB_CONNECTION_STRING: "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"
           RUN_URL: ""
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 

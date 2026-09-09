@@ -60,7 +60,7 @@ jobs:
         run: |
           source conda-forge-bot/autotick-bot/install_bot_code.sh
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
@@ -72,7 +72,7 @@ jobs:
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           conda-forge-tick update-prs --job=${BOT_JOB} --n-jobs=${NUM_BOT_JOBS}
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
@@ -88,7 +88,7 @@ jobs:
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           conda-forge-tick deploy-to-github
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
@@ -99,7 +99,7 @@ jobs:
           export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           python conda-forge-bot/autotick-bot/bump_bot_team.py
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           RUN_ID: ${{ github.run_id }}
           ACTION_NAME: ${{ github.workflow }}
 
@@ -151,6 +151,6 @@ jobs:
           export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
           python conda-forge-bot/autotick-bot/bump_bot_team.py
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           RUN_ID: ${{ github.run_id }}
           ACTION_NAME: ${{ github.workflow }}

@@ -95,5 +95,5 @@ jobs:
         with:
           feedstock: conda-forge-tick-feedstock
           version: ${{ steps.version.outputs.NEXT }}
-          github-token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           automerge: false
