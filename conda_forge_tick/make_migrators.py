@@ -66,6 +66,7 @@ from conda_forge_tick.migrators import (
     PyPIOrgMigrator,
     Replacement,
     RUCRTCleanup,
+    RV0ToV1Migrator,
     StaticLibMigrator,
     StdlibMigrator,
     UpdateCMakeArgsMigrator,
@@ -113,6 +114,7 @@ DEFAULT_MINI_MIGRATORS = [
     MPIPinRunAsBuildCleanup,
     PyPIOrgMigrator,
     CombineV1ConditionsMigrator,
+    RV0ToV1Migrator,
 ]
 
 
