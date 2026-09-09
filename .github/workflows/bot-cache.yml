@@ -67,7 +67,7 @@ jobs:
         run: |
           source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
@@ -84,7 +84,7 @@ jobs:
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
@@ -135,7 +135,7 @@ jobs:
         run: |
           source conda-forge-bot/autotick-bot/install_bot_code.sh --no-clone-graph
         env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
@@ -145,4 +145,4 @@ jobs:
         with:
           workflow: bot-cache
           ref: ${{ github.event.ref || github.head_ref || github.ref }}
-          token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}

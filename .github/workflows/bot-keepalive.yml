@@ -22,7 +22,7 @@ jobs:
         with:
           abort-after-seconds: 300
           poll-interval-seconds: 30
-          github-token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           workflow-name: bot-bot
         continue-on-error: true
 
@@ -45,4 +45,4 @@ jobs:
         with:
           workflow: bot-bot
           ref: ${{ github.event.ref || github.head_ref || github.ref }}
-          token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
