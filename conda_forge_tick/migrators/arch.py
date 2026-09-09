@@ -144,6 +144,26 @@ def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
         graph.remove_edges_from([("blas", "lapack")])
 
 
+def _arches_are_configured(attrs: "AttrsTypedDict", arches: dict) -> bool:
+    """Whether the feedstock itself already builds every one of ``arches``.
+
+    This reads the state off ``conda-forge.yml``, so it is true for feedstocks that
+    were migrated by hand or by a rerender as well as for ones the bot PRed.
+    """
+    for arch in arches:
+        configured_arch = (
+            attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
+        ) or (
+            attrs.get("conda-forge.yml", {}).get("build_platform", {}).get(arch)
+            not in [None, arch]
+        )
+        if not configured_arch:
+            # This arch is not in provider or build_platform
+            return False
+
+    return True
+
+
 class ArchRebuild(GraphMigrator):
     """A Migrator that adds aarch64 builds to feedstocks."""
 
@@ -238,21 +258,12 @@ class ArchRebuild(GraphMigrator):
     def filter_node_migrated(
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
     ):
-        has_arch_all_arch = True
-        for arch in self.arches:
-            configured_arch = (
-                attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
-            ) or (
-                attrs.get("conda-forge.yml", {}).get("build_platform", {}).get(arch)
-                not in [None, arch]
-            )
-            if not configured_arch:
-                # This arch is not in provider or build_platform
-                has_arch_all_arch = False
+        return _arches_are_configured(
+            attrs, self.arches
+        ) or super().filter_node_migrated(attrs, not_bad_str_start)
 
-        return has_arch_all_arch or super().filter_node_migrated(
-            attrs, not_bad_str_start
-        )
+    def predecessor_already_migrated(self, attrs: "AttrsTypedDict") -> bool:
+        return _arches_are_configured(attrs, self.arches)
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
@@ -426,21 +437,12 @@ class _CrossCompileRebuild(GraphMigrator):
     def filter_node_migrated(
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
     ):
-        has_arch_all_arch = True
-        for arch in self.arches:
-            configured_arch = (
-                attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
-            ) or (
-                attrs.get("conda-forge.yml", {}).get("build_platform", {}).get(arch)
-                not in [None, arch]
-            )
-            if not configured_arch:
-                # This arch is not in provider or build_platform
-                has_arch_all_arch = False
+        return _arches_are_configured(
+            attrs, self.arches
+        ) or super().filter_node_migrated(attrs, not_bad_str_start)
 
-        return has_arch_all_arch or super().filter_node_migrated(
-            attrs, not_bad_str_start
-        )
+    def predecessor_already_migrated(self, attrs: "AttrsTypedDict") -> bool:
+        return _arches_are_configured(attrs, self.arches)
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any

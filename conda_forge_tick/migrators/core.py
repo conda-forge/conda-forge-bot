@@ -958,6 +958,20 @@ class GraphMigrator(Migrator):
 
         return True
 
+    def predecessor_already_migrated(self, attrs: "AttrsTypedDict") -> bool:
+        """If true, treat a predecessor as built even without a bot PR record.
+
+        Migrators whose migrated state is visible in the feedstock itself -- the arch
+        migrators, which read it off ``conda-forge.yml`` -- override this. Without it
+        a parent that was migrated manually or by a rerender never gets a ``PRed``
+        entry, and so blocks all of its children forever: nothing on the feedstock
+        side can add that entry after the fact.
+
+        This deliberately does not consider ``PRed`` records, so that a predecessor
+        with an open migration PR still blocks its children.
+        """
+        return False
+
     def predecessors_not_yet_built(self, attrs: "AttrsTypedDict") -> bool:
         # Check if all upstreams have been built
         if self.graph is None:
@@ -970,6 +984,10 @@ class GraphMigrator(Migrator):
                 attrs.get("feedstock_name", None),
                 [],
             ):
+                continue
+
+            if self.predecessor_already_migrated(payload):
+                logger.debug("already migrated: %s", node)
                 continue
 
             muid = frozen_to_json_friendly(self.migrator_uid(payload))
