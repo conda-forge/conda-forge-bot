@@ -351,6 +351,11 @@ jobs:
       run:
         shell: bash -leo pipefail {0}
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: ${{ needs.check.outputs.skip-check != 'true' }}
+        with:
+          repository: "conda-forge/conda-forge-bot"
+
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
