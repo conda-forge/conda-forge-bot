@@ -329,13 +329,14 @@ latest_url_npm_test_list = [
 ]
 
 latest_url_rawurl_test_list = [
-    (
+    pytest.param(
         "python-spams",
         sample_spams,
         "2.6.1",
         False,
         RawURL(),
         {},
+        marks=[pytest.mark.xfail(reason="spams URLs can be flaky!")],
     ),
     (
         "cmake-no-system",
