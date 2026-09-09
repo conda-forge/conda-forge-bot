@@ -1,6 +1,7 @@
 import networkx as nx
 
-from conda_forge_tick.migrators.arch import LinuxRISCV64
+from conda_forge_tick.migrators.arch import ArchRebuild, LinuxRISCV64
+from conda_forge_tick.migrators.core import GraphMigrator
 from conda_forge_tick.utils import frozen_to_json_friendly
 
 
@@ -71,4 +72,39 @@ def test_predecessor_with_merged_pr_counts_as_built():
     muid = frozen_to_json_friendly(migrator.migrator_uid(parent))
     parent["pr_info"]["PRed"] = [{"data": muid["data"], "PR": {"state": "closed"}}]
 
+    assert not migrator.predecessors_not_yet_built(_payload("gsl"))
+
+
+class _PlainGraphMigrator(GraphMigrator):
+    """A graph migrator with no feedstock-visible notion of "already migrated"."""
+
+    migrator_version = 0
+
+
+def test_default_hook_does_not_treat_config_as_migrated():
+    # non-arch migrators keep the old behaviour: only a PRed record counts, so an
+    # arch key in conda-forge.yml means nothing to them
+    parent = _payload(
+        "lapack",
+        conda_forge_yml={"build_platform": {"linux_riscv64": "linux_64"}},
+    )
+    migrator = _PlainGraphMigrator(
+        name="test migration",
+        graph=_graph(parent),
+        effective_graph=_graph(parent),
+    )
+
+    assert not migrator.predecessor_already_migrated(parent)
+    assert migrator.predecessors_not_yet_built(_payload("gsl"))
+
+
+def test_arch_rebuild_predecessor_migrated_counts_as_built():
+    # the same fix applies to the aarch64 migrator
+    parent = _payload(
+        "lapack",
+        conda_forge_yml={"provider": {"linux_aarch64": "default"}},
+    )
+    migrator = ArchRebuild(graph=_graph(parent), effective_graph=_graph(parent))
+
+    assert migrator.predecessor_already_migrated(parent)
     assert not migrator.predecessors_not_yet_built(_payload("gsl"))
