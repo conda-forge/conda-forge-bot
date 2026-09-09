@@ -336,7 +336,7 @@ latest_url_rawurl_test_list = [
         False,
         RawURL(),
         {},
-        marks=[pytest.mark.xfail(reason="spams URLs can be flaky!")]
+        marks=[pytest.mark.xfail(reason="spams URLs can be flaky!")],
     ),
     (
         "cmake-no-system",
