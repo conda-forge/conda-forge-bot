@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.08.14.26.08
+  version: 2026.09.09.02.33.52
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.08.14.26.08-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.09.02.33.52-hd8ed1ab_0.conda
   hash:
-    md5: c6e5a6b62abe5328b0a91de5e14f89a8
-    sha256: a26a96db32532b46aa13dda31c55c7e483499134a13cd79b3b3d6f280a6bf061
+    md5: f98d221227479b472f17a2cdbd807bb6
+    sha256: ebdde734038a825af617a7a71e77dd2fde3c6da7869d1d6e83593a1e62c003d7
   category: main
   optional: false
 - name: conda-index
@@ -3681,13 +3681,12 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-    libxcrypt: '>=4.4.38'
-  url: https://conda.anaconda.org/conda-forge/linux-64/perl-5.32.1-8_hb03c661_perl5.conda
+    libgcc-ng: '>=12'
+    libxcrypt: '>=4.4.36'
+  url: https://conda.anaconda.org/conda-forge/linux-64/perl-5.32.1-7_hd590300_perl5.conda
   hash:
-    md5: 2d74083a0899b26de3e7fb88847ad7aa
-    sha256: c28544715a24f12409748a97412e1fa27a4a09f8d3623a629bf3486ad03b23cd
+    md5: f2cfec9406850991f4e3d960cc9e3321
+    sha256: 9ec32b6936b0e37bcb0ed34f22ec3116e75b3c0964f9f50ecea5f58734ed6ce9
   category: main
   optional: false
 - name: pexpect
