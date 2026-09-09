@@ -126,7 +126,7 @@ package:
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.11.0
+  version: 0.11.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -135,10 +135,10 @@ package:
     cpython: '>=3.11'
     libgcc: '>=15'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.11.0-py311hf77984d_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.11.1-py311hf77984d_0.conda
   hash:
-    md5: 8786f3a748a0b6aaa97f69ce113b9f37
-    sha256: 4ace13be332324350187224eb595109d36593e4d3968de18911863b3413a9c5e
+    md5: 74eb5410139257faf8ff809f4d002fc7
+    sha256: 22118451bbee7f4d2ae708e5720c2619858faa51f96133f9b4236e1def96f88b
   category: main
   optional: false
 - name: at-spi2-atk
@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.09.05.43.13
+  version: 2026.09.09.20.21.58
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.09.05.43.13-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.09.20.21.58-hd8ed1ab_0.conda
   hash:
-    md5: dc36bdcd97e0822788a9d358fe64ec4d
-    sha256: 269a1f8592ce6b66f78bd869b7ac17da4b787b6036fbebc543f0279a67f19df4
+    md5: 2cb7337234474643f064fdc7b8453a38
+    sha256: ee93d70152a41bcab1b6e06a03d66468e6dfe8a4c2334736ddf0947959eef490
   category: main
   optional: false
 - name: conda-index
