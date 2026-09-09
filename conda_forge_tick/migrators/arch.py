@@ -149,7 +149,11 @@ def _arches_are_configured(attrs: "AttrsTypedDict", arches: dict) -> bool:
 
     This reads the state off ``conda-forge.yml``, so it is true for feedstocks that
     were migrated by hand or by a rerender as well as for ones the bot PRed.
+
+    The default is false: an empty ``arches`` means there is nothing to detect, not
+    that the feedstock is configured for everything.
     """
+    configured = False
     for arch in arches:
         configured_arch = (
             attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
@@ -160,8 +164,9 @@ def _arches_are_configured(attrs: "AttrsTypedDict", arches: dict) -> bool:
         if not configured_arch:
             # This arch is not in provider or build_platform
             return False
+        configured = True
 
-    return True
+    return configured
 
 
 class ArchRebuild(GraphMigrator):

@@ -1,6 +1,10 @@
 import networkx as nx
 
-from conda_forge_tick.migrators.arch import ArchRebuild, LinuxRISCV64
+from conda_forge_tick.migrators.arch import (
+    ArchRebuild,
+    LinuxRISCV64,
+    _arches_are_configured,
+)
 from conda_forge_tick.migrators.core import GraphMigrator
 from conda_forge_tick.utils import frozen_to_json_friendly
 
@@ -108,3 +112,14 @@ def test_arch_rebuild_predecessor_migrated_counts_as_built():
 
     assert migrator.predecessor_already_migrated(parent)
     assert not migrator.predecessors_not_yet_built(_payload("gsl"))
+
+
+def test_no_arches_is_not_configured():
+    # an empty `arches` means there is nothing to detect, not that the feedstock is
+    # configured for everything -- the latter would mark every predecessor as built
+    parent = _payload(
+        "lapack",
+        conda_forge_yml={"build_platform": {"linux_riscv64": "linux_64"}},
+    )
+
+    assert not _arches_are_configured(parent, {})
