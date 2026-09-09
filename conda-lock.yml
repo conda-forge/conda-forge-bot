@@ -715,7 +715,7 @@ package:
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.20.1
+  version: 0.20.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -740,10 +740,10 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.20.1-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.20.2-pyh5ded981_0.conda
   hash:
-    md5: dd5a790a6b4370acda6b6978f9be945e
-    sha256: 861c1888fdbe2f5dbc8e72d5d30c8fba8786a5479cbbf1fdfde2e2328d75e7df
+    md5: 5a52ad931498c69bed2834c16a0b45f1
+    sha256: b1382b883895c4557b2e945ee56ed960f026b18ef6d3f5cb9a98b8505020bf83
   category: main
   optional: false
 - name: conda-forge-metadata
@@ -5268,7 +5268,7 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.11
+  version: 0.12.12
   manager: conda
   platform: linux-64
   dependencies:
@@ -5277,10 +5277,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.11-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.12-h841d291_0.conda
   hash:
-    md5: 4b074e99b96668f2b8833cdae16a6c63
-    sha256: 9bdfd18fbade02f12bfa1afe3b04a281c847c2b1e46eb1609408f927703d08d1
+    md5: ab48164f27bfec8d6624e2c8447e73f5
+    sha256: 0da9fba742577c9e93020e435eccfdbe62d601aa2f25314c44e2bc13341610ff
   category: main
   optional: false
 - name: vcs_versioning
