@@ -535,6 +535,11 @@ class WinArm64(_CrossCompileRebuild):
     build_platform = {"win_arm64": "win_64"}
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "win_64"}
+    ignored_packages = {
+        # irrelevant for windows
+        "gfortran_impl_osx-64",
+        "gfortran_osx-64",
+    }
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support windows arm64 platform")
