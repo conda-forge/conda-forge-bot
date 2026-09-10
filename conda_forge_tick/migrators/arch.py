@@ -22,6 +22,7 @@ from conda_forge_tick.migrators_types import AttrsTypedDict, MigrationUidTypedDi
 from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import (
     as_iterable,
+    get_keys_default,
     pluck,
     prune,
     yaml_safe_dump,
@@ -150,23 +151,23 @@ def _arches_are_configured(attrs: "AttrsTypedDict", arches: dict) -> bool:
     This reads the state off ``conda-forge.yml``, so it is true for feedstocks that
     were migrated by hand or by a rerender as well as for ones the bot PRed.
 
-    The default is false: an empty ``arches`` means there is nothing to detect, not
-    that the feedstock is configured for everything.
+    Any missing arch fails the check.
     """
-    configured = False
-    for arch in arches:
-        configured_arch = (
-            attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
+
+    def _already_has_arch(arch):
+        # This arch has to be in provider or build_platform
+        return get_keys_default(
+            attrs, ["conda-forge.yml", "provider", arch], {}, None
         ) or (
-            attrs.get("conda-forge.yml", {}).get("build_platform", {}).get(arch)
+            get_keys_default(
+                attrs, ["conda-forge.yml", "build_platform", arch], {}, None
+            )
             not in [None, arch]
         )
-        if not configured_arch:
-            # This arch is not in provider or build_platform
-            return False
-        configured = True
 
-    return configured
+    # ternary condition because `all` over an empty list is always true; we want
+    # to default to False rather than marking a feedstock as done
+    return all(_already_has_arch(arch) for arch in arches) if arches else False
 
 
 class ArchRebuild(GraphMigrator):

@@ -115,11 +115,22 @@ def test_arch_rebuild_predecessor_migrated_counts_as_built():
 
 
 def test_no_arches_is_not_configured():
-    # an empty `arches` means there is nothing to detect, not that the feedstock is
-    # configured for everything -- the latter would mark every predecessor as built
+    # `all` over an empty iterable is true, so the natural spelling would mark every
+    # predecessor as built; defaulting to "done" is the dangerous way to be wrong
     parent = _payload(
         "lapack",
         conda_forge_yml={"build_platform": {"linux_riscv64": "linux_64"}},
     )
 
     assert not _arches_are_configured(parent, {})
+
+
+def test_null_conda_forge_yml_sections_do_not_raise():
+    # the bot writes null rather than omitting a section, so a plain `.get(..., {})`
+    # chain would raise AttributeError on the None
+    parent = _payload(
+        "lapack",
+        conda_forge_yml={"provider": None, "build_platform": None},
+    )
+
+    assert not _arches_are_configured(parent, {"linux_riscv64": "linux_64"})
