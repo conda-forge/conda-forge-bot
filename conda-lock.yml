@@ -982,7 +982,7 @@ package:
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.9.1
+  version: 2026.9.10
   manager: conda
   platform: linux-64
   dependencies:
@@ -1013,10 +1013,10 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.1-unix_pyh707e725_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.10-unix_pyh707e725_0.conda
   hash:
-    md5: e567b686b66df4afd3fae3f40d57942b
-    sha256: 49553b8d960b37cdece20b315ec4af58f5195b6b185bfe675874219bd3667ad6
+    md5: 323fe73187676bae5475172050a28001
+    sha256: 67aa13fc46e0fdec8f8a797bdface99d48725f1c1bc6a64eded1552c3bd5b377
   category: main
   optional: false
 - name: conda-souschef
@@ -2788,7 +2788,7 @@ package:
     cpp-expected: '>=1.3.1,<1.3.2.0a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libarchive: '>=3.8.9,<3.9.0a0'
-    libcurl: '>=8.21.0,<9.0a0'
+    libcurl: '>=8.22.0,<9.0a0'
     libgcc: '>=15'
     libmsgpack-c: '>=6.1.0,<7.0a0'
     libsolv: '>=0.7.39,<0.8.0a0'
@@ -2797,14 +2797,14 @@ package:
     openssl: '>=3.5.8,<4.0a0'
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
-    simdjson: '>=4.6.9,<4.7.0a0'
+    simdjson: '>=4.6.11,<4.7.0a0'
     spdlog: '>=1.17.0,<1.18.0a0'
     yaml-cpp: '>=0.8.0,<0.9.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-2.9.0-py312he3a525c_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-2.9.0-py312he3a525c_1.conda
   hash:
-    md5: aff254b57225fb76d656bbfbcbdc4e63
-    sha256: 64861bde42bbdea2564d681534d5038d3e8ab7be71883fc9ffa177094c9eb025
+    md5: 20afe395e040a265bb209de2f0b2ec70
+    sha256: 1aced4a6a8ec908392e26e76709689d7b097aa96ef3d93b92f0d3e8b7be5d184
   category: main
   optional: false
 - name: libmamba-spdlog
@@ -2816,10 +2816,10 @@ package:
     libgcc: '>=15'
     libmamba: '>=2.9.0,<2.10.0a0'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-spdlog-2.9.0-hc0ddeed_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-spdlog-2.9.0-hc368430_1.conda
   hash:
-    md5: f77da3ac6117e41fb9fda4ed7c802793
-    sha256: fec1a23ec1f08fb1ffddb37338b7de1ae5023072408696d41fc44299f9b740a1
+    md5: 1b4a73468cb25fa5e27e176bccacca3b
+    sha256: 63b4deac2d417271a5bb027094db40c104e9809f9760ddc3e4162ec142188de3
   category: main
   optional: false
 - name: libmambapy
@@ -2835,16 +2835,16 @@ package:
     libstdcxx: '>=15'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.8,<4.0a0'
-    pybind11-abi: '4'
+    pybind11-abi: '11'
     python: ''
     python_abi: 3.12.*
     spdlog: '>=1.17.0,<1.18.0a0'
     yaml-cpp: '>=0.8.0,<0.9.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libmambapy-2.9.0-py312had86545_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libmambapy-2.9.0-py312h08f3bd4_1.conda
   hash:
-    md5: d64aba029cc9bc872c96836e8ac738b3
-    sha256: e55739b4f985585fe89c46815d885cb215298d9d28e547d1dc9a1ae520119c7d
+    md5: 9fdea5c31770852022baa83f91d03c87
+    sha256: 8da16d4d30de11c7cf90d9c21a291550d57e60497e5ae8c284064e3cb4f3d4cf
   category: main
   optional: false
 - name: libmsgpack-c
@@ -3295,10 +3295,10 @@ package:
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/mamba-2.9.0-h8a1d8a6_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/mamba-2.9.0-hc54fbe4_1.conda
   hash:
-    md5: d5bb8ebdd46b246c5dd7be3668f5a9e7
-    sha256: d2e037379932434b7da418dbe85e2585a6d743c4dfa2d32e2d0b849ec4247992
+    md5: b69c2446b8f89f7ad86eae3bd628d874
+    sha256: 134009655a4b93e6e92aae83a3299f5a8dd5cbca7bacda5a3f987576c999b037
   category: main
   optional: false
 - name: markdown-it-py
@@ -3905,14 +3905,14 @@ package:
   category: main
   optional: false
 - name: pybind11-abi
-  version: '4'
+  version: '11'
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/pybind11-abi-4-hd8ed1ab_3.tar.bz2
+  url: https://conda.anaconda.org/conda-forge/noarch/pybind11-abi-11-hc364b38_1.conda
   hash:
-    md5: 878f923dd6acc8aeb47a75da6c4098be
-    sha256: d4fb485b79b11042a16dc6abfb0c44c4f557707c2653ac47c81e5d32b24a3bb0
+    md5: f0599959a2447c1e544e216bddf393fa
+    sha256: 9e7fe12f727acd2787fb5816b2049cef4604b7a00ad3e408c5e709c298ce8bf1
   category: main
   optional: false
 - name: pycosat
@@ -4081,20 +4081,20 @@ package:
   category: main
   optional: false
 - name: pymongo
-  version: 4.18.0
+  version: 4.18.1
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    dnspython: <3.0.0,>=2.7.0
+    dnspython: '>=2.7.0,<3.0.0'
     libgcc: '>=15'
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.0-py312h1064dfc_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.1-py312h1064dfc_0.conda
   hash:
-    md5: 55542bf4a02cadc405b4cb3ba692a3c6
-    sha256: 9c1cb747463c66e5f778865f859f021472d1b7a8f6d1a5145547958dbe669ef9
+    md5: c4e7c81331a22be7278662b5ba10e6df
+    sha256: 04a5b957f79ff2613c2cef8a4dafddd84bb70e26b1e18f7a65db14772ed165c9
   category: main
   optional: false
 - name: pynacl
