@@ -1,4 +1,5 @@
 import collections.abc
+import glob
 import hashlib
 import logging
 import os
@@ -489,6 +490,21 @@ def populate_feedstock_attributes(
         if k.endswith("_meta_yaml") or k.endswith("_requirements"):
             node_attrs.pop(k)
 
+    # record names of migration files
+    if feedstock_dir is not None:
+        migration_files = sorted(
+            [
+                os.path.basename(mfile)[: -len(".yaml")]
+                for mfile in glob.glob(
+                    os.path.join(feedstock_dir, ".ci_support", "migrations", "*.yaml")
+                )
+            ]
+        )
+    else:
+        migration_files = []
+    node_attrs["ci_support_migrations"] = migration_files
+
+    # extract requirements of various kinds
     for k, v in zip(plat_archs, variant_yamls):
         plat_arch_name = "_".join(k)
         node_attrs[f"{plat_arch_name}_meta_yaml"] = v
