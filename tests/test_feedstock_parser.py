@@ -124,6 +124,7 @@ def test_feedstock_parser_load_feedstock_local_fenics_basix_version():
     assert attrs["name"] == "fenics-basix"
     assert attrs["parsing_error"] is False
     assert isinstance(attrs["ci_support_migrations"], list)
+    assert any(fname.startswith("python") for fname in attrs["ci_support_migrations"])
 
 
 def test_get_feedstock_commit_hash_and_timestamp():
