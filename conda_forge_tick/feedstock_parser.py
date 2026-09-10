@@ -499,9 +499,9 @@ def populate_feedstock_attributes(
         )
     else:
         migration_files = []
-    node_attrs["ci_support_migrations"] = [
+    node_attrs["ci_support_migrations"] = sorted([
         os.path.basename(mfile)[: -len(".yaml")] for mfile in migration_files
-    ]
+    ])
 
     # extract requirements of various kinds
     for k, v in zip(plat_archs, variant_yamls):
