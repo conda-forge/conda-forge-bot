@@ -110,6 +110,7 @@ def test_feedstock_parser_load_feedstock_local_semi_ate_stdf():
     assert attrs["feedstock_name"] == "semi-ate-stdf"
     assert "parsing_error" in attrs
     assert attrs["parsing_error"] is False
+    assert isinstance(attrs["ci_support_migrations"], list)
 
 
 def test_feedstock_parser_load_feedstock_local_fenics_basix_version():
@@ -122,6 +123,7 @@ def test_feedstock_parser_load_feedstock_local_fenics_basix_version():
     assert attrs["name"] == attrs["meta_yaml"]["outputs"][0]["name"]
     assert attrs["name"] == "fenics-basix"
     assert attrs["parsing_error"] is False
+    assert isinstance(attrs["ci_support_migrations"], list)
 
 
 def test_get_feedstock_commit_hash_and_timestamp():
@@ -137,6 +139,7 @@ def test_feedstock_parser_load_feedstock_local_pyobjc_framework_quartz():
     )
     assert attrs["feedstock_name"] == "pyobjc-framework-quartz"
     assert attrs["parsing_error"] is False
+    assert isinstance(attrs["ci_support_migrations"], list)
 
 
 def test_feedstock_parser_load_feedstock_local_nemo_relay():
@@ -146,3 +149,4 @@ def test_feedstock_parser_load_feedstock_local_nemo_relay():
     )
     assert attrs["feedstock_name"] == "nemo-relay"
     assert attrs["parsing_error"] is False
+    assert isinstance(attrs["ci_support_migrations"], list)
