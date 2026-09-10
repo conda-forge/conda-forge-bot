@@ -170,7 +170,27 @@ def _arches_are_configured(attrs: "AttrsTypedDict", arches: dict) -> bool:
     return all(_already_has_arch(arch) for arch in arches) if arches else False
 
 
-class ArchRebuild(GraphMigrator):
+class _ArchesConfiguredMixin:
+    """Answers "is this feedstock already building our arches?" off ``conda-forge.yml``.
+
+    Shared by the arch migrators, whose migrated state is visible in the feedstock
+    itself rather than only in the bot's PR records.
+    """
+
+    arches: dict = {}
+
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ):
+        return _arches_are_configured(
+            attrs, self.arches
+        ) or super().filter_node_migrated(attrs, not_bad_str_start)  # type: ignore[misc]
+
+    def predecessor_already_migrated(self, attrs: "AttrsTypedDict") -> bool:
+        return _arches_are_configured(attrs, self.arches)
+
+
+class ArchRebuild(_ArchesConfiguredMixin, GraphMigrator):
     """A Migrator that adds aarch64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
@@ -261,16 +281,6 @@ class ArchRebuild(GraphMigrator):
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
 
-    def filter_node_migrated(
-        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
-    ):
-        return _arches_are_configured(
-            attrs, self.arches
-        ) or super().filter_node_migrated(attrs, not_bad_str_start)
-
-    def predecessor_already_migrated(self, attrs: "AttrsTypedDict") -> bool:
-        return _arches_are_configured(attrs, self.arches)
-
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
     ) -> MigrationUidTypedDict | Literal[False]:
@@ -330,7 +340,7 @@ class ArchRebuild(GraphMigrator):
         return super().remote_branch(feedstock_ctx) + "_arch"
 
 
-class _CrossCompileRebuild(GraphMigrator):
+class _CrossCompileRebuild(_ArchesConfiguredMixin, GraphMigrator):
     """A Migrator that adds arch platform builds to feedstocks."""
 
     rerender = True
@@ -339,7 +349,6 @@ class _CrossCompileRebuild(GraphMigrator):
 
     ignored_packages: set[str] = set()
     excluded_dependencies: set[str] = set()
-    arches: dict = {}
 
     @property
     def additional_keys(self):
@@ -439,16 +448,6 @@ class _CrossCompileRebuild(GraphMigrator):
             top_level=top_level,
         )
         assert not self.check_solvable, "We don't want to check solvability!"
-
-    def filter_node_migrated(
-        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
-    ):
-        return _arches_are_configured(
-            attrs, self.arches
-        ) or super().filter_node_migrated(attrs, not_bad_str_start)
-
-    def predecessor_already_migrated(self, attrs: "AttrsTypedDict") -> bool:
-        return _arches_are_configured(attrs, self.arches)
 
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
