@@ -30,6 +30,7 @@ import github3.exceptions
 import github3.pulls
 import github3.repos
 import requests
+import tqdm
 from github3.session import GitHubSession
 from requests.exceptions import RequestException, Timeout
 from requests.structures import CaseInsensitiveDict
@@ -38,7 +39,7 @@ from conda_forge_tick import sensitive_env
 from conda_forge_tick.lazy_json_backends import (
     LazyJson,
     _test_and_raise_besides_file_not_exists,
-    lazy_json_retry_sequence,
+    make_lazy_json_retry_sequence,
 )
 
 from .executors import lock_git_operation
@@ -1990,7 +1991,14 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     with open(pth) as f:
         data = f.read()
 
-    for tr, ntries in lazy_json_retry_sequence():
+    lzj_rts = make_lazy_json_retry_sequence()
+    for tr, ntries in tqdm.tqdm(
+        lzj_rts(),
+        desc="pushing file '%s'" % pth,
+        ncols=80,
+        total=lzj_rts.num_tries,
+        leave=False,
+    ):
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
@@ -2038,7 +2046,14 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     msg : str
         The commit message.
     """
-    for tr, ntries in lazy_json_retry_sequence():
+    lzj_rts = make_lazy_json_retry_sequence()
+    for tr, ntries in tqdm.tqdm(
+        lzj_rts(),
+        desc="deleting file '%s'" % pth,
+        ncols=80,
+        total=lzj_rts.num_tries,
+        leave=False,
+    ):
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
