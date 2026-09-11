@@ -1093,15 +1093,16 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
+    _python_abi3_support: 1.*
     cffi: '>=2.0'
+    cpython: '>=3.11'
     libgcc: '>=15'
     openssl: '>=3.5.8,<4.0a0'
-    python: '>=3.12,<3.13.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/cryptography-50.0.1-py312h89f293a_0.conda
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/linux-64/cryptography-50.0.1-py311hc91d8b8_1.conda
   hash:
-    md5: 0b26a64e52f9a006338021ccf5a3b0d7
-    sha256: cb8e6552f8fbad0891f4d2e439eb22f393de7ccbd72c23b13ebe6f5195aa5698
+    md5: f68d2562d5f1a828fa82dfa2e91e27da
+    sha256: 901268eb9ed9ab9a9285fda16abb4feb65eca3301755e560fef54ea7e2fc312c
   category: main
   optional: false
 - name: curl
@@ -4472,10 +4473,10 @@ package:
     numpy: ''
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/rapidfuzz-3.14.6-py312ha6a3dbb_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/rapidfuzz-3.14.6-py312ha6a3dbb_2.conda
   hash:
-    md5: 0e3acb1665a84a2b879444285f65259d
-    sha256: ad9373e5f2393e63465af0e729ec9b94f645b6d6b8b204555bbe8b17c9c22889
+    md5: 11c82a3153ba4f9692f6edf5fbbca2b1
+    sha256: 100c9a4a35f65f3ddeff664ecbddb9504bf86da9d7d62a21a0da0541ae50d38d
   category: main
   optional: false
 - name: rattler-build
@@ -4726,25 +4727,25 @@ package:
   category: main
   optional: false
 - name: scipy
-  version: 1.18.0
+  version: 1.18.1
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libblas: '>=3.9.0,<4.0a0'
     libcblas: '>=3.9.0,<4.0a0'
-    libgcc: '>=14'
+    libgcc: '>=15'
     libgfortran: ''
-    libgfortran5: '>=14.3.0'
+    libgfortran5: '>=15.3.0'
     liblapack: '>=3.9.0,<4.0a0'
-    libstdcxx: '>=14'
-    numpy: <2.7,>=1.23,<3,>=2.0.0
+    libstdcxx: '>=15'
+    numpy: <2.8,>=1.25,<3,>=2.0.0
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.18.0-py312h54fa4ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.18.1-py312h106c528_0.conda
   hash:
-    md5: f8d242c552b0f7f682451ce95879af5e
-    sha256: c304dfb0bbf0d824d3706623f6437237d7bfc83941bb7b18f80e05abb10ec79e
+    md5: 9f57b4b1fa3b51dbf1df6eca1e6c0cfa
+    sha256: 1304a96048fd68ae50e30ca4891e4d2851c20c5687b3152045930541a4008121
   category: main
   optional: false
 - name: scrypt
