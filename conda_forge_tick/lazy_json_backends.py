@@ -65,14 +65,18 @@ CF_TICK_GRAPH_DATA_HASHMAPS = [
 CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS = 5
 
 
-def lazy_json_retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
-    for i in range(num_tries):
-        start = factor * (base**i)
-        end = start * base
-        if end - start > max_wait:
-            end = start + max_wait
-        time.sleep(RNG.uniform(0, end - start))
-        yield i, num_tries
+def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
+    def _func():
+        for i in range(num_tries):
+            start = factor * (base**i)
+            end = start * base
+            if end - start > max_wait:
+                end = start + max_wait
+            time.sleep(0.1)
+            yield i, num_tries
+
+    _func.num_tries = num_tries  # type: ignore[attr-defined]
+    return _func
 
 
 def get_sharded_path(file_path, n_dirs=CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS):
@@ -409,6 +413,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         )
 
         # exponential backoff
+        lazy_json_retry_sequence = make_lazy_json_retry_sequence()
         for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
@@ -438,13 +443,13 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                         )
                 break
             except Exception as e:
-                logger.warning(
+                logger.debug(
                     "failed to push '%s' - trying %d more times",
                     filename,
                     ntries - tr - 1,
                 )
                 if tr == ntries - 1:
-                    logger.warning(
+                    logger.exception(
                         "failed to push '%s'",
                         filename,
                         exc_info=e,
@@ -482,6 +487,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         )
 
         # exponential backoff
+        lazy_json_retry_sequence = make_lazy_json_retry_sequence()
         for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
@@ -499,13 +505,13 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                     )
                 break
             except Exception as e:
-                logger.warning(
+                logger.debug(
                     "failed to delete '%s' - trying %d more times",
                     filename,
                     ntries - tr - 1,
                 )
                 if tr == ntries - 1:
-                    logger.warning(
+                    logger.exception(
                         "failed to delete '%s'",
                         filename,
                         exc_info=e,
@@ -538,6 +544,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         )
 
         # exponential backoff
+        lazy_json_retry_sequence = make_lazy_json_retry_sequence()
         for tr, ntries in lazy_json_retry_sequence():
             try:
                 cnts = requests.get(
@@ -547,13 +554,13 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                 cnts.raise_for_status()
                 return cnts.text
             except Exception as e:
-                logger.warning(
+                logger.debug(
                     "failed to pull '%s' - trying %d more times",
                     pth,
                     ntries - tr - 1,
                 )
                 if tr == ntries - 1:
-                    logger.warning(
+                    logger.exception(
                         "failed to pull '%s'",
                         pth,
                         exc_info=e,
