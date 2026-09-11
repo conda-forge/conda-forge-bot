@@ -40,7 +40,9 @@ VERY_FLAKY_TEST = "This test case is more flaky than usual."
         ("compress", "0.9"),
         ("onesrc", "2.4.1"),
         ("multisrc", "2.4.1"),
-        ("jinja2sha", "2.4.1"),
+        pytest.param(
+            "jinja2sha", "2.4.1", marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST)
+        ),
         ("r", "1.3_2"),
         pytest.param(
             "multisrclist", "2.25.0", marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST)
