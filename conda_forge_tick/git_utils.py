@@ -2012,13 +2012,13 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
                     )
             break
         except Exception as e:
-            logger.warning(
+            logger.debug(
                 "failed to push '%s' - trying %d more times",
                 pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
-                logger.warning(
+                logger.exception(
                     "failed to push '%s'",
                     pth,
                     exc_info=e,
@@ -2054,13 +2054,13 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
             break
 
         except Exception as e:
-            logger.warning(
+            logger.debug(
                 "failed to delete '%s' - trying %d more times",
                 pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
-                logger.warning(
+                logger.exception(
                     "failed to delete '%s'",
                     pth,
                     exc_info=e,
