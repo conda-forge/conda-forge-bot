@@ -747,7 +747,7 @@ package:
   category: main
   optional: false
 - name: conda-forge-metadata
-  version: 2026.9.5
+  version: 2026.9.10
   manager: conda
   platform: linux-64
   dependencies:
@@ -758,10 +758,10 @@ package:
     requests: ''
     ruamel.yaml: ''
     typing-extensions: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-2026.9.5-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-metadata-2026.9.10-pyh5ded981_0.conda
   hash:
-    md5: d06136568d930cdb490fb0435e05e513
-    sha256: df8999449d87d52a784596389a3ae68658ff50171cf5c6dca7bf7a4f9c391f1e
+    md5: 22004549d5a9a0b81d8b3f1870ecd532
+    sha256: 31cbe5ded7a0d340be9f2e1817835407a62fe8046a16f596191e811941b65eb9
   category: main
   optional: false
 - name: conda-forge-pinning
@@ -5073,10 +5073,10 @@ package:
     libgcc: '>=15'
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/tornado-6.5.8-py312h5cc1888_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/tornado-6.5.8-py312h5cc1888_2.conda
   hash:
-    md5: e15caa7ad9be633c3cba5a7937b117b7
-    sha256: 3480bf39c540d3dfa737ce5df1e14c74fef161ccb2a19485cb211a654921fa68
+    md5: 7a327c3f25e34e434b681906f47e53bc
+    sha256: 01ffcb9966caa35a344216a89f37a0bc7b281cd6bf50b803d55a9f6bc04cb072
   category: main
   optional: false
 - name: tqdm
