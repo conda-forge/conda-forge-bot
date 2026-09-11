@@ -1995,7 +1995,6 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     for tr, ntries in tqdm.tqdm(
         lzj_rts(),
         desc="pushing file '%s'" % pth,
-        ncols=80,
         total=lzj_rts.num_tries,
         leave=False,
     ):
@@ -2050,7 +2049,6 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     for tr, ntries in tqdm.tqdm(
         lzj_rts(),
         desc="deleting file '%s'" % pth,
-        ncols=80,
         total=lzj_rts.num_tries,
         leave=False,
     ):
