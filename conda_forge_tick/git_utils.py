@@ -30,7 +30,6 @@ import github3.exceptions
 import github3.pulls
 import github3.repos
 import requests
-import tqdm
 from github3.session import GitHubSession
 from requests.exceptions import RequestException, Timeout
 from requests.structures import CaseInsensitiveDict
@@ -1992,12 +1991,7 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
         data = f.read()
 
     lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in tqdm.tqdm(
-        lzj_rts(),
-        desc="pushing file '%s'" % pth,
-        total=lzj_rts.num_tries,
-        leave=False,
-    ):
+    for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
@@ -2046,12 +2040,7 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
         The commit message.
     """
     lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in tqdm.tqdm(
-        lzj_rts(),
-        desc="deleting file '%s'" % pth,
-        total=lzj_rts.num_tries,
-        leave=False,
-    ):
+    for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
