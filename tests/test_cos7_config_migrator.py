@@ -62,6 +62,11 @@ def test_version_cos7_config(case, remove_quay, recipe_version, tmp_path):
         },
         tmp_path=tmp_path,
         recipe_version=recipe_version,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz}"
+            },
+        ],
     )
     with open(cfg) as fp:
         cfg_lines = fp.readlines()
