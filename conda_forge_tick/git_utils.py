@@ -38,7 +38,7 @@ from conda_forge_tick import sensitive_env
 from conda_forge_tick.lazy_json_backends import (
     LazyJson,
     _test_and_raise_besides_file_not_exists,
-    make_lazy_json_retry_sequence,
+    lazy_json_retry_sequence,
 )
 
 from .executors import lock_git_operation
@@ -1990,8 +1990,7 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     with open(pth) as f:
         data = f.read()
 
-    lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in lzj_rts():
+    for tr, ntries in lazy_json_retry_sequence():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
@@ -2013,13 +2012,13 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
                     )
             break
         except Exception as e:
-            logger.debug(
+            logger.warning(
                 "failed to push '%s' - trying %d more times",
                 pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
-                logger.exception(
+                logger.warning(
                     "failed to push '%s'",
                     pth,
                     exc_info=e,
@@ -2039,8 +2038,7 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     msg : str
         The commit message.
     """
-    lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in lzj_rts():
+    for tr, ntries in lazy_json_retry_sequence():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
@@ -2056,13 +2054,13 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
             break
 
         except Exception as e:
-            logger.debug(
+            logger.warning(
                 "failed to delete '%s' - trying %d more times",
                 pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
-                logger.exception(
+                logger.warning(
                     "failed to delete '%s'",
                     pth,
                     exc_info=e,

@@ -303,7 +303,7 @@ jobs:
             cp .test_durations .test_durations.${{ matrix.group }}
           fi
           pytest \
-            -vvvs \
+            -v \
             --splits 1 --group ${{ matrix.group }} \
             --store-durations \
             --durations-path=.test_durations.mongodb \

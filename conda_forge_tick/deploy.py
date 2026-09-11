@@ -5,8 +5,6 @@ import subprocess
 import sys
 import time
 
-import tqdm
-
 from .git_utils import (
     delete_file_via_gh_api,
     get_bot_token,
@@ -243,31 +241,34 @@ def _deploy_via_api(
 ) -> tuple[set[str], set[str]]:
     files_done = set()
     files_to_try_again = set()
-    for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80):
+    for pth in files_to_add:
         try:
-            tqdm.tqdm.write(f"pushing file '{pth}' to the graph via the GitHub API")
+            print(f"pushing file '{pth}' to the graph via the GitHub API", flush=True)
 
             msg = _get_pth_commit_message(pth)
 
             push_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
         except Exception as e:
-            logger.warning("git push via API failed", exc_info=e)
+            logger.warning("git push via API failed - trying via git CLI", exc_info=e)
             files_to_try_again.add(pth)
         else:
             files_done.add(pth)
 
         time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
-    for pth in tqdm.tqdm(files_to_delete, desc="deleting files", ncols=80):
+    for pth in files_to_delete:
         try:
-            tqdm.tqdm.write(f"deleting file '{pth}' from the graph via the GitHub API")
+            print(
+                f"deleting file '{pth}' from the graph via the GitHub API",
+                flush=True,
+            )
 
             # make a nice message for stuff managed via LazyJson
             msg = _get_pth_commit_message(pth)
 
             delete_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
         except Exception as e:
-            logger.warning("git delete via API failed", exc_info=e)
+            logger.warning("git delete via API failed - trying via git CLI", exc_info=e)
             files_to_try_again.add(pth)
         else:
             files_done.add(pth)

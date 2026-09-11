@@ -27,11 +27,11 @@ from conda_forge_tick.lazy_json_backends import (
     get_lazy_json_primary_backend,
     get_sharded_path,
     lazy_json_override_backends,
+    lazy_json_retry_sequence,
     lazy_json_snapshot,
     lazy_json_transaction,
     load,
     loads,
-    make_lazy_json_retry_sequence,
     remove_key_for_hashmap,
     sync_lazy_json_across_backends,
     touch_all_lazy_json_refs,
@@ -1144,10 +1144,9 @@ def test_lazy_json_file_read_only_backend(tmpdir):
             )
 
 
-def test_lazy_json_make_lazy_json_retry_sequence():
-    rts = make_lazy_json_retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=2)
+def test_lazy_json_lazy_json_retry_sequence():
     start = time.time()
-    for _ in rts():
+    for _ in lazy_json_retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=2):
         pass
     end = time.time()
     assert end - start < 20 * 2
