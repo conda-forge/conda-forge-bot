@@ -35,6 +35,7 @@ from conda_forge_tick.settings import (
 )
 from conda_forge_tick.utils import (
     as_iterable,
+    get_keys_default,
     get_platform_arch_from_ci_support_filename,
     parse_meta_yaml,
     parse_recipe_yaml,
@@ -493,16 +494,26 @@ def populate_feedstock_attributes(
     # record names of migration files
     if feedstock_dir is not None:
         migration_files = sorted(
-            [
-                os.path.basename(mfile)[: -len(".yaml")]
-                for mfile in glob.glob(
+            list(
+                glob.glob(
                     os.path.join(feedstock_dir, ".ci_support", "migrations", "*.yaml")
                 )
-            ]
+            )
         )
     else:
         migration_files = []
-    node_attrs["ci_support_migrations"] = migration_files
+    migration_file_info = {}
+    for mfile in migration_files:
+        key = os.path.basename(mfile)[: -len(".yaml")]
+        with open(mfile) as fp:
+            mdata = yaml_safe_load(fp.read())
+        migration_file_info[key] = {
+            "migrator_ts": mdata.get("migrator_ts", None),
+            "migration_number": get_keys_default(
+                mdata, ["__migrator", "migration_number"], {}, None
+            ),
+        }
+    node_attrs["ci_support_migrations"] = migration_file_info
 
     # extract requirements of various kinds
     for k, v in zip(plat_archs, variant_yamls):
