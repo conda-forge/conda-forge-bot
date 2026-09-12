@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.12.19.13.57
+  version: 2026.09.12.19.51.15
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.12.19.13.57-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.12.19.51.15-hd8ed1ab_0.conda
   hash:
-    md5: cc8bea74009cbeec58ad5df1d5dd51a0
-    sha256: 9dee0f67e085e69cae0bf6d541c8675576dfe037ab73d973e6342e362bdba06d
+    md5: b9ac9010b57a6d5ce9c193069a530bce
+    sha256: fff56cbf97b1414ebe35605684b50673f0241bd02da2609ed7d1d78f1f14e9f3
   category: main
   optional: false
 - name: conda-index
@@ -4027,14 +4027,14 @@ package:
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     cffi: ''
-    libgcc: '>=14'
-    libgit2: '>=1.9.6,<1.10.0a0'
+    libgcc: '>=15'
+    libgit2: '>=1.9.7,<1.10.0a0'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pygit2-1.20.0-py312h5253ce2_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pygit2-1.20.0-py312h1b36aeb_1.conda
   hash:
-    md5: 5253dffc6a3ed6e6b08178dc956f960c
-    sha256: d21f399dda43ae7d7783c4332101114cabcadd11dad0830efa9b77fc2b79e912
+    md5: d64c53af195b456bf13c3a7f458b5456
+    sha256: e27e9f2c3338bd66cd16760b80cc2b279290d13eb03be516f0cc07d47afd6e93
   category: main
   optional: false
 - name: pygithub
