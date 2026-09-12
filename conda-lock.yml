@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.11.16.01.30
+  version: 2026.09.12.19.13.57
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.11.16.01.30-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.12.19.13.57-hd8ed1ab_0.conda
   hash:
-    md5: 396a66d749531a44948ad7b603dd8a6c
-    sha256: 1fb4221b29672f5b9776c33e0792c211062cf7352cfe53630f3abedddc1bbca0
+    md5: cc8bea74009cbeec58ad5df1d5dd51a0
+    sha256: 9dee0f67e085e69cae0bf6d541c8675576dfe037ab73d973e6342e362bdba06d
   category: main
   optional: false
 - name: conda-index
@@ -1594,18 +1594,18 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libcurl: '>=8.21.0,<9.0a0'
+    libcurl: '>=8.22.0,<9.0a0'
     libexpat: '>=2.8.1,<3.0a0'
-    libgcc: '>=14'
+    libgcc: '>=15'
     libiconv: '>=1.18,<2.0a0'
     libzlib: '>=1.3.2,<2.0a0'
-    openssl: '>=3.5.7,<4.0a0'
+    openssl: '>=3.5.8,<4.0a0'
     pcre2: '>=10.47,<10.48.0a0'
     perl: 5.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.55.0-pl5321h5685339_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.55.0-pl5321h3795e67_2.conda
   hash:
-    md5: da325124b01b7b88e7374d160d02698b
-    sha256: ffe825e3ff78876dc5aa28eee791d8d9be4a47157761aa38dbff79e9222b3b8e
+    md5: 6c2e06e5d72574700e526b860e136157
+    sha256: 762e393f66cff2f4053f986cd4eaaa93b0fd22a6decec8f9cdefe9c9e12591be
   category: main
   optional: false
 - name: gitdb
@@ -5270,7 +5270,7 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.12
+  version: 0.12.13
   manager: conda
   platform: linux-64
   dependencies:
@@ -5279,10 +5279,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.12-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.13-h841d291_0.conda
   hash:
-    md5: ab48164f27bfec8d6624e2c8447e73f5
-    sha256: 0da9fba742577c9e93020e435eccfdbe62d601aa2f25314c44e2bc13341610ff
+    md5: 63a7873a0d33470c9f24272783e77982
+    sha256: 02b3ac1f7a27082370a6ec49299c9c1efe245d018ff872da40933fa2279940e9
   category: main
   optional: false
 - name: vcs_versioning
