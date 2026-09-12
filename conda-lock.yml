@@ -3682,12 +3682,13 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libgcc-ng: '>=12'
-    libxcrypt: '>=4.4.36'
-  url: https://conda.anaconda.org/conda-forge/linux-64/perl-5.32.1-7_hd590300_perl5.conda
+    __glibc: '>=2.17,<3.0.a0'
+    libgcc: '>=15'
+    libxcrypt: '>=4.4.38'
+  url: https://conda.anaconda.org/conda-forge/linux-64/perl-5.32.1-9_h7cc23a3_perl5.conda
   hash:
-    md5: f2cfec9406850991f4e3d960cc9e3321
-    sha256: 9ec32b6936b0e37bcb0ed34f22ec3116e75b3c0964f9f50ecea5f58734ed6ce9
+    md5: da53476767a523b23baf56b724a11e0b
+    sha256: d81859fc9f6fe6a49175403d3ddf93ba8038cb4f12664bc4cf628d200b664bd4
   category: main
   optional: false
 - name: pexpect
@@ -4471,12 +4472,12 @@ package:
     libgcc: '>=15'
     libstdcxx: '>=15'
     numpy: ''
-    python: '>=3.12,<3.13.0a0'
+    python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/rapidfuzz-3.14.6-py312ha6a3dbb_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/rapidfuzz-3.14.6-py312h80505a6_3.conda
   hash:
-    md5: 11c82a3153ba4f9692f6edf5fbbca2b1
-    sha256: 100c9a4a35f65f3ddeff664ecbddb9504bf86da9d7d62a21a0da0541ae50d38d
+    md5: f14c1e766012504eb48d40529fd7192b
+    sha256: 82f61d2a8c9b39e8b17ffba4df9904a9b4b2e1224edafa4cf68b1b28dba3bebf
   category: main
   optional: false
 - name: rattler-build
@@ -5081,16 +5082,16 @@ package:
   category: main
   optional: false
 - name: tqdm
-  version: 4.70.0
+  version: 4.70.1
   manager: conda
   platform: linux-64
   dependencies:
     __unix: ''
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.70.0-pyh8f84b5b_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/tqdm-4.70.1-pyhfa0c392_0.conda
   hash:
-    md5: 00953c3b729e03b0ae21f49fdf3441bb
-    sha256: a4d9e9da15b13f1ab047e7db412e2ed564bc615832e80213cf129b973c3abf4a
+    md5: ffc91f29264eeb8d3ba96fdc897316c3
+    sha256: 7c40c84de3de3624c2a753496122dbb880903c796d183e9d4be6c15c310c4bab
   category: main
   optional: false
 - name: trove-classifiers
@@ -5386,10 +5387,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.4.0-py312h1b36aeb_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.4.0-py312h1b36aeb_2.conda
   hash:
-    md5: 298135d24aec3992c26293e903f29a62
-    sha256: 30be4c86ae1e0ac0d4a0ce71f3a28f0beac3422a33c668b56131dc24d6eb42b7
+    md5: 1c6a986ce95c1919e83c4a8650891e38
+    sha256: 0ab5f935929b386b0f22926b81c923bffb69a91d16137f292f6e61c971067c7a
   category: main
   optional: false
 - name: wurlitzer
