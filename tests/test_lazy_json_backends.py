@@ -20,6 +20,7 @@ from conda_forge_tick.lazy_json_backends import (
     LazyJson,
     LazyJsonStub,
     MongoDBLazyJsonBackend,
+    PrimaryLazyJsonBackend,
     dump,
     dumps,
     get_all_keys_for_hashmap,
@@ -273,10 +274,14 @@ def test_lazy_json_backends_sync(backends, tmpdir):
                 pytest.mark.mongodb,
             ],
         ),
+        "primary",
     ],
 )
 def test_lazy_json_backends_ops(backend, hashmap, tmpdir):
-    be = LAZY_JSON_BACKENDS[backend]()
+    if backend == "primary":
+        be = PrimaryLazyJsonBackend()
+    else:
+        be = LAZY_JSON_BACKENDS[backend]()
     key = "blah"
     value = dumps({"a": 1, "b": 2})
     key_again = "blahblah"

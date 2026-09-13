@@ -142,6 +142,49 @@ class LazyJsonBackend(ABC):
         pass
 
 
+class PrimaryLazyJsonBackend(LazyJsonBackend):
+    """The primary LazyJson backend."""
+
+    @property
+    def _backend(self):
+        return LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND]()
+
+    @contextlib.contextmanager
+    def transaction_context(self) -> Iterator[Self]:
+        yield from self._backend.transaction_context()
+
+    @contextlib.contextmanager
+    def snapshot_context(self) -> Iterator[Self]:
+        yield from self._backend.snapshot_context()
+
+    def hexists(self, name: str, key: str) -> bool:
+        return self._backend.hexists(name, key)
+
+    def hset(self, name: str, key: str, value: str) -> None:
+        return self._backend.hset(name, key, value)
+
+    def hmset(self, name: str, mapping: Mapping[str, str]) -> None:
+        return self._backend.hmset(name, mapping)
+
+    def hmget(self, name: str, keys: Iterable[str]) -> list[str]:
+        return self._backend.hmget(name, keys)
+
+    def hdel(self, name: str, keys: Iterable[str]) -> None:
+        return self._backend.hdel(name, keys)
+
+    def hkeys(self, name: str) -> list[str]:
+        return self._backend.hkeys(name)
+
+    def hsetnx(self, name: str, key: str, value: str) -> bool:
+        return self._backend.hsetnx(name, key, value)
+
+    def hget(self, name: str, key: str) -> str:
+        return self._backend.hget(name, key)
+
+    def hgetall(self, name: str, hashval: bool = False) -> dict[str, str]:
+        return self._backend.hgetall(name, hashval=hashval)
+
+
 class FileLazyJsonBackend(LazyJsonBackend):
     @contextlib.contextmanager
     def transaction_context(self) -> Iterator[Self]:
