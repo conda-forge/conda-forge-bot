@@ -65,14 +65,14 @@ CF_TICK_GRAPH_DATA_HASHMAPS = [
 CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS = 5
 
 
-def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=0.02, max_wait=600):
+def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=1, max_wait=600):
     def _func():
         for i in range(num_tries):
             start = factor * (base**i)
             end = start * base
             if end - start > max_wait:
                 end = start + max_wait
-            time.sleep(0.1)
+            time.sleep(RNG.uniform(0, end - start))
             yield i, num_tries
 
     _func.num_tries = num_tries  # type: ignore[attr-defined]
