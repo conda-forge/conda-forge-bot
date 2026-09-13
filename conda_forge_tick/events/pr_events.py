@@ -7,6 +7,7 @@ from conda_forge_tick.git_utils import (
 )
 from conda_forge_tick.lazy_json_backends import (
     LazyJson,
+    PrimaryLazyJsonBackend,
     lazy_json_override_backends,
 )
 from conda_forge_tick.utils import get_keys_default, pr_can_be_archived
@@ -19,6 +20,11 @@ def _backout_node_from_html_url(html_url):
 
 def _react_to_pr(uid: str, dry_run: bool = False) -> None:
     with lazy_json_override_backends(["github_api"], use_file_cache=False):
+        # if the json blob does not exist, simply return
+        primary_backend = PrimaryLazyJsonBackend()
+        if not primary_backend.hexists("pr_json", uid):
+            return
+
         pr_json = LazyJson(f"pr_json/{uid}.json")
         is_archiveable = pr_can_be_archived(pr_json)
 
