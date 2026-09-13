@@ -147,7 +147,7 @@ class PrimaryLazyJsonBackend(LazyJsonBackend):
 
     @property
     def _backend(self):
-        return
+        return LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND]()
 
     @contextlib.contextmanager
     def transaction_context(self) -> Iterator[Self]:
