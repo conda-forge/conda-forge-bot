@@ -14,6 +14,7 @@ concurrency:
 
 env:
   CF_TICK_USE_LOCAL_PINNINGS: "true"
+  PYTHONUNBUFFERED: "1"
 
 defaults:
   run:

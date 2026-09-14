@@ -243,9 +243,10 @@ def _deploy_via_api(
 ) -> tuple[set[str], set[str]]:
     files_done = set()
     files_to_try_again = set()
-    for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80):
+    for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80, file=sys.stdout):
         try:
-            tqdm.tqdm.write(f"pushing file '{pth}' to the graph via the GitHub API")
+            with tqdm.tqdm.external_write_mode(file=sys.stdout):
+                print(f"pushing file '{pth}'", flush=True)
 
             msg = _get_pth_commit_message(pth)
 
@@ -258,9 +259,10 @@ def _deploy_via_api(
 
         time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
-    for pth in tqdm.tqdm(files_to_delete, desc="deleting files", ncols=80):
+    for pth in tqdm.tqdm(files_to_delete, desc="deleting files", ncols=80, file=sys.stdout):
         try:
-            tqdm.tqdm.write(f"deleting file '{pth}' from the graph via the GitHub API")
+            with tqdm.tqdm.external_write_mode(file=sys.stdout):
+                print(f"deleting file '{pth}'", flush=True)
 
             # make a nice message for stuff managed via LazyJson
             msg = _get_pth_commit_message(pth)

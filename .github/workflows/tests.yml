@@ -14,6 +14,7 @@ concurrency:
 env:
   PY_COLORS: "1"
   IMAGE_NAME: conda-forge-tick
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   check:

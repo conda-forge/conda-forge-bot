@@ -11,6 +11,7 @@ concurrency:
 
 env:
   PY_COLORS: "1"
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   test-model:

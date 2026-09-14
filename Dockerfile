@@ -4,7 +4,8 @@ ARG SETUPTOOLS_SCM_PRETEND_VERSION
 # baseline env
 ENV SETUPTOOLS_SCM_PRETEND_VERSION=${SETUPTOOLS_SCM_PRETEND_VERSION} \
     TMPDIR=/tmp \
-    AUTOTICK_BOT_DIR=/opt/conda-forge-bot
+    AUTOTICK_BOT_DIR=/opt/conda-forge-bot \
+    PYTHONUNBUFFERED=1
 
 COPY --chown=$MAMBA_USER:$MAMBA_USER . $AUTOTICK_BOT_DIR
 RUN micromamba install --name base --yes --file $AUTOTICK_BOT_DIR/conda-lock.yml && \
