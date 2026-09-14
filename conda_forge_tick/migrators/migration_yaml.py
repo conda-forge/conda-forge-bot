@@ -326,10 +326,9 @@ class MigrationYaml(GraphMigrator):
         if not info:
             return False
 
-        return bool(
-            info.get("migration_number") == self.obj_version
-            and info.get("migrator_ts") == self.loaded_yaml.get("migrator_ts")
-        )
+        number_matches = info.get("migration_number") == self.obj_version
+        ts_matches = info.get("migrator_ts") == self.loaded_yaml.get("migrator_ts")
+        return number_matches and ts_matches
 
     def filter_not_in_migration(self, attrs, not_bad_str_start=""):
         if super().filter_not_in_migration(attrs, not_bad_str_start):
