@@ -170,6 +170,12 @@ def test_cmake(tmp_path, recipe_version: int):
         },
         tmp_path=tmp_path,
         recipe_version=recipe_version,
+        allowed_text_replacements=[
+            {
+                "{{ version }}.tar.gz": "{{ version }}.zip",
+                "93db9e519efe372657d97e96e68c888aa65696b0ee31408780efa6388563989b": "3d1823ea704a3f97fa98a5d38e2d0f1103168e5327d84ecfdb55a4be5bdee534",
+            }
+        ],
     )
     expected_unix = [
         "#!/bin/bash\n",

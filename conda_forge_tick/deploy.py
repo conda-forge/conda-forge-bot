@@ -5,6 +5,8 @@ import subprocess
 import sys
 import time
 
+import tqdm
+
 from .git_utils import (
     delete_file_via_gh_api,
     get_bot_token,
@@ -16,7 +18,6 @@ from .lazy_json_backends import (
     get_lazy_json_backends,
     lazy_json_override_backends,
 )
-from .os_utils import clean_disk_space
 from .settings import settings
 from .utils import (
     fold_log_lines,
@@ -241,34 +242,35 @@ def _deploy_via_api(
 ) -> tuple[set[str], set[str]]:
     files_done = set()
     files_to_try_again = set()
-    for pth in files_to_add:
+    for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80, file=sys.stdout):
         try:
-            print(f"pushing file '{pth}' to the graph via the GitHub API", flush=True)
+            with tqdm.tqdm.external_write_mode(file=sys.stdout):
+                print(f"pushing file '{pth}'", flush=True)
 
             msg = _get_pth_commit_message(pth)
 
             push_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
         except Exception as e:
-            logger.warning("git push via API failed - trying via git CLI", exc_info=e)
+            logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
         else:
             files_done.add(pth)
 
         time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
-    for pth in files_to_delete:
+    for pth in tqdm.tqdm(
+        files_to_delete, desc="deleting files", ncols=80, file=sys.stdout
+    ):
         try:
-            print(
-                f"deleting file '{pth}' from the graph via the GitHub API",
-                flush=True,
-            )
+            with tqdm.tqdm.external_write_mode(file=sys.stdout):
+                print(f"deleting file '{pth}'", flush=True)
 
             # make a nice message for stuff managed via LazyJson
             msg = _get_pth_commit_message(pth)
 
             delete_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
         except Exception as e:
-            logger.warning("git delete via API failed - trying via git CLI", exc_info=e)
+            logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)
         else:
             files_done.add(pth)
@@ -298,9 +300,6 @@ def deploy(
         for node, attrs in gx.nodes.items():
             with attrs["payload"]:
                 pass
-
-    with fold_log_lines("cleaning up disk space for deploy"):
-        clean_disk_space()
 
     files_to_add: set[str] = set()
     if not dirs_to_deploy:

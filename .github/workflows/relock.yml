@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -29,7 +29,7 @@ jobs:
       - uses: conda-incubator/relock-conda@a2bc3539342497f43c9f13d322b24d8f17276f6e # v28
         if: ${{ ! env.CI_SKIP }}
         with:
-          github-token: ${{ secrets.AUTOTICK_BOT_TOKEN }}
+          github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           automerge: true
           skip-if-pr-exists: true
           git-user-name: regro-cf-autotick-bot

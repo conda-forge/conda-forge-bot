@@ -9,7 +9,6 @@ import tempfile
 from contextlib import contextmanager
 
 import wurlitzer
-import yaml
 from conda_forge_feedstock_ops.container_utils import (
     get_default_log_level_args,
     run_container_operation,
@@ -22,6 +21,7 @@ from conda_forge_tick.settings import (
     ENV_GRAPH_GITHUB_BACKEND_REPO,
     settings,
 )
+from conda_forge_tick.utils import yaml_safe_dump
 
 logger = logging.getLogger(__name__)
 
@@ -219,7 +219,7 @@ def _provide_source_code_v1(recipe_dir, variant_config_file):
         },
     }
     with open(f"{recipe_dir}/minimal_recipe.yaml", "w") as f:
-        yaml.dump(minimal_recipe, f)
+        yaml_safe_dump(minimal_recipe, stream=f)
     try:
         out = subprocess.run(
             [

@@ -6,10 +6,11 @@ import tempfile
 import typing
 from typing import Any
 
+from conda_forge_feedstock_ops.recipe_parser import CondaMetaYAML
+
 from conda_forge_tick.migrators.core import MiniMigrator, skip_migrator_due_to_schema
 from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.provide_source_code import provide_source_code
-from conda_forge_tick.recipe_parser import CondaMetaYAML
 
 try:
     from conda_smithy.lint_recipe import NEEDED_FAMILIES

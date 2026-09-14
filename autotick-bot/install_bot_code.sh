@@ -11,6 +11,8 @@
 
 set -euo pipefail
 
+export PYTHONUNBUFFERED=1
+
 git config --global user.name regro-cf-autotick-bot
 git config --global user.email 36490558+regro-cf-autotick-bot@users.noreply.github.com
 git config --global pull.rebase false
@@ -23,16 +25,6 @@ cd conda-forge-bot
 pip install --no-deps --no-build-isolation -e .
 
 cd ..
-
-clean_disk_space="false"
-for arg in "$@"; do
-  if [[ "$arg" == "--clean-disk-space" ]]; then
-    clean_disk_space="true"
-  fi
-done
-if [[ "${clean_disk_space}" == "true" ]]; then
-  conda-forge-tick clean-disk-space --ci-service='github-actions'
-fi
 
 clone_graph="true"
 for arg in "$@"; do

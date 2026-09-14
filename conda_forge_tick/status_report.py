@@ -13,7 +13,6 @@ import networkx as nx
 import orjson
 import requests
 import tqdm
-import yaml
 from conda.models.version import VersionOrder
 from graphviz import Source
 
@@ -40,6 +39,7 @@ from conda_forge_tick.utils import (
     load_existing_graph,
     pr_can_be_archived,
     sanitize_string,
+    yaml_safe_load,
 )
 from conda_forge_tick.version_filters import filter_version
 
@@ -247,8 +247,13 @@ def graph_migrator_status(
         # No PR was ever issued but the migration was performed.
         # This is only the case when the migration was done manually
         # before the bot could issue any PR.
-        manually_done = pr_json is None and frozen_to_json_friendly(nuid)["data"] in (
-            z["data"] for z in all_pr_jsons
+        manually_done = pr_json is None and (
+            frozen_to_json_friendly(nuid)["data"] in (z["data"] for z in all_pr_jsons)
+            # the migrator may also be able to tell from the feedstock itself, e.g.
+            # the arch migrators read the arches off conda-forge.yml. Without this,
+            # a feedstock migrated by hand or by a rerender has no PRed record to
+            # match and falls through to the "awaiting-parents" catch-all below.
+            or migrator.filter_node_migrated(attrs)
         )
 
         if pr_json is not None and "PR" in pr_json:
@@ -506,7 +511,7 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
             or isinstance(migrator, Migrator)
         ) and not isinstance(migrator, Version):
             if isinstance(migrator, GraphMigrator):
-                mgconf = yaml.safe_load(getattr(migrator, "yaml_contents", "{}")).get(
+                mgconf = yaml_safe_load(getattr(migrator, "yaml_contents", "{}")).get(
                     "__migrator",
                     {},
                 )

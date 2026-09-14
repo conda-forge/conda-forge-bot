@@ -344,6 +344,12 @@ class NodeAttributesValid(ValidatedBaseModel):
     Note that this field is NOT analogous to the `pr_info` field. Version migration PRs still appear in `pr_info`.
     """
 
+    ci_support_migrations: dict[str, dict[str, Any]]
+    """
+    A dictionary mapping the names of the migration yaml files in the `.ci_support` directory without
+    the `.yaml` file extension to their properties (`migrator_ts`, `migration_number`).
+    """
+
 
 class NodeAttributesError(ValidatedBaseModel):
     """If a parsing error occurred, any number of fields can be missing."""

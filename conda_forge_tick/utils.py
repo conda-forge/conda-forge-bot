@@ -15,8 +15,16 @@ import traceback
 import typing
 import warnings
 from collections import defaultdict
-from collections.abc import Iterable, Mapping, MutableMapping, Sequence
+from collections.abc import (
+    Collection,
+    Iterable,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from pathlib import Path
+from types import MethodType
 from typing import (
     Any,
     ContextManager,
@@ -35,12 +43,13 @@ from conda_forge_feedstock_ops.container_utils import (
     run_container_operation,
     should_use_container,
 )
+from conda_forge_feedstock_ops.recipe_parser import CondaMetaYAML
 from rattler_build_conda_compat.outputs import flatten_staging_inheritance
+from ruamel.yaml.comments import CommentedMap
 
 from . import sensitive_env
 from .lazy_json_backends import LazyJson
 from .migrators_types import AttrsTypedDict
-from .recipe_parser import CondaMetaYAML
 from .settings import ENV_CONDA_FORGE_ORG, ENV_GRAPH_GITHUB_BACKEND_REPO, settings
 
 if typing.TYPE_CHECKING:
@@ -183,6 +192,71 @@ def fold_log_lines(title):
             print("::endgroup::", flush=True)
 
 
+# from https://stackoverflow.com/a/40227545
+def _recursive_sort_data_by_keys(d):
+    try:
+        if isinstance(d, CommentedMap):
+            return d.sort()
+    except AttributeError:
+        pass
+
+    if isinstance(d, Mapping):
+        # could use dict in newer python versions
+        res = CommentedMap()
+        for k in sorted(d.keys()):
+            res[k] = _recursive_sort_data_by_keys(d[k])
+        return res
+    if isinstance(d, MutableSequence):
+        for idx, elem in enumerate(d):
+            d[idx] = _recursive_sort_data_by_keys(elem)
+    return d
+
+
+def get_yaml_parser(typ="rt", sort_keys=False):
+    """Get a yaml parser.
+
+    Parameters
+    ----------
+    typ : str
+        The type of parser (e.g., 'rt', 'safe', 'jinja2').
+    sort_keys : bool
+        If True, sort keys on output.
+
+    Returns
+    -------
+    parser
+        A `ruamel.yaml.YAML` instance.
+    """
+    parser = ruamel.yaml.YAML(typ=typ)  # spellchecker:disable-line
+    parser.indent(mapping=2, sequence=4, offset=2)
+    parser.width = 320
+    parser.preserve_quotes = True
+    parser.default_flow_style = False
+    # do not use yaml anchors
+    parser.representer.ignore_aliases = lambda x: True
+
+    if sort_keys:
+        orig_dump = parser.dump
+
+        def dump(self, *args, **kwargs):
+            args = list(args)
+            args[0] = _recursive_sort_data_by_keys(args[0])
+            args = tuple(args)
+            orig_dump(*args, **kwargs)
+
+        parser.dump = MethodType(dump, parser)
+
+    def dumps(self, data):
+        s = io.StringIO()
+        self.dump(data, s)
+        return s.getvalue()
+
+    parser.dumps = MethodType(dumps, parser)
+    parser.loads = parser.load
+
+    return parser
+
+
 def yaml_safe_load(stream):
     """Load a yaml doc safely."""
     return ruamel.yaml.YAML(typ="safe", pure=True).load(stream)
@@ -193,6 +267,13 @@ def yaml_safe_dump(data, stream=None):
     yaml = ruamel.yaml.YAML(typ="safe", pure=True)
     yaml.default_flow_style = False
     return yaml.dump(data, stream=stream)
+
+
+def yaml_safe_dumps(data):
+    """Dump a yaml object to a string."""
+    s = io.StringIO()
+    yaml_safe_dump(data, stream=s)
+    return s.getvalue()
 
 
 def _render_meta_yaml(text: str, for_pinning: bool = False, **kwargs) -> str:
@@ -1270,6 +1351,80 @@ def pluck(G: nx.DiGraph, node_id: Any) -> None:
         )
         G.remove_node(node_id)
         G.add_edges_from(new_edges)
+
+
+def prune(G: nx.DiGraph, node_ids: Collection[Any], keep: Collection[Any] = ()) -> None:
+    """Remove ancestors of given nodes that are not needed anywhere else in the graph.
+
+    Ancestors of a node are its (transitive) dependencies. This function cuts the
+    dependency edges feeding into each of ``node_ids`` and then drops every ancestor
+    that, after that cut, can no longer reach the rest of the graph along directed
+    edges -- i.e. every ancestor that was needed *only* to build one of ``node_ids``.
+
+    Ancestors that are still a (transitive) dependency of some other retained node are
+    kept, as are the ``node_ids`` themselves and everything that depends on them.
+
+    The motivating use case is metapackages such as ``blas``: an arch migration
+    wants ``blas`` and its genuinely shared dependencies, but not the pile of
+    mutually-exclusive BLAS implementations (``mkl``, ``blis``, ...) and their
+    private dependencies (``tbb``, ...) that hang off it.
+
+    This function operates in-place.
+
+    Parameters
+    ----------
+    G : networkx.DiGraph
+    node_ids : collection of hashable
+        The nodes whose exclusive ancestors should be pruned. Any node in node_ids
+        is itself not removed, even if it is an ancestor of another node to be pruned.
+    keep : collection of hashable, optional
+        Nodes to exclude from pruning operation (also extends to their own ancestors!).
+    """
+    node_ids = {n for n in node_ids if n in G.nodes}
+    if not node_ids:
+        return
+
+    keep = set(keep)
+
+    # the ancestors of any of node_ids are potentially in scope for removal
+    ancestors: set[Any] = set()
+    for n in node_ids:
+        ancestors |= nx.ancestors(G, n)
+    # ensures that node_ids are never considered for removal; this also helps
+    # breaks any eventual cycles that a node_id may be a part of
+    ancestors.difference_update(node_ids)
+    # also remove `keep` nodes from the list of candidates for removal
+    ancestors.difference_update(keep)
+
+    # the main cut: remove all the dependency edges feeding into the node_ids (modulo `keep`)
+    G.remove_edges_from(
+        [(p, n) for n in node_ids for p in list(G.predecessors(n)) if p not in keep]
+    )
+
+    # clean-up afterwards: determine which nodes can now be dropped from the graph.
+    # A given node is still needed if it's a transitive dependency of something other
+    # than node_ids' ancestors. Since the direction of the edges is from parent to child,
+    # this means we need to search the reversed graph, i.e. all (grand^N-)parents of
+    # `G.nodes - ancestors`; nodes which aren't reached existed only to build a node_id.
+    # There's no deep reason for choosing `bfs_layers` (breadth-first search), except that
+    # it's the only traversal function that returns nodes and allows multiple sources at once,
+    # c.f. https://networkx.org/documentation/stable/reference/algorithms/traversal.html
+    still_needed = set(
+        # we don't care about the layers (i.e. equal distance from sources); unpack everything
+        itertools.chain.from_iterable(
+            nx.bfs_layers(G.reverse(copy=False), list(G.nodes - ancestors)),
+        ),
+    )
+    G.remove_nodes_from(ancestors - still_needed)
+
+    # sanity check: drop anything that got detached from the components containing node_ids
+    reachables = set().union(
+        *(
+            nx.node_connected_component(G.to_undirected(as_view=True), n)
+            for n in node_ids
+        ),
+    )
+    G.remove_nodes_from(G.nodes - reachables)
 
 
 def dump_graph_json(gx: nx.DiGraph, filename: str = "graph.json") -> None:

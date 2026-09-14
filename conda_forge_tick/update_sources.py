@@ -17,8 +17,8 @@ from pathlib import Path
 import feedparser
 import orjson
 import requests
-import yaml
 from conda.models.version import VersionOrder
+from conda_forge_feedstock_ops.hashing import hash_url
 from packaging.version import InvalidVersion, Version
 from packaging.version import parse as parse_version
 
@@ -32,10 +32,9 @@ from conda_forge_tick.utils import (
     get_platform_arch_from_ci_support_filename,
     parse_meta_yaml,
     parse_recipe_yaml,
+    yaml_safe_load,
 )
 from conda_forge_tick.version_filters import is_tag_ignored, is_version_ignored
-
-from .hashing import hash_url
 
 CRAN_INDEX: dict[str, str] = {}
 
@@ -399,7 +398,7 @@ class ROSDistro(AbstractSource):
             f"https://raw.githubusercontent.com/ros/rosdistro/master/{distro_name}/distribution.yaml",  # noqa
         )
         res.raise_for_status()
-        resd = yaml.safe_load(res.text)
+        resd = yaml_safe_load(res.text)
         repos = resd["repositories"]
 
         result_dict: dict = {distro_name: {"reverse": {}, "forward": {}}}

@@ -20,6 +20,7 @@ from conda_forge_tick.lazy_json_backends import (
     LazyJson,
     LazyJsonStub,
     MongoDBLazyJsonBackend,
+    PrimaryLazyJsonBackend,
     dump,
     dumps,
     get_all_keys_for_hashmap,
@@ -31,6 +32,7 @@ from conda_forge_tick.lazy_json_backends import (
     lazy_json_transaction,
     load,
     loads,
+    make_lazy_json_retry_sequence,
     remove_key_for_hashmap,
     sync_lazy_json_across_backends,
     touch_all_lazy_json_refs,
@@ -272,10 +274,14 @@ def test_lazy_json_backends_sync(backends, tmpdir):
                 pytest.mark.mongodb,
             ],
         ),
+        "primary",
     ],
 )
 def test_lazy_json_backends_ops(backend, hashmap, tmpdir):
-    be = LAZY_JSON_BACKENDS[backend]()
+    if backend == "primary":
+        be = PrimaryLazyJsonBackend()
+    else:
+        be = LAZY_JSON_BACKENDS[backend]()
     key = "blah"
     value = dumps({"a": 1, "b": 2})
     key_again = "blahblah"
@@ -1141,3 +1147,12 @@ def test_lazy_json_file_read_only_backend(tmpdir):
             conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_USE_FILE_CACHE = (
                 old_cache
             )
+
+
+def test_lazy_json_make_lazy_json_retry_sequence():
+    rts = make_lazy_json_retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=2)
+    start = time.time()
+    for _ in rts():
+        pass
+    end = time.time()
+    assert end - start < 20 * 2

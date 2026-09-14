@@ -1,4 +1,5 @@
 import collections.abc
+import glob
 import hashlib
 import logging
 import os
@@ -12,7 +13,6 @@ from pathlib import Path
 from typing import Union
 
 import requests
-import yaml
 from conda_forge_feedstock_ops.container_utils import (
     get_default_log_level_args,
     run_container_operation,
@@ -35,10 +35,12 @@ from conda_forge_tick.settings import (
 )
 from conda_forge_tick.utils import (
     as_iterable,
+    get_keys_default,
     get_platform_arch_from_ci_support_filename,
     parse_meta_yaml,
     parse_recipe_yaml,
     sanitize_string,
+    yaml_safe_load,
 )
 
 logger = logging.getLogger(__name__)
@@ -252,6 +254,7 @@ def populate_feedstock_attributes(
     conda_forge_yaml: str | None = None,
     mark_not_archived: bool = False,
     feedstock_dir: str | Path | None = None,
+    use_container: bool | None = None,
 ) -> dict[str, typing.Any]:
     """
     Parse the various configuration information into the node_attrs of a feedstock.
@@ -274,6 +277,11 @@ def populate_feedstock_attributes(
     feedstock_dir
         The directory where the feedstock is located. If None, some information
         will not be available.
+    use_container : bool, optional
+        Whether to use a container to run the version parsing.
+        If None, the function will use a container if the environment
+        variable `CF_FEEDSTOCK_OPS_IN_CONTAINER` is 'false'. This feature can be
+        used to avoid container in container calls.
 
     Returns
     -------
@@ -325,7 +333,7 @@ def populate_feedstock_attributes(
     if isinstance(conda_forge_yaml, str):
         try:
             node_attrs["conda-forge.yml"] = {
-                k: v for k, v in yaml.safe_load(conda_forge_yaml).items()
+                k: v for k, v in yaml_safe_load(conda_forge_yaml).items()
             }
         except Exception as e:
             import traceback
@@ -379,6 +387,7 @@ def populate_feedstock_attributes(
                                 recipe_dir,
                                 "conda_build_config.yaml",
                             ),
+                            use_container=use_container,
                         ),
                     )
                     variant_yamls[-1]["schema_version"] = 0
@@ -393,6 +402,7 @@ def populate_feedstock_attributes(
                             recipe_yaml,
                             platform_arch=platform_arch,
                             cbc_path=cbc_path,
+                            use_container=use_container,
                         ),
                     )
                     variant_yamls[-1]["schema_version"] = variant_yamls[-1].get(
@@ -481,6 +491,31 @@ def populate_feedstock_attributes(
         if k.endswith("_meta_yaml") or k.endswith("_requirements"):
             node_attrs.pop(k)
 
+    # record names of migration files
+    if feedstock_dir is not None:
+        migration_files = sorted(
+            list(
+                glob.glob(
+                    os.path.join(feedstock_dir, ".ci_support", "migrations", "*.yaml")
+                )
+            )
+        )
+    else:
+        migration_files = []
+    migration_file_info = {}
+    for mfile in migration_files:
+        key = os.path.basename(mfile)[: -len(".yaml")]
+        with open(mfile) as fp:
+            mdata = yaml_safe_load(fp.read())
+        migration_file_info[key] = {
+            "migrator_ts": mdata.get("migrator_ts", None),
+            "migration_number": get_keys_default(
+                mdata, ["__migrator", "migration_number"], {}, None
+            ),
+        }
+    node_attrs["ci_support_migrations"] = migration_file_info
+
+    # extract requirements of various kinds
     for k, v in zip(plat_archs, variant_yamls):
         plat_arch_name = "_".join(k)
         node_attrs[f"{plat_arch_name}_meta_yaml"] = v
@@ -703,6 +738,7 @@ def load_feedstock_local(
             conda_forge_yaml=conda_forge_yaml,
             mark_not_archived=mark_not_archived,
             feedstock_dir=feedstock_dir,
+            use_container=False,
         )
 
 

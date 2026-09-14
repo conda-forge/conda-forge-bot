@@ -22,7 +22,9 @@ from conda_forge_tick.migrators_types import AttrsTypedDict, MigrationUidTypedDi
 from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import (
     as_iterable,
+    get_keys_default,
     pluck,
+    prune,
     yaml_safe_dump,
     yaml_safe_load,
 )
@@ -133,8 +135,62 @@ def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
     # post-plucking cleanup
     graph.remove_edges_from(nx.selfloop_edges(graph))
 
+    # special handling for meta-packages
+    if "blas" in graph.nodes("payload"):
+        # blas has many implementations, and its feedstock depends on all of them;
+        # for arch migrations, we generally only need/want lapack & openblas.
+        prune(graph, ["blas"], keep=["lapack", "openblas"])
+        # lapack->blas is a genuine edge; blas->lapack is the bot getting confused
+        # by outputs with the same name that are being built on several feedstocks
+        graph.remove_edges_from([("blas", "lapack")])
 
-class ArchRebuild(GraphMigrator):
+
+def _arches_are_configured(attrs: "AttrsTypedDict", arches: dict) -> bool:
+    """Whether the feedstock itself already builds every one of ``arches``.
+
+    This reads the state off ``conda-forge.yml``, so it is true for feedstocks that
+    were migrated by hand or by a rerender as well as for ones the bot PRed.
+
+    Any missing arch fails the check.
+    """
+
+    def _already_has_arch(arch):
+        # This arch has to be in provider or build_platform
+        return get_keys_default(
+            attrs, ["conda-forge.yml", "provider", arch], {}, None
+        ) or (
+            get_keys_default(
+                attrs, ["conda-forge.yml", "build_platform", arch], {}, None
+            )
+            not in [None, arch]
+        )
+
+    # ternary condition because `all` over an empty list is always true; we want
+    # to default to False rather than marking a feedstock as done
+    return all(_already_has_arch(arch) for arch in arches) if arches else False
+
+
+class _ArchesConfiguredMixin:
+    """Answers "is this feedstock already building our arches?" off ``conda-forge.yml``.
+
+    Shared by the arch migrators, whose migrated state is visible in the feedstock
+    itself rather than only in the bot's PR records.
+    """
+
+    arches: dict[str, str] = {}
+
+    def filter_node_migrated(
+        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
+    ):
+        return _arches_are_configured(
+            attrs, self.arches
+        ) or super().filter_node_migrated(attrs, not_bad_str_start)  # type: ignore[misc]
+
+    def predecessor_already_migrated(self, attrs: "AttrsTypedDict") -> bool:
+        return _arches_are_configured(attrs, self.arches)
+
+
+class ArchRebuild(_ArchesConfiguredMixin, GraphMigrator):
     """A Migrator that adds aarch64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
@@ -225,25 +281,6 @@ class ArchRebuild(GraphMigrator):
         )
         assert not self.check_solvable, "We don't want to check solvability for aarch!"
 
-    def filter_node_migrated(
-        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
-    ):
-        has_arch_all_arch = True
-        for arch in self.arches:
-            configured_arch = (
-                attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
-            ) or (
-                attrs.get("conda-forge.yml", {}).get("build_platform", {}).get(arch)
-                not in [None, arch]
-            )
-            if not configured_arch:
-                # This arch is not in provider or build_platform
-                has_arch_all_arch = False
-
-        return has_arch_all_arch or super().filter_node_migrated(
-            attrs, not_bad_str_start
-        )
-
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
     ) -> MigrationUidTypedDict | Literal[False]:
@@ -303,7 +340,7 @@ class ArchRebuild(GraphMigrator):
         return super().remote_branch(feedstock_ctx) + "_arch"
 
 
-class _CrossCompileRebuild(GraphMigrator):
+class _CrossCompileRebuild(_ArchesConfiguredMixin, GraphMigrator):
     """A Migrator that adds arch platform builds to feedstocks."""
 
     rerender = True
@@ -313,7 +350,6 @@ class _CrossCompileRebuild(GraphMigrator):
     ignored_packages: set[str] = set()
     excluded_dependencies: set[str] = set()
     build_platform: dict[str, str] = {}
-    arches: dict[str, str] = {}
 
     def additional_keys(self, attrs: AttrsTypedDict) -> dict[str, dict[str, str] | str]:
         return {
@@ -414,25 +450,6 @@ class _CrossCompileRebuild(GraphMigrator):
         )
         assert not self.check_solvable, "We don't want to check solvability!"
 
-    def filter_node_migrated(
-        self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
-    ):
-        has_arch_all_arch = True
-        for arch in self.arches:
-            configured_arch = (
-                attrs.get("conda-forge.yml", {}).get("provider", {}).get(arch)
-            ) or (
-                attrs.get("conda-forge.yml", {}).get("build_platform", {}).get(arch)
-                not in [None, arch]
-            )
-            if not configured_arch:
-                # This arch is not in provider or build_platform
-                has_arch_all_arch = False
-
-        return has_arch_all_arch or super().filter_node_migrated(
-            attrs, not_bad_str_start
-        )
-
     def migrate(
         self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
     ) -> MigrationUidTypedDict | Literal[False]:
@@ -519,6 +536,11 @@ class WinArm64(_CrossCompileRebuild):
     build_platform = {"win_arm64": "win_64"}
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "default"}
+    ignored_packages = {
+        # irrelevant for windows
+        "gfortran_impl_osx-64",
+        "gfortran_osx-64",
+    }
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support windows arm64 platform")

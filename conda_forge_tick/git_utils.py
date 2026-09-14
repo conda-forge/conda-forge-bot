@@ -38,6 +38,7 @@ from conda_forge_tick import sensitive_env
 from conda_forge_tick.lazy_json_backends import (
     LazyJson,
     _test_and_raise_besides_file_not_exists,
+    make_lazy_json_retry_sequence,
 )
 
 from .executors import lock_git_operation
@@ -1959,16 +1960,6 @@ def close_out_dirty_prs(
     return None
 
 
-def _retry_sequence(num_tries=50, base=2, factor=0.01, max_wait=360):
-    for i in range(num_tries):
-        start = factor * (base**i)
-        end = start * base
-        if end - start > max_wait:
-            end = start + max_wait
-        time.sleep(RNG.uniform(0, end - start))
-        yield i, num_tries
-
-
 def _get_pth_blob_sha_and_content(
     pth: str, repo: github.Repository.Repository
 ) -> tuple[str | None, str | None]:
@@ -1999,7 +1990,8 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     with open(pth) as f:
         data = f.read()
 
-    for tr, ntries in _retry_sequence():
+    lzj_rts = make_lazy_json_retry_sequence()
+    for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
@@ -2021,13 +2013,13 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
                     )
             break
         except Exception as e:
-            logger.warning(
+            logger.debug(
                 "failed to push '%s' - trying %d more times",
                 pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
-                logger.warning(
+                logger.exception(
                     "failed to push '%s'",
                     pth,
                     exc_info=e,
@@ -2047,7 +2039,8 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     msg : str
         The commit message.
     """
-    for tr, ntries in _retry_sequence():
+    lzj_rts = make_lazy_json_retry_sequence()
+    for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo_full_name)
@@ -2063,13 +2056,13 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
             break
 
         except Exception as e:
-            logger.warning(
+            logger.debug(
                 "failed to delete '%s' - trying %d more times",
                 pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
-                logger.warning(
+                logger.exception(
                     "failed to delete '%s'",
                     pth,
                     exc_info=e,

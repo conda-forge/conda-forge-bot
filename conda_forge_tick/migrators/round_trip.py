@@ -1,7 +1,9 @@
 import os
 
+from conda_forge_feedstock_ops.recipe_parser import CondaMetaYAML
+from conda_forge_feedstock_ops.yaml import get_yaml_parser
+
 from conda_forge_tick.migrators.core import MiniMigrator, skip_migrator_due_to_schema
-from conda_forge_tick.recipe_parser import CondaMetaYAML, get_yaml_parser
 
 
 class YAMLRoundTrip(MiniMigrator):

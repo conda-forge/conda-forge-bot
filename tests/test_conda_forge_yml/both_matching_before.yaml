@@ -1,0 +1,14 @@
+azure:
+  store_build_artifacts: true
+  free_disk_space: true
+  settings_linux:
+    swapfile_size: 0GiB
+  settings_win:
+    variables:
+      SET_PAGEFILE: "False"
+      MINIFORGE_HOME: C:\miniforge3
+      CONDA_BLD_PATH: D:\bld
+github_actions:
+  store_build_artifacts: true
+  free_disk_space: [apt, cache]
+  resize_win_partitions: false

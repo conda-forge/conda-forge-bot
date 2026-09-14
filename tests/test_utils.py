@@ -5,6 +5,7 @@ from io import StringIO
 from unittest import mock
 from unittest.mock import MagicMock, mock_open
 
+import networkx as nx
 import pytest
 
 from conda_forge_tick.lazy_json_backends import LazyJson
@@ -18,6 +19,7 @@ from conda_forge_tick.utils import (
     load_existing_graph,
     load_graph,
     parse_munged_run_export,
+    prune,
     replace_compiler_with_stub,
     run_command_hiding_token,
 )
@@ -94,6 +96,138 @@ def test_get_keys_default_none():
         )
         is False
     )
+
+
+@pytest.fixture
+def blas_like_graph():
+    """Provide a dummy graph modeled on the ``blas`` metapackage.
+
+    Edges point from a dependency to the package requiring it (as in the real
+    conda-forge graph). ``blas`` combines several BLAS implementations;
+    ``zlib``/``zstd`` are shared dependencies also used by ``numpy``/``scipy``,
+    while ``tbb``/``libhwloc`` are private to a single implementation.
+    """
+    G = nx.DiGraph()
+    # blas depends on the implementations
+    G.add_edges_from(
+        [
+            ("openblas", "blas"),
+            ("mkl", "blas"),
+            ("mpich", "blas"),
+            ("blis", "blas"),
+        ]
+    )
+    # example of shared low-level deps, also needed by the science stack
+    G.add_edges_from(
+        [
+            ("zlib", "openblas"),
+            ("zlib", "mkl"),
+            ("zstd", "openblas"),
+            ("zstd", "mpich"),
+            ("zlib", "numpy"),
+            ("zstd", "scipy"),
+        ]
+    )
+    # deps private to a single implementation
+    G.add_edges_from([("tbb", "mkl"), ("libhwloc", "mpich")])
+    # children of blas
+    G.add_edges_from([("blas", "numpy"), ("blas", "scipy"), ("numpy", "scipy")])
+    return G
+
+
+def test_prune_removes_exclusive_ancestors(blas_like_graph):
+    G = blas_like_graph
+
+    prune(G, ["blas"])
+
+    # blas and its children survive, as do the shared deps (needed by numpy/scipy)
+    assert set(G.nodes) == {"blas", "numpy", "scipy", "zlib", "zstd"}
+    # the BLAS implementations and their private deps are gone, with all edges
+    assert set(G.edges) == {
+        ("blas", "numpy"),
+        ("blas", "scipy"),
+        ("numpy", "scipy"),
+        ("zlib", "numpy"),
+        ("zstd", "scipy"),
+    }
+
+
+def test_prune_keeps_ancestors_needed_elsewhere(blas_like_graph):
+    G = blas_like_graph
+    # mkl is now also a direct dependency of numpy -> it (and its private dep
+    # tbb, transitively) must be kept even though blas no longer needs it
+    G.add_edge("mkl", "numpy")
+
+    prune(G, ["blas"])
+
+    assert set(G.nodes) == {"blas", "numpy", "scipy", "zlib", "zstd", "mkl", "tbb"}
+    assert ("tbb", "mkl") in G.edges
+    assert ("mkl", "numpy") in G.edges
+    assert ("mkl", "blas") not in G.edges
+    # the other implementations are still pruned
+    assert {"openblas", "mpich", "blis", "libhwloc"}.isdisjoint(G.nodes)
+
+
+def test_prune_keep_retains_listed_ancestors_and_their_deps(blas_like_graph):
+    G = blas_like_graph
+
+    prune(G, ["blas"], keep=["mkl"])
+
+    # mkl is kept even though it is exclusive to blas, and so is its private
+    # dependency tbb
+    assert {"mkl", "tbb"} <= set(G.nodes)
+    assert ("tbb", "mkl") in G.edges
+    # the mkl -> blas edge survives too: edges from `keep` nodes are not cut
+    assert ("mkl", "blas") in G.edges
+    # the other implementations are still pruned
+    assert {"openblas", "mpich", "blis", "libhwloc"}.isdisjoint(G.nodes)
+
+
+def test_prune_handles_cycle_through_node_id():
+    G = nx.DiGraph()
+    # blas and lapack feedstocks (from the POV of the bot metadata) form a cycle
+    G.add_edges_from([("blas", "lapack"), ("lapack", "blas")])
+    # mkl is a private, exclusive dependency of blas
+    G.add_edge("mkl", "blas")
+    # numpy depends on blas and lapack
+    G.add_edges_from([("blas", "numpy"), ("lapack", "numpy")])
+
+    prune(G, ["blas"])
+
+    # lapack is part of the cycle but is still needed by numpy -> kept;
+    # mkl was exclusive to blas -> pruned
+    assert set(G.nodes) == {"blas", "lapack", "numpy"}
+    assert ("lapack", "blas") not in G.edges
+    assert {("blas", "lapack"), ("blas", "numpy"), ("lapack", "numpy")} <= set(G.edges)
+
+
+def test_prune_multiple_nodes(blas_like_graph):
+    G = blas_like_graph
+    # a second metapackage sharing a dependency (zstd) with blas
+    G.add_edges_from([("mpi", "mpi_meta"), ("zstd", "mpi_meta"), ("mpi_meta", "scipy")])
+
+    prune(G, ["blas", "mpi_meta"])
+
+    # both metapackages plus the shared deps (still needed by numpy/scipy) survive
+    assert set(G.nodes) == {"blas", "mpi_meta", "numpy", "scipy", "zlib", "zstd"}
+    # every exclusive implementation/dependency is gone
+    assert {"openblas", "mkl", "mpich", "blis", "tbb", "libhwloc", "mpi"}.isdisjoint(
+        G.nodes
+    )
+
+
+def test_prune_multiple_nodes_one_depending_on_another():
+    G = nx.DiGraph()
+    # meta_low is itself a dependency of meta_high
+    G.add_edges_from([("meta_low", "meta_high"), ("priv", "meta_low")])
+    G.add_edges_from([("meta_high", "app"), ("meta_low", "app")])
+
+    prune(G, ["meta_low", "meta_high"])
+
+    # meta_low is an ancestor of meta_high but arguments to prune are always kept
+    assert set(G.nodes) == {"meta_low", "meta_high", "app"}
+    # its private dependency is removed though
+    assert "priv" not in G.nodes
 
 
 def test_load_graph():

@@ -5,7 +5,6 @@ Builds and maintains mapping of pypi-names to conda-forge names.
 2: Packages MUST have a test: imports section importing it
 """
 
-import functools
 import math
 import os
 import pathlib
@@ -17,7 +16,6 @@ from typing import Any, Literal, TypedDict
 
 import orjson
 import requests
-import yaml
 from packaging.utils import NormalizedName as PypiName
 from packaging.utils import canonicalize_name as canonicalize_pypi_name
 
@@ -30,7 +28,7 @@ from .lazy_json_backends import (
     loads,
 )
 from .settings import settings
-from .utils import as_iterable, load_existing_graph
+from .utils import as_iterable, get_yaml_parser, load_existing_graph, yaml_safe_load
 
 
 class Mapping(TypedDict):
@@ -281,7 +279,7 @@ def resolve_collisions(collisions: list[Mapping]) -> Mapping:
 def load_static_mappings() -> list[Mapping]:
     path = pathlib.Path(__file__).parent / "pypi_name_mapping_static.yaml"
     with path.open("r") as fp:
-        mapping = yaml.safe_load(fp)
+        mapping = yaml_safe_load(fp)
     for d in mapping:
         d["mapping_source"] = "static"
         d["pypi_name"] = canonicalize_pypi_name(d["pypi_name"])
@@ -444,7 +442,7 @@ def main() -> None:
     dirname = pathlib.Path(".") / "mappings" / "pypi"
     dirname.mkdir(parents=True, exist_ok=True)
 
-    yaml_dump = functools.partial(yaml.dump, default_flow_style=False, sort_keys=True)
+    yaml_dump = get_yaml_parser(sort_keys=True).dump
 
     def json_dump(obj, fp):
         fp.write(

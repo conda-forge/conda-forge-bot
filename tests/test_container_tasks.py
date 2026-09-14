@@ -37,7 +37,6 @@ from conda_forge_tick.provide_source_code import (
 )
 from conda_forge_tick.rerender_feedstock import rerender_feedstock
 from conda_forge_tick.solver_checks import is_recipe_solvable
-from conda_forge_tick.update_recipe.version import update_version_feedstock_dir
 from conda_forge_tick.update_upstream_versions import (
     all_version_sources,
     get_latest_version_containerized,
@@ -703,33 +702,6 @@ def test_migration_runner_run_migration_containerized_version(
         actual_output = f.read()
     assert actual_output == output
     assert m.filter(pmy) is True
-
-
-@pytest.mark.skipif(
-    not HAVE_CONTAINERS_AND_TEST_IMAGE, reason="containers not available"
-)
-def test_container_tasks_update_version_feedstock_dir():
-    with tempfile.TemporaryDirectory() as tmpdir:
-        fs_dir = os.path.join(tmpdir, "mpich-feedstock")
-        rp_dir = os.path.join(fs_dir, "recipe")
-        os.makedirs(rp_dir, exist_ok=True)
-        with open(os.path.join(rp_dir, "meta.yaml"), "w") as f:
-            with open(os.path.join(YAML_PATH, "version_mpich.yaml")) as fp:
-                f.write(fp.read())
-
-        updated, errors = update_version_feedstock_dir(
-            fs_dir, "4.1.1", use_container=True
-        )
-        assert updated
-        assert not errors
-
-        with open(os.path.join(rp_dir, "meta.yaml")) as f:
-            actual_output = f.read()
-
-        with open(os.path.join(YAML_PATH, "version_mpich_correct.yaml")) as fp:
-            output = fp.read()
-
-        assert actual_output == output
 
 
 def test_container_tasks_provide_source_code_local(use_containers):
