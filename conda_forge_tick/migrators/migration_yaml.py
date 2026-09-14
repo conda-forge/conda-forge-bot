@@ -322,6 +322,12 @@ class MigrationYaml(GraphMigrator):
         and a changed timestamp is a distinct migration to conda-smithy, so a
         feedstock holding an older copy has not had *this* migration applied.
         """
+        # Some of the graph nodes have this field as a list due to
+        # a change in the format of the data. We skip this test for
+        # these nodes for now. Once all of the graph data is converted
+        # this bit will be a no-op.
+        if isinstance(attrs.get("ci_support_migrations", None), list):
+            return False
         info = get_keys_default(attrs, ["ci_support_migrations", self.name], {}, None)
         if not info:
             return False
