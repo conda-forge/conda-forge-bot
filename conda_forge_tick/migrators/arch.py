@@ -386,6 +386,47 @@ class ArchRebuild(_NativeCompileMixin, _Rebuild):
         return super().remote_branch(feedstock_ctx) + "_arch"
 
 
+class LinuxRISCV64(_NativeCompileMixin, _Rebuild):
+    """A Migrator that adds riscv64 builds to feedstocks."""
+
+    allowed_schema_versions = {0, 1}
+    migrator_version = 1
+    rerender = True
+    # We purposefully don't want to bump build number for this migrator
+    bump_number = 1
+    pkg_list_filename = "linux_riscv64.txt"
+    arches = {
+        "linux_riscv64": "default",
+    }
+    ignored_packages = {
+        "make",
+        "perl",
+        "toolchain",
+        "posix",
+        "patchelf",  # weird issue
+        # already built compiler packages that get caught in a cycle
+        "_openmp_mutex",
+        "ctng-compiler-activation",
+        "ctng-compilers",
+        "gfortran_impl_osx-64",
+        "gfortran_osx-64",
+        # intel packages will not be built for riscv
+        "intel-compiler-repack",
+        "intel_repack",
+    }
+
+    title = "Support linux-riscv64 platform"
+    migration_name = "riscv64"
+    migration_team = "<code>@</code>conda-forge/help-riscv64"
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("name", "support linux riscv64 platform")
+        super().__init__(*args, **kwargs)
+
+    def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
+        return super().remote_branch(feedstock_ctx) + "_riscv64"
+
+
 class _CrossCompileMixin(_ArchesConfiguredMixin):
     """A Migrator that adds arch platform builds to feedstocks."""
 
@@ -486,38 +527,3 @@ class WinArm64(_CrossCompileMixin, _Rebuild):
 
     def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
         return super().remote_branch(feedstock_ctx) + "_arm64_win"
-
-
-class LinuxRISCV64(_CrossCompileMixin, _Rebuild):
-    """A Migrator that adds linux-riscv64 builds to feedstocks."""
-
-    allowed_schema_versions = {0, 1}
-    migrator_version = 1
-    build_platform = {"linux_riscv64": "linux_64"}
-    # We bump here as most feedstocks need a rerender and updates
-    # the compiler versions
-    bump_number = 1
-    pkg_list_filename = "linux_riscv64.txt"
-    arches = {"linux_riscv64": "linux_64"}
-    ignored_packages = {
-        # already built compiler packages that get caught in a cycle
-        "_openmp_mutex",
-        "ctng-compiler-activation",
-        "ctng-compilers",
-        "gfortran_impl_osx-64",
-        "gfortran_osx-64",
-        # intel packages will not be built for riscv
-        "intel-compiler-repack",
-        "intel_repack",
-    }
-
-    title = "Support linux-riscv64 platform"
-    migration_name = "linux riscv64"
-    migration_team = "<code>@</code>conda-forge/help-riscv64"
-
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("name", "support linux riscv64 platform")
-        super().__init__(*args, **kwargs)
-
-    def remote_branch(self, feedstock_ctx: FeedstockContext) -> str:
-        return super().remote_branch(feedstock_ctx) + "_riscv64"
