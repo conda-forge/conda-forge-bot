@@ -259,7 +259,9 @@ def _deploy_via_api(
 
         time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
-    for pth in tqdm.tqdm(files_to_delete, desc="deleting files", ncols=80, file=sys.stdout):
+    for pth in tqdm.tqdm(
+        files_to_delete, desc="deleting files", ncols=80, file=sys.stdout
+    ):
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
                 print(f"deleting file '{pth}'", flush=True)
