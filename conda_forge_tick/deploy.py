@@ -18,7 +18,6 @@ from .lazy_json_backends import (
     get_lazy_json_backends,
     lazy_json_override_backends,
 )
-from .os_utils import clean_disk_space
 from .settings import settings
 from .utils import (
     fold_log_lines,
@@ -301,9 +300,6 @@ def deploy(
         for node, attrs in gx.nodes.items():
             with attrs["payload"]:
                 pass
-
-    with fold_log_lines("cleaning up disk space for deploy"):
-        clean_disk_space()
 
     files_to_add: set[str] = set()
     if not dirs_to_deploy:
