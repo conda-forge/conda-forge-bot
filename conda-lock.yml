@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.13.13.29.48
+  version: 2026.09.14.07.55.58
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.13.13.29.48-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.14.07.55.58-hd8ed1ab_0.conda
   hash:
-    md5: d9c548658f8740c2153b22991a345049
-    sha256: bfb004e1c63f33cc8c01d99ad056bc62c37c7a54a7609a1f4e3ca215019a6ffd
+    md5: bb3478fa90dde7c920d915f564827c20
+    sha256: 9e24df7160f341ccda324d3b1d0a358779975b5dafb2c500327d14ba0da624a2
   category: main
   optional: false
 - name: conda-index
@@ -2548,10 +2548,10 @@ package:
     libzlib: '>=1.3.2,<2.0a0'
     openssl: '>=3.5.8,<4.0a0'
     pcre2: '>=10.47,<10.48.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libgit2-1.9.7-hf27fc33_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libgit2-1.9.7-hf27fc33_1.conda
   hash:
-    md5: 03d856cde28adba68b5775bd4bc2a106
-    sha256: 96de13af973d4f6a056b17ad95f993689fa2754d70e5457908bd62de52265014
+    md5: 1cf3ef849e34bc3283641cfda2675281
+    sha256: 5b213ad90ba7eb0ba3a23c32f413fe9a1163d492e218e7283a9f5ade67fa49aa
   category: main
   optional: false
 - name: libgl
@@ -4021,7 +4021,7 @@ package:
   category: main
   optional: false
 - name: pygit2
-  version: 1.20.0
+  version: 1.20.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -4031,10 +4031,10 @@ package:
     libgit2: '>=1.9.7,<1.10.0a0'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pygit2-1.20.0-py312h1b36aeb_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pygit2-1.20.1-py312h1b36aeb_0.conda
   hash:
-    md5: d64c53af195b456bf13c3a7f458b5456
-    sha256: e27e9f2c3338bd66cd16760b80cc2b279290d13eb03be516f0cc07d47afd6e93
+    md5: 28d3e020a6018a2736b3356501c235b7
+    sha256: 55de368914a6f72adf74333afce79c13166fdc80765a370471b3a61d4cc81e75
   category: main
   optional: false
 - name: pygithub
