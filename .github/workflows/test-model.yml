@@ -31,37 +31,24 @@ jobs:
           rm_cmd: "rmz"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: conda-forge-bot
 
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
-          environment-file: conda-lock.yml
+          environment-file: conda-forge-bot/conda-lock.yml
           environment-name: conda-forge-bot
-          condarc-file: autotick-bot/condarc
+          condarc-file: conda-forge-bot/autotick-bot/condarc
 
       - name: configure conda, install code, and clone cf-graph
-        if: ${{ ! env.CI_SKIP }}
         run: |
-          pip install --no-deps --no-build-isolation -e .
-          git clone --depth=1 https://github.com/conda-forge/conda-forge-bot-data.git cf-graph
-
-      - name: conda info and env
-        if: ${{ ! env.CI_SKIP }}
-        run: |
-          echo "=================================================================="
-          echo "=================================================================="
-          conda info
-
-          echo ""
-          echo "=================================================================="
-          echo "=================================================================="
-          conda list
+          source conda-forge-bot/autotick-bot/install_bot_code.sh
 
       - name: run pytest (model)
-        if: ${{ ! env.CI_SKIP }}
         run: |
           cd cf-graph
           # for pull requests, a failed model test should not be a failed check
           # this is a hack around the absence of https://github.com/orgs/community/discussions/15452
           pytest \
             --durations 10 \
-            ../tests_model ${{ github.event_name == 'pull_request' && '|| [ $? = 1 ]' || '' }}
+            ../conda-forge-bot/tests_model ${{ github.event_name == 'pull_request' && '|| [ $? = 1 ]' || '' }}
