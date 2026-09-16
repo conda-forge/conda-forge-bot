@@ -61,10 +61,10 @@ class BotSettings(BaseSettings):
     """
 
     versions_github_backend_repo: str = Field(
-        "conda-forge/conda-forge-bot-data", pattern=r"^[\w\.-]+/[\w\.-]+$"
+        "conda-forge/conda-forge-bot-data-versions", pattern=r"^[\w\.-]+/[\w\.-]+$"
     )
     """
-    The GitHub repository to deploy version data to. Default: "conda-forge/conda-forge-bot-data".
+    The GitHub repository to deploy version data to. Default: "conda-forge/conda-forge-bot-data-versions".
     If you change the field name, you must also update the `ENV_GRAPH_VERSIONS_BACKEND_REPO` constant.
     """
 

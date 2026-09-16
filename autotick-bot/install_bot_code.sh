@@ -61,7 +61,7 @@ if [[ "${clone_graph}" == "true" ]]; then
     exit 1
   fi
 
-  versions_repo=${CF_TICK_VERSIONS_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data"}
+  versions_repo=${CF_TICK_VERSIONS_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data-versions"}
   versions_remote="https://github.com/${versions_repo}.git"
   if [[ "${versions_repo}" != "${cf_graph_repo}" ]]; then
     failed="true"
