@@ -41,7 +41,7 @@ def _flush_io():
 
 
 def _run_git_cmd(cmd, **kwargs):
-    r = subprocess.run(["git"] + cmd, check=True, timeout=GIT_CMD_TIMEOUT, **kwargs)
+    r = subprocess.run(["git"] + cmd, timeout=GIT_CMD_TIMEOUT, **kwargs)
     _flush_io()
     if r.returncode != 0:
         raise RuntimeError(
