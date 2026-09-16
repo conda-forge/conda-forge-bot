@@ -57,7 +57,7 @@ class TestBotSettings:
         assert bot_settings.graph_repo_default_branch == "main"
         assert (
             bot_settings.versions_github_backend_repo
-            == "conda-forge/conda-forge-bot-data"
+            == "conda-forge/conda-forge-bot-data-versions"
         )
         assert bot_settings.versions_repo_default_branch == "main"
         assert bot_settings.github_runner_debug is False
