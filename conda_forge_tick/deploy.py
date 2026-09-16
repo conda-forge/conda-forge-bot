@@ -394,7 +394,7 @@ def deploy(
             # untracked
             _files_to_add = set(
                 _run_git_cmd(
-                    ["ls-files", "-o", "--exclude-standard", dr],
+                    ["ls-files", "-o", "--exclude-standard"],
                     capture_output=True,
                     text=True,
                 ).stdout.splitlines(),
@@ -408,7 +408,7 @@ def deploy(
             # these come out with the full path
             _files_to_add = set(
                 _run_git_cmd(
-                    ["diff", "--name-only", dr],
+                    ["diff", "--name-only"],
                     capture_output=True,
                     text=True,
                 ).stdout.splitlines(),
@@ -419,7 +419,7 @@ def deploy(
             # these come out with the full path
             _files_to_add = set(
                 _run_git_cmd(
-                    ["diff", "--name-only", "--cached", "--diff-filter=d", dr],
+                    ["diff", "--name-only", "--cached", "--diff-filter=d"],
                     capture_output=True,
                     text=True,
                 ).stdout.splitlines(),
