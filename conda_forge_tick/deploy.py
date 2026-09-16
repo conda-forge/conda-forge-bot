@@ -257,7 +257,7 @@ def _deploy_via_api(
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"pushing file '{pth}'", flush=True)
+                print(f"[{full_repo_name}] pushing file '{pth}'", flush=True)
 
             msg = _get_pth_commit_message(pth)
 
@@ -277,7 +277,7 @@ def _deploy_via_api(
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"deleting file '{pth}'", flush=True)
+                print(f"[{full_repo_name}] deleting file '{pth}'", flush=True)
 
             # make a nice message for stuff managed via LazyJson
             msg = _get_pth_commit_message(pth)
