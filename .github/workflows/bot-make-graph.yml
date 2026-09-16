@@ -1,6 +1,7 @@
 name: bot-make-graph
 
 on:
+  pull_request: null
   workflow_dispatch: null
   schedule:
     - cron: '*/15 * * * *'
