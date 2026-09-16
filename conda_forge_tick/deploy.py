@@ -226,7 +226,7 @@ def _get_files_to_delete(drs_to_deploy) -> set[str]:
 
         with ctx:
             r = subprocess.run(
-                ["git", "diff", "--name-status", "--cached"],
+                ["git", "diff", "--name-status", "--cached", "."],
                 text=True,
                 capture_output=True,
                 check=True,
@@ -386,15 +386,17 @@ def deploy(
         if os.path.isdir(dr):
             is_dir = True
             ctx = pushd(dr)
+            extra_cmd = ["."]
         else:
-            ctx = contextlib.nullcontext()
             is_dir = False
+            ctx = contextlib.nullcontext()
+            extra_cmd = [dr]
 
         with ctx:
             # untracked
             _files_to_add = set(
                 _run_git_cmd(
-                    ["ls-files", "-o", "--exclude-standard"],
+                    ["ls-files", "-o", "--exclude-standard"] + extra_cmd,
                     capture_output=True,
                     text=True,
                 ).stdout.splitlines(),
@@ -408,7 +410,7 @@ def deploy(
             # these come out with the full path
             _files_to_add = set(
                 _run_git_cmd(
-                    ["diff", "--name-only"],
+                    ["diff", "--name-only"] + extra_cmd,
                     capture_output=True,
                     text=True,
                 ).stdout.splitlines(),
@@ -419,7 +421,7 @@ def deploy(
             # these come out with the full path
             _files_to_add = set(
                 _run_git_cmd(
-                    ["diff", "--name-only", "--cached", "--diff-filter=d"],
+                    ["diff", "--name-only", "--cached", "--diff-filter=d"] + extra_cmd,
                     capture_output=True,
                     text=True,
                 ).stdout.splitlines(),
