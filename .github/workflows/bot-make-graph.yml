@@ -36,7 +36,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ steps.latest_release.outputs.tag_name }}
+          ref: ${{ case(github.event_name != 'pull_request', steps.latest_release.outputs.tag_name, '') }}
           path: conda-forge-bot
 
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
