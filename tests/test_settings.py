@@ -22,6 +22,7 @@ class TestBotSettings:
         os.environ["CF_TICK_VERSIONS_GITHUB_BACKEND_REPO"] = (
             "versions-owner/versions-repo"
         )
+        os.environ["CF_TICK_VERSIONS_REPO_DEFAULT_BRANCH"] = "mybranch-versions"
 
         bot_settings = BotSettings()
 

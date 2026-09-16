@@ -4,6 +4,9 @@
 # - CF_FEEDSTOCK_OPS_CONTAINER_NAME: The name of the container image to use for the bot (optional, not used but left intact)
 # - CF_FEEDSTOCK_OPS_CONTAINER_TAG: The tag of the container image to use for the bot (optional).
 # - CF_TICK_GRAPH_GITHUB_BACKEND_REPO: The GitHub repository to clone cf-graph from. Default: conda-forge/conda-forge-bot-data
+# - CF_TICK_VERSIONS_GITHUB_BACKEND_REPO: The GitHub repository to clone the versions data from. If this
+#   value differs from CF_TICK_GRAPH_GITHUB_BACKEND_REPO, then the repo is cloned to versions under the
+#   CF_TICK_GRAPH_GITHUB_BACKEND_REPO repo. Default: conda-forge/conda-forge-bot-data
 
 # Sets the following environment variables via GITHUB_ENV:
 # - CF_FEEDSTOCK_OPS_CONTAINER_NAME (see above)
@@ -45,7 +48,7 @@ if [[ "${clone_graph}" == "true" ]]; then
     git clone --depth=5 "${cf_graph_remote}" cf-graph || false
     set -e
 
-    if [[ "$?" == 0 ]]; then
+    if [[ "$?" == "0" ]]; then
       failed="false"
       break
     else
@@ -56,6 +59,38 @@ if [[ "${clone_graph}" == "true" ]]; then
   if [[ "${failed}" == "true" ]]; then
     echo "graph clone failed!"
     exit 1
+  fi
+
+  versions_repo=${CF_TICK_VERSIONS_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data"}
+  versions_remote="https://github.com/${versions_repo}.git"
+  if [[ "${versions_repo}" != "${cf_graph_repo}"]]; then
+    failed="true"
+    for itr in {1..5}; do
+      echo "clone iteration ${itr}"
+
+      pushd cf-graph
+      set +e
+      # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
+      git clone --depth=5 "${versions_remote}" versions || false
+      set -e
+      popd
+
+      if [[ "$?" == "0" ]]; then
+        failed="false"
+        break
+      else
+        rm -rf cf-graph/versions
+      fi
+    done
+
+    if [[ "${failed}" == "true" ]]; then
+      echo "versions clone failed!"
+      exit 1
+    else
+      # do not allow git deploys in this case
+      rm -rf cf-graph/versions/.git
+      rm -rf cf-graph/.git
+    fi
   fi
 else
   echo "Skipping cloning of cf-graph"
@@ -80,7 +115,7 @@ if [[ "${pull_cont}" == "true" ]]; then
     docker pull "${docker_name}:${docker_tag}" || false
     set -e
 
-    if [[ "$?" == 0 ]]; then
+    if [[ "$?" == "0" ]]; then
       failed="false"
       break
     fi
