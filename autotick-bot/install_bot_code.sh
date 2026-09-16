@@ -86,10 +86,6 @@ if [[ "${clone_graph}" == "true" ]]; then
     if [[ "${failed}" == "true" ]]; then
       echo "versions clone failed!"
       exit 1
-    else
-      # do not allow git deploys in this case
-      rm -rf cf-graph/versions/.git
-      rm -rf cf-graph/.git
     fi
   fi
 else

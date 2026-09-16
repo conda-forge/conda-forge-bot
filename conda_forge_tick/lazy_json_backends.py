@@ -297,6 +297,19 @@ class ReadOnlyFileLazyJsonBackend(FileLazyJsonBackend):
         self._ignore_write()
 
 
+def get_sharded_path_and_trim_hashmap_name_if_needed(name, key):
+    """Compute a sharded location for the LazyJson file and trim first path segment if needed."""
+    pth = get_sharded_path(f"{name}/{key}.json")
+
+    # we need to remove the first dir if the repo is not the default one
+    repo_url = get_github_backend_repo_for_hashmap(name)
+    default_repo_url = get_github_backend_repo_for_hashmap("lazy_json")
+    if repo_url != default_repo_url:
+        pth = pth.split("/")
+        pth = "/".join(pth[1:])
+    return pth
+
+
 class GithubLazyJsonBackend(LazyJsonBackend):
     """
     Read-only backend that makes live requests to https://raw.githubusercontent.com
@@ -349,10 +362,11 @@ class GithubLazyJsonBackend(LazyJsonBackend):
         yield self
 
     def hexists(self, name: str, key: str) -> bool:
+        pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
         self._inform_web_request()
         url = urllib.parse.urljoin(
             self._get_base_url(name),
-            get_sharded_path(f"{name}/{key}.json"),
+            pth,
         )
         status = requests.head(url, allow_redirects=True).status_code
 
@@ -387,9 +401,9 @@ class GithubLazyJsonBackend(LazyJsonBackend):
         )
 
     def hget(self, name: str, key: str) -> str:
+        pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
         self._inform_web_request()
-        sharded_path = get_sharded_path(f"{name}/{key}.json")
-        url = urllib.parse.urljoin(self._get_base_url(name), sharded_path)
+        url = urllib.parse.urljoin(self._get_base_url(name), pth)
         r = requests.get(url)
         if r.status_code == 404:
             raise KeyError(f"Key {key} not found in hashmap {name}")
@@ -452,10 +466,12 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         yield self
 
     def hexists(self, name: str, key: str) -> bool:
-        pth = get_sharded_path(f"{name}/{key}.json")
-
+        pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
         logger.debug(
-            "GithubAPILazyJsonBackend EXISTS: (%s, %s) w/ path %s", name, key, pth
+            "GithubAPILazyJsonBackend EXISTS: (%s, %s) w/ path %s",
+            name,
+            key,
+            get_sharded_path(f"{name}/{key}.json"),
         )
         try:
             self._get_repo(name).get_contents(pth)
@@ -473,13 +489,16 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         bn, fn = os.path.split(filename)
         if fn.endswith(".json"):
             fn = fn[:-5]
-        pth = get_sharded_path(filename)
         msg = f"{bn} - {fn} - {get_bot_run_url()}"
 
         logger.debug(
-            "GithubAPILazyJsonBackend SET: (%s, %s) w/ path %s", name, key, pth
+            "GithubAPILazyJsonBackend SET: (%s, %s) w/ path %s",
+            name,
+            key,
+            get_sharded_path(filename),
         )
 
+        pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
         repo = self._get_repo(name)
 
         # exponential backoff
@@ -549,13 +568,16 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         bn, fn = os.path.split(filename)
         if fn.endswith(".json"):
             fn = fn[:-5]
-        pth = get_sharded_path(filename)
         msg = f"{bn} - {fn} - {get_bot_run_url()}"
 
         logger.debug(
-            "GithubAPILazyJsonBackend DEL: (%s, %s) w/ path %s", name, key, pth
+            "GithubAPILazyJsonBackend DEL: (%s, %s) w/ path %s",
+            name,
+            key,
+            get_sharded_path(filename),
         )
 
+        pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
         repo = self._get_repo(name)
 
         # exponential backoff
@@ -605,17 +627,20 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
     def hget(self, name: str, key: str) -> str:
         from conda_forge_tick.git_utils import get_bot_app_token
 
-        pth = get_sharded_path(f"{name}/{key}.json")
         hrds = {
             "Accept": "application/vnd.github.raw+json",
             "Authorization": f"Bearer {get_bot_app_token()}",
         }
 
         logger.debug(
-            "GithubAPILazyJsonBackend GET: (%s, %s) w/ path %s", name, key, pth
+            "GithubAPILazyJsonBackend GET: (%s, %s) w/ path %s",
+            name,
+            key,
+            get_sharded_path(f"{name}/{key}.json"),
         )
 
         repo_url = get_github_backend_repo_for_hashmap(name)
+        pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
 
         # exponential backoff
         lazy_json_retry_sequence = make_lazy_json_retry_sequence()

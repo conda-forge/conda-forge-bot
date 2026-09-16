@@ -1,3 +1,4 @@
+import contextlib
 import logging
 import os
 import secrets
@@ -7,20 +8,21 @@ import time
 
 import tqdm
 
-from .git_utils import (
+from conda_forge_tick.git_utils import (
     delete_file_via_gh_api,
     get_bot_app_token,
     push_file_via_gh_api,
     reset_and_restore_file,
 )
-from .lazy_json_backends import (
+from conda_forge_tick.lazy_json_backends import (
     CF_TICK_GRAPH_DATA_HASHMAPS,
     get_github_backend_repo_for_hashmap,
     get_lazy_json_backends,
     lazy_json_override_backends,
 )
-from .settings import settings
-from .utils import (
+from conda_forge_tick.os_utils import pushd
+from conda_forge_tick.settings import settings
+from conda_forge_tick.utils import (
     fold_log_lines,
     get_bot_run_url,
     load_existing_graph,
@@ -205,22 +207,33 @@ def _deploy_batch(
     return n_added_this_batch
 
 
-def _get_files_to_delete() -> set[str]:
-    r = subprocess.run(
-        ["git", "diff", "--name-status", "--cached"],
-        text=True,
-        capture_output=True,
-        check=True,
-        timeout=GIT_CMD_TIMEOUT,
-    )
+def _get_files_to_delete(drs_to_deploy) -> set[str]:
     files_to_delete = set()
-    for line in r.stdout.splitlines():
-        res = line.strip().split()
-        if len(res) < 2:
+    for dr in drs_to_deploy:
+        if not os.path.exists(dr):
             continue
-        status, fname = res[0:2]
-        if status == "D":
-            files_to_delete.add(fname)
+
+        if os.path.isdir(dr):
+            ctx = pushd(dr)
+        else:
+            ctx = contextlib.nullcontext()
+
+        with ctx:
+            r = subprocess.run(
+                ["git", "diff", "--name-status", "--cached"],
+                text=True,
+                capture_output=True,
+                check=True,
+                timeout=GIT_CMD_TIMEOUT,
+            )
+            for line in r.stdout.splitlines():
+                res = line.strip().split()
+                if len(res) < 2:
+                    continue
+                status, fname = res[0:2]
+                if status == "D":
+                    files_to_delete.add(fname)
+
     return files_to_delete
 
 
@@ -237,13 +250,21 @@ def _get_pth_commit_message(pth):
     return msg
 
 
-def _get_full_repo_name_from_path(pth):
+def _get_full_repo_name_and_pth_from_path(pth):
+    default_repo = get_github_backend_repo_for_hashmap("lazy_json")
+
     pth_parts = pth.split("/")
     if len(pth_parts) > 1:
         hashmap_name = pth_parts[0]
+        repo = get_github_backend_repo_for_hashmap(hashmap_name)
     else:
-        hashmap_name = "lazy_json"
-    return get_github_backend_repo_for_hashmap(hashmap_name)
+        repo = default_repo
+
+    pth_parts = pth.split("/")
+    if repo != default_repo and len(pth_parts) > 1:
+        pth = "/".join(pth_parts[1:])
+
+    return repo, pth
 
 
 def _deploy_via_api(
@@ -253,15 +274,17 @@ def _deploy_via_api(
     files_done = set()
     files_to_try_again = set()
     for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80, file=sys.stdout):
-        full_repo_name = _get_full_repo_name_from_path(pth)
+        full_repo_name, pth_to_push = _get_full_repo_name_and_pth_from_path(pth)
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"[{full_repo_name}] pushing file '{pth}'", flush=True)
+                print(f"[{full_repo_name}] pushing file '{pth_to_push}'", flush=True)
 
+            # make a nice message for stuff managed via LazyJson
+            # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            push_file_via_gh_api(pth, full_repo_name, msg)
+            push_file_via_gh_api(pth_to_push, full_repo_name, msg)
         except Exception as e:
             logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -273,16 +296,17 @@ def _deploy_via_api(
     for pth in tqdm.tqdm(
         files_to_delete, desc="deleting files", ncols=80, file=sys.stdout
     ):
-        full_repo_name = _get_full_repo_name_from_path(pth)
+        full_repo_name, pth_to_push = _get_full_repo_name_and_pth_from_path(pth)
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
                 print(f"[{full_repo_name}] deleting file '{pth}'", flush=True)
 
             # make a nice message for stuff managed via LazyJson
+            # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            delete_file_via_gh_api(pth, full_repo_name, msg)
+            delete_file_via_gh_api(pth_to_push, full_repo_name, msg)
         except Exception as e:
             logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -292,7 +316,21 @@ def _deploy_via_api(
         time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
     for pth in files_done:
-        reset_and_restore_file(pth)
+        pth_parts = pth.split("/")
+        if len(pth_parts) > 1:
+            dr = pth_parts[0]
+            pth_to_restore = "/".join(pth_parts[1:])
+        else:
+            dr = pth
+            pth_to_restore = pth
+
+        if os.path.isdir(dr):
+            ctx = pushd(dr)
+        else:
+            ctx = contextlib.nullcontext()
+
+        with ctx:
+            reset_and_restore_file(pth_to_restore)
 
     return files_done, files_to_try_again
 
@@ -339,34 +377,50 @@ def deploy(
         if not os.path.exists(dr):
             continue
 
-        # untracked
-        files_to_add |= set(
-            _run_git_cmd(
-                ["ls-files", "-o", "--exclude-standard", dr],
-                capture_output=True,
-                text=True,
-            ).stdout.splitlines(),
-        )
+        if os.path.isdir(dr):
+            is_dir = True
+            ctx = pushd(dr)
+        else:
+            ctx = contextlib.nullcontext()
+            is_dir = False
 
-        # changed
-        files_to_add |= set(
-            _run_git_cmd(
-                ["diff", "--name-only", dr],
-                capture_output=True,
-                text=True,
-            ).stdout.splitlines(),
-        )
+        with ctx:
+            # untracked
+            _files_to_add = set(
+                _run_git_cmd(
+                    ["ls-files", "-o", "--exclude-standard", dr],
+                    capture_output=True,
+                    text=True,
+                ).stdout.splitlines(),
+            )
+            # need to add the other path segment
+            if is_dir:
+                _files_to_add = {os.path.join(dr, fn) for fn in files_to_add}
+            files_to_add |= _files_to_add
 
-        # modified and staged but not deleted
-        files_to_add |= set(
-            _run_git_cmd(
-                ["diff", "--name-only", "--cached", "--diff-filter=d", dr],
-                capture_output=True,
-                text=True,
-            ).stdout.splitlines(),
-        )
+            # changed
+            # these come out with the full path
+            _files_to_add = set(
+                _run_git_cmd(
+                    ["diff", "--name-only", dr],
+                    capture_output=True,
+                    text=True,
+                ).stdout.splitlines(),
+            )
+            files_to_add |= _files_to_add
 
-    files_to_delete = _get_files_to_delete()
+            # modified and staged but not deleted
+            # these come out with the full path
+            _files_to_add = set(
+                _run_git_cmd(
+                    ["diff", "--name-only", "--cached", "--diff-filter=d", dr],
+                    capture_output=True,
+                    text=True,
+                ).stdout.splitlines(),
+            )
+            files_to_add |= _files_to_add
+
+    files_to_delete = _get_files_to_delete(drs_to_deploy)
 
     if dirs_to_ignore:
         print("ignoring dirs:", dirs_to_ignore, flush=True)
