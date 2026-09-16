@@ -42,7 +42,7 @@ jobs:
 
       - name: configure conda, install code, and clone cf-graph
         run: |
-          source conda-forge-bot/autotick-bot/install_bot_code.sh
+          source conda-forge-bot/autotick-bot/install_bot_code.sh --no-pull-container
 
       - name: run pytest (model)
         run: |
