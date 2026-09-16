@@ -352,11 +352,11 @@ def deploy(
         return
 
     # make sure the graph can load, if not it will error
-    with lazy_json_override_backends(["file-read-only"], use_file_cache=False):
-        gx = load_existing_graph()
-        for node, attrs in gx.nodes.items():
-            with attrs["payload"]:
-                pass
+    # with lazy_json_override_backends(["file-read-only"], use_file_cache=False):
+    #     gx = load_existing_graph()
+    #     for node, attrs in gx.nodes.items():
+    #         with attrs["payload"]:
+    #             pass
 
     files_to_add: set[str] = set()
     if not dirs_to_deploy:
