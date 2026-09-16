@@ -54,7 +54,7 @@ jobs:
       - name: do not skip
         if: github.event_name == 'pull_request'
         run: |
-          echo "CI_SKIP=false" >> "$GITHUB_ENV"
+          echo "CI_SKIP=" >> "$GITHUB_ENV"
 
       - name: install bot code
         if: success() && ! env.CI_SKIP
