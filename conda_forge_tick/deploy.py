@@ -401,7 +401,7 @@ def deploy(
             )
             # need to add the other path segment
             if is_dir:
-                _files_to_add = {os.path.join(dr, fn) for fn in files_to_add}
+                _files_to_add = {os.path.join(dr, fn) for fn in _files_to_add}
             files_to_add |= _files_to_add
 
             # changed
