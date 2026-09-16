@@ -44,10 +44,10 @@ jobs:
           environment-name: conda-forge-bot
           condarc-file: conda-forge-bot/autotick-bot/condarc
 
-      - name: do local setup and stop me if needed
-        run: |
-          cd conda-forge-bot
-          python autotick-bot/stop_me_if_needed.py
+      # - name: do local setup and stop me if needed
+      #   run: |
+      #     cd conda-forge-bot
+      #     python autotick-bot/stop_me_if_needed.py
 
       - name: install bot code
         if: success() && ! env.CI_SKIP
