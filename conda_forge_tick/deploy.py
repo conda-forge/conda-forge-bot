@@ -9,12 +9,13 @@ import tqdm
 
 from .git_utils import (
     delete_file_via_gh_api,
-    get_bot_token,
+    get_bot_app_token,
     push_file_via_gh_api,
     reset_and_restore_file,
 )
 from .lazy_json_backends import (
     CF_TICK_GRAPH_DATA_HASHMAPS,
+    get_github_backend_repo_for_hashmap,
     get_lazy_json_backends,
     lazy_json_override_backends,
 )
@@ -185,10 +186,10 @@ def _deploy_batch(
                     [
                         "git",
                         "push",
-                        f"https://{get_bot_token()}@github.com/{settings().graph_github_backend_repo}.git",
+                        f"https://{get_bot_app_token()}@github.com/{settings().graph_github_backend_repo}.git",
                         settings().graph_repo_default_branch,
                     ],
-                    token=get_bot_token(),
+                    token=get_bot_app_token(),
                 )
                 if status != 0:
                     print(">>>>>>>>>>>> git push failed", flush=True)
@@ -236,6 +237,15 @@ def _get_pth_commit_message(pth):
     return msg
 
 
+def _get_full_repo_name_from_path(pth):
+    pth_parts = pth.split("/")
+    if len(pth_parts) > 1:
+        hashmap_name = pth_parts[0]
+    else:
+        hashmap_name = "lazy_json"
+    return get_github_backend_repo_for_hashmap(hashmap_name)
+
+
 def _deploy_via_api(
     files_to_add: set[str],
     files_to_delete: set[str],
@@ -243,13 +253,15 @@ def _deploy_via_api(
     files_done = set()
     files_to_try_again = set()
     for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80, file=sys.stdout):
+        full_repo_name = _get_full_repo_name_from_path(pth)
+
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
                 print(f"pushing file '{pth}'", flush=True)
 
             msg = _get_pth_commit_message(pth)
 
-            push_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
+            push_file_via_gh_api(pth, full_repo_name, msg)
         except Exception as e:
             logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -261,6 +273,8 @@ def _deploy_via_api(
     for pth in tqdm.tqdm(
         files_to_delete, desc="deleting files", ncols=80, file=sys.stdout
     ):
+        full_repo_name = _get_full_repo_name_from_path(pth)
+
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
                 print(f"deleting file '{pth}'", flush=True)
@@ -268,7 +282,7 @@ def _deploy_via_api(
             # make a nice message for stuff managed via LazyJson
             msg = _get_pth_commit_message(pth)
 
-            delete_file_via_gh_api(pth, settings().graph_github_backend_repo, msg)
+            delete_file_via_gh_api(pth, full_repo_name, msg)
         except Exception as e:
             logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -288,7 +302,6 @@ def deploy(
     dirs_to_deploy: list[str] | None = None,
     git_only: bool = False,
     dirs_to_ignore: list[str] | None = None,
-    pull_changes: bool = False,
 ):
     if dry_run:
         print("(dry run) deploying", flush=True)
@@ -387,6 +400,14 @@ def deploy(
         if files_to_try_again:
             sys.exit(1)
     else:
+        if (
+            settings().graph_github_backend_repo
+            != settings().versions_github_backend_repo
+        ):
+            raise RuntimeError(
+                "git-based deploys of the graph data do not work for split backends!"
+            )
+
         batch = 0
         n_added = 0
         while files_to_add:
@@ -398,6 +419,3 @@ def deploy(
             )
 
         print(f"deployed {n_added} files to graph in {batch} batches", flush=True)
-
-    if pull_changes:
-        _pull_changes()

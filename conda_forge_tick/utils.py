@@ -50,7 +50,12 @@ from ruamel.yaml.comments import CommentedMap
 from . import sensitive_env
 from .lazy_json_backends import LazyJson
 from .migrators_types import AttrsTypedDict
-from .settings import ENV_CONDA_FORGE_ORG, ENV_GRAPH_GITHUB_BACKEND_REPO, settings
+from .settings import (
+    ENV_CONDA_FORGE_ORG,
+    ENV_GRAPH_GITHUB_BACKEND_REPO,
+    ENV_VERSIONS_GITHUB_BACKEND_REPO,
+    settings,
+)
 
 if typing.TYPE_CHECKING:
     from typing import TypedDict
@@ -395,6 +400,8 @@ def parse_recipe_yaml_containerized(
                 f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
                 "-e",
                 f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
+                "-e",
+                f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
             ],
         )
 
@@ -1038,6 +1045,8 @@ def parse_meta_yaml_containerized(
                 f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
                 "-e",
                 f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
+                "-e",
+                f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
             ],
         )
 

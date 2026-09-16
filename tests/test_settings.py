@@ -19,15 +19,26 @@ class TestBotSettings:
         os.environ["RUNNER_DEBUG"] = "1"
         os.environ["CF_TICK_FRAC_UPDATE_UPSTREAM_VERSIONS"] = "0.5"
         os.environ["CF_TICK_FRAC_MAKE_GRAPH"] = "0.7"
+        os.environ["CF_TICK_VERSIONS_GITHUB_BACKEND_REPO"] = (
+            "versions-owner/versions-repo"
+        )
 
         bot_settings = BotSettings()
 
         assert bot_settings.conda_forge_org == "myorg"
         assert bot_settings.graph_github_backend_repo == "graph-owner/graph-repo"
+        assert (
+            bot_settings.versions_github_backend_repo == "versions-owner/versions-repo"
+        )
         assert bot_settings.graph_repo_default_branch == "mybranch"
+        assert bot_settings.versions_repo_default_branch == "mybranch-versions"
         assert (
             bot_settings.graph_github_backend_raw_base_url
             == "https://github.com/graph-owner/graph-repo/raw/mybranch/"
+        )
+        assert (
+            bot_settings.versions_github_backend_raw_base_url
+            == "https://github.com/versions-owner/versions-repo/raw/mybranch-versions/"
         )
         assert bot_settings.github_runner_debug is True
         assert bot_settings.frac_update_upstream_versions == 0.5
@@ -43,6 +54,11 @@ class TestBotSettings:
             bot_settings.graph_github_backend_repo == "conda-forge/conda-forge-bot-data"
         )
         assert bot_settings.graph_repo_default_branch == "main"
+        assert (
+            bot_settings.versions_github_backend_repo
+            == "conda-forge/conda-forge-bot-data"
+        )
+        assert bot_settings.versions_repo_default_branch == "main"
         assert bot_settings.github_runner_debug is False
         assert 0 <= bot_settings.frac_update_upstream_versions <= 1
         assert 0 <= bot_settings.frac_make_graph <= 1

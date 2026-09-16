@@ -65,6 +65,23 @@ CF_TICK_GRAPH_DATA_HASHMAPS = [
 CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS = 5
 
 
+HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT = "graph_github_backend_repo"
+HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING = {
+    "versions": "versions_github_backend_repo",
+}
+
+
+def get_github_backend_repo_for_hashmap(hashmap_name: str) -> str:
+    """Get the GitHub backend repo given the name of the hashmap (e.g., "versions", "node_attrs")."""
+    return getattr(
+        settings(),
+        HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING.get(
+            hashmap_name,
+            HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT,
+        ),
+    )
+
+
 def make_lazy_json_retry_sequence(num_tries=50, base=4, factor=1, max_wait=600):
     def _func():
         for i in range(num_tries):
@@ -292,17 +309,14 @@ class GithubLazyJsonBackend(LazyJsonBackend):
     _n_requests = 0
 
     def __init__(self) -> None:
-        self._base_url = settings().graph_github_backend_raw_base_url
+        self._graph_base_url = settings().graph_github_backend_raw_base_url
+        self._versions_base_url = settings().versions_github_backend_raw_base_url
 
-    @property
-    def base_url(self) -> str:
-        return self._base_url
-
-    @base_url.setter
-    def base_url(self, value: str) -> None:
-        if not value.endswith("/"):
-            value += "/"
-        self._base_url = value
+    def _get_base_url(self, name: str) -> str:
+        if name == "versions":
+            return self._versions_base_url
+        else:
+            return self._graph_base_url
 
     @classmethod
     def _ignore_write(cls) -> None:
@@ -337,7 +351,7 @@ class GithubLazyJsonBackend(LazyJsonBackend):
     def hexists(self, name: str, key: str) -> bool:
         self._inform_web_request()
         url = urllib.parse.urljoin(
-            self.base_url,
+            self._get_base_url(name),
             get_sharded_path(f"{name}/{key}.json"),
         )
         status = requests.head(url, allow_redirects=True).status_code
@@ -375,7 +389,7 @@ class GithubLazyJsonBackend(LazyJsonBackend):
     def hget(self, name: str, key: str) -> str:
         self._inform_web_request()
         sharded_path = get_sharded_path(f"{name}/{key}.json")
-        url = urllib.parse.urljoin(self.base_url, sharded_path)
+        url = urllib.parse.urljoin(self._get_base_url(name), sharded_path)
         r = requests.get(url)
         if r.status_code == 404:
             raise KeyError(f"Key {key} not found in hashmap {name}")
@@ -414,7 +428,18 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         from conda_forge_tick.git_utils import github_client
 
         self._gh = github_client(with_app_token=True)
-        self._repo = self._gh.get_repo(settings().graph_github_backend_repo)
+        self._graph_repo = self._gh.get_repo(
+            get_github_backend_repo_for_hashmap("default")
+        )
+        self._version_repo = self._gh.get_repo(
+            get_github_backend_repo_for_hashmap("versions")
+        )
+
+    def _get_repo(self, name: str) -> github.Repository:
+        if name == "versions":
+            return self._version_repo
+        else:
+            return self._graph_repo
 
     @contextlib.contextmanager
     def transaction_context(self) -> Iterator[Self]:
@@ -433,7 +458,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
             "GithubAPILazyJsonBackend EXISTS: (%s, %s) w/ path %s", name, key, pth
         )
         try:
-            self._repo.get_contents(pth)
+            self._get_repo(name).get_contents(pth)
         except github.GithubException as e:
             _test_and_raise_besides_file_not_exists(e)
             return False
@@ -455,12 +480,14 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
             "GithubAPILazyJsonBackend SET: (%s, %s) w/ path %s", name, key, pth
         )
 
+        repo = self._get_repo(name)
+
         # exponential backoff
         lazy_json_retry_sequence = make_lazy_json_retry_sequence()
         for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
-                    _cnts = self._repo.get_contents(pth)
+                    _cnts = repo.get_contents(pth)
                     cnt = base64.b64decode(_cnts.content.encode("utf-8")).decode(
                         "utf-8"
                     )
@@ -471,14 +498,14 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                     cnt = None
 
                 if sha is None:
-                    self._repo.create_file(
+                    repo.create_file(
                         pth,
                         msg,
                         value,
                     )
                 else:
                     if cnt != value:
-                        self._repo.update_file(
+                        repo.update_file(
                             pth,
                             msg,
                             value,
@@ -529,19 +556,21 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
             "GithubAPILazyJsonBackend DEL: (%s, %s) w/ path %s", name, key, pth
         )
 
+        repo = self._get_repo(name)
+
         # exponential backoff
         lazy_json_retry_sequence = make_lazy_json_retry_sequence()
         for tr, ntries in lazy_json_retry_sequence():
             try:
                 try:
-                    _cnts = self._repo.get_contents(pth)
+                    _cnts = repo.get_contents(pth)
                     sha = _cnts.sha
                 except github.GithubException as e:
                     _test_and_raise_besides_file_not_exists(e)
                     sha = None
 
                 if sha is not None:
-                    self._repo.delete_file(
+                    repo.delete_file(
                         pth,
                         msg,
                         sha,
@@ -574,24 +603,26 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         )
 
     def hget(self, name: str, key: str) -> str:
-        from conda_forge_tick.git_utils import get_bot_token
+        from conda_forge_tick.git_utils import get_bot_app_token
 
         pth = get_sharded_path(f"{name}/{key}.json")
         hrds = {
             "Accept": "application/vnd.github.raw+json",
-            "Authorization": f"Bearer {get_bot_token()}",
+            "Authorization": f"Bearer {get_bot_app_token()}",
         }
 
         logger.debug(
             "GithubAPILazyJsonBackend GET: (%s, %s) w/ path %s", name, key, pth
         )
 
+        repo_url = get_github_backend_repo_for_hashmap(name)
+
         # exponential backoff
         lazy_json_retry_sequence = make_lazy_json_retry_sequence()
         for tr, ntries in lazy_json_retry_sequence():
             try:
                 cnts = requests.get(
-                    f"https://api.github.com/repos/{settings().graph_github_backend_repo}/contents/{pth}",
+                    f"https://api.github.com/repos/{repo_url}/contents/{pth}",
                     headers=hrds,
                 )
                 cnts.raise_for_status()

@@ -21,6 +21,12 @@ The environment variable used to set the `graph_github_backend_repo` setting.
 Note: This must match the field name in the `BotSettings` class.
 """
 
+ENV_VERSIONS_GITHUB_BACKEND_REPO = ENVIRONMENT_PREFIX + "VERSIONS_GITHUB_BACKEND_REPO"
+"""
+The environment variable used to set the `versions_github_backend_repo` setting.
+Note: This must match the field name in the `BotSettings` class.
+"""
+
 Fraction = Annotated[float, Field(ge=0.0, le=1.0)]
 
 
@@ -54,9 +60,22 @@ class BotSettings(BaseSettings):
     If you change the field name, you must also update the `ENV_GRAPH_GITHUB_BACKEND_REPO` constant.
     """
 
+    versions_github_backend_repo: str = Field(
+        "conda-forge/conda-forge-bot-data", pattern=r"^[\w\.-]+/[\w\.-]+$"
+    )
+    """
+    The GitHub repository to deploy version data to. Default: "conda-forge/conda-forge-bot-data".
+    If you change the field name, you must also update the `ENV_GRAPH_VERSIONS_BACKEND_REPO` constant.
+    """
+
     graph_repo_default_branch: str = "main"
     """
     The default branch of the graph_github_backend_repo repository.
+    """
+
+    versions_repo_default_branch: str = "main"
+    """
+    The default branch of the versions_github_backend_repo repository.
     """
 
     @property
@@ -66,6 +85,14 @@ class BotSettings(BaseSettings):
         Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
         """
         return f"https://github.com/{self.graph_github_backend_repo}/raw/{self.graph_repo_default_branch}/"
+
+    @property
+    def versions_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the versions_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return f"https://github.com/{self.versions_github_backend_repo}/raw/{self.versions_repo_default_branch}/"
 
     github_runner_debug: bool = Field(False, alias="RUNNER_DEBUG")
     """

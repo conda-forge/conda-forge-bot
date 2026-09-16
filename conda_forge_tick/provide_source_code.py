@@ -19,6 +19,7 @@ from conda_forge_feedstock_ops.os_utils import chmod_plus_rwX, sync_dirs
 from conda_forge_tick.settings import (
     ENV_CONDA_FORGE_ORG,
     ENV_GRAPH_GITHUB_BACKEND_REPO,
+    ENV_VERSIONS_GITHUB_BACKEND_REPO,
     settings,
 )
 from conda_forge_tick.utils import yaml_safe_dump
@@ -108,6 +109,8 @@ def provide_source_code_containerized(recipe_dir):
                 f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
                 "-e",
                 f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
+                "-e",
+                f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
             ],
         )
 

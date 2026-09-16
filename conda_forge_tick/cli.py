@@ -239,18 +239,12 @@ def make_mappings() -> None:
         "directories will be ignored."
     ),
 )
-@click.option(
-    "--pull-changes",
-    is_flag=True,
-    help="Pull the changes to the local repo after deployment.",
-)
 @pass_context
 def deploy_to_github(
     ctx: CliContext,
     git_only: bool,
     dirs_to_ignore: str,
     dirs_to_deploy: str,
-    pull_changes: bool,
 ) -> None:
     from . import deploy
 
@@ -259,7 +253,6 @@ def deploy_to_github(
         git_only=git_only,
         dirs_to_ignore=[] if dirs_to_ignore is None else dirs_to_ignore.split(","),
         dirs_to_deploy=[] if dirs_to_deploy is None else dirs_to_deploy.split(","),
-        pull_changes=pull_changes,
     )
 
 

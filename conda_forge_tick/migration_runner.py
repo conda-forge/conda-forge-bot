@@ -23,6 +23,7 @@ from conda_forge_tick.lazy_json_backends import LazyJson, dumps
 from conda_forge_tick.settings import (
     ENV_CONDA_FORGE_ORG,
     ENV_GRAPH_GITHUB_BACKEND_REPO,
+    ENV_VERSIONS_GITHUB_BACKEND_REPO,
     settings,
 )
 
@@ -188,6 +189,8 @@ def run_migration_containerized(
                 f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
                 "-e",
                 f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
+                "-e",
+                f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
             ],
         )
 
