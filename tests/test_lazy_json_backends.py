@@ -37,8 +37,7 @@ from conda_forge_tick.lazy_json_backends import (
     sync_lazy_json_across_backends,
     touch_all_lazy_json_refs,
 )
-from conda_forge_tick.os_utils import pushd
-from conda_forge_tick.settings import settings
+from conda_forge_tick.os_utils import override_env, pushd
 
 HAVE_MONGODB = (
     "MONGODB_CONNECTION_STRING" in conda_forge_tick.global_sensitive_env.classified_info
@@ -699,13 +698,6 @@ def test_lazy_json_backends_hashmap(tmpdir):
         assert get_all_keys_for_hashmap("lazy_json") == []
 
 
-def test_github_base_url() -> None:
-    github_backend = GithubLazyJsonBackend()
-    assert github_backend.base_url == settings().graph_github_backend_raw_base_url
-    github_backend.base_url = "https://github.com/lorem/ipsum"
-    assert github_backend.base_url == "https://github.com/lorem/ipsum" + "/"
-
-
 @pytest.mark.parametrize(
     "name, key",
     [
@@ -832,28 +824,28 @@ def test_github_hgetall() -> None:
 def test_github_hget_success(
     mock_get: MagicMock,
 ) -> None:
-    backend = GithubLazyJsonBackend()
-    backend.base_url = "https://github.com/lorem/ipsum"
-    mock_get.return_value.status_code = 200
-    mock_get.return_value.text = "{'key': 'value'}"
-    assert backend.hget("name", "key") == "{'key': 'value'}"
-    mock_get.assert_called_once_with(
-        "https://github.com/lorem/ipsum/name/4/4/0/9/d/key.json",
-    )
+    with override_env("CF_TICK_GRAPH_GITHUB_BACKEND_REPO", "lorem/ipsum"):
+        backend = GithubLazyJsonBackend()
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = "{'key': 'value'}"
+        assert backend.hget("name", "key") == "{'key': 'value'}"
+        mock_get.assert_called_once_with(
+            "https://github.com/lorem/ipsum/raw/main/name/4/4/0/9/d/key.json",
+        )
 
 
 @mock.patch("requests.get")
 def test_github_offline_hget_not_found(
     mock_get: MagicMock,
 ) -> None:
-    backend = GithubLazyJsonBackend()
-    backend.base_url = "https://github.com/lorem/ipsum"
-    mock_get.return_value.status_code = 404
-    with pytest.raises(KeyError):
-        backend.hget("name", "key")
-    mock_get.assert_called_once_with(
-        "https://github.com/lorem/ipsum/name/4/4/0/9/d/key.json",
-    )
+    with override_env("CF_TICK_GRAPH_GITHUB_BACKEND_REPO", "lorem/ipsum"):
+        backend = GithubLazyJsonBackend()
+        mock_get.return_value.status_code = 404
+        with pytest.raises(KeyError):
+            backend.hget("name", "key")
+        mock_get.assert_called_once_with(
+            "https://github.com/lorem/ipsum/raw/main/name/4/4/0/9/d/key.json",
+        )
 
 
 @pytest.mark.parametrize(
