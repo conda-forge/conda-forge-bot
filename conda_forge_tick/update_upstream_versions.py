@@ -26,6 +26,7 @@ from conda_forge_tick.lazy_json_backends import LazyJson, dumps
 from conda_forge_tick.settings import (
     ENV_CONDA_FORGE_ORG,
     ENV_GRAPH_GITHUB_BACKEND_REPO,
+    ENV_NODE_ATTRS_GITHUB_BACKEND_REPO,
     ENV_VERSIONS_GITHUB_BACKEND_REPO,
     settings,
 )
@@ -220,6 +221,8 @@ def get_latest_version_containerized(
             f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
             "-e",
             f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
+            "-e",
+            f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
         ],
     )
 

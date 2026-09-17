@@ -6,6 +6,9 @@
 # - CF_TICK_GRAPH_GITHUB_BACKEND_REPO: The GitHub repository to clone cf-graph from. Default: conda-forge/conda-forge-bot-data
 # - CF_TICK_VERSIONS_GITHUB_BACKEND_REPO: The GitHub repository to clone the versions data from. If this
 #   value differs from CF_TICK_GRAPH_GITHUB_BACKEND_REPO, then the repo is cloned to versions under the
+#   CF_TICK_GRAPH_GITHUB_BACKEND_REPO repo. Default: conda-forge/conda-forge-bot-data-versions
+# - CF_TICK_NODE_ATTRS_GITHUB_BACKEND_REPO: The GitHub repository to clone the node_attrs data from. If this
+#   value differs from CF_TICK_GRAPH_GITHUB_BACKEND_REPO, then the repo is cloned to node_attrs under the
 #   CF_TICK_GRAPH_GITHUB_BACKEND_REPO repo. Default: conda-forge/conda-forge-bot-data
 
 # Sets the following environment variables via GITHUB_ENV:
@@ -88,6 +91,35 @@ if [[ "${clone_graph}" == "true" ]]; then
       exit 1
     fi
   fi
+
+  node_attrs_repo=${CF_TICK_NODE_ATTRS_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data"}
+  node_attrs_remote="https://github.com/${node_attrs_repo}.git"
+  if [[ "${node_attrs_repo}" != "${cf_graph_repo}" ]]; then
+    failed="true"
+    for itr in {1..5}; do
+      echo "clone iteration ${itr}"
+
+      pushd cf-graph
+      set +e
+      # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
+      git clone --depth=5 "${node_attrs_remote}" node_attrs || false
+      set -e
+      popd
+
+      if [[ "$?" == "0" ]]; then
+        failed="false"
+        break
+      else
+        rm -rf cf-graph/node_attrs
+      fi
+    done
+
+    if [[ "${failed}" == "true" ]]; then
+      echo "node_attrs clone failed!"
+      exit 1
+    fi
+  fi
+
 else
   echo "Skipping cloning of cf-graph"
 fi

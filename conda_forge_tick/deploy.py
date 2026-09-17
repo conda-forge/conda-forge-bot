@@ -498,9 +498,13 @@ def deploy(
             if files_to_try_again:
                 sys.exit(1)
         else:
-            if (
-                settings().graph_github_backend_repo
-                != settings().versions_github_backend_repo
+            if not all(
+                repo == settings().graph_github_backend_repo
+                for repo in [
+                    settings().graph_github_backend_repo,
+                    settings().versions_github_backend_repo,
+                    settings().node_attrs_github_backend_repo,
+                ]
             ):
                 raise RuntimeError(
                     "git-based deploys of the graph data do not work for split backends!"

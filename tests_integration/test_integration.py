@@ -71,6 +71,9 @@ def global_environment_setup():
     new_settings.versions_github_backend_repo = (
         f"{GitHubAccount.REGRO_ORG}/conda-forge-bot-data"
     )
+    new_settings.node_attrs_github_backend_repo = (
+        f"{GitHubAccount.REGRO_ORG}/conda-forge-bot-data"
+    )
     new_settings.conda_forge_org = GitHubAccount.CONDA_FORGE_ORG
 
     with use_settings(new_settings):

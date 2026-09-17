@@ -68,6 +68,7 @@ CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS = 5
 HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT = "graph_github_backend_repo"
 HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING = {
     "versions": "versions_github_backend_repo",
+    "node_attrs": "node_attrs_github_backend_repo",
 }
 
 
@@ -325,10 +326,13 @@ class GithubLazyJsonBackend(LazyJsonBackend):
     def __init__(self) -> None:
         self._graph_base_url = settings().graph_github_backend_raw_base_url
         self._versions_base_url = settings().versions_github_backend_raw_base_url
+        self._node_attrs_base_url = settings().node_attrs_github_backend_raw_base_url
 
     def _get_base_url(self, name: str) -> str:
         if name == "versions":
             return self._versions_base_url
+        elif name == "node_attrs":
+            return self._node_attrs_base_url
         else:
             return self._graph_base_url
 
@@ -446,13 +450,18 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         self._graph_repo = self._gh.get_repo(
             get_github_backend_repo_for_hashmap("default")
         )
-        self._version_repo = self._gh.get_repo(
+        self._versions_repo = self._gh.get_repo(
             get_github_backend_repo_for_hashmap("versions")
+        )
+        self._node_attrs_repo = self._gh.get_repo(
+            get_github_backend_repo_for_hashmap("node_attrs")
         )
 
     def _get_repo(self, name: str) -> github.Repository:
         if name == "versions":
-            return self._version_repo
+            return self._versions_repo
+        elif name == "node_attrs":
+            return self._node_attrs_repo
         else:
             return self._graph_repo
 

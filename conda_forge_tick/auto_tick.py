@@ -1334,7 +1334,6 @@ def _update_nodes_with_new_versions(gx):
     version_nodes = get_all_keys_for_hashmap("versions")
 
     for node in version_nodes:
-
         if node not in gx.nodes:
             continue
 

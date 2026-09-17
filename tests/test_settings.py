@@ -23,6 +23,10 @@ class TestBotSettings:
             "versions-owner/versions-repo"
         )
         os.environ["CF_TICK_VERSIONS_REPO_DEFAULT_BRANCH"] = "mybranch-versions"
+        os.environ["CF_TICK_NODE_ATTRS_GITHUB_BACKEND_REPO"] = (
+            "node_attrs-owner/node_attrs-repo"
+        )
+        os.environ["CF_TICK_NODE_ATTRS_REPO_DEFAULT_BRANCH"] = "mybranch-node_attrs"
 
         bot_settings = BotSettings()
 
@@ -31,8 +35,13 @@ class TestBotSettings:
         assert (
             bot_settings.versions_github_backend_repo == "versions-owner/versions-repo"
         )
+        assert (
+            bot_settings.node_attrs_github_backend_repo
+            == "node_attrs-owner/node_attrs-repo"
+        )
         assert bot_settings.graph_repo_default_branch == "mybranch"
         assert bot_settings.versions_repo_default_branch == "mybranch-versions"
+        assert bot_settings.node_attrs_repo_default_branch == "mybranch-node_attrs"
         assert (
             bot_settings.graph_github_backend_raw_base_url
             == "https://github.com/graph-owner/graph-repo/raw/mybranch/"
@@ -40,6 +49,10 @@ class TestBotSettings:
         assert (
             bot_settings.versions_github_backend_raw_base_url
             == "https://github.com/versions-owner/versions-repo/raw/mybranch-versions/"
+        )
+        assert (
+            bot_settings.node_attrs_github_backend_raw_base_url
+            == "https://github.com/node_attrs-owner/node_attrs-repo/raw/mybranch-node_attrs/"
         )
         assert bot_settings.github_runner_debug is True
         assert bot_settings.frac_update_upstream_versions == 0.5

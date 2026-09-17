@@ -53,6 +53,7 @@ from .migrators_types import AttrsTypedDict
 from .settings import (
     ENV_CONDA_FORGE_ORG,
     ENV_GRAPH_GITHUB_BACKEND_REPO,
+    ENV_NODE_ATTRS_GITHUB_BACKEND_REPO,
     ENV_VERSIONS_GITHUB_BACKEND_REPO,
     settings,
 )
@@ -402,6 +403,8 @@ def parse_recipe_yaml_containerized(
                 f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
                 "-e",
                 f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
+                "-e",
+                f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
             ],
         )
 
@@ -1047,6 +1050,8 @@ def parse_meta_yaml_containerized(
                 f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
                 "-e",
                 f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
+                "-e",
+                f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
             ],
         )
 

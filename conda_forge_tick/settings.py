@@ -27,6 +27,14 @@ The environment variable used to set the `versions_github_backend_repo` setting.
 Note: This must match the field name in the `BotSettings` class.
 """
 
+ENV_NODE_ATTRS_GITHUB_BACKEND_REPO = (
+    ENVIRONMENT_PREFIX + "NODE_ATTRS_GITHUB_BACKEND_REPO"
+)
+"""
+The environment variable used to set the `node_attrs_github_backend_repo` setting.
+Note: This must match the field name in the `BotSettings` class.
+"""
+
 Fraction = Annotated[float, Field(ge=0.0, le=1.0)]
 
 
@@ -68,6 +76,14 @@ class BotSettings(BaseSettings):
     If you change the field name, you must also update the `ENV_GRAPH_VERSIONS_BACKEND_REPO` constant.
     """
 
+    node_attrs_github_backend_repo: str = Field(
+        "conda-forge/conda-forge-bot-data", pattern=r"^[\w\.-]+/[\w\.-]+$"
+    )
+    """
+    The GitHub repository to deploy node attrs to. Default: "conda-forge/conda-forge-bot-data".
+    If you change the field name, you must also update the `ENV_GRAPH_NODE_ATTRS_BACKEND_REPO` constant.
+    """
+
     graph_repo_default_branch: str = "main"
     """
     The default branch of the graph_github_backend_repo repository.
@@ -76,6 +92,11 @@ class BotSettings(BaseSettings):
     versions_repo_default_branch: str = "main"
     """
     The default branch of the versions_github_backend_repo repository.
+    """
+
+    node_attrs_repo_default_branch: str = "main"
+    """
+    The default branch of the node_attrs_github_backend_repo repository.
     """
 
     @property
@@ -93,6 +114,14 @@ class BotSettings(BaseSettings):
         Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
         """
         return f"https://github.com/{self.versions_github_backend_repo}/raw/{self.versions_repo_default_branch}/"
+
+    @property
+    def node_attrs_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the node_attrs_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return f"https://github.com/{self.node_attrs_github_backend_repo}/raw/{self.node_attrs_repo_default_branch}/"
 
     github_runner_debug: bool = Field(False, alias="RUNNER_DEBUG")
     """
