@@ -101,7 +101,7 @@ class BotSettings(BaseSettings):
     https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
     """
 
-    frac_update_upstream_versions: Fraction = 1.0
+    frac_update_upstream_versions: Fraction = 0.05
     """
     The fraction of feedstocks (randomly selected) to update in the update-upstream-versions job.
     This is currently only respected when running concurrently (via process pool), not in sequential mode.
