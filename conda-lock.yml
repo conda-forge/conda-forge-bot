@@ -126,7 +126,7 @@ package:
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.11.1
+  version: 0.11.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -135,10 +135,10 @@ package:
     cpython: '>=3.11'
     libgcc: '>=15'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.11.1-py311hf77984d_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.11.2-py311hf77984d_0.conda
   hash:
-    md5: 74eb5410139257faf8ff809f4d002fc7
-    sha256: 22118451bbee7f4d2ae708e5720c2619858faa51f96133f9b4236e1def96f88b
+    md5: 954e55a97486ce671170f95b1a5ccc18
+    sha256: ad68b61411979d15ed172f9886908471244ad2d4d26b80ba88a41b4079ea095b
   category: main
   optional: false
 - name: at-spi2-atk
@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.16.11.22.01
+  version: 2026.09.17.09.37.29
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.16.11.22.01-hd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.17.09.37.29-hd8ed1ab_1.conda
   hash:
-    md5: ee3569e61701fb6bde8d1c2271a3647b
-    sha256: f05b1656ab90249d71d7c29012cd05abf6e9a3d70559d23db60f18a03835671a
+    md5: de06a6aaedeea805403c9820625c79a6
+    sha256: a9738aacd0cbb00d66f0dc213943afa783badca3bb2f624bcb66da216589cfc5
   category: main
   optional: false
 - name: conda-index
@@ -1602,10 +1602,10 @@ package:
     openssl: '>=3.5.8,<4.0a0'
     pcre2: '>=10.47,<10.48.0a0'
     perl: 5.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.55.0-pl5321h3795e67_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.55.0-pl5321h3795e67_3.conda
   hash:
-    md5: 6c2e06e5d72574700e526b860e136157
-    sha256: 762e393f66cff2f4053f986cd4eaaa93b0fd22a6decec8f9cdefe9c9e12591be
+    md5: a3ea529904edb09f7a0b22926ee24fd3
+    sha256: dc160f995b3d49627bf5c865f9c0db79d803c73a605a2c05c3f950d5f884936e
   category: main
   optional: false
 - name: gitdb
@@ -3890,7 +3890,7 @@ package:
   category: main
   optional: false
 - name: py-rattler-build
-  version: 0.72.2
+  version: 0.73.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -3900,10 +3900,10 @@ package:
     libgcc: '>=15'
     openssl: '>=3.5.8,<4.0a0'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-build-0.72.2-py311h30674b1_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-build-0.73.0-py311h30674b1_0.conda
   hash:
-    md5: fcd8838dc6d002ace1b576c21abe3a3b
-    sha256: 9e21508f1daf3d67b54267838fd999aaa83a9486d09df0b64af16f1e1389cd88
+    md5: 22094f8dc5212ee1269d7f8bf499d8ea
+    sha256: 20d345d91f4b8c22444a5e0cf1f748b6c43ff790537337806f599e5c311b3b7a
   category: main
   optional: false
 - name: pybind11-abi
@@ -5241,7 +5241,7 @@ package:
   category: main
   optional: false
 - name: urllib3
-  version: 2.7.0
+  version: 2.8.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -5249,11 +5249,11 @@ package:
     brotli-python: '>=1.2.0'
     h2: '>=4,<5'
     pysocks: '>=1.5.6,<2.0,!=1.5.7'
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/urllib3-2.7.0-pyhd8ed1ab_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/urllib3-2.8.0-pyhd8ed1ab_0.conda
   hash:
-    md5: cbb88288f74dbe6ada1c6c7d0a97223e
-    sha256: feff959a816f7988a0893201aa9727bbb7ee1e9cec2c4f0428269b489eb93fb4
+    md5: 407a3d3778570bae8e8fcf554e803e43
+    sha256: c5511c190ab55168ca412f3c54592fbf677ae6250784cb72b227a7cf3f538f7d
   category: main
   optional: false
 - name: userpath
@@ -5270,7 +5270,7 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.13
+  version: 0.12.15
   manager: conda
   platform: linux-64
   dependencies:
@@ -5279,10 +5279,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.13-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.15-h841d291_0.conda
   hash:
-    md5: 63a7873a0d33470c9f24272783e77982
-    sha256: 02b3ac1f7a27082370a6ec49299c9c1efe245d018ff872da40933fa2279940e9
+    md5: e07a8b84fd0c1b134cbbdd3deca971ac
+    sha256: 1af51a76d5f2317a9b3bcd04105d01b5c6bc4f9e8703406649cf5d9a45931466
   category: main
   optional: false
 - name: vcs_versioning
