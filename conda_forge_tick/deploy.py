@@ -256,7 +256,7 @@ def _get_pth_commit_message(pth):
     return msg
 
 
-def _get_full_repo_name_and_pth_from_path(pth):
+def _get_full_repo_name_pth_and_context_from_path(pth):
     default_repo = get_github_backend_repo_for_hashmap("lazy_json")
 
     pth_parts = pth.split("/")
@@ -268,9 +268,12 @@ def _get_full_repo_name_and_pth_from_path(pth):
 
     pth_parts = pth.split("/")
     if repo != default_repo and len(pth_parts) > 1:
+        context_dir = pth_parts[0]
         pth = "/".join(pth_parts[1:])
+    else:
+        context_dir = None
 
-    return repo, pth
+    return repo, pth, context_dir
 
 
 def _deploy_via_api(
@@ -280,7 +283,9 @@ def _deploy_via_api(
     files_done = set()
     files_to_try_again = set()
     for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80, file=sys.stdout):
-        full_repo_name, pth_to_push = _get_full_repo_name_and_pth_from_path(pth)
+        full_repo_name, pth_to_push, context_dir = (
+            _get_full_repo_name_pth_and_context_from_path(pth)
+        )
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
@@ -290,7 +295,13 @@ def _deploy_via_api(
             # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            push_file_via_gh_api(pth_to_push, full_repo_name, msg)
+            if context_dir is not None:
+                ctx = pushd(context_dir)
+            else:
+                ctx = contextlib.nullcontext()
+
+            with ctx:
+                push_file_via_gh_api(pth_to_push, full_repo_name, msg)
         except Exception as e:
             logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -300,7 +311,9 @@ def _deploy_via_api(
     for pth in tqdm.tqdm(
         files_to_delete, desc="deleting files", ncols=80, file=sys.stdout
     ):
-        full_repo_name, pth_to_push = _get_full_repo_name_and_pth_from_path(pth)
+        full_repo_name, pth_to_push, context_dir = (
+            _get_full_repo_name_pth_and_context_from_path(pth)
+        )
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
@@ -310,7 +323,13 @@ def _deploy_via_api(
             # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            delete_file_via_gh_api(pth_to_push, full_repo_name, msg)
+            if context_dir is not None:
+                ctx = pushd(context_dir)
+            else:
+                ctx = contextlib.nullcontext()
+
+            with ctx:
+                delete_file_via_gh_api(pth_to_push, full_repo_name, msg)
         except Exception as e:
             logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)
