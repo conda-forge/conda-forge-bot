@@ -1,0 +1,23 @@
+package:
+  name: conditional_abi3_pkg
+  version: "1.0.0"
+
+source:
+  url: https://example.com/conditional_abi3_pkg-1.0.0.tar.gz
+  sha256: 54d4259d1bfae24ecdb5ca79f7acc2eac6c286a02d6a0ae617797cb45f0726d3
+
+build:
+  number: 0
+  python:
+    version_independent: ${{ is_abi3 }}
+
+requirements:
+  host:
+    - python
+  run:
+    - python
+
+about:
+  homepage: https://example.com/conditional_abi3_pkg
+  license: BSD-3-Clause
+  summary: An abi3 recipe that still builds version-specific wheels for some pythons

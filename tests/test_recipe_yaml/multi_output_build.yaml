@@ -1,0 +1,36 @@
+context:
+  version: "1.0.0"
+
+recipe:
+  name: multi_output_build
+  version: ${{ version }}
+
+source:
+  url: https://example.com/multi_output_build-${{ version }}.tar.gz
+  sha256: 54d4259d1bfae24ecdb5ca79f7acc2eac6c286a02d6a0ae617797cb45f0726d3
+
+outputs:
+  - package:
+      name: libmulti
+    build:
+      number: 0
+    requirements:
+      run_exports:
+        weak:
+          - libmulti
+
+  - package:
+      name: multi_output_build
+    build:
+      noarch: python
+      number: 0
+    requirements:
+      host:
+        - python
+      run:
+        - python
+
+about:
+  homepage: https://example.com/multi_output_build
+  license: BSD-3-Clause
+  summary: A multi-output recipe used to check per-output build parsing

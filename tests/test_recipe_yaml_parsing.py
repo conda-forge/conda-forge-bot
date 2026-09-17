@@ -8,6 +8,7 @@ import pytest
 from conda_forge_tick.feedstock_parser import (
     populate_feedstock_attributes,
 )
+from conda_forge_tick.migrators.migration_yaml import all_noarch
 from conda_forge_tick.utils import (
     _parse_recipe_yaml_requirements,
     _process_recipe_for_pinning,
@@ -39,6 +40,86 @@ def test_parse_validated_recipes():
 
     for key in ["about", "build", "package", "requirements", "source", "extra"]:
         assert recipe_yaml_dict[key] == meta_yaml_dict[key]
+
+
+def test_parse_recipe_yaml_keeps_python_version_independent():
+    """``build.python.version_independent`` marks an abi3 build.
+
+    ``all_noarch(only_python=True)`` reads it to decide that a feedstock does not
+    need rebuilding for every python version, which keeps it out of the python
+    migrations. Dropping the key at parse time made that check unreachable.
+    """
+    text = TEST_RECIPE_YAML_PATH.joinpath("abi3_pkg.yaml").read_text()
+    recipe_yaml_dict = parse_recipe_yaml(text)
+
+    assert recipe_yaml_dict["build"]["python"]["version_independent"] is True
+    assert all_noarch({"meta_yaml": recipe_yaml_dict}, only_python=True)
+
+
+def test_parse_recipe_yaml_keeps_per_output_build_section():
+    """Each output's `build` section must survive parsing.
+
+    It used to be replaced by the output's run exports, so `noarch` and
+    `build.python` were unreachable for multi-output v1 recipes and
+    `_extract_requirements` could not find run exports under `build` either.
+    """
+    text = TEST_RECIPE_YAML_PATH.joinpath("multi_output_build.yaml").read_text()
+    recipe_yaml_dict = parse_recipe_yaml(text)
+
+    builds = {output["name"]: output["build"] for output in recipe_yaml_dict["outputs"]}
+
+    assert builds["multi_output_build"]["noarch"] == "python"
+    assert builds["libmulti"]["run_exports"] == {"weak": ["libmulti"]}
+
+    # _remove_none_values does not recurse into lists, so unset keys must be
+    # omitted rather than stored as None; `"noarch" in build` is a consumer.
+    assert all(
+        value is not None for build in builds.values() for value in build.values()
+    )
+
+    # the only python-dependent output is noarch, so the feedstock does not
+    # need rebuilding for each python version
+    assert all_noarch({"meta_yaml": recipe_yaml_dict}, only_python=True)
+
+
+@pytest.mark.parametrize(
+    "is_abi3_per_variant,version_independent",
+    [
+        (["true", "true"], True),
+        (["true", "false"], False),
+        (["false", "false"], False),
+    ],
+)
+def test_populate_feedstock_attributes_version_independent_needs_every_variant(
+    is_abi3_per_variant, version_independent
+):
+    """A recipe is only version independent if every variant is.
+
+    abi3 recipes commonly build one wheel covering python >=3.12 and version
+    specific ones for the rest, e.g. an older python or a free threaded build.
+    Reporting the feedstock as version independent overall would take it out of
+    the python migrations it still needs.
+    """
+    recipe_yaml = TEST_RECIPE_YAML_PATH / "conditional_abi3_pkg.yaml"
+
+    with TemporaryDirectory() as tmpdir:
+        os.makedirs(Path(tmpdir) / "recipe", exist_ok=True)
+        os.makedirs(Path(tmpdir) / ".ci_support", exist_ok=True)
+        shutil.copy2(recipe_yaml, Path(tmpdir) / "recipe" / "recipe.yaml")
+        for i, is_abi3 in enumerate(is_abi3_per_variant):
+            (Path(tmpdir) / ".ci_support" / f"linux_64_v{i}.yaml").write_text(
+                f"target_platform:\n - 'linux-64'\nis_abi3:\n - {is_abi3}\n"
+            )
+        node_attrs = populate_feedstock_attributes(
+            "conditional_abi3_pkg",
+            {},
+            recipe_yaml=recipe_yaml.read_text(),
+            feedstock_dir=tmpdir,
+        )
+
+    build_python = (node_attrs["meta_yaml"].get("build") or {}).get("python") or {}
+    assert build_python.get("version_independent", False) is version_independent
+    assert all_noarch(node_attrs, only_python=True) is version_independent
 
 
 def test_process_recipe_for_pinning():

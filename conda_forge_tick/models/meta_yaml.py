@@ -103,6 +103,16 @@ class BuildRunExportsExplicit(ValidatedBaseModel):
     strong: NoneIsEmptyList[str] | SingleElementToList[str] = []
 
 
+class BuildPython(ValidatedBaseModel):
+    version_independent: bool = False
+    """
+    v1 recipes only. Set by abi3 recipes, which build a single wheel that works
+    for every later CPython, so the feedstock does not need rebuilding for each
+    new python version. `all_noarch(only_python=True)` reads this to keep such
+    feedstocks out of the python migrations.
+    """
+
+
 class Build(ValidatedBaseModel):
     number: int
     noarch: Literal["generic", "python"] | None = None
@@ -119,6 +129,10 @@ class Build(ValidatedBaseModel):
     run_exports: (
         NoneIsEmptyList[str] | SingleElementToList[str] | BuildRunExportsExplicit
     ) = []
+    python: BuildPython | None = None
+    """
+    v1 recipes only, see `BuildPython`.
+    """
 
 
 class Requirements(ValidatedBaseModel):

@@ -751,6 +751,7 @@ def _parse_recipes(
         else {
             "noarch": build.get("noarch"),
             "number": str(build.get("number")),
+            "python": build.get("python"),
             "script": build.get("script"),
             "run_exports": requirements.get("run_exports"),
         }
@@ -798,14 +799,19 @@ def _parse_recipes(
                 "run": requirements_output.get("run", []),
             }
         )
-        build_output_data = (
-            None
-            if run_exports_output is None
-            else {
-                "strong": run_exports_output.get("strong", []),
-                "weak": run_exports_output.get("weak", []),
-            }
-        )
+        build_output = recipe.get("build") or {}
+        # Mirror the top-level shape. Keys are only emitted when set because
+        # _remove_none_values does not recurse into lists, so a None here would
+        # survive into the node attrs and read as "present" to consumers.
+        build_output_data = {
+            key: value
+            for key, value in (
+                ("noarch", build_output.get("noarch")),
+                ("python", build_output.get("python")),
+                ("run_exports", run_exports_output),
+            )
+            if value is not None
+        } or None
         output_data.append(
             {
                 "name": None if package_output is None else package_output.get("name"),

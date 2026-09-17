@@ -1,0 +1,34 @@
+context:
+  version: "27.2.0"
+
+package:
+  name: abi3_pkg
+  version: ${{ version }}
+
+source:
+  url: https://pypi.io/packages/source/a/abi3_pkg/abi3_pkg-${{ version }}.tar.gz
+  sha256: 54d4259d1bfae24ecdb5ca79f7acc2eac6c286a02d6a0ae617797cb45f0726d3
+
+build:
+  number: 1
+  script: pip install . -v
+  python:
+    version_independent: true
+
+requirements:
+  host:
+    - pip
+    - python
+  run:
+    - python
+
+tests:
+  - python:
+      imports:
+        - abi3_pkg
+
+about:
+  homepage: https://example.com/abi3_pkg
+  license: BSD-3-Clause
+  license_file: LICENSE
+  summary: A recipe that builds a single abi3 wheel for all later CPythons

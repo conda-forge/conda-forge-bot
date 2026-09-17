@@ -72,6 +72,24 @@ def _dedupe_list_ordered(list_with_dupes):
     return list_without_dupes
 
 
+def _is_version_independent(variant_yaml: typing.Any) -> bool:
+    """Whether this rendered variant builds a python version independent package."""
+    build = variant_yaml.get("build") or {}
+    python = build.get("python") or {}
+    return bool(python.get("version_independent", False))
+
+
+def _set_version_independent(meta_yaml, version_independent: bool) -> None:
+    """Record whether every variant of the recipe is python version independent."""
+    build = meta_yaml.setdefault("build", {})
+    if version_independent:
+        build.setdefault("python", {})["version_independent"] = True
+    elif "python" in build:
+        build["python"].pop("version_independent", None)
+        if not build["python"]:
+            del build["python"]
+
+
 def _dedupe_meta_yaml(meta_yaml):
     """Deduplicate a meta.yaml dict recursively."""
     if isinstance(meta_yaml, dict):
@@ -355,6 +373,7 @@ def populate_feedstock_attributes(
     # these might get set below
     saved_cbc_key = None
     saved_cbc_value = None
+    version_independent = None
 
     try:
         if (
@@ -427,6 +446,16 @@ def populate_feedstock_attributes(
                                 )
                             )
 
+                # `build.python.version_independent` is decided per variant: a
+                # recipe can build one abi3 wheel that covers several pythons
+                # and version specific ones for the rest, e.g. an older python
+                # or a free threaded build. Collapsing keeps one value per key,
+                # which would report such a feedstock as version independent
+                # overall; it only is if every variant is.
+                version_independent = bool(variant_yamls) and all(
+                    _is_version_independent(varyml) for varyml in variant_yamls
+                )
+
                 # collapse them down
                 logger.debug("collapsing reqs for %s", name)
                 final_cfgs: dict = {}
@@ -485,6 +514,9 @@ def populate_feedstock_attributes(
 
     node_attrs["meta_yaml"] = _dedupe_meta_yaml(_convert_to_dict(yaml_dict))
     meta_yaml = node_attrs["meta_yaml"]
+
+    if version_independent is not None:
+        _set_version_independent(meta_yaml, version_independent)
 
     # remove all plat-arch specific keys to remove old ones if a combination is disabled
     for k in list(node_attrs.keys()):
