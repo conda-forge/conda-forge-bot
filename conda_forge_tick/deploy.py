@@ -213,6 +213,12 @@ def _deploy_batch(
     return n_added_this_batch
 
 
+def _ensure_file_has_dir(pth, dr):
+    if not pth.startswith(f"{dr}/"):
+        pth = os.path.join(dr, pth)
+    return pth
+
+
 def _get_files_to_delete(drs_to_deploy) -> set[str]:
     files_to_delete = set()
     for dr in drs_to_deploy:
@@ -221,8 +227,10 @@ def _get_files_to_delete(drs_to_deploy) -> set[str]:
 
         if os.path.isdir(dr):
             ctx = pushd(dr)
+            is_dir = True
         else:
             ctx = contextlib.nullcontext()
+            is_dir = False
 
         with ctx:
             r = subprocess.run(
@@ -238,6 +246,9 @@ def _get_files_to_delete(drs_to_deploy) -> set[str]:
                     continue
                 status, fname = res[0:2]
                 if status == "D":
+                    if is_dir:
+                        fname = _ensure_file_has_dir(fname, dr)
+                    logger.debug("deleting file: %s", fname)
                     files_to_delete.add(fname)
 
     return files_to_delete
@@ -395,6 +406,7 @@ def deploy(
         drs_to_deploy = dirs_to_deploy
 
     for dr in drs_to_deploy:
+        logger.info("checking file/directory: %s", dr)
         if not os.path.exists(dr):
             continue
 
@@ -418,11 +430,11 @@ def deploy(
             )
             # need to add the other path segment
             if is_dir:
-                _files_to_add = {os.path.join(dr, fn) for fn in _files_to_add}
+                _files_to_add = {_ensure_file_has_dir(fn, dr) for fn in _files_to_add}
+            logger.debug("adding files: %r", _files_to_add)
             files_to_add |= _files_to_add
 
             # changed
-            # these come out with the full path
             _files_to_add = set(
                 _run_git_cmd(
                     ["diff", "--name-only"] + extra_cmd,
@@ -430,6 +442,9 @@ def deploy(
                     text=True,
                 ).stdout.splitlines(),
             )
+            if is_dir:
+                _files_to_add = {_ensure_file_has_dir(fn, dr) for fn in _files_to_add}
+            logger.debug("adding files: %r", _files_to_add)
             files_to_add |= _files_to_add
 
             # modified and staged but not deleted
@@ -441,6 +456,9 @@ def deploy(
                     text=True,
                 ).stdout.splitlines(),
             )
+            if is_dir:
+                _files_to_add = {_ensure_file_has_dir(fn, dr) for fn in _files_to_add}
+            logger.debug("adding files: %r", _files_to_add)
             files_to_add |= _files_to_add
 
     files_to_delete = _get_files_to_delete(drs_to_deploy)
