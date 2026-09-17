@@ -297,8 +297,6 @@ def _deploy_via_api(
         else:
             files_done.add(pth)
 
-        time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
-
     for pth in tqdm.tqdm(
         files_to_delete, desc="deleting files", ncols=80, file=sys.stdout
     ):
@@ -318,8 +316,6 @@ def _deploy_via_api(
             files_to_try_again.add(pth)
         else:
             files_done.add(pth)
-
-        time.sleep(1.0 + RNG.uniform(-1, 1) * 0.1)
 
     for pth in files_done:
         pth_parts = pth.split("/")
@@ -352,11 +348,11 @@ def deploy(
         return
 
     # make sure the graph can load, if not it will error
-    # with lazy_json_override_backends(["file-read-only"], use_file_cache=False):
-    #     gx = load_existing_graph()
-    #     for node, attrs in gx.nodes.items():
-    #         with attrs["payload"]:
-    #             pass
+    with lazy_json_override_backends(["file-read-only"], use_file_cache=False):
+        gx = load_existing_graph()
+        for node, attrs in gx.nodes.items():
+            with attrs["payload"]:
+                pass
 
     files_to_add: set[str] = set()
     if not dirs_to_deploy:
