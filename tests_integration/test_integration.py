@@ -63,7 +63,7 @@ def global_environment_setup():
 
     new_settings = settings()
 
-    new_settings.frac_make_graph = 1.0  # do not skip nodes due to randomness
+    new_settings.frac_update_node_attrs = 1.0  # do not skip nodes due to randomness
     new_settings.frac_update_upstream_versions = 1.0
     new_settings.graph_github_backend_repo = (
         f"{GitHubAccount.REGRO_ORG}/conda-forge-bot-data"

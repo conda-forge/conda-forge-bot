@@ -56,7 +56,7 @@ class TestBotSettings:
         )
         assert bot_settings.github_runner_debug is True
         assert bot_settings.frac_update_upstream_versions == 0.5
-        assert bot_settings.frac_make_graph == 0.7
+        assert bot_settings.frac_update_node_attrs == 0.7
 
     def test_defaults(self, temporary_environment):
         os.environ.clear()
@@ -75,7 +75,7 @@ class TestBotSettings:
         assert bot_settings.versions_repo_default_branch == "main"
         assert bot_settings.github_runner_debug is False
         assert 0 <= bot_settings.frac_update_upstream_versions <= 1
-        assert 0 <= bot_settings.frac_make_graph <= 1
+        assert 0 <= bot_settings.frac_update_node_attrs <= 1
 
     def test_env_conda_forge_org(self, temporary_environment):
         os.environ.clear()

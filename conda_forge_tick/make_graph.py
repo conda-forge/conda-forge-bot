@@ -248,7 +248,7 @@ def _build_graph_process_pool(
         futures = {
             pool.submit(get_attrs, name, mark_not_archived=mark_not_archived): name
             for name in names
-            if RNG.random() <= settings().frac_make_graph
+            if RNG.random() <= settings().frac_update_node_attrs
         }
         logger.info("submitted all nodes")
 
@@ -282,7 +282,7 @@ def _build_graph_sequential(
     mark_not_archived=False,
 ) -> None:
     for name in names:
-        if RNG.random() > settings().frac_make_graph:
+        if RNG.random() > settings().frac_update_node_attrs:
             logger.debug("skipping %s due to random fraction to update", name)
             continue
 
