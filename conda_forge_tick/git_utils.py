@@ -156,7 +156,6 @@ def _generate_bot_app_token(app_id, raw_pem):
     if "GITHUB_ACTIONS" in os.environ and os.environ["GITHUB_ACTIONS"] == "true":
         sys.stdout.flush()
         print(f"::add-mask::{raw_pem}", flush=True)
-        print(f"::add-mask::{raw_pem!r}", flush=True)
 
     try:
         f = io.StringIO()
@@ -169,7 +168,6 @@ def _generate_bot_app_token(app_id, raw_pem):
             ):
                 sys.stdout.flush()
                 print(f"::add-mask::{raw_pem}", flush=True)  # type: ignore[str-bytes-safe]
-                print(f"::add-mask::{raw_pem!r}", flush=True)
 
         if isinstance(raw_pem, bytes):
             with redirect_stdout(f), redirect_stderr(f):
