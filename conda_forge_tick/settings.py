@@ -77,10 +77,10 @@ class BotSettings(BaseSettings):
     """
 
     node_attrs_github_backend_repo: str = Field(
-        "conda-forge/conda-forge-bot-data", pattern=r"^[\w\.-]+/[\w\.-]+$"
+        "conda-forge/conda-forge-bot-data-node_attrs", pattern=r"^[\w\.-]+/[\w\.-]+$"
     )
     """
-    The GitHub repository to deploy node attrs to. Default: "conda-forge/conda-forge-bot-data".
+    The GitHub repository to deploy node attrs to. Default: "conda-forge/conda-forge-bot-data-node_attrs".
     If you change the field name, you must also update the `ENV_GRAPH_NODE_ATTRS_BACKEND_REPO` constant.
     """
 
