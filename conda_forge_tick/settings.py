@@ -147,6 +147,10 @@ class BotSettings(BaseSettings):
     In tests or when debugging, you probably need to set this to 1.0 to update all feedstocks.
     """
 
+    batch_size_update_node_attrs_deploy: int = 100
+    """The batch size used to push node attrs updates to the graph as they are found.
+    """
+
     frac_update_pr_json: Fraction = 0.25
     """
     The fraction of feedstocks (randomly selected) to update in the prs job.

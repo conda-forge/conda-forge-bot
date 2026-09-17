@@ -12,6 +12,7 @@ import networkx as nx
 import psutil
 import tqdm
 
+from conda_forge_tick.deploy import deploy
 from conda_forge_tick.feedstock_parser import load_feedstock
 from conda_forge_tick.git_utils import is_tracked_by_git
 from conda_forge_tick.lazy_json_backends import (
@@ -275,6 +276,16 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
+
+            if (
+                n_left % settings().batch_size_update_node_attrs_deploy == 0
+                and n_left < n_tot
+            ):
+                try:
+                    deploy(dirs_to_deploy=["node_attrs", "version_pr_info", "pr_info"])
+                except Exception:
+                    # we'll try again later
+                    pass
 
 
 def _build_graph_sequential(
