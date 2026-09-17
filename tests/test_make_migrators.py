@@ -192,6 +192,8 @@ __migrator:
 
 def test_make_migrators_initialize_migrators():
     with tempfile.TemporaryDirectory() as tmpdir:
+        cf_graph_dir = os.path.join(tmpdir, "conda-forge-bot-data")
+
         subprocess.run(
             [
                 "git",
@@ -202,8 +204,31 @@ def test_make_migrators_initialize_migrators():
             cwd=tmpdir,
             check=True,
         )
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--depth=1",
+                "https://github.com/conda-forge/conda-forge-bot-data-node_attrs.git",
+                "node_attrs",
+            ],
+            cwd=cf_graph_dir,
+            check=True,
+        )
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--depth=1",
+                "https://github.com/conda-forge/conda-forge-bot-data-versions.git",
+                "versions",
+            ],
+            cwd=cf_graph_dir,
+            check=True,
+        )
+
         with (
-            pushd(os.path.join(tmpdir, "conda-forge-bot-data")),
+            pushd(cf_graph_dir),
             lazy_json_override_backends(["file"], use_file_cache=True),
         ):
             gx = load_graph()
