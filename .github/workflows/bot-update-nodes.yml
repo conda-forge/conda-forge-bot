@@ -1,6 +1,7 @@
 name: bot-update-nodes
 
 on:
+  pull_request: null
   workflow_dispatch: null
   schedule:
     - cron: '15 * * * *'
@@ -41,7 +42,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ steps.latest_release.outputs.tag_name }}
+          ref: ${{ case(github.event_name != 'pull_request', steps.latest_release.outputs.tag_name, '') }}
           path: conda-forge-bot
 
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
@@ -51,14 +52,21 @@ jobs:
           condarc-file: conda-forge-bot/autotick-bot/condarc
 
       - name: do local setup and stop me if needed
+        if: github.event_name != 'pull_request'
         run: |
           cd conda-forge-bot
           python autotick-bot/stop_me_if_needed.py
 
+      - name: do not skip
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "CI_SKIP=" >> "$GITHUB_ENV"
+
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          source conda-forge-bot/autotick-bot/install_bot_code.sh
+          source conda-forge-bot/autotick-bot/install_bot_code.sh \
+            ${{ case(github.event_name == 'pull_request', '--no-pull-container', '') }}
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
@@ -83,7 +91,7 @@ jobs:
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
 
       - name: deploy
-        if: github.ref == 'refs/heads/main' && always() && ! env.CI_SKIP
+        if: (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') && always() && ! env.CI_SKIP
         run: |
           pushd cf-graph
 
