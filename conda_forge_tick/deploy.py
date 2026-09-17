@@ -228,13 +228,15 @@ def _get_files_to_delete(drs_to_deploy) -> set[str]:
         if os.path.isdir(dr):
             ctx = pushd(dr)
             is_dir = True
+            extra_cmd = ["."]
         else:
             ctx = contextlib.nullcontext()
             is_dir = False
+            extra_cmd = [dr]
 
         with ctx:
             r = subprocess.run(
-                ["git", "diff", "--name-status", "--cached", "."],
+                ["git", "diff", "--name-status", "--cached"] + extra_cmd,
                 text=True,
                 capture_output=True,
                 check=True,

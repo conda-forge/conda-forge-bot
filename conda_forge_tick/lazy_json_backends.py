@@ -69,6 +69,9 @@ HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT = "graph_github_backend_repo"
 HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING = {
     "versions": "versions_github_backend_repo",
     "node_attrs": "node_attrs_github_backend_repo",
+    # things without a directory always use the default
+    "lazy_json": HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT,
+    "": HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT,
 }
 
 
@@ -108,6 +111,19 @@ def get_sharded_path(file_path, n_dirs=CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS):
         hx = hashlib.sha1(file_name.encode("utf-8")).hexdigest()[0:n_dirs]
         pth_parts = [top_dir] + [hx[i] for i in range(n_dirs)] + [file_name]
         return os.path.join(*pth_parts)
+
+
+def get_sharded_path_and_trim_hashmap_name_if_needed(name, key):
+    """Compute a sharded location for the LazyJson file and trim first path segment if needed."""
+    pth = get_sharded_path(f"{name}/{key}.json")
+
+    # we need to remove the first dir if the repo is not the default one
+    repo_url = get_github_backend_repo_for_hashmap(name)
+    default_repo_url = get_github_backend_repo_for_hashmap("lazy_json")
+    if repo_url != default_repo_url:
+        pth = pth.split("/")
+        pth = "/".join(pth[1:])
+    return pth
 
 
 class LazyJsonBackend(ABC):
@@ -297,19 +313,6 @@ class ReadOnlyFileLazyJsonBackend(FileLazyJsonBackend):
 
     def hdel(self, name: str, keys: Iterable[str]) -> None:
         self._ignore_write()
-
-
-def get_sharded_path_and_trim_hashmap_name_if_needed(name, key):
-    """Compute a sharded location for the LazyJson file and trim first path segment if needed."""
-    pth = get_sharded_path(f"{name}/{key}.json")
-
-    # we need to remove the first dir if the repo is not the default one
-    repo_url = get_github_backend_repo_for_hashmap(name)
-    default_repo_url = get_github_backend_repo_for_hashmap("lazy_json")
-    if repo_url != default_repo_url:
-        pth = pth.split("/")
-        pth = "/".join(pth[1:])
-    return pth
 
 
 class GithubLazyJsonBackend(LazyJsonBackend):
