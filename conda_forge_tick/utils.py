@@ -1475,8 +1475,7 @@ def load_existing_graph(filename: str = DEFAULT_GRAPH_FILENAME) -> nx.DiGraph:
     """
     gx = load_graph(filename)
     if gx is None:
-        gx = nx.DiGraph()
-        # raise ValueError(f"Graph file {filename} contains empty JSON")
+        raise ValueError(f"Graph file {filename} contains empty JSON")
     return gx
 
 
