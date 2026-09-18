@@ -170,6 +170,12 @@ def _migrate_schema(name, sub_graph):
         with lazy_json_transaction():
             sub_graph.pop("last_updated")
 
+    if "ci_support_migrations" in sub_graph and isinstance(
+        sub_graph["ci_support_migratoons"], list
+    ):
+        with lazy_json_transaction():
+            sub_graph.pop("ci_support_migrations")
+
     vpri_move_keys = [
         "new_version_attempts",
         "new_version_errors",
