@@ -39,17 +39,8 @@ from conda_forge_tick.lazy_json_backends import (
 )
 from conda_forge_tick.os_utils import override_env, pushd
 
-HAVE_MONGODB = (
-    "MONGODB_CONNECTION_STRING" in conda_forge_tick.global_sensitive_env.classified_info
-    and conda_forge_tick.global_sensitive_env.classified_info[
-        "MONGODB_CONNECTION_STRING"
-    ]
-    is not None
-)
 
-
-@pytest.mark.skipif(not HAVE_MONGODB, reason="no mongodb")
-@pytest.mark.mongodb
+# FIXME: need to do this with a git repo
 def test_lazy_json_override_backends_global(tmpdir):
     old_backend = conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
     with pushd(tmpdir):
@@ -150,8 +141,7 @@ def test_lazy_json_override_backends_global(tmpdir):
             )
 
 
-@pytest.mark.skipif(not HAVE_MONGODB, reason="no mongodb")
-@pytest.mark.mongodb
+# FIXME: need to do this with a git repo
 def test_lazy_json_override_backends_global_nocache(tmpdir):
     old_backend = conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
     with pushd(tmpdir):
@@ -210,7 +200,7 @@ def test_lazy_json_override_backends_global_nocache(tmpdir):
             )
 
 
-@pytest.mark.skipif(not HAVE_MONGODB, reason="no mongodb")
+# FIXME: need to do this with a git repo
 @pytest.mark.parametrize(
     "backends",
     [
@@ -218,7 +208,6 @@ def test_lazy_json_override_backends_global_nocache(tmpdir):
         ("mongodb", "file"),
     ],
 )
-@pytest.mark.mongodb
 def test_lazy_json_backends_sync(backends, tmpdir):
     old_backend = conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
     with pushd(tmpdir):
@@ -263,16 +252,6 @@ def test_lazy_json_backends_sync(backends, tmpdir):
     "backend",
     [
         "file",
-        pytest.param(
-            "mongodb",
-            marks=[
-                pytest.mark.skipif(
-                    not HAVE_MONGODB,
-                    reason="no mongodb",
-                ),
-                pytest.mark.mongodb,
-            ],
-        ),
         "primary",
     ],
 )
@@ -337,16 +316,6 @@ def test_lazy_json_backends_ops(backend, hashmap, tmpdir):
     "backend",
     [
         "file",
-        pytest.param(
-            "mongodb",
-            marks=[
-                pytest.mark.skipif(
-                    not HAVE_MONGODB,
-                    reason="no mongodb",
-                ),
-                pytest.mark.mongodb,
-            ],
-        ),
     ],
 )
 def test_lazy_json_backends_contexts(backend):
@@ -429,16 +398,6 @@ def test_lazy_json_backends_dump_load(tmpdir):
     "backend",
     [
         "file",
-        pytest.param(
-            "mongodb",
-            marks=[
-                pytest.mark.skipif(
-                    not HAVE_MONGODB,
-                    reason="no mongodb",
-                ),
-                pytest.mark.mongodb,
-            ],
-        ),
     ],
 )
 def test_lazy_json(tmpdir, backend):

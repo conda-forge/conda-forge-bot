@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import base64
 import contextlib
-import functools
 import glob
 import hashlib
 import logging
@@ -698,165 +697,9 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         assert False, "There is at least one try, so this cannot be reached."
 
 
-@functools.lru_cache(maxsize=128)
-def _get_graph_data_mongodb_client_cached(pid):
-    import pymongo
-    from pymongo import MongoClient
-
-    from . import sensitive_env
-
-    with sensitive_env() as env:
-        client = MongoClient(env.get("MONGODB_CONNECTION_STRING", ""))
-
-    db = client["cf_graph"]
-    for hashmap in CF_TICK_GRAPH_DATA_HASHMAPS + ["lazy_json"]:
-        if hashmap not in db.list_collection_names():
-            coll = db.create_collection(hashmap)
-            coll.create_index(
-                [("node", pymongo.ASCENDING)],
-                background=True,
-                unique=True,
-            )
-
-    return client
-
-
-def get_graph_data_mongodb_client():
-    return _get_graph_data_mongodb_client_cached(str(os.getpid()))
-
-
-class MongoDBLazyJsonBackend(LazyJsonBackend):
-    _session: Any = None
-    _snapshot_session: Any = None
-
-    @contextlib.contextmanager
-    def transaction_context(self) -> Iterator[Self]:
-        try:
-            if self.__class__._session is None:
-                client = get_graph_data_mongodb_client()
-                with client.start_session() as session:
-                    with session.start_transaction():
-                        self.__class__._session = session
-                        yield self
-                        self.__class__._session = None
-            else:
-                yield self
-        finally:
-            self.__class__._session = None
-
-    @contextlib.contextmanager
-    def snapshot_context(self) -> Iterator[Self]:
-        try:
-            if self.__class__._snapshot_session is None:
-                client = get_graph_data_mongodb_client()
-                if "Single" not in client.topology_description.topology_type_name:
-                    with client.start_session(snapshot=True) as session:
-                        self.__class__._snapshot_session = session
-                        yield self
-                        self.__class__._snapshot_session = None
-                else:
-                    yield self
-            else:
-                yield self
-        finally:
-            self.__class__._snapshot_session = None
-
-    def hgetall(self, name, hashval=False):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        if hashval:
-            curr = coll.find(
-                {},
-                {"node": 1, "sha256": 1},
-                session=self.__class__._snapshot_session,
-            )
-            return {d["node"]: d["sha256"] for d in curr}
-        else:
-            curr = coll.find({}, session=self.__class__._snapshot_session)
-            return {d["node"]: dumps(d["value"]) for d in curr}
-
-    def _get_collection(self, name):
-        return get_graph_data_mongodb_client()["cf_graph"][name]
-
-    def hexists(self, name, key):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        num = coll.count_documents({"node": key}, session=self.__class__._session)
-        return num == 1
-
-    def hset(self, name, key, value):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        coll.update_one(
-            {"node": key},
-            {
-                "$set": {
-                    "node": key,
-                    "value": orjson.loads(value),
-                    "sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
-                },
-            },
-            upsert=True,
-            session=self.__class__._session,
-        )
-
-    def hmset(self, name, mapping):
-        from pymongo import UpdateOne
-
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        coll.bulk_write(
-            [
-                UpdateOne(
-                    {"node": key},
-                    {
-                        "$set": {
-                            "node": key,
-                            "value": orjson.loads(value),
-                            "sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
-                        },
-                    },
-                    upsert=True,
-                )
-                for key, value in mapping.items()
-            ],
-            session=self.__class__._session,
-        )
-
-    def hmget(self, name, keys):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        cur = coll.find(
-            {"node": {"$in": list(keys)}},
-            session=self.__class__._session,
-        )
-        odata = {d["node"]: dumps(d["value"]) for d in cur}
-        return [odata[k] for k in keys]
-
-    def hdel(self, name, keys):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        for key in keys:
-            coll.delete_one({"node": key}, session=self.__class__._session)
-
-    def hkeys(self, name):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        curr = coll.find({}, {"node": 1}, session=self.__class__._session)
-        return [doc["node"] for doc in curr]
-
-    def hget(self, name, key):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        data = coll.find_one({"node": key}, session=self.__class__._session)
-        assert data is not None
-        return dumps(data["value"])
-
-
 LAZY_JSON_BACKENDS: dict[str, type[LazyJsonBackend]] = {
     "file": FileLazyJsonBackend,
     "file-read-only": ReadOnlyFileLazyJsonBackend,
-    "mongodb": MongoDBLazyJsonBackend,
     "github": GithubLazyJsonBackend,
     "github_api": GithubAPILazyJsonBackend,
 }
@@ -983,35 +826,6 @@ def sync_lazy_json_across_backends(batch_size=5000, keys_to_sync=None):
                 writer=_write_and_flush,
                 keys_to_sync=keys_to_sync,
             )
-
-        # if mongodb has better performance we do this
-        # only certain collections need to be updated in a single transaction
-        # all_collections = set(CF_TICK_GRAPH_DATA_HASHMAPS + ["lazy_json"])
-        # pr_collections = {"pr_info", "pr_json", "version_pr_info"}
-        # node_collections = {"node_attrs", "lazy_json"}
-        # parallel_collections = all_collections - pr_collections - node_collections
-
-        # for collection_set in [pr_collections, node_collections]:
-        #     with primary_backend.snapshot_context():
-        #         with tqdm.tqdm(
-        #             collection_set,
-        #             ncols=80,
-        #             desc="syncing %r" % collection_set,
-        #         ) as pbar:
-        #             for hashmap in pbar:
-        #                 tqdm.tqdm.write("SYNCING %s" % hashmap)
-        #                 _flush_it()
-        #                 _sync_hashmap(hashmap, batch_size, primary_backend)
-
-        # with tqdm.tqdm(
-        #     parallel_collections,
-        #     ncols=80,
-        #     desc="syncing %r" % parallel_collections,
-        # ) as pbar:
-        #     for hashmap in pbar:
-        #         tqdm.tqdm.write("SYNCING %s" % hashmap)
-        #         _flush_it()
-        #         _sync_hashmap(hashmap, batch_size, primary_backend)
 
 
 def remove_key_for_hashmap(name, node):

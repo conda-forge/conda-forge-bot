@@ -156,7 +156,7 @@ def test_graph():
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",
-        "mongodb: mark tests that run with mongodb",
+        "serial: mark tests that run serially",
     )
 
 
