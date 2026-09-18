@@ -3,7 +3,7 @@ name: bot-keepalive
 on:
   workflow_dispatch: null
   schedule:
-    - cron: '15 * * * *'
+    - cron: '0-59/15 * * * *'
 
 concurrency: bot-keepalive
 
