@@ -2,7 +2,7 @@ name: bot-versions
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '12-59/15 * * * *'
   workflow_dispatch: null
 
 concurrency: versions

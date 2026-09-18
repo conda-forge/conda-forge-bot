@@ -3,7 +3,7 @@ name: bot-make-graph
 on:
   workflow_dispatch: null
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '2-59/15 * * * *'
 
 concurrency: bot-make-graph
 
@@ -102,11 +102,3 @@ jobs:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           RUN_ID: ${{ github.run_id }}
           ACTION_NAME: ${{ github.workflow }}
-
-      - name: trigger next job
-        uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2
-        if: github.ref == 'refs/heads/main' && ! cancelled() && ! failure() && ! env.CI_SKIP
-        with:
-          workflow: bot-make-graph
-          ref: ${{ github.event.ref || github.head_ref || github.ref }}
-          token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}

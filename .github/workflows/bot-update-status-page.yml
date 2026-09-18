@@ -3,7 +3,7 @@ name: bot-update-status-page
 on:
   workflow_dispatch: null
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '10-59/15 * * * *'
 
 concurrency: update-status-page
 
@@ -90,11 +90,3 @@ jobs:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           RUN_ID: ${{ github.run_id }}
           ACTION_NAME: ${{ github.workflow }}
-
-      - name: trigger status page
-        uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2
-        if: github.ref == 'refs/heads/main' && ! cancelled() && ! failure() && ! env.CI_SKIP
-        with:
-          workflow: bot-update-status-page
-          ref: ${{ github.event.ref || github.head_ref || github.ref }}
-          token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
