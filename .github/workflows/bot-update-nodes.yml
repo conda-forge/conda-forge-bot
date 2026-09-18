@@ -54,13 +54,15 @@ jobs:
           build-args: |
             SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1
 
-      - name: push image to docker
+      - name: push docker image to quay.io
         if: ${{ github.event_name == 'pull_request' }}
         uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3.0.0
         with:
           image: conda-forge-tick
           tags: test-update-nodes
-          registry: "docker-daemon:docker.io/library"
+          registry: quay.io/condaforge
+          username: conda_forge_daemon
+          password: ${{ secrets.CF_DAEMON_QUAY_PASSWORD }}
 
   update-nodes:
     name: update-nodes
@@ -111,7 +113,7 @@ jobs:
           cd conda-forge-bot
           python autotick-bot/stop_me_if_needed.py
 
-      - name: do not skip
+      - name: do not skip for pull requests
         if: github.event_name == 'pull_request'
         run: |
           echo "CI_SKIP=" >> "$GITHUB_ENV"
@@ -225,7 +227,7 @@ jobs:
           cd conda-forge-bot
           python autotick-bot/stop_me_if_needed.py
 
-      - name: do not skip
+      - name: do not skip for pull requests
         if: github.event_name == 'pull_request'
         run: |
           echo "CI_SKIP=" >> "$GITHUB_ENV"
