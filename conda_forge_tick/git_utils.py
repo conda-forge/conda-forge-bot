@@ -153,31 +153,24 @@ def _generate_bot_app_token(app_id, raw_pem):
     gh_token : str
         The github token. May return None if there is an error.
     """
-    if "GITHUB_ACTIONS" in os.environ and os.environ["GITHUB_ACTIONS"] == "true":
-        sys.stdout.flush()
-        print(f"::add-mask::{raw_pem}", flush=True)
-
     try:
         f = io.StringIO()
-        if raw_pem[0:1] != b"-":
-            with redirect_stdout(f), redirect_stderr(f):
+        mask_me = False
+        with redirect_stdout(f), redirect_stderr(f):
+            if raw_pem[0:1] != b"-":
                 raw_pem = base64.b64decode(raw_pem)
-            if (
-                "GITHUB_ACTIONS" in os.environ
-                and os.environ["GITHUB_ACTIONS"] == "true"
-            ):
-                sys.stdout.flush()
-                print(f"::add-mask::{raw_pem}", flush=True)  # type: ignore[str-bytes-safe]
-
-        if isinstance(raw_pem, bytes):
-            with redirect_stdout(f), redirect_stderr(f):
+                mask_me = True
+            if isinstance(raw_pem, bytes):
                 raw_pem = raw_pem.decode()
-            if (
-                "GITHUB_ACTIONS" in os.environ
-                and os.environ["GITHUB_ACTIONS"] == "true"
-            ):
-                sys.stdout.flush()
-                print(f"::add-mask::{raw_pem}", flush=True)
+                mask_me = True
+
+        if (
+            "GITHUB_ACTIONS" in os.environ
+            and os.environ["GITHUB_ACTIONS"] == "true"
+            and mask_me
+        ):
+            sys.stdout.flush()
+            print(f"::add-mask::{raw_pem}", flush=True)  # type: ignore[str-bytes-safe]
 
         with redirect_stdout(f), redirect_stderr(f):
             gh_auth = github.Auth.AppAuth(app_id=app_id, private_key=raw_pem)
