@@ -141,7 +141,7 @@ class BotSettings(BaseSettings):
     """The batch size used to push upstream version updates to the graph as they are found.
     """
 
-    frac_update_node_attrs: Fraction = 0.001
+    frac_update_node_attrs: Fraction = 0.01
     """
     The fraction of feedstocks (randomly selected) to update the node attrs in the update nodes job.
     In tests or when debugging, you probably need to set this to 1.0 to update all feedstocks.
