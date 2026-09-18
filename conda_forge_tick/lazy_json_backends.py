@@ -86,7 +86,7 @@ def get_github_backend_repo_for_hashmap(hashmap_name: str) -> str:
     )
 
 
-def make_lazy_json_retry_sequence(num_tries=50, base=4, factor=1, max_wait=600):
+def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=1, max_wait=600):
     def _func():
         for i in range(num_tries):
             start = factor * (base ** (i - 1))
