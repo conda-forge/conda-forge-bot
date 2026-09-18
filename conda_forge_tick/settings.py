@@ -130,28 +130,20 @@ class BotSettings(BaseSettings):
     https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
     """
 
-    frac_update_upstream_versions: Fraction = 1.0
+    frac_update_upstream_versions: Fraction = 0.1
     """
     The fraction of feedstocks (randomly selected) to update in the update-upstream-versions job.
     This is currently only respected when running concurrently (via process pool), not in sequential mode.
     Therefore, you don't need to set this when debugging locally.
     """
 
-    batch_size_update_upstream_versions_deploy: int = 10
-    """The batch size used to push upstream version updates to the graph as they are found.
-    """
-
-    frac_update_node_attrs: Fraction = 0.05
+    frac_update_node_attrs: Fraction = 0.1
     """
     The fraction of feedstocks (randomly selected) to update the node attrs in the update nodes job.
     In tests or when debugging, you probably need to set this to 1.0 to update all feedstocks.
     """
 
-    batch_size_update_node_attrs_deploy: int = 100
-    """The batch size used to push node attrs updates to the graph as they are found.
-    """
-
-    frac_update_pr_json: Fraction = 0.25
+    frac_update_pr_json: Fraction = 0.1
     """
     The fraction of feedstocks (randomly selected) to update in the prs job.
     In tests or when debugging, you probably need to set this to 1.0 to update all feedstocks.

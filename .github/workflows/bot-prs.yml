@@ -3,7 +3,7 @@ name: bot-prs
 on:
   workflow_dispatch: null
   schedule:
-    - cron: '15 * * * *'
+    - cron: '*/15 * * * *'
 
 concurrency: prs
 
@@ -92,58 +92,6 @@ jobs:
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
-
-      - name: bump on fail
-        if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
-        run: |
-          export ACTION_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-          python conda-forge-bot/autotick-bot/bump_bot_team.py
-        env:
-          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
-          RUN_ID: ${{ github.run_id }}
-          ACTION_NAME: ${{ github.workflow }}
-
-  prs-trigger:
-    needs: prs
-    name: prs-trigger
-    runs-on: "ubuntu-latest"
-    defaults:
-      run:
-        shell: bash -leo pipefail {0}
-
-    steps:
-      - name: free disk space
-        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
-        with:
-          remove_android: true
-          remove_dotnet: true
-          remove_haskell: true
-          rm_cmd: "rmz"
-
-      - name: get latest release
-        id: latest_release
-        run: |
-          tag_name=$(gh api repos/conda-forge/conda-forge-bot/releases/latest --jq '.tag_name')
-          echo "latest release: ${tag_name}"
-          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ steps.latest_release.outputs.tag_name }}
-          path: conda-forge-bot
-
-      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
-        with:
-          environment-file: conda-forge-bot/conda-lock.yml
-          environment-name: conda-forge-bot
-          condarc-file: conda-forge-bot/autotick-bot/condarc
-
-      - name: do local setup and stop me if needed
-        run: |
-          cd conda-forge-bot
-          python autotick-bot/stop_me_if_needed.py
 
       - name: bump on fail
         if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP

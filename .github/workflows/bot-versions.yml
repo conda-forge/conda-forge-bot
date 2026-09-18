@@ -2,7 +2,7 @@ name: bot-versions
 
 on:
   schedule:
-    - cron: '15,45 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch: null
 
 concurrency: versions
@@ -80,18 +80,18 @@ jobs:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
 
-      # - name: deploy
-      #   if: github.ref == 'refs/heads/main' && ! cancelled() && ! env.CI_SKIP
-      #   run: |
-      #     pushd cf-graph
+      - name: deploy
+        if: github.ref == 'refs/heads/main' && ! cancelled() && ! env.CI_SKIP
+        run: |
+          pushd cf-graph
 
-      #     export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-      #     conda-forge-tick deploy-to-github
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
-      #     BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
-      #     BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
-      #     RUN_ID: ${{ github.run_id }}
+          export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
+          conda-forge-tick deploy-to-github --dirs-to-deploy=versions
+        env:
+          BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
+          BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
+          BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
+          RUN_ID: ${{ github.run_id }}
 
       - name: bump on fail
         if: github.ref == 'refs/heads/main' && failure() && ! env.CI_SKIP
