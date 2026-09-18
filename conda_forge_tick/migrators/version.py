@@ -17,6 +17,7 @@ from conda.models.version import VersionOrder
 from conda_forge_feedstock_ops.update_version import update_version
 from rattler_build_conda_compat.loader import load_yaml
 
+from conda_forge_tick.config_schema import BotConfig
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
 from conda_forge_tick.migrators.core import Migrator
 from conda_forge_tick.migrators_types import (
@@ -422,7 +423,7 @@ class Version(Migrator):
             feedstock_ctx.attrs,
             ["conda-forge.yml", "bot", "inspection"],
             {},
-            "hint",
+            BotConfig().inspection,
         )
         logger.info("bot.inspection: %s", update_deps)
 

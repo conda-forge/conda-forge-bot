@@ -165,10 +165,8 @@ class BotConfig(BaseModel):
         # the bots behaviour for automatic dependency updates:
         inspection: hint  # generate hints using source code (backwards compatible)
         inspection: hint-all  # generate hints using all methods
-        inspection: hint-source  # generate hints using only source code
         inspection: hint-grayskull  # generate hints using only grayskull
         inspection: update-all  # update recipe using all methods
-        inspection: update-source  # update recipe using only source code
         inspection: update-grayskull  # update recipe using only grayskull
         inspection: disabled # don't update recipe, don't generate hints
 
@@ -207,7 +205,7 @@ class BotConfig(BaseModel):
     )
 
     inspection: BotConfigInspectionChoice | None = Field(
-        default="hint",
+        default="disabled",
         description="Method for generating hints or updating recipe",
     )
 
