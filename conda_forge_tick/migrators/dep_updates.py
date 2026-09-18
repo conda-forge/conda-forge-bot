@@ -2,6 +2,7 @@ import logging
 import typing
 from typing import Any
 
+from conda_forge_tick.config_schema import BotConfig
 from conda_forge_tick.migrators.core import MiniMigrator, skip_migrator_due_to_schema
 from conda_forge_tick.update_deps import apply_dep_update, get_dep_updates_and_hints
 from conda_forge_tick.utils import get_keys_default
@@ -30,9 +31,9 @@ class DependencyUpdateMigrator(MiniMigrator):
             attrs,
             ["conda-forge.yml", "bot", "inspection"],
             {},
-            "hint",
+            BotConfig().inspection,
         )
-        if update_deps in ["update-all", "update-source", "update-grayskull"]:
+        if update_deps in ["update-all", "update-grayskull"]:
             return False or skip_migrator_due_to_schema(
                 attrs, self.allowed_schema_versions
             )
@@ -44,7 +45,7 @@ class DependencyUpdateMigrator(MiniMigrator):
             attrs,
             ["conda-forge.yml", "bot", "inspection"],
             {},
-            "hint",
+            BotConfig().inspection,
         )
         logger.info("bot.inspection: %s", update_deps)
         try:
