@@ -219,41 +219,86 @@ def _ensure_file_has_dir(pth, dr):
     return pth
 
 
-def _get_files_to_delete(drs_to_deploy) -> set[str]:
+def _parse_git_status_output(lines):
     files_to_delete = set()
-    for dr in drs_to_deploy:
-        if not os.path.exists(dr):
-            continue
+    files_to_add = set()
+    git_subdirs_to_check = set()
+    for line in lines:
+        status, fname = (p.strip() for p in line.split())
 
-        if os.path.isdir(dr):
-            ctx = pushd(dr)
-            is_dir = True
-            extra_cmd = ["."]
+        if status.lower() == "d":
+            # deleted
+            files_to_delete.add(fname)
+        elif status.lower() == "m":
+            # modified
+            files_to_add.add(fname)
         else:
-            ctx = contextlib.nullcontext()
-            is_dir = False
-            extra_cmd = [dr]
+            if fname.endswith("/"):
+                # untracked but is git subdir
+                git_subdirs_to_check.add(fname[:-1])
+            else:
+                # untracked
+                files_to_add.add(fname)
 
-        with ctx:
-            r = subprocess.run(
-                ["git", "diff", "--name-status", "--cached"] + extra_cmd,
-                text=True,
-                capture_output=True,
-                check=True,
-                timeout=GIT_CMD_TIMEOUT,
+    return files_to_add, files_to_delete, git_subdirs_to_check
+
+
+def _get_files_to_push_or_delete(drs_to_deploy):
+    files_to_add, files_to_delete, git_subdirs_to_check = set(), set(), set()
+    for dr in drs_to_deploy:
+        lines = _run_git_cmd(
+            ["status", "--porcelain", "-uall", dr],
+            text=True,
+            capture_output=True,
+        ).stdout.splitlines()
+
+        _files_to_add, _files_to_delete, _git_subdirs_to_check = (
+            _parse_git_status_output(lines)
+        )
+        if dr not in _git_subdirs_to_check:
+            logger.info("git status: %s", dr)
+            logger.info(
+                "files to add:%s",
+                "\n  " + "\n  ".join(_files_to_add) if _files_to_add else "",
             )
-            for line in r.stdout.splitlines():
-                res = line.strip().split()
-                if len(res) < 2:
-                    continue
-                status, fname = res[0:2]
-                if status == "D":
-                    if is_dir:
-                        fname = _ensure_file_has_dir(fname, dr)
-                    logger.debug("deleting file: %s", fname)
-                    files_to_delete.add(fname)
+            logger.info(
+                "files to del:%s",
+                "\n  " + "\n  ".join(_files_to_delete) if _files_to_delete else "",
+            )
+            _flush_io()
+        files_to_add |= _files_to_add
+        files_to_delete |= _files_to_delete
+        git_subdirs_to_check |= _git_subdirs_to_check
 
-    return files_to_delete
+    for dr in git_subdirs_to_check:
+        logger.info("git status: %s", dr)
+        lines = _run_git_cmd(
+            ["status", "--porcelain", "-uall"],
+            text=True,
+            capture_output=True,
+            cwd=dr,
+        ).stdout.splitlines()
+        _files_to_add, _files_to_delete, _git_subdirs_to_check = (
+            _parse_git_status_output(lines)
+        )
+        assert _git_subdirs_to_check == set(), (
+            f"Found recursive git subdirs! curr={dr} subdirs={_git_subdirs_to_check}"
+        )
+        _files_to_add = {_ensure_file_has_dir(fn, dr) for fn in _files_to_add}
+        _files_to_delete = {_ensure_file_has_dir(fn, dr) for fn in _files_to_delete}
+        logger.info(
+            "files to add:%s",
+            "\n  " + "\n  ".join(_files_to_add) if _files_to_add else "",
+        )
+        logger.info(
+            "files to del:%s",
+            "\n  " + "\n  ".join(_files_to_delete) if _files_to_delete else "",
+        )
+        _flush_io()
+        files_to_add |= _files_to_add
+        files_to_delete |= _files_to_delete
+
+    return files_to_add, files_to_delete
 
 
 def _get_pth_commit_message(pth):
@@ -287,6 +332,10 @@ def _get_full_repo_name_pth_and_context_from_path(pth):
         context_dir = None
 
     return repo, pth, context_dir
+
+
+def _is_git_dir(dr):
+    return os.path.isdir(dr) and os.path.isdir(os.path.join(dr, ".git"))
 
 
 def _deploy_via_api(
@@ -351,16 +400,13 @@ def _deploy_via_api(
 
     for pth in files_done:
         pth_parts = pth.split("/")
-        if len(pth_parts) > 1:
+        if len(pth_parts) > 1 and _is_git_dir(pth_parts[0]):
             dr = pth_parts[0]
             pth_to_restore = "/".join(pth_parts[1:])
+            ctx = pushd(dr)
         else:
             dr = pth
             pth_to_restore = pth
-
-        if os.path.isdir(dr):
-            ctx = pushd(dr)
-        else:
             ctx = contextlib.nullcontext()
 
         with ctx:
@@ -386,7 +432,6 @@ def deploy(
             with attrs["payload"]:
                 pass
 
-    files_to_add: set[str] = set()
     if not dirs_to_deploy:
         drs_to_deploy = [
             "status",
@@ -407,63 +452,7 @@ def deploy(
             )
         drs_to_deploy = dirs_to_deploy
 
-    for dr in drs_to_deploy:
-        logger.info("checking file/directory: %s", dr)
-        if not os.path.exists(dr):
-            continue
-
-        if os.path.isdir(dr):
-            is_dir = True
-            ctx = pushd(dr)
-            extra_cmd = ["."]
-        else:
-            is_dir = False
-            ctx = contextlib.nullcontext()
-            extra_cmd = [dr]
-
-        with ctx:
-            # untracked
-            _files_to_add = set(
-                _run_git_cmd(
-                    ["ls-files", "-o", "--exclude-standard"] + extra_cmd,
-                    capture_output=True,
-                    text=True,
-                ).stdout.splitlines(),
-            )
-            # need to add the other path segment
-            if is_dir:
-                _files_to_add = {_ensure_file_has_dir(fn, dr) for fn in _files_to_add}
-            logger.debug("adding files: %r", _files_to_add)
-            files_to_add |= _files_to_add
-
-            # changed
-            _files_to_add = set(
-                _run_git_cmd(
-                    ["diff", "--name-only"] + extra_cmd,
-                    capture_output=True,
-                    text=True,
-                ).stdout.splitlines(),
-            )
-            if is_dir:
-                _files_to_add = {_ensure_file_has_dir(fn, dr) for fn in _files_to_add}
-            logger.debug("adding files: %r", _files_to_add)
-            files_to_add |= _files_to_add
-
-            # modified and staged but not deleted
-            # these come out with the full path
-            _files_to_add = set(
-                _run_git_cmd(
-                    ["diff", "--name-only", "--cached", "--diff-filter=d"] + extra_cmd,
-                    capture_output=True,
-                    text=True,
-                ).stdout.splitlines(),
-            )
-            if is_dir:
-                _files_to_add = {_ensure_file_has_dir(fn, dr) for fn in _files_to_add}
-            logger.debug("adding files: %r", _files_to_add)
-            files_to_add |= _files_to_add
-
-    files_to_delete = _get_files_to_delete(drs_to_deploy)
+    files_to_add, files_to_delete = _get_files_to_push_or_delete(drs_to_deploy)
 
     if dirs_to_ignore:
         print("ignoring dirs:", dirs_to_ignore, flush=True)
