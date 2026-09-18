@@ -277,16 +277,17 @@ def test_lazy_json_backends_sync(backends, tmpdir):
     ],
 )
 def test_lazy_json_backends_ops(backend, hashmap, tmpdir):
-    if backend == "primary":
-        be = PrimaryLazyJsonBackend()
-    else:
-        be = LAZY_JSON_BACKENDS[backend]()
     key = "blah"
     value = dumps({"a": 1, "b": 2})
     key_again = "blahblah"
     value_again = dumps({"a": 1, "b": 2, "c": 3})
 
     with pushd(tmpdir):
+        if backend == "primary":
+            be = PrimaryLazyJsonBackend()
+        else:
+            be = LAZY_JSON_BACKENDS[backend]()
+
         try:
             assert not be.hexists(hashmap, key)
             assert be.hkeys(hashmap) == []
