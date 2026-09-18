@@ -276,18 +276,6 @@ def _build_graph_process_pool(
                     exc_info=e,
                 )
 
-            # TODO: this appears to possibly cause bugs with new split repos so not
-            # running it for now
-            # if (
-            #     n_left % settings().batch_size_update_node_attrs_deploy == 0
-            #     and n_left < n_tot
-            # ):
-            #     try:
-            #         deploy(dirs_to_deploy=["node_attrs", "version_pr_info", "pr_info"])
-            #     except Exception:
-            #         # we'll try again later
-            #         pass
-
 
 def _build_graph_sequential(
     names: list[str],

@@ -20,7 +20,6 @@ from conda_forge_feedstock_ops.container_utils import (
 )
 
 from conda_forge_tick.cli_context import CliContext
-from conda_forge_tick.deploy import deploy
 from conda_forge_tick.executors import executor
 from conda_forge_tick.lazy_json_backends import LazyJson, dumps
 from conda_forge_tick.settings import (
@@ -420,7 +419,6 @@ def _update_upstream_versions_process_pool(
 
         n_tot = len(futures)
         n_left = len(futures)
-        n_changed = 0
         start = time.time()
         # eta :: elapsed time average
         eta = -1.0
@@ -459,30 +457,8 @@ def _update_upstream_versions_process_pool(
             # writing out file
             lazyjson = LazyJson(f"versions/{node}.json")
             with lazyjson as version_attrs:
-                changed = version_attrs.data != version_data
                 version_attrs.clear()
                 version_attrs.update(version_data)
-
-            if changed:
-                n_changed += 1
-
-            if n_changed == settings().batch_size_update_upstream_versions_deploy:
-                try:
-                    deploy(dirs_to_deploy=["versions"])
-                except Exception:
-                    # we will try again later
-                    pass
-                else:
-                    n_changed = 0
-
-    if n_changed > 0:
-        try:
-            deploy(dirs_to_deploy=["versions"])
-        except Exception:
-            # we will try again later
-            pass
-        else:
-            n_changed = 0
 
 
 @functools.lru_cache(maxsize=1)
