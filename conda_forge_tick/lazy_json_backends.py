@@ -235,15 +235,11 @@ class FileLazyJsonBackend(LazyJsonBackend):
         yield self
 
     def hexists(self, name: str, key: str) -> bool:
-        pth = get_sharded_path(f"{name}/{key}.json")
-        if self._cwd is not None:
-            pth = os.path.join(self._cwd, pth)
+        pth = os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
         return os.path.exists(pth)
 
     def hset(self, name: str, key: str, value: str) -> None:
-        sharded_path = get_sharded_path(f"{name}/{key}.json")
-        if self._cwd is not None:
-            sharded_path = os.path.join(self._cwd, sharded_path)
+        sharded_path = os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
 
         if os.path.split(sharded_path)[0]:
             os.makedirs(os.path.split(sharded_path)[0], exist_ok=True)
@@ -273,11 +269,10 @@ class FileLazyJsonBackend(LazyJsonBackend):
         }
 
     def hdel(self, name: str, keys: Iterable[str]) -> None:
-        lzj_names = [get_sharded_path(f"{name}/{key}.json") for key in keys]
-        if self._cwd is not None:
-            lzj_names = [
-                os.path.join(self._cwd, sharded_path) for sharded_path in lzj_names
-            ]
+        lzj_names = [
+            os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
+            for key in keys
+        ]
 
         with lock_git_operation():
             subprocess.run(
@@ -293,28 +288,20 @@ class FileLazyJsonBackend(LazyJsonBackend):
         jlen = len(".json")
         fnames: Iterable[str]
         if name == "lazy_json":
-            if self._cwd is not None:
-                fnames = glob.glob(os.path.join(self._cwd, "*.json"))
-                fnames = [os.path.basename(fname) for fname in fnames]
-            else:
-                fnames = glob.glob("*.json")
+            fnames = glob.glob(os.path.join(self._cwd, "*.json"))
+            fnames = [os.path.basename(fname) for fname in fnames]
             fnames = set(fnames) - {
                 "ranked_hubs_authorities.json",
                 "all_feedstocks.json",
             }
         else:
-            if self._cwd is not None:
-                fnames = glob.glob(
-                    os.path.join(self._cwd, name, "**/*.json"), recursive=True
-                )
-            else:
-                fnames = glob.glob(os.path.join(name, "**/*.json"), recursive=True)
+            fnames = glob.glob(
+                os.path.join(self._cwd, name, "**/*.json"), recursive=True
+            )
         return [os.path.basename(fname)[:-jlen] for fname in fnames]
 
     def hget(self, name: str, key: str) -> str:
-        sharded_path = get_sharded_path(f"{name}/{key}.json")
-        if self._cwd is not None:
-            sharded_path = os.path.join(self._cwd, sharded_path)
+        sharded_path = os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
 
         with open(sharded_path) as f:
             data_str = f.read()
