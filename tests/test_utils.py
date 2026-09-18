@@ -291,7 +291,11 @@ def test_load_existing_graph_file_does_not_exist(exists_mock: MagicMock):
             load_existing_graph()
 
     mock_file.assert_has_calls(
-        [mock.call(os.path.join(os.getcwd(), DEFAULT_GRAPH_FILENAME), "w")]
+        [
+            mock.call(
+                os.path.join(os.path.abspath(os.getcwd()), DEFAULT_GRAPH_FILENAME), "w"
+            )
+        ]
     )
 
 
