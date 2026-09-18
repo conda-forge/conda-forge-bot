@@ -265,6 +265,7 @@ def _get_files_to_push_or_delete(drs_to_deploy):
                 "files to del:%s",
                 "\n  " + "\n  ".join(_files_to_delete) if _files_to_delete else "",
             )
+            _flush_io()
         files_to_add |= _files_to_add
         files_to_delete |= _files_to_delete
         git_subdirs_to_check |= _git_subdirs_to_check
@@ -293,6 +294,7 @@ def _get_files_to_push_or_delete(drs_to_deploy):
             "files to del:%s",
             "\n  " + "\n  ".join(_files_to_delete) if _files_to_delete else "",
         )
+        _flush_io()
         files_to_add |= _files_to_add
         files_to_delete |= _files_to_delete
 
@@ -475,38 +477,38 @@ def deploy(
     print("found %d files to add" % len(files_to_add), flush=True)
     print("found %d files to delete" % len(files_to_delete), flush=True)
 
-    # if files_to_add or files_to_delete:
-    #     if not git_only:
-    #         files_done, files_to_try_again = _deploy_via_api(
-    #             files_to_add, files_to_delete
-    #         )
-    #         print(
-    #             f"deployed {len(files_done)} files to graph; {len(files_to_try_again)} did not deploy!",
-    #             flush=True,
-    #         )
-    #         if files_to_try_again:
-    #             sys.exit(1)
-    #     else:
-    #         if not all(
-    #             repo == settings().graph_github_backend_repo
-    #             for repo in [
-    #                 settings().graph_github_backend_repo,
-    #                 settings().versions_github_backend_repo,
-    #                 settings().node_attrs_github_backend_repo,
-    #             ]
-    #         ):
-    #             raise RuntimeError(
-    #                 "git-based deploys of the graph data do not work for split backends!"
-    #             )
+    if files_to_add or files_to_delete:
+        if not git_only:
+            files_done, files_to_try_again = _deploy_via_api(
+                files_to_add, files_to_delete
+            )
+            print(
+                f"deployed {len(files_done)} files to graph; {len(files_to_try_again)} did not deploy!",
+                flush=True,
+            )
+            if files_to_try_again:
+                sys.exit(1)
+        else:
+            if not all(
+                repo == settings().graph_github_backend_repo
+                for repo in [
+                    settings().graph_github_backend_repo,
+                    settings().versions_github_backend_repo,
+                    settings().node_attrs_github_backend_repo,
+                ]
+            ):
+                raise RuntimeError(
+                    "git-based deploys of the graph data do not work for split backends!"
+                )
 
-    #         batch = 0
-    #         n_added = 0
-    #         while files_to_add:
-    #             batch += 1
-    #             n_added += _deploy_batch(
-    #                 files_to_add=files_to_add,
-    #                 n_added=n_added,
-    #                 batch=batch,
-    #             )
+            batch = 0
+            n_added = 0
+            while files_to_add:
+                batch += 1
+                n_added += _deploy_batch(
+                    files_to_add=files_to_add,
+                    n_added=n_added,
+                    batch=batch,
+                )
 
-    #         print(f"deployed {n_added} files to graph in {batch} batches", flush=True)
+            print(f"deployed {n_added} files to graph in {batch} batches", flush=True)
