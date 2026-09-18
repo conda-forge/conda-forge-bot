@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "CI_SKIP=1" >> $GITHUB_ENV
 
-      - name: trigger next job
+      - name: trigger the bot
         uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 # v1.3.2
         if: github.ref == 'refs/heads/main' && ! cancelled() && ! failure() && ! env.CI_SKIP
         with:
