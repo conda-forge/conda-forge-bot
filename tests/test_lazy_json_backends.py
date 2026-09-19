@@ -1160,7 +1160,7 @@ def _check_cwd(data, cwd):
         assert data["lfoo"][0]._cwd == cwd, "lfoo cwd wrong"
 
 
-def test_lazy_json_cwd():
+def test_lazy_json_backends_cwd():
     with tempfile.TemporaryDirectory() as tmpdir, pushd(tmpdir):
         cwd = os.path.abspath(os.getcwd())
 
@@ -1273,3 +1273,75 @@ def test_lazy_json_cwd():
             _check_cwd(new_data, cwd)
             assert new_data["foo"]["bar"] == "baz"
             assert new_data["lfoo"][0]["bar"] == "bazz"
+
+
+def test_lazy_json_backends_recurse():
+    with tempfile.TemporaryDirectory() as tmpdir, pushd(tmpdir):
+        cwd = os.path.abspath(os.getcwd())
+
+        d = LazyJson("first.json")
+        with d as d:
+            d["second"] = LazyJson("second.json")
+            d["foo"] = "bar"
+            with d["second"] as d2:
+                d2["third"] = LazyJson("third.json")
+                d2["bar"] = "baz"
+                with d2["third"] as d3:
+                    d3["leaf"] = LazyJson("leaf.json")
+                    d3["baz"] = "foo"
+                    with d3["leaf"]:
+                        pass
+
+        fnames = set(glob.glob("*.json"))
+        assert fnames == {"first.json", "second.json", "third.json", "leaf.json"}
+
+        with open("all_data.json", "w") as fp:
+            dump(d, fp)
+
+        with open("all_data.json") as fp:
+            new_d = load(fp)
+        assert new_d == d
+        assert new_d["second"]["third"]["leaf"] == {}
+        assert new_d["second"]["third"]["baz"] == "foo"
+        assert new_d["second"]["bar"] == "baz"
+        assert new_d["foo"] == "bar"
+        assert new_d._cwd == cwd
+        assert new_d["second"]._cwd == cwd
+        assert new_d["second"]["third"]._cwd == cwd
+        assert new_d["second"]["third"]["leaf"]._cwd == cwd
+
+        with open("first.json") as fp:
+            new_d = load(fp)
+        assert new_d == d
+        assert new_d["foo"] == "bar"
+        with tempfile.TemporaryDirectory() as tmpdir2, pushd(tmpdir2):
+            assert new_d["second"]._cwd == cwd
+            with tempfile.TemporaryDirectory() as tmpdir3, pushd(tmpdir3):
+                assert new_d["second"]["third"]._cwd == cwd
+                with tempfile.TemporaryDirectory() as tmpdir4, pushd(tmpdir4):
+                    assert new_d["second"]["third"]["leaf"]._cwd == cwd
+
+        assert new_d["second"]["third"]["leaf"] == {}
+        assert new_d["second"]["third"]["baz"] == "foo"
+        assert new_d["second"]["bar"] == "baz"
+
+        with open("first.json") as fp:
+            assert (
+                fp.read()
+                == '{\n  "foo": "bar",\n  "second": {\n    "__lazy_json__": "second.json"\n  }\n}'
+            )
+
+        with open("second.json") as fp:
+            assert (
+                fp.read()
+                == '{\n  "bar": "baz",\n  "third": {\n    "__lazy_json__": "third.json"\n  }\n}'
+            )
+
+        with open("third.json") as fp:
+            assert (
+                fp.read()
+                == '{\n  "baz": "foo",\n  "leaf": {\n    "__lazy_json__": "leaf.json"\n  }\n}'
+            )
+
+        with open("leaf.json") as fp:
+            assert fp.read() == "{}"
