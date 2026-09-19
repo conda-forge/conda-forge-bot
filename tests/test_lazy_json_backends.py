@@ -1312,9 +1312,9 @@ def test_lazy_json_backends_recurse():
 
         with open("first.json") as fp:
             new_d = load(fp)
-        assert new_d == d
-        assert new_d["foo"] == "bar"
         with tempfile.TemporaryDirectory() as tmpdir2, pushd(tmpdir2):
+            assert new_d == d
+            assert new_d["foo"] == "bar"
             assert new_d["second"]._cwd == cwd
             with tempfile.TemporaryDirectory() as tmpdir3, pushd(tmpdir3):
                 assert new_d["second"]["third"]._cwd == cwd
