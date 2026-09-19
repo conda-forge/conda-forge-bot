@@ -1156,6 +1156,8 @@ def _check_cwd(data, cwd):
     assert data._cwd == cwd, "data cwd wrong"
     if "foo" in data:
         assert data["foo"]._cwd == cwd, "foo cwd wrong"
+    if "lfoo" in data:
+        assert data["lfoo"][0]._cwd == cwd, "lfoo cwd wrong"
 
 
 def test_lazy_json_cwd():
@@ -1168,6 +1170,7 @@ def test_lazy_json_cwd():
 
         with data as data:
             data["foo"] = LazyJson("foo.json")
+            data["lfoo"] = [LazyJson("lfoo.json")]
             _check_cwd(data, cwd)
 
             with data["foo"] as foo:
@@ -1176,13 +1179,22 @@ def test_lazy_json_cwd():
 
             _check_cwd(data, cwd)
 
+            with data["lfoo"][0] as lfoo:
+                _check_cwd(data, cwd)
+                lfoo["bar"] = "barr"
+
+            _check_cwd(data, cwd)
+
         _check_cwd(data, cwd)
 
         fnames = glob.glob("*.json")
-        assert set(fnames) == {"foo.json", "data.json"}
+        assert set(fnames) == {"lfoo.json", "foo.json", "data.json"}
         with open("foo.json") as fp:
             foo = load(fp)
         assert foo == {"bar": "bar"}
+        with open("lfoo.json") as fp:
+            lfoo = load(fp)
+        assert lfoo == {"bar": "barr"}
 
         # ensure using a second subdir doesn't change cwd, doesn't cause
         # extra files, and writes go to right spot
@@ -1198,6 +1210,12 @@ def test_lazy_json_cwd():
 
                 _check_cwd(data, cwd)
 
+                with data["lfoo"][0] as lfoo:
+                    _check_cwd(data, cwd)
+                    lfoo["bar"] = "bazz"
+
+                _check_cwd(data, cwd)
+
             _check_cwd(data, cwd)
 
             fnames = glob.glob("*.json")
@@ -1206,11 +1224,16 @@ def test_lazy_json_cwd():
         _check_cwd(data, cwd)
 
         fnames = glob.glob("*.json")
-        assert set(fnames) == {"foo.json", "data.json"}
+        assert set(fnames) == {"foo.json", "data.json", "lfoo.json"}
         with open("foo.json") as fp:
             foo = load(fp)
         assert foo == {"bar": "baz"}
+        with open("lfoo.json") as fp:
+            lfoo = load(fp)
+        assert lfoo == {"bar": "bazz"}
+
         assert data["foo"]["bar"] == "baz"
+        assert data["lfoo"][0]["bar"] == "bazz"
 
         # test I/O with second subdir works as expected
         with tempfile.TemporaryDirectory() as sub_tmpdir:
@@ -1221,6 +1244,7 @@ def test_lazy_json_cwd():
                     dump(data, fp)
                 _check_cwd(data, cwd)
                 assert data["foo"]["bar"] == "baz"
+                assert data["lfoo"][0]["bar"] == "bazz"
 
                 fnames = glob.glob("*.json")
                 assert set(fnames) == {"all_data.json"}
@@ -1230,6 +1254,7 @@ def test_lazy_json_cwd():
 
             _check_cwd(new_data, cwd)
             assert new_data["foo"]["bar"] == "baz"
+            assert new_data["lfoo"][0]["bar"] == "bazz"
 
             # write to directory works ok
             _check_cwd(data, cwd)
@@ -1237,6 +1262,7 @@ def test_lazy_json_cwd():
                 dump(data, fp)
             _check_cwd(data, cwd)
             assert data["foo"]["bar"] == "baz"
+            assert data["lfoo"][0]["bar"] == "bazz"
 
             fnames = glob.glob(os.path.join(sub_tmpdir, "*.json"))
             assert set(fnames) == {f"{sub_tmpdir}/all_data.json"}
@@ -1246,3 +1272,4 @@ def test_lazy_json_cwd():
 
             _check_cwd(new_data, cwd)
             assert new_data["foo"]["bar"] == "baz"
+            assert new_data["lfoo"][0]["bar"] == "bazz"
