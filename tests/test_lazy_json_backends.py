@@ -1,4 +1,5 @@
 import base64
+import glob
 import hashlib
 import json
 import logging
@@ -1149,3 +1150,99 @@ def test_lazy_json_make_lazy_json_retry_sequence():
         pass
     end = time.time()
     assert end - start < 20 * 2
+
+
+def _check_cwd(data, cwd):
+    assert data._cwd == cwd, "data cwd wrong"
+    if "foo" in data:
+        assert data["foo"]._cwd == cwd, "foo cwd wrong"
+
+
+def test_lazy_json_cwd():
+    with tempfile.TemporaryDirectory() as tmpdir, pushd(tmpdir):
+        cwd = os.path.abspath(os.getcwd())
+
+        # ensure basic manipulations track cwd correctly
+        data = LazyJson("data.json")
+        _check_cwd(data, cwd)
+
+        with data as data:
+            data["foo"] = LazyJson("foo.json")
+            _check_cwd(data, cwd)
+
+            with data["foo"] as foo:
+                _check_cwd(data, cwd)
+                foo["bar"] = "bar"
+
+            _check_cwd(data, cwd)
+
+        _check_cwd(data, cwd)
+
+        fnames = glob.glob("*.json")
+        assert set(fnames) == {"foo.json", "data.json"}
+        with open("foo.json") as fp:
+            foo = load(fp)
+        assert foo == {"bar": "bar"}
+
+        # ensure using a second subdir doesn't change cwd, doesn't cause
+        # extra files, and writes go to right spot
+        with tempfile.TemporaryDirectory() as sub_tmpdir, pushd(sub_tmpdir):
+            _check_cwd(data, cwd)
+
+            with data as data:
+                _check_cwd(data, cwd)
+
+                with data["foo"] as foo:
+                    _check_cwd(data, cwd)
+                    foo["bar"] = "baz"
+
+                _check_cwd(data, cwd)
+
+            _check_cwd(data, cwd)
+
+            fnames = glob.glob("*.json")
+            assert set(fnames) == set()
+
+        _check_cwd(data, cwd)
+
+        fnames = glob.glob("*.json")
+        assert set(fnames) == {"foo.json", "data.json"}
+        with open("foo.json") as fp:
+            foo = load(fp)
+        assert foo == {"bar": "baz"}
+        assert data["foo"]["bar"] == "baz"
+
+        # test I/O with second subdir works as expected
+        with tempfile.TemporaryDirectory() as sub_tmpdir:
+            # write in directory works ok
+            with pushd(sub_tmpdir):
+                _check_cwd(data, cwd)
+                with open("all_data.json", "w") as fp:
+                    dump(data, fp)
+                _check_cwd(data, cwd)
+                assert data["foo"]["bar"] == "baz"
+
+                fnames = glob.glob("*.json")
+                assert set(fnames) == {"all_data.json"}
+
+            with open(os.path.join(sub_tmpdir, "all_data.json")) as fp:
+                new_data = load(fp)
+
+            _check_cwd(new_data, cwd)
+            assert new_data["foo"]["bar"] == "baz"
+
+            # write to directory works ok
+            _check_cwd(data, cwd)
+            with open(os.path.join(sub_tmpdir, "all_data.json"), "w") as fp:
+                dump(data, fp)
+            _check_cwd(data, cwd)
+            assert data["foo"]["bar"] == "baz"
+
+            fnames = glob.glob(os.path.join(sub_tmpdir, "*.json"))
+            assert set(fnames) == {f"{sub_tmpdir}/all_data.json"}
+
+            with open(os.path.join(sub_tmpdir, "all_data.json")) as fp:
+                new_data = load(fp)
+
+            _check_cwd(new_data, cwd)
+            assert new_data["foo"]["bar"] == "baz"

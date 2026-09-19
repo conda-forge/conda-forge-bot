@@ -792,7 +792,7 @@ class MongoDBLazyJsonBackend(LazyJsonBackend):
             {
                 "$set": {
                     "node": key,
-                    "value": orjson.loads(value),
+                    "value": orjson.loads(value, cwd=self._cwd),
                     "sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
                 },
             },
@@ -812,7 +812,7 @@ class MongoDBLazyJsonBackend(LazyJsonBackend):
                     {
                         "$set": {
                             "node": key,
-                            "value": orjson.loads(value),
+                            "value": orjson.loads(value, cwd=self._cwd),
                             "sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
                         },
                     },
@@ -1129,7 +1129,7 @@ class LazyJson(MutableMapping):
 
     _no_sync = False
 
-    def __init__(self, file_name: str):
+    def __init__(self, file_name: str, cwd: str | None = None):
         self.file_name = file_name
         self._data: dict | None = None
         self._data_hash_at_load: str | None = None
@@ -1145,7 +1145,7 @@ class LazyJson(MutableMapping):
         self.node = node
         self.json_ref = {"__lazy_json__": self.file_name}
         self.sharded_path = get_sharded_path(f"{self.hashmap}/{self.node}.json")
-        self._cwd = os.path.abspath(os.getcwd())
+        self._cwd = cwd or os.path.abspath(os.getcwd())
 
         # make this backwards compatible with old behavior
         if CF_TICK_GRAPH_DATA_PRIMARY_BACKEND == "file" and not self._no_sync:
@@ -1239,7 +1239,7 @@ class LazyJson(MutableMapping):
                 if not lzj_is_new
                 else ""
             )
-            self._data = loads(data_str)
+            self._data = loads(data_str, cwd=self._cwd)
 
     def _dump(self, purge=False) -> None:
         self._load()
@@ -1330,10 +1330,10 @@ def default(obj: Any) -> Any:
     raise TypeError(repr(obj) + " is not JSON serializable")
 
 
-def object_hook(dct: dict) -> LazyJson | set | dict:
+def object_hook(dct: dict, cwd) -> LazyJson | set | dict:
     """For custom object deserialization."""
     if "__lazy_json__" in dct:
-        return LazyJson(dct["__lazy_json__"])
+        return LazyJson(dct["__lazy_json__"], cwd=cwd)
     elif "__set__" in dct:
         return set(dct["elements"])
     elif "__nx_digraph__" in dct:
@@ -1363,33 +1363,30 @@ def dump(
 
 def _call_object_hook(
     data: Any,
-    object_hook: Callable[[dict], Any],
+    object_hook: Callable[[dict, str], Any],
+    cwd: str,
 ) -> Any:
     """Recursively calls object_hook depth-first."""
     if isinstance(data, list):
-        return [_call_object_hook(d, object_hook) for d in data]
+        return [_call_object_hook(d, object_hook, cwd) for d in data]
     elif isinstance(data, dict):
         for k in data:
-            data[k] = _call_object_hook(data[k], object_hook)
-        return object_hook(data)
+            data[k] = _call_object_hook(data[k], object_hook, cwd)
+        return object_hook(data, cwd)
     else:
         return data
 
 
-def loads(s: str, object_hook: Callable[[dict], Any] = object_hook) -> dict:
+def loads(s: str, cwd: str | None = None) -> dict:
     """Load a string as JSON, with appropriate object hooks."""
     data = orjson.loads(s)
-    if object_hook is not None:
-        data = _call_object_hook(data, object_hook)
+    data = _call_object_hook(data, object_hook, cwd or os.path.abspath(os.getcwd()))
     return data
 
 
-def load(
-    fp: IO[str],
-    object_hook: Callable[[dict], Any] = object_hook,
-) -> dict:
+def load(fp: IO[str], cwd: str | None = None) -> dict:
     """Load a file object as JSON, with appropriate object hooks."""
-    return loads(fp.read())
+    return loads(fp.read(), cwd=cwd)
 
 
 def main_sync(ctx: CliContext):
