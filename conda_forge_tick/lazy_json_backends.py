@@ -127,6 +127,9 @@ def get_sharded_path_and_trim_hashmap_name_if_needed(name, key):
 
 
 class LazyJsonBackend(ABC):
+    def __init__(self, cwd=None):
+        self._cwd = cwd or os.path.abspath(os.getcwd())
+
     @contextlib.contextmanager
     @abstractmethod
     def transaction_context(self) -> Iterator[Self]:
@@ -232,10 +235,12 @@ class FileLazyJsonBackend(LazyJsonBackend):
         yield self
 
     def hexists(self, name: str, key: str) -> bool:
-        return os.path.exists(get_sharded_path(f"{name}/{key}.json"))
+        pth = os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
+        return os.path.exists(pth)
 
     def hset(self, name: str, key: str, value: str) -> None:
-        sharded_path = get_sharded_path(f"{name}/{key}.json")
+        sharded_path = os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
+
         if os.path.split(sharded_path)[0]:
             os.makedirs(os.path.split(sharded_path)[0], exist_ok=True)
 
@@ -264,7 +269,11 @@ class FileLazyJsonBackend(LazyJsonBackend):
         }
 
     def hdel(self, name: str, keys: Iterable[str]) -> None:
-        lzj_names = [get_sharded_path(f"{name}/{key}.json") for key in keys]
+        lzj_names = [
+            os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
+            for key in keys
+        ]
+
         with lock_git_operation():
             subprocess.run(
                 ["git", "rm", "--ignore-unmatch", "-f"] + lzj_names,
@@ -279,17 +288,21 @@ class FileLazyJsonBackend(LazyJsonBackend):
         jlen = len(".json")
         fnames: Iterable[str]
         if name == "lazy_json":
-            fnames = glob.glob("*.json")
+            fnames = glob.glob(os.path.join(self._cwd, "*.json"))
+            fnames = [os.path.basename(fname) for fname in fnames]
             fnames = set(fnames) - {
                 "ranked_hubs_authorities.json",
                 "all_feedstocks.json",
             }
         else:
-            fnames = glob.glob(os.path.join(name, "**/*.json"), recursive=True)
+            fnames = glob.glob(
+                os.path.join(self._cwd, name, "**/*.json"), recursive=True
+            )
         return [os.path.basename(fname)[:-jlen] for fname in fnames]
 
     def hget(self, name: str, key: str) -> str:
-        sharded_path = get_sharded_path(f"{name}/{key}.json")
+        sharded_path = os.path.join(self._cwd, get_sharded_path(f"{name}/{key}.json"))
+
         with open(sharded_path) as f:
             data_str = f.read()
         return data_str
@@ -326,7 +339,8 @@ class GithubLazyJsonBackend(LazyJsonBackend):
     _write_warned = False
     _n_requests = 0
 
-    def __init__(self) -> None:
+    def __init__(self, cwd=None) -> None:
+        super().__init__(cwd=cwd)
         self._graph_base_url = settings().graph_github_backend_raw_base_url
         self._versions_base_url = settings().versions_github_backend_raw_base_url
         self._node_attrs_base_url = settings().node_attrs_github_backend_raw_base_url
@@ -446,8 +460,10 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
     hashmap data across backends.
     """
 
-    def __init__(self):
+    def __init__(self, cwd=None) -> None:
         from conda_forge_tick.git_utils import github_client
+
+        super().__init__(cwd=cwd)
 
         self._gh = github_client(with_app_token=True)
         self._graph_repo = self._gh.get_repo(
@@ -1113,7 +1129,7 @@ class LazyJson(MutableMapping):
 
     _no_sync = False
 
-    def __init__(self, file_name: str):
+    def __init__(self, file_name: str, cwd: str | None = None):
         self.file_name = file_name
         self._data: dict | None = None
         self._data_hash_at_load: str | None = None
@@ -1129,12 +1145,13 @@ class LazyJson(MutableMapping):
         self.node = node
         self.json_ref = {"__lazy_json__": self.file_name}
         self.sharded_path = get_sharded_path(f"{self.hashmap}/{self.node}.json")
+        self._cwd = cwd or os.path.abspath(os.getcwd())
 
         # make this backwards compatible with old behavior
         if CF_TICK_GRAPH_DATA_PRIMARY_BACKEND == "file" and not self._no_sync:
-            if not LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND]().hexists(
-                self.hashmap, self.node
-            ):
+            if not LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND](
+                cwd=self._cwd
+            ).hexists(self.hashmap, self.node):
                 self._never_synced = True
             else:
                 self._never_synced = False
@@ -1186,7 +1203,7 @@ class LazyJson(MutableMapping):
         if self._data is None:
             lzj_is_new = False
 
-            file_backend = LAZY_JSON_BACKENDS["file"]()
+            file_backend = LAZY_JSON_BACKENDS["file"](cwd=self._cwd)
 
             # check if we have it in the cache first
             # if yes, load it from cache, if not load from primary backend and cache it
@@ -1195,7 +1212,9 @@ class LazyJson(MutableMapping):
             ):
                 data_str = file_backend.hget(self.hashmap, self.node)
             else:
-                backend = LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND]()
+                backend = LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND](
+                    cwd=self._cwd
+                )
                 if backend.hexists(self.hashmap, self.node):
                     data_str = backend.hget(self.hashmap, self.node)
                 else:
@@ -1220,7 +1239,7 @@ class LazyJson(MutableMapping):
                 if not lzj_is_new
                 else ""
             )
-            self._data = loads(data_str)
+            self._data = loads(data_str, cwd=self._cwd)
 
     def _dump(self, purge=False) -> None:
         self._load()
@@ -1233,14 +1252,14 @@ class LazyJson(MutableMapping):
             if not self._no_sync:
                 # cache it locally
                 if CF_TICK_GRAPH_DATA_USE_FILE_CACHE:
-                    file_backend = LAZY_JSON_BACKENDS["file"]()
+                    file_backend = LAZY_JSON_BACKENDS["file"](cwd=self._cwd)
                     file_backend.hset(self.hashmap, self.node, data_str)
 
                 # sync changes to all backends
                 for backend_name in CF_TICK_GRAPH_DATA_BACKENDS:
                     if backend_name == "file" and CF_TICK_GRAPH_DATA_USE_FILE_CACHE:
                         continue
-                    backend = LAZY_JSON_BACKENDS[backend_name]()
+                    backend = LAZY_JSON_BACKENDS[backend_name](cwd=self._cwd)
                     backend.hset(self.hashmap, self.node, data_str)
 
         if purge and not self._no_sync:
@@ -1311,10 +1330,10 @@ def default(obj: Any) -> Any:
     raise TypeError(repr(obj) + " is not JSON serializable")
 
 
-def object_hook(dct: dict) -> LazyJson | set | dict:
+def object_hook(dct: dict, cwd) -> LazyJson | set | dict:
     """For custom object deserialization."""
     if "__lazy_json__" in dct:
-        return LazyJson(dct["__lazy_json__"])
+        return LazyJson(dct["__lazy_json__"], cwd=cwd)
     elif "__set__" in dct:
         return set(dct["elements"])
     elif "__nx_digraph__" in dct:
@@ -1344,33 +1363,30 @@ def dump(
 
 def _call_object_hook(
     data: Any,
-    object_hook: Callable[[dict], Any],
+    object_hook: Callable[[dict, str], Any],
+    cwd: str,
 ) -> Any:
     """Recursively calls object_hook depth-first."""
     if isinstance(data, list):
-        return [_call_object_hook(d, object_hook) for d in data]
+        return [_call_object_hook(d, object_hook, cwd) for d in data]
     elif isinstance(data, dict):
         for k in data:
-            data[k] = _call_object_hook(data[k], object_hook)
-        return object_hook(data)
+            data[k] = _call_object_hook(data[k], object_hook, cwd)
+        return object_hook(data, cwd)
     else:
         return data
 
 
-def loads(s: str, object_hook: Callable[[dict], Any] = object_hook) -> dict:
+def loads(s: str, cwd: str | None = None) -> dict:
     """Load a string as JSON, with appropriate object hooks."""
     data = orjson.loads(s)
-    if object_hook is not None:
-        data = _call_object_hook(data, object_hook)
+    data = _call_object_hook(data, object_hook, cwd or os.path.abspath(os.getcwd()))
     return data
 
 
-def load(
-    fp: IO[str],
-    object_hook: Callable[[dict], Any] = object_hook,
-) -> dict:
+def load(fp: IO[str], cwd: str | None = None) -> dict:
     """Load a file object as JSON, with appropriate object hooks."""
-    return loads(fp.read())
+    return loads(fp.read(), cwd=cwd)
 
 
 def main_sync(ctx: CliContext):
