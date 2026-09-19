@@ -982,7 +982,7 @@ package:
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.9.10
+  version: 2026.9.19
   manager: conda
   platform: linux-64
   dependencies:
@@ -1006,17 +1006,19 @@ package:
     pygithub: '>=2,<3'
     python: '>=3.11'
     rattler-build-conda-compat: '>=1.4.15,<2.0.0a0'
+    referencing: ''
     requests: ''
     ruamel.yaml: '>=0.16'
     scrypt: ''
     setuptools: ''
+    spdx-license-list-data: ''
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.10-unix_pyh707e725_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.19-unix_pyh707e725_0.conda
   hash:
-    md5: 323fe73187676bae5475172050a28001
-    sha256: 67aa13fc46e0fdec8f8a797bdface99d48725f1c1bc6a64eded1552c3bd5b377
+    md5: 2b51a4611d1ed7de226a0a16a53a46a2
+    sha256: 6de05359f8334637e9db81709d3b0105db45fb0fb5c0b16f5dc98829fc2cd6ec
   category: main
   optional: false
 - name: conda-souschef
@@ -4933,6 +4935,17 @@ package:
   hash:
     md5: 5e32ceeb7b9514ce4730565052829dbd
     sha256: 5fca627690d56c6f87a9dabafceee54cb75d7da392309bb080333948c048365a
+  category: main
+  optional: false
+- name: spdx-license-list-data
+  version: 3.28.0
+  manager: conda
+  platform: linux-64
+  dependencies: {}
+  url: https://conda.anaconda.org/conda-forge/noarch/spdx-license-list-data-3.28.0-hc364b38_0.conda
+  hash:
+    md5: 0a3204f387bb426c62c1852a8d30579e
+    sha256: 2599296faac4933daa1905d6e38fdb440d26b732ab581b42af2e8b28c1cdd8a0
   category: main
   optional: false
 - name: stdlib-list
