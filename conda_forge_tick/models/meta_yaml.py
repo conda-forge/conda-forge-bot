@@ -109,7 +109,8 @@ class BuildPython(ValidatedBaseModel):
     v1 recipes only. Set by abi3 recipes, which build a single wheel that works
     for every later CPython, so the feedstock does not need rebuilding for each
     new python version. `all_noarch(only_python=True)` reads this to keep such
-    feedstocks out of the python migrations.
+    feedstocks out of the python migrations -- except the free-threading ones,
+    where abi3 pulls in `python-gil` and so a `cp3XXt` build is still needed.
     """
 
 
