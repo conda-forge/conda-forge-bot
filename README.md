@@ -129,7 +129,11 @@ __migrator:
   exclude_pinned_pkgs: true
 
   # If `include_noarch` is set to true, the bot will include noarch feedstocks in the migration.
-  # The bot will skip noarch feedstocks by default.
+  # The bot will skip noarch feedstocks by default. For python migrations, abi3
+  # feedstocks (`build.python.version_independent`) count as noarch and are skipped
+  # too -- except when the migration sets the top-level `is_freethreading` variant
+  # key, since an abi3 package depends on `python-gil` and so cannot be installed
+  # with a free-threaded interpreter at all.
   include_noarch: false
 
   # If `include_build` is set to true, the bot will include build requirements in the migration.

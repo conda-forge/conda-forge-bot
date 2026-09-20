@@ -120,6 +120,22 @@ def merge_migrator_cbc(migrator_yaml: str, conda_build_config_yaml: str):
     return "\n".join(outbound_cbc)
 
 
+def _is_freethreading_migration(loaded_yaml: dict) -> bool:
+    """Test if a migration yaml migrates to a free-threaded python.
+
+    These migrations flag themselves with `is_freethreading` so that recipes can
+    branch on it; the bot needs it because abi3 packages, which are exempt from
+    every other python migration, are not exempt from this one. An abi3 package
+    pulls in `python-gil` through `_python_abi3_support` and so cannot be
+    installed next to a free-threaded interpreter at all -- it really does need
+    a `cp3XXt` build of its own.
+    """
+    return any(
+        str(value).lower() == "true"
+        for value in (loaded_yaml.get("is_freethreading") or [])
+    )
+
+
 def _trim_edges_for_abi_rebuild(
     total_graph: nx.DiGraph, migrator: Migrator, outputs_lut: dict[str, set]
 ) -> nx.DiGraph:
@@ -368,7 +384,14 @@ class MigrationYaml(GraphMigrator):
             bh = host or build
         only_python = "python" in self.package_names
         inclusion_criteria = bh & set(self.package_names) and (
-            include_noarch or not all_noarch(attrs, only_python=only_python)
+            include_noarch
+            or not all_noarch(
+                attrs,
+                only_python=only_python,
+                version_independent_is_noarch=not _is_freethreading_migration(
+                    self.loaded_yaml
+                ),
+            )
         )
 
         if not inclusion_criteria:
@@ -827,13 +850,19 @@ def _req_is_not_exactly_python(req):
     return req.lower().strip() != "python"
 
 
+def _build_is_version_independent(build):
+    return build.get("python_version_independent", False) or (
+        build.get("python", {}) or {}
+    ).get("version_independent", False)
+
+
 def _combine_build(output_build, global_build):
     build = copy.deepcopy(global_build)
     build.update(output_build)
     return build
 
 
-def all_noarch(attrs, only_python=False):
+def all_noarch(attrs, only_python=False, version_independent_is_noarch=True):
     """Test if a recipe is all noarch.
 
     An all noarch recipe is one in which all builds are some form of noarch.
@@ -841,6 +870,10 @@ def all_noarch(attrs, only_python=False):
     If only_python is True, then each build must be `noarch: python`,
     `python_version_independent` or not depend on `python` (without
     any other constraints) in host.
+
+    Set version_independent_is_noarch to False to stop `python_version_independent`
+    (abi3) builds from counting. They are version independent only across
+    GIL-enabled pythons -- see `_is_freethreading_migration`.
     """
     meta_yaml = attrs.get("meta_yaml", {}) or {}
     global_build = meta_yaml.get("build", {}) or {}
@@ -853,9 +886,9 @@ def all_noarch(attrs, only_python=False):
                 _build = _combine_build(output.get("build", {}) or {}, global_build)
                 all_noarch = all_noarch and (
                     "noarch" in _build
-                    or _build.get("python_version_independent", False)
-                    or (_build.get("python", {}) or {}).get(
-                        "version_independent", False
+                    or (
+                        version_independent_is_noarch
+                        and _build_is_version_independent(_build)
                     )
                 )
 
@@ -870,9 +903,9 @@ def all_noarch(attrs, only_python=False):
         ):
             all_noarch = all_noarch and (
                 "noarch" in global_build
-                or global_build.get("python_version_independent", False)
-                or (global_build.get("python", {}) or {}).get(
-                    "version_independent", False
+                or (
+                    version_independent_is_noarch
+                    and _build_is_version_independent(global_build)
                 )
             )
     else:
@@ -884,9 +917,9 @@ def all_noarch(attrs, only_python=False):
         if any(_req_is_python(req) for req in reqs):
             all_noarch = all_noarch and (
                 ("python" == global_build.get("noarch", None))
-                or global_build.get("python_version_independent", False)
-                or (global_build.get("python", {}) or {}).get(
-                    "version_independent", False
+                or (
+                    version_independent_is_noarch
+                    and _build_is_version_independent(global_build)
                 )
                 or all(_req_is_not_exactly_python(req) for req in reqs)
             )
@@ -903,9 +936,9 @@ def all_noarch(attrs, only_python=False):
             if any(_req_is_python(req) for req in _reqs):
                 all_noarch = all_noarch and (
                     ("python" == _build.get("noarch", None))
-                    or _build.get("python_version_independent", False)
-                    or (_build.get("python", {}) or {}).get(
-                        "version_independent", False
+                    or (
+                        version_independent_is_noarch
+                        and _build_is_version_independent(_build)
                     )
                     or all(_req_is_not_exactly_python(req) for req in _reqs)
                 )
