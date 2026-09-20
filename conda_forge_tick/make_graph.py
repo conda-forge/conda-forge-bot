@@ -1,3 +1,4 @@
+import glob
 import hashlib
 import logging
 import os
@@ -103,7 +104,6 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
     lzj_vpri = (
         _in_vpri if _in_vpri is not None else LazyJson(f"version_pr_info/{name}.json")
     )
-    print(f"CWD version_pr_info/{name}.json: {lzj_vpri._cwd}", flush=True)
     with lzj_vpri as vpri:
         for key in [
             "new_version_attempts",
@@ -114,7 +114,6 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
                 vpri[key] = {}
 
     lzj_pri = _in_pri if _in_pri is not None else LazyJson(f"pr_info/{name}.json")
-    print(f"CWD pr_info/{name}.json: {lzj_pri._cwd}", flush=True)
     with lzj_pri as pri:
         for key in [
             "pre_pr_migrator_status",
@@ -129,7 +128,6 @@ def _add_required_lazy_json_refs(attrs, name):
     for sub_lzj in ["version_pr_info", "pr_info"]:
         if sub_lzj not in attrs:
             attrs[sub_lzj] = LazyJson(f"{sub_lzj}/{name}.json")
-        print(f"CWD {sub_lzj}/{name}.json: {attrs[sub_lzj]._cwd}", flush=True)
 
     make_feedstock_required_lazy_json_refs(
         name,
@@ -158,7 +156,6 @@ def try_load_feedstock(name: str, attrs: LazyJson, mark_not_archived=False) -> L
 
 def get_attrs(name: str, mark_not_archived=False) -> LazyJson:
     lzj = LazyJson(f"node_attrs/{name}.json")
-    print(f"CWD node_attrs/{name}.json: {lzj._cwd}", flush=True)
     with lzj as sub_graph:
         try_load_feedstock(name, sub_graph, mark_not_archived=mark_not_archived)
 
@@ -272,7 +269,21 @@ def _build_graph_process_pool(
                 eta = (time.time() - start) / (n_tot - n_left) * n_left
             name = futures[f]
             try:
-                f.result()
+                lzj = f.result()
+                print(f"CWD node_attrs/{name}: {lzj._cwd}", flush=True)
+                print(f"CWD pr_info/{name}: {lzj['pr_info']._cwd}", flush=True)
+                print(
+                    f"CWD version_pr_info/{name}: {lzj['version_pr_info']._cwd}",
+                    flush=True,
+                )
+                print(
+                    f"EXTRA FILES pr_info/{name}: {set(glob.glob('node_attrs/pr_info/**/' + name + '.json', recursive=True))}",
+                    flush=True,
+                )
+                print(
+                    f"EXTRA FILES version_pr_info/{name}: {set(glob.glob('node_attrs/version_pr_info/**/' + name + '.json', recursive=True))}",
+                    flush=True,
+                )
                 if n_left % 100 == 0:
                     logger.info(
                         "nodes left %5d - eta %5ds: finished %s", n_left, int(eta), name
