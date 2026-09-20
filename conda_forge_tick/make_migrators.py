@@ -642,7 +642,12 @@ def _extract_most_stringent_pin_from_recipe(
         # v1 recipes often can't parse without one
         ci_support_yaml = ""
         for key in feedstock_attrs:
-            if key.startswith("ci_support"):
+            if (
+                key.startswith("ci_support")
+                and key not in ["ci_support_migrations"]
+                and key.endswith(".yaml")
+                and isinstance(feedstock_attrs[key], str)
+            ):
                 ci_support_yaml = feedstock_attrs[key]
         if ci_support_yaml:
             cbc_path = Path(td) / "conda_build_config.yaml"
