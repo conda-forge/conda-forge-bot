@@ -12,7 +12,6 @@ import networkx as nx
 import psutil
 import tqdm
 
-from conda_forge_tick.deploy import deploy
 from conda_forge_tick.feedstock_parser import load_feedstock
 from conda_forge_tick.git_utils import is_tracked_by_git
 from conda_forge_tick.lazy_json_backends import (
@@ -282,15 +281,6 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
-
-            # FIXME
-            if n_left % 10 == 0:
-                deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
-                deploy(dirs_to_deploy=["node_attrs"])
-
-    # FIXME
-    deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
-    deploy(dirs_to_deploy=["node_attrs"])
 
 
 def _build_graph_sequential(
