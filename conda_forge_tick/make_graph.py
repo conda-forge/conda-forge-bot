@@ -12,7 +12,6 @@ import networkx as nx
 import psutil
 import tqdm
 
-from conda_forge_tick.deploy import deploy
 from conda_forge_tick.feedstock_parser import load_feedstock
 from conda_forge_tick.git_utils import is_tracked_by_git
 from conda_forge_tick.lazy_json_backends import (
@@ -104,6 +103,7 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
     lzj_vpri = (
         _in_vpri if _in_vpri is not None else LazyJson(f"version_pr_info/{name}.json")
     )
+    print(f"CWD version_pr_info/{name}.json: {lzj_vpri._cwd}", flush=True)
     with lzj_vpri as vpri:
         for key in [
             "new_version_attempts",
@@ -114,6 +114,7 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
                 vpri[key] = {}
 
     lzj_pri = _in_pri if _in_pri is not None else LazyJson(f"pr_info/{name}.json")
+    print(f"CWD pr_info/{name}.json: {lzj_pri._cwd}", flush=True)
     with lzj_pri as pri:
         for key in [
             "pre_pr_migrator_status",
@@ -128,6 +129,7 @@ def _add_required_lazy_json_refs(attrs, name):
     for sub_lzj in ["version_pr_info", "pr_info"]:
         if sub_lzj not in attrs:
             attrs[sub_lzj] = LazyJson(f"{sub_lzj}/{name}.json")
+        print(f"CWD {sub_lzj}/{name}.json: {attrs[sub_lzj]._cwd}", flush=True)
 
     make_feedstock_required_lazy_json_refs(
         name,
@@ -156,6 +158,7 @@ def try_load_feedstock(name: str, attrs: LazyJson, mark_not_archived=False) -> L
 
 def get_attrs(name: str, mark_not_archived=False) -> LazyJson:
     lzj = LazyJson(f"node_attrs/{name}.json")
+    print(f"CWD node_attrs/{name}.json: {lzj._cwd}", flush=True)
     with lzj as sub_graph:
         try_load_feedstock(name, sub_graph, mark_not_archived=mark_not_archived)
 
@@ -282,13 +285,6 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
-
-            if n_left % 10 == 0:
-                deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
-                deploy(dirs_to_deploy=["node_attrs"])
-
-        deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
-        deploy(dirs_to_deploy=["node_attrs"])
 
 
 def _build_graph_sequential(
