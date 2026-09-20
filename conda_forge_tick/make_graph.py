@@ -1,4 +1,3 @@
-import glob
 import hashlib
 import logging
 import os
@@ -13,6 +12,7 @@ import networkx as nx
 import psutil
 import tqdm
 
+from conda_forge_tick.deploy import deploy
 from conda_forge_tick.feedstock_parser import load_feedstock
 from conda_forge_tick.git_utils import is_tracked_by_git
 from conda_forge_tick.lazy_json_backends import (
@@ -269,21 +269,7 @@ def _build_graph_process_pool(
                 eta = (time.time() - start) / (n_tot - n_left) * n_left
             name = futures[f]
             try:
-                lzj = f.result()
-                print(f"CWD node_attrs/{name}: {lzj._cwd}", flush=True)
-                print(f"CWD pr_info/{name}: {lzj['pr_info']._cwd}", flush=True)
-                print(
-                    f"CWD version_pr_info/{name}: {lzj['version_pr_info']._cwd}",
-                    flush=True,
-                )
-                print(
-                    f"EXTRA FILES pr_info/{name}: {set(glob.glob('node_attrs/pr_info/**/' + name + '.json', recursive=True))}",
-                    flush=True,
-                )
-                print(
-                    f"EXTRA FILES version_pr_info/{name}: {set(glob.glob('node_attrs/version_pr_info/**/' + name + '.json', recursive=True))}",
-                    flush=True,
-                )
+                f.result()
                 if n_left % 100 == 0:
                     logger.info(
                         "nodes left %5d - eta %5ds: finished %s", n_left, int(eta), name
@@ -296,6 +282,15 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
+
+            # FIXME
+            if n_left % 10 == 0:
+                deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+                deploy(dirs_to_deploy=["node_attrs"])
+
+    # FIXME
+    deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+    deploy(dirs_to_deploy=["node_attrs"])
 
 
 def _build_graph_sequential(
