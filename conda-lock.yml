@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.21.11.10.01
+  version: 2026.09.21.18.40.03
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.11.10.01-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.18.40.03-hd8ed1ab_1.conda
   hash:
-    md5: aa501b3ea90f759e9cf40e8ede89fd9f
-    sha256: 86f050e12a688699f8f9fe7e2b5b9b91fac3fc440ddb982dbb37037c21b8a9de
+    md5: 435f444b2796f4c6fe9067cfc96965ab
+    sha256: 0efa3f382b78293e64e8cc2ae904e83f4f50ea6067a9ec9a09d7ef60b0e19659
   category: main
   optional: false
 - name: conda-index
@@ -1536,16 +1536,16 @@ package:
   category: main
   optional: false
 - name: fribidi
-  version: 1.0.16
+  version: 1.0.17
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/fribidi-1.0.16-h7cc23a3_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/fribidi-1.0.17-h7cc23a3_0.conda
   hash:
-    md5: 16d6e5a0f8dbc17bd6669dba6f49bad3
-    sha256: 76dd097bd65d812a9104edb0e266386e152e65928ac5c8eb4f480ce24affc470
+    md5: f9d5302bca196ee87e62f393f2626562
+    sha256: 3ba79ebfbd14ca5db4affaf10ee8001064e907de5baabc2dbe5bcd9aec856c9f
   category: main
   optional: false
 - name: frozendict
@@ -3430,10 +3430,10 @@ package:
     python-librt: '>=0.13.0'
     python_abi: 3.12.*
     typing_extensions: '>=4.6.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/mypy-2.3.1-py312h1b36aeb_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/mypy-2.3.1-py312h1b36aeb_2.conda
   hash:
-    md5: 815e2e7092885558875c1b8fe5b47100
-    sha256: 225abc5fa711bb01ec4a0ec88383bde286b62624c47188e1c8dd49de0762be4d
+    md5: 614f4a808b6c50516d423172d231dc10
+    sha256: b11e1af6e0dd18d4f31f61da627d9877cbf5b6edb1ed538e036b290219c5d34a
   category: main
   optional: false
 - name: mypy_extensions
@@ -3720,7 +3720,7 @@ package:
   category: main
   optional: false
 - name: pixi
-  version: 0.80.0
+  version: 0.81.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -3728,10 +3728,10 @@ package:
     libgcc: '>=15'
     libstdcxx: '>=15'
     openssl: '>=3.5.8,<4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pixi-0.80.0-hf01adef_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pixi-0.81.0-hf01adef_0.conda
   hash:
-    md5: 10ecfb860d4e496becd0c5142a06dbb6
-    sha256: 889685b000a0cf03b6bdddf9dbad9c34152112cc7e1a2468e8ed739d104dfcdb
+    md5: 5432d3ad3bf2cd87613dccc17af3424f
+    sha256: 691c4f465b27b9ed0aeee0849c5a1f8b234f1ef02d4c7d7572855bcca84d3e10
   category: main
   optional: false
 - name: pixman
@@ -3987,10 +3987,10 @@ package:
     python: ''
     python_abi: 3.12.*
     typing-extensions: '>=4.6.0,!=4.7.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pydantic-core-2.46.5-py312hc767a74_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pydantic-core-2.46.5-py312hc767a74_2.conda
   hash:
-    md5: 2854d36e093d53d0cf81ec433ffd9c4c
-    sha256: a805a64e0e7e5ed22e8f49f0038a5d8cab4b96cf094c8822da75d6823f2377e8
+    md5: f7a033135df967ea983fe4833856d2b1
+    sha256: 64ef841c88756f8d1ca9c241c0ab1585ad5a9cb8d0bfe0555c201c2ad0e3c701
   category: main
   optional: false
 - name: pydantic-extra-types
