@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.21.06.27.06
+  version: 2026.09.21.09.47.09
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.06.27.06-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.09.47.09-hd8ed1ab_1.conda
   hash:
-    md5: ee70272ab9ca12be6da0e5c8f12e3733
-    sha256: f110e661f8a1b037f9411ad2f289fe36617630217a783d145637d3d69a10f956
+    md5: 01eaed305f0ab57319466b8943013730
+    sha256: 7343ed9861ab8eff022ac18f70523828da72ad1e180bf50f0bd6027f51dc414a
   category: main
   optional: false
 - name: conda-index
@@ -5390,7 +5390,7 @@ package:
   category: main
   optional: false
 - name: wrapt
-  version: 2.4.0
+  version: 2.4.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -5398,10 +5398,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.4.0-py312h1b36aeb_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.4.1-py312h1b36aeb_0.conda
   hash:
-    md5: 1c6a986ce95c1919e83c4a8650891e38
-    sha256: 0ab5f935929b386b0f22926b81c923bffb69a91d16137f292f6e61c971067c7a
+    md5: d06605fe1a45b11cb4f21d2438a3e3a9
+    sha256: b07ed016c0befa20362bbd1b41cd6d730407f27f171ad15811347741a9553bb7
   category: main
   optional: false
 - name: wurlitzer
