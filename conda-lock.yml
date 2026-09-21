@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.21.18.40.03
+  version: 2026.09.21.20.55.08
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.18.40.03-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.20.55.08-hd8ed1ab_1.conda
   hash:
-    md5: 435f444b2796f4c6fe9067cfc96965ab
-    sha256: 0efa3f382b78293e64e8cc2ae904e83f4f50ea6067a9ec9a09d7ef60b0e19659
+    md5: d5a0ad9e73ef7ff652a8d5cc3908ed2e
+    sha256: 38841f89f6c396a8149c942f64aa4a5e8f87ea8666cb63849961d39409954702
   category: main
   optional: false
 - name: conda-index
@@ -982,7 +982,7 @@ package:
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.9.19
+  version: 2026.9.21
   manager: conda
   platform: linux-64
   dependencies:
@@ -1015,10 +1015,10 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.19-unix_pyh707e725_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.21-unix_pyh707e725_0.conda
   hash:
-    md5: 2b51a4611d1ed7de226a0a16a53a46a2
-    sha256: 6de05359f8334637e9db81709d3b0105db45fb0fb5c0b16f5dc98829fc2cd6ec
+    md5: 2e3ca4138d30e82e59913b910e8845ea
+    sha256: f1e64a8f3287d9051a76e4a47f8fc150b51fa2ac66e65083eefbaf9221fdb313
   category: main
   optional: false
 - name: conda-souschef
@@ -2003,15 +2003,15 @@ package:
   category: main
   optional: false
 - name: idna
-  version: '3.19'
+  version: '3.20'
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/idna-3.19-pyhcf101f3_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/idna-3.20-pyh5ded981_0.conda
   hash:
-    md5: a39ae05027e9b707742e41b30d296b75
-    sha256: 1c35a59c1545ad0fdaddf1fbde7bcfa6ef41a8d68c3a2b0b4a291be00676163e
+    md5: ee73be987f9de9ea5c2fdaeefa7b6491
+    sha256: e044b1ec829e2e24f971fa3f3408eb26f1db836e521a58f08b0fd9a03fee47be
   category: main
   optional: false
 - name: importlib-metadata
@@ -3568,10 +3568,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/orjson-3.12.0-py312he35bb96_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/orjson-3.12.0-py312he35bb96_1.conda
   hash:
-    md5: c02a56bfd152abea8023b4e3c2d38435
-    sha256: 617fd0a4e1670421e69d9e3c699fd04916aa3d56fb4abaedff4628d3b95d0822
+    md5: f3ff8203420ad6ea863d21db096d8426
+    sha256: b3504d474b838188ba06558e554a4f69394bc9c7fd48d8df9d2910ae2c33e507
   category: main
   optional: false
 - name: packaging
@@ -4743,10 +4743,10 @@ package:
     numpy: <2.8,>=1.25,<3,>=2.0.0
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.18.1-py312h106c528_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.18.1-py312h106c528_1.conda
   hash:
-    md5: 9f57b4b1fa3b51dbf1df6eca1e6c0cfa
-    sha256: 1304a96048fd68ae50e30ca4891e4d2851c20c5687b3152045930541a4008121
+    md5: 73cc9629383ee4e1f2166b314527b324
+    sha256: d080762a708a0c885814995470d6fb186cec366acb080913584127e94ed031d5
   category: main
   optional: false
 - name: scrypt
