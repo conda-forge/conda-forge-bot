@@ -580,12 +580,12 @@ class LinuxRISCV64(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {"linux_riscv64": "linux_64"}
+    build_platform = {}
     # We bump here as most feedstocks need a rerender and updates
     # the compiler versions
     bump_number = 1
     pkg_list_filename = "linux_riscv64.txt"
-    arches = {"linux_riscv64": "linux_64"}
+    arches = {"linux_riscv64": "default"}
     ignored_packages = {
         # already built compiler packages that get caught in a cycle
         "_openmp_mutex",
