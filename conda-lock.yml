@@ -464,7 +464,7 @@ package:
   category: main
   optional: false
 - name: cairo
-  version: 1.18.4
+  version: 1.18.6
   manager: conda
   platform: linux-64
   dependencies:
@@ -476,7 +476,7 @@ package:
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=15'
-    libglib: '>=2.88.3,<3.0a0'
+    libglib: '>=2.90.0,<3.0a0'
     libpng: '>=1.6.58,<1.7.0a0'
     libstdcxx: '>=15'
     libxcb: '>=1.17.0,<2.0a0'
@@ -487,10 +487,10 @@ package:
     xorg-libx11: '>=1.8.13,<2.0a0'
     xorg-libxext: '>=1.3.7,<2.0a0'
     xorg-libxrender: '>=0.9.12,<0.10.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/cairo-1.18.4-h3c89d7e_3.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/cairo-1.18.6-h3c89d7e_0.conda
   hash:
-    md5: 7b870cffbaa8430290e567a0facd8dca
-    sha256: 6b551d9346997bc4c6fadf96b7b92442b8f3244011cc462e4ee77afc714d52c5
+    md5: 7920701f9abcb488411495742cf365a7
+    sha256: 5d0efc6f9981468aca72897460d9b2d17b74dff72787f20a9d2330e214064515
   category: main
   optional: false
 - name: certifi
@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.21.22.21.35
+  version: 2026.09.22.09.39.50
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.22.21.35-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.22.09.39.50-hd8ed1ab_1.conda
   hash:
-    md5: 8a054e1d149c6c2eadca8c5cda9b5d1e
-    sha256: 8d9a3417a25ddcac5780523805d2d84dadb500d2efed6ef2aeeb63b587ee4e19
+    md5: da01720c6d41f8c4701e7c32cbe4d5c5
+    sha256: 9edd76f6f251b0072687269f9ccf84fb83e1ffce9d32eb23e62ce02eaa7bcd73
   category: main
   optional: false
 - name: conda-index
@@ -1836,15 +1836,15 @@ package:
   category: main
   optional: false
 - name: harfbuzz
-  version: 14.4.0
+  version: 14.5.0
   manager: conda
   platform: linux-64
   dependencies:
-    libharfbuzz-devel: 14.4.0
-  url: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.4.0-ha770c72_1.conda
+    libharfbuzz-devel: 14.5.0
+  url: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.5.0-ha770c72_0.conda
   hash:
-    md5: d5c10e05d7135fca0731173c288bfff5
-    sha256: 12b371fad335d0c27de968140088cc678233d7060c2743baf9cb687a9fa975a7
+    md5: ef253035e60216967c117ab9a279eea2
+    sha256: 1fefc6e69c1e08a42639ede2c025102bb76244a364d6a2d332991017aa4d74a6
   category: main
   optional: false
 - name: hatch
@@ -2411,16 +2411,16 @@ package:
   category: main
   optional: false
 - name: libexpat
-  version: 2.8.1
+  version: 2.8.4
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libexpat-2.8.1-hecca717_1.conda
+    libgcc: '>=15'
+  url: https://conda.anaconda.org/conda-forge/linux-64/libexpat-2.8.4-hd2095e1_0.conda
   hash:
-    md5: b24d3c612f71e7aa74158d92106318b2
-    sha256: 16feffd9ddbbe5b718515d38ee376c685ba95491cd901244e24671d20b952a77
+    md5: a77b44d6cbaad97f3ad050ab35fad55a
+    sha256: 2f5e90b621f7bf64c35d5c972bd85a645555d82404130569149a129dcbc8b8dd
   category: main
   optional: false
 - name: libffi
@@ -2654,49 +2654,49 @@ package:
   category: main
   optional: false
 - name: libharfbuzz
-  version: 14.4.0
+  version: 14.5.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    cairo: '>=1.18.4,<2.0a0'
+    cairo: '>=1.18.6,<2.0a0'
     graphite2: '>=1.3.15,<2.0a0'
     icu: '>=78.3,<79.0a0'
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=15'
-    libglib: '>=2.88.3,<3.0a0'
+    libglib: '>=2.90.0,<3.0a0'
     libpng: '>=1.6.58,<1.7.0a0'
     libstdcxx: '>=15'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-14.4.0-h23af247_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-14.5.0-h23af247_0.conda
   hash:
-    md5: c44470b6bfa6a582cb4dd42cbda3401e
-    sha256: 979b14ba13054aab9e90363809aac470a58b7c37203c330216327356a98c8f60
+    md5: 4c0d9662a054c51e69b66a427e7ead03
+    sha256: 4e1522841eb5a5ab5a152ea9e2c1db4ec7919ab3c8991354367db9e8902e6111
   category: main
   optional: false
 - name: libharfbuzz-devel
-  version: 14.4.0
+  version: 14.5.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    cairo: '>=1.18.4,<2.0a0'
+    cairo: '>=1.18.6,<2.0a0'
     freetype: ''
     graphite2: '>=1.3.15,<2.0a0'
     icu: '>=78.3,<79.0a0'
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=15'
-    libglib: '>=2.88.3,<3.0a0'
-    libharfbuzz: 14.4.0
+    libglib: '>=2.90.0,<3.0a0'
+    libharfbuzz: 14.5.0
     libpng: '>=1.6.58,<1.7.0a0'
     libstdcxx: '>=15'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-devel-14.4.0-h23af247_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-devel-14.5.0-h23af247_0.conda
   hash:
-    md5: 148cd995f5ba8af22412a4258abc2f94
-    sha256: 11f08038c165e354c2a7064ce6bcb28dad2668b330931572666f418e2a8f623c
+    md5: 82f4063122b5ebc18cc34bb269e941f3
+    sha256: b877e3fc7a8cfd5c702086333c24bb454971e1332865e9361a8038fcf82d706c
   category: main
   optional: false
 - name: libiconv
@@ -3462,15 +3462,15 @@ package:
   category: main
   optional: false
 - name: networkx
-  version: 3.6.1
+  version: '3.7'
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/networkx-3.6.1-pyhcf101f3_0.conda
+    python: '>=3.12'
+  url: https://conda.anaconda.org/conda-forge/noarch/networkx-3.7-pyhc364b38_0.conda
   hash:
-    md5: a2c1eeadae7a309daed9d62c96012a2b
-    sha256: f6a82172afc50e54741f6f84527ef10424326611503c64e359e25a19a8e4c1c6
+    md5: ddc679d85e7c9c3738efd303b6580c69
+    sha256: 9458e13767779d5db48c035ba27a1af843fde5187d34c17b60076e18835e8637
   category: main
   optional: false
 - name: nlohmann_json-abi
