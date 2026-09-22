@@ -284,8 +284,12 @@ def _build_graph_process_pool(
                     exc_info=e,
                 )
 
-            deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
-            deploy(dirs_to_deploy=["node_attrs"])
+            if n_left % 10 == 0:
+                deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+                deploy(dirs_to_deploy=["node_attrs"])
+
+    deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+    deploy(dirs_to_deploy=["node_attrs"])
 
 
 def _build_graph_sequential(
