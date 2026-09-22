@@ -49,17 +49,17 @@ package:
   category: main
   optional: false
 - name: adwaita-icon-theme
-  version: '50.0'
+  version: '51.0'
   manager: conda
   platform: linux-64
   dependencies:
     __unix: ''
     hicolor-icon-theme: ''
     librsvg: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/adwaita-icon-theme-50.0-unix_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/adwaita-icon-theme-51.0-unix_0.conda
   hash:
-    md5: 383e9cae97ca2f1fd090adab7cb2fbbf
-    sha256: 18434a496f3728f3c62181ecbd0fb51a66bf79c997642b6642479c0f4b4b2dee
+    md5: 6f62266fb2bfc35a5071cfa1d6ffdcc9
+    sha256: def01b148aa54d4de29b7d4bf58d941c8699582201db14cf78c6c89fa1666434
   category: main
   optional: false
 - name: annotated-doc
@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.22.09.39.50
+  version: 2026.09.22.19.29.34
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.22.09.39.50-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.22.19.29.34-hd8ed1ab_1.conda
   hash:
-    md5: da01720c6d41f8c4701e7c32cbe4d5c5
-    sha256: 9edd76f6f251b0072687269f9ccf84fb83e1ffce9d32eb23e62ce02eaa7bcd73
+    md5: 5de1c9b0b5d56d21ce568b33414a6af4
+    sha256: 50c8710b2637e32f6c0ca2523e0dc882d7b8cceed3761af0a9e0c77b3849f16d
   category: main
   optional: false
 - name: conda-index
@@ -969,16 +969,16 @@ package:
   category: main
   optional: false
 - name: conda-self
-  version: 0.2.1
+  version: 0.3.0
   manager: conda
   platform: linux-64
   dependencies:
     conda: '>=26.1.1'
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-self-0.2.1-pyhd8ed1ab_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-self-0.3.0-pyhd8ed1ab_0.conda
   hash:
-    md5: ac705504abf28bb924a021a3d5f4b55f
-    sha256: efd3b7b79a0e3993a174ab0140794479e2479b59fd053605acaaa25718f0f013
+    md5: f041b3104d0b01d187d72b1a71af79d3
+    sha256: ba6e0a634471934a5d2e4ef264c0ff012c8be9c4d0e9dafb5ad7abdf57fa199a
   category: main
   optional: false
 - name: conda-smithy
@@ -2971,19 +2971,19 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    cairo: '>=1.18.4,<2.0a0'
-    fontconfig: '>=2.18.0,<3.0a0'
+    cairo: '>=1.18.6,<2.0a0'
+    fontconfig: '>=2.18.3,<3.0a0'
     fonts-conda-ecosystem: ''
-    gdk-pixbuf: '>=2.44.6,<3.0a0'
-    harfbuzz: '>=14.2.0'
-    libgcc: '>=14'
-    libglib: '>=2.88.1,<3.0a0'
-    libxml2-16: '>=2.14.6'
-    pango: '>=1.56.4,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/librsvg-2.62.3-h4c96295_0.conda
+    gdk-pixbuf: '>=2.44.8,<3.0a0'
+    libgcc: '>=15'
+    libglib: '>=2.90.0,<3.0a0'
+    libharfbuzz: '>=14.5.0'
+    libxml2-16: '>=2.15.4'
+    pango: '>=1.58.2,<2.0a0'
+  url: https://conda.anaconda.org/conda-forge/linux-64/librsvg-2.62.3-ha427ee3_1.conda
   hash:
-    md5: 492c8d9b1c564c2e948b6cb4ba0f8261
-    sha256: 5571bd8239d71961d4e3ce972f865b3ea95a91ce0b53d5749fe2dd24254ddbda
+    md5: d357bae89810ca378fdc9e1cf02a7a54
+    sha256: 9cd8f95157cd442b463649117c4814f1d8488a8b70b31ac926860bc43eb3685a
   category: main
   optional: false
 - name: libsodium
