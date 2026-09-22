@@ -344,16 +344,18 @@ def _deploy_via_api(
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"[{full_repo_name}] pushing file '{pth}' as '{dst_pth}'", flush=True)
+                print(
+                    f"[{full_repo_name}] pushing file '{pth}' as '{dst_pth}'",
+                    flush=True,
+                )
 
             # make a nice message for stuff managed via LazyJson
             # use path here for nice commit message
-            # FIXME
-            # msg = _get_pth_commit_message(pth)
+            msg = _get_pth_commit_message(pth)
 
-            # push_file_via_gh_api(
-            #     src_pth=pth, dst_pth=dst_pth, repo=full_repo_name, msg=msg
-            # )
+            push_file_via_gh_api(
+                src_pth=pth, dst_pth=dst_pth, repo=full_repo_name, msg=msg
+            )
         except Exception as e:
             logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -367,14 +369,16 @@ def _deploy_via_api(
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"[{full_repo_name}] deleting file '{pth}' as '{dst_pth}'", flush=True)
+                print(
+                    f"[{full_repo_name}] deleting file '{pth}' as '{dst_pth}'",
+                    flush=True,
+                )
 
             # make a nice message for stuff managed via LazyJson
             # use path here for nice commit message
-            # FIXME
-            # msg = _get_pth_commit_message(pth)
+            msg = _get_pth_commit_message(pth)
 
-            # delete_file_via_gh_api(dst_pth=dst_pth, repo=full_repo_name, msg=msg)
+            delete_file_via_gh_api(dst_pth=dst_pth, repo=full_repo_name, msg=msg)
         except Exception as e:
             logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)
