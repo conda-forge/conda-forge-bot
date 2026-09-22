@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.21.20.55.08
+  version: 2026.09.21.22.21.35
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.20.55.08-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.21.22.21.35-hd8ed1ab_1.conda
   hash:
-    md5: d5a0ad9e73ef7ff652a8d5cc3908ed2e
-    sha256: 38841f89f6c396a8149c942f64aa4a5e8f87ea8666cb63849961d39409954702
+    md5: 8a054e1d149c6c2eadca8c5cda9b5d1e
+    sha256: 8d9a3417a25ddcac5780523805d2d84dadb500d2efed6ef2aeeb63b587ee4e19
   category: main
   optional: false
 - name: conda-index
@@ -982,7 +982,7 @@ package:
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.9.21
+  version: 2026.9.22
   manager: conda
   platform: linux-64
   dependencies:
@@ -1015,10 +1015,10 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.21-unix_pyh707e725_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.22-unix_pyh707e725_0.conda
   hash:
-    md5: 2e3ca4138d30e82e59913b910e8845ea
-    sha256: f1e64a8f3287d9051a76e4a47f8fc150b51fa2ac66e65083eefbaf9221fdb313
+    md5: a6341dfd81b7b5ebb510095d4d66eff9
+    sha256: 3fbb6dc06ad72b753385dc900a16963e62f494c26e5dcf02b11ff8c9fb1119b6
   category: main
   optional: false
 - name: conda-souschef
@@ -4771,15 +4771,15 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
+    __linux: ''
     cryptography: '>=2.0'
     dbus: ''
     jeepney: '>=0.6'
-    python: '>=3.12,<3.13.0a0'
-    python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/secretstorage-3.5.0-py312h7900ff3_2.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/secretstorage-3.5.0-pyhc9edb4d_3.conda
   hash:
-    md5: d65c8e382280bb9758c23e20dc91b8d5
-    sha256: 4006e8ffa0d05f3b49ad713ba65163379bf8473e395a4e33b6efed04dc4689a9
+    md5: 0792c92f542eaa716b6f2331e25f0027
+    sha256: 8737d5470befc491447e8ec9f8d9eb486cee3c536190609f71dcfc38d07304b1
   category: main
   optional: false
 - name: semver
