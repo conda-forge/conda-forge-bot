@@ -400,20 +400,19 @@ def _deploy_via_api(
         else:
             files_done.add(pth)
 
-    # FIXME
-    # for pth in files_done:
-    #     pth_parts = pth.split("/")
-    #     if len(pth_parts) > 1 and _is_git_dir(pth_parts[0]):
-    #         dr = pth_parts[0]
-    #         pth_to_restore = "/".join(pth_parts[1:])
-    #         ctx = pushd(dr)
-    #     else:
-    #         dr = pth
-    #         pth_to_restore = pth
-    #         ctx = contextlib.nullcontext()
+    for pth in files_done:
+        pth_parts = pth.split("/")
+        if len(pth_parts) > 1 and _is_git_dir(pth_parts[0]):
+            dr = pth_parts[0]
+            pth_to_restore = "/".join(pth_parts[1:])
+            ctx = pushd(dr)
+        else:
+            dr = pth
+            pth_to_restore = pth
+            ctx = contextlib.nullcontext()
 
-    #     with ctx:
-    #         reset_and_restore_file(pth_to_restore)
+        with ctx:
+            reset_and_restore_file(pth_to_restore)
 
     return files_done, files_to_try_again
 

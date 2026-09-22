@@ -523,16 +523,13 @@ def main(
                     ]
                 )
             else:
-                logger.info("updating node attrs")
                 _update_graph_nodes(
                     names_for_this_job,
                     mark_not_archived=True,
                     debug=ctx.debug,
                 )
-                logger.info("adding run exports")
                 _add_run_exports(gx, names_for_this_job)
 
-                logger.info("archibing nodes")
                 _update_nodes_with_archived(
                     archived_names_for_this_job,
                 )
