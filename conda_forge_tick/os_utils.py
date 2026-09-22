@@ -3,19 +3,24 @@ import copy
 import logging
 import os
 import subprocess
+import threading
 
 logger = logging.getLogger(__name__)
+PUSHD_RLOCK = threading.RLock()
 
 
 # https://stackoverflow.com/questions/6194499/pushd-through-os-system
 @contextlib.contextmanager
 def pushd(new_dir: str):
+    # FIXME
+    PUSHD_RLOCK.acquire()
     previous_dir = os.getcwd()
     os.chdir(new_dir)
     try:
         yield
     finally:
         os.chdir(previous_dir)
+        PUSHD_RLOCK.release()
 
 
 @contextlib.contextmanager
