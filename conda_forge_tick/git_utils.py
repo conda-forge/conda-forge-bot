@@ -1966,38 +1966,40 @@ def _get_pth_blob_sha_and_content(
         return None, None
 
 
-def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
+def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> None:
     """Push a file to a repo via the GitHub API.
 
     Parameters
     ----------
-    pth : str
-        The path to the file.
-    repo_full_name : str
+    src_pth : str
+        The path to the file locally.
+    dst_pth: str
+        The destination path of the file in the upstream repo.
+    repo : str
         The full name of the repository (e.g., "conda-forge/conda-forge-pinning").
     msg : str
         The commit message.
     """
-    with open(pth) as f:
+    with open(src_pth) as f:
         data = f.read()
 
     lzj_rts = make_lazy_json_retry_sequence()
     for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
-            repo = gh.get_repo(repo_full_name)
+            repo = gh.get_repo(repo)
 
-            sha, cnt = _get_pth_blob_sha_and_content(pth, repo)
+            sha, cnt = _get_pth_blob_sha_and_content(dst_pth, repo)
             if sha is None:
                 repo.create_file(
-                    pth,
+                    dst_pth,
                     msg,
                     data,
                 )
             else:
                 if cnt != data:
                     repo.update_file(
-                        pth,
+                        dst_pth,
                         msg,
                         data,
                         sha,
@@ -2006,26 +2008,26 @@ def push_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
         except Exception as e:
             logger.debug(
                 "failed to push '%s' - trying %d more times",
-                pth,
+                dst_pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
                 logger.exception(
                     "failed to push '%s'",
-                    pth,
+                    dst_pth,
                     exc_info=e,
                 )
                 raise e
 
 
-def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
+def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
     """Delete a file from a repo via the GitHub API.
 
     Parameters
     ----------
-    pth : str
-        The path to the file.
-    repo_full_name : str
+    dst_pth: str
+        The path of the file in the upstream repo.
+    repo : str
         The full name of the repository (e.g., "conda-forge/conda-forge-pinning").
     msg : str
         The commit message.
@@ -2034,13 +2036,13 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
     for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
-            repo = gh.get_repo(repo_full_name)
+            repo = gh.get_repo(repo)
 
-            sha, _ = _get_pth_blob_sha_and_content(pth, repo)
+            sha, _ = _get_pth_blob_sha_and_content(dst_pth, repo)
 
             if sha is not None:
                 repo.delete_file(
-                    pth,
+                    dst_pth,
                     msg,
                     sha,
                 )
@@ -2049,36 +2051,43 @@ def delete_file_via_gh_api(pth: str, repo_full_name: str, msg: str) -> None:
         except Exception as e:
             logger.debug(
                 "failed to delete '%s' - trying %d more times",
-                pth,
+                dst_pth,
                 ntries - tr - 1,
             )
             if tr == ntries - 1:
                 logger.exception(
                     "failed to delete '%s'",
-                    pth,
+                    dst_pth,
                     exc_info=e,
                 )
                 raise e
 
 
 @lock_git_operation()
-def reset_and_restore_file(pth: str):
+def reset_and_restore_file(*, pth: str, repo_dir: str | None = None):
     """Reset the status of a file tracked by git to its version at the current commit."""
-    subprocess.run(["git", "reset", "--", pth], capture_output=True, text=True)
-    subprocess.run(["git", "restore", "--", pth], capture_output=True, text=True)
-    subprocess.run(["git", "clean", "-f", "--", pth], capture_output=True, text=True)
+    subprocess.run(
+        ["git", "reset", "--", pth], capture_output=True, text=True, cwd=repo_dir
+    )
+    subprocess.run(
+        ["git", "restore", "--", pth], capture_output=True, text=True, cwd=repo_dir
+    )
+    subprocess.run(
+        ["git", "clean", "-f", "--", pth], capture_output=True, text=True, cwd=repo_dir
+    )
 
 
 @lock_git_operation()
-def is_tracked_by_git(pth: str):
-    """Return True if the current working directory is a git repo and the `pth` is
-    tracked by git.
+def is_tracked_by_git(*, pth: str, repo_dir: str | None = None):
+    """Return True if the repo_dir directory is a git repo and the `pth` is
+    tracked by git. Defaults to the current working directory.
     """
     # command suggested by AI and then tested by hand
     ret = subprocess.run(
         ["git", "ls-files", "--error-unmatch", pth],
         capture_output=True,
         text=True,
+        cwd=repo_dir,
     )
     if ret.returncode == 0:
         return True

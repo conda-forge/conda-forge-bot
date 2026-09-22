@@ -434,7 +434,7 @@ def _should_be_stub_node(name):
     # is empty JSON blob and not tracked by git
     with open(pth) as fp:
         data = fp.read()
-    if data.strip() == "{}" and not is_tracked_by_git(pth):
+    if data.strip() == "{}" and not is_tracked_by_git(pth=pth):
         # remove the file here so it is not pushed later
         os.remove(pth)
         return True

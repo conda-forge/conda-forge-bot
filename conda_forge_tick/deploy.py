@@ -1,4 +1,3 @@
-import contextlib
 import logging
 import os
 import secrets
@@ -20,7 +19,6 @@ from conda_forge_tick.lazy_json_backends import (
     get_lazy_json_backends,
     lazy_json_override_backends,
 )
-from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.settings import settings
 from conda_forge_tick.utils import (
     fold_log_lines,
@@ -314,7 +312,7 @@ def _get_pth_commit_message(pth):
     return msg
 
 
-def _get_full_repo_name_pth_and_context_from_path(pth):
+def _get_full_repo_name_and_dst_pth_from_src_pth(pth):
     default_repo = get_github_backend_repo_for_hashmap("lazy_json")
 
     pth_parts = pth.split("/")
@@ -326,12 +324,9 @@ def _get_full_repo_name_pth_and_context_from_path(pth):
 
     pth_parts = pth.split("/")
     if repo != default_repo and len(pth_parts) > 1:
-        context_dir = pth_parts[0]
         pth = "/".join(pth_parts[1:])
-    else:
-        context_dir = None
 
-    return repo, pth, context_dir
+    return repo, pth
 
 
 def _is_git_dir(dr):
@@ -345,25 +340,19 @@ def _deploy_via_api(
     files_done = set()
     files_to_try_again = set()
     for pth in tqdm.tqdm(files_to_add, desc="pushing files", ncols=80, file=sys.stdout):
-        full_repo_name, pth_to_push, context_dir = (
-            _get_full_repo_name_pth_and_context_from_path(pth)
-        )
+        full_repo_name, dst_pth = _get_full_repo_name_and_dst_pth_from_src_pth(pth)
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"[{full_repo_name}] pushing file '{pth_to_push}'", flush=True)
+                print(f"[{full_repo_name}] pushing file '{dst_pth}'", flush=True)
 
             # make a nice message for stuff managed via LazyJson
             # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            if context_dir is not None:
-                ctx = pushd(context_dir)
-            else:
-                ctx = contextlib.nullcontext()
-
-            with ctx:
-                push_file_via_gh_api(pth_to_push, full_repo_name, msg)
+            push_file_via_gh_api(
+                src_pth=pth, dst_pth=dst_pth, repo=full_repo_name, msg=msg
+            )
         except Exception as e:
             logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -373,9 +362,7 @@ def _deploy_via_api(
     for pth in tqdm.tqdm(
         files_to_delete, desc="deleting files", ncols=80, file=sys.stdout
     ):
-        full_repo_name, pth_to_push, context_dir = (
-            _get_full_repo_name_pth_and_context_from_path(pth)
-        )
+        full_repo_name, dst_pth = _get_full_repo_name_and_dst_pth_from_src_pth(pth)
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
@@ -385,13 +372,7 @@ def _deploy_via_api(
             # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            if context_dir is not None:
-                ctx = pushd(context_dir)
-            else:
-                ctx = contextlib.nullcontext()
-
-            with ctx:
-                delete_file_via_gh_api(pth_to_push, full_repo_name, msg)
+            delete_file_via_gh_api(dst_pth=dst_pth, repo=full_repo_name, msg=msg)
         except Exception as e:
             logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -403,14 +384,11 @@ def _deploy_via_api(
         if len(pth_parts) > 1 and _is_git_dir(pth_parts[0]):
             dr = pth_parts[0]
             pth_to_restore = "/".join(pth_parts[1:])
-            ctx = pushd(dr)
         else:
-            dr = pth
+            dr = None
             pth_to_restore = pth
-            ctx = contextlib.nullcontext()
 
-        with ctx:
-            reset_and_restore_file(pth_to_restore)
+        reset_and_restore_file(pth=pth_to_restore, repo_dir=dr)
 
     return files_done, files_to_try_again
 
@@ -459,7 +437,15 @@ def deploy(
         new_files_to_add = set()
         for fn in files_to_add:
             if any(fn.startswith(f"{dr}/") for dr in dirs_to_ignore):
-                reset_and_restore_file(fn)
+                pth_parts = fn.split("/")
+                if len(pth_parts) > 1 and _is_git_dir(pth_parts[0]):
+                    dr = pth_parts[0]
+                    pth_to_restore = "/".join(pth_parts[1:])
+                else:
+                    dr = None
+                    pth_to_restore = fn
+
+                reset_and_restore_file(pth=pth_to_restore, repo_dir=dr)
                 print("ignoring file to add:", fn, flush=True)
             else:
                 new_files_to_add.add(fn)
@@ -468,7 +454,15 @@ def deploy(
         new_files_to_delete = set()
         for fn in files_to_delete:
             if any(fn.startswith(f"{dr}/") for dr in dirs_to_ignore):
-                reset_and_restore_file(fn)
+                pth_parts = fn.split("/")
+                if len(pth_parts) > 1 and _is_git_dir(pth_parts[0]):
+                    dr = pth_parts[0]
+                    pth_to_restore = "/".join(pth_parts[1:])
+                else:
+                    dr = None
+                    pth_to_restore = fn
+
+                reset_and_restore_file(pth=pth_to_restore, repo_dir=dr)
                 print("ignoring file to delete:", fn, flush=True)
             else:
                 new_files_to_delete.add(fn)
