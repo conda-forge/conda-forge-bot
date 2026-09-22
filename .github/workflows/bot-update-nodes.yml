@@ -1,6 +1,8 @@
 name: bot-update-nodes
 
 on:
+  # FIXME
+  pull_request: null
   workflow_dispatch: null
   schedule:
     - cron: '8-59/15 * * * *'

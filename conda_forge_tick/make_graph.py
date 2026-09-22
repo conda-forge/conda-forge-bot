@@ -249,6 +249,8 @@ def _build_graph_process_pool(
     names: list[str],
     mark_not_archived=False,
 ) -> None:
+    from conda_forge_tick.deploy import deploy
+
     # we use threads here since all of the work is done in a container anyways
     with executor("thread", max_workers=8) as pool:
         futures = {
@@ -281,6 +283,9 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
+
+            deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+            deploy(dirs_to_deploy=["node_attrs"])
 
 
 def _build_graph_sequential(
@@ -512,13 +517,16 @@ def main(
                     ]
                 )
             else:
+                logger.info("updating node attrs")
                 _update_graph_nodes(
                     names_for_this_job,
                     mark_not_archived=True,
                     debug=ctx.debug,
                 )
+                logger.info("adding run exports")
                 _add_run_exports(gx, names_for_this_job)
 
+                logger.info("archibing nodes")
                 _update_nodes_with_archived(
                     archived_names_for_this_job,
                 )
