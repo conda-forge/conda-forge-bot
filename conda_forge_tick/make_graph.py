@@ -249,6 +249,7 @@ def _build_graph_process_pool(
     names: list[str],
     mark_not_archived=False,
 ) -> None:
+
     # we use threads here since all of the work is done in a container anyways
     with executor("thread", max_workers=8) as pool:
         futures = {
@@ -434,7 +435,7 @@ def _should_be_stub_node(name):
     # is empty JSON blob and not tracked by git
     with open(pth) as fp:
         data = fp.read()
-    if data.strip() == "{}" and not is_tracked_by_git(pth):
+    if data.strip() == "{}" and not is_tracked_by_git(pth=pth):
         # remove the file here so it is not pushed later
         os.remove(pth)
         return True
