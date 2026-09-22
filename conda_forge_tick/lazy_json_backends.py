@@ -243,6 +243,25 @@ class FileLazyJsonBackend(LazyJsonBackend):
             "FileLazyJsonBackend SET: (%s, %s) w/ path %s", name, key, sharded_path
         )
 
+        # FIXME
+        if any("version_pr_info" in prt for prt in [name, key]):
+            logger.info(
+                "FileLazyJsonBackend SET at stacklevel=2: (%s, %s) w/ path %s", name, key, sharded_path,
+                stacklevel=2,
+            )
+            logger.info(
+                "FileLazyJsonBackend SET at stacklevel=3: (%s, %s) w/ path %s", name, key, sharded_path,
+                stacklevel=3,
+            )
+            logger.info(
+                "FileLazyJsonBackend SET at stacklevel=4: (%s, %s) w/ path %s", name, key, sharded_path,
+                stacklevel=4,
+            )
+            logger.info(
+                "FileLazyJsonBackend SET at stacklevel=5: (%s, %s) w/ path %s", name, key, sharded_path,
+                stacklevel=5,
+            )
+
         with open(sharded_path, "w") as f:
             f.write(value)
 

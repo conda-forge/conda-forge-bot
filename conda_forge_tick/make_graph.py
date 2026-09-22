@@ -100,6 +100,9 @@ def make_outputs_lut_from_graph(gx):
 
 
 def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
+    # FIXME
+    logger.info("MAKE REQUIRED LZJ REFS name|cwd: %r|%r", name, os.path.abspath(os.getcwd()))
+
     lzj_vpri = (
         _in_vpri if _in_vpri is not None else LazyJson(f"version_pr_info/{name}.json")
     )
@@ -249,6 +252,8 @@ def _build_graph_process_pool(
     names: list[str],
     mark_not_archived=False,
 ) -> None:
+    from conda_forge_tick.deploy import deploy
+
     # we use threads here since all of the work is done in a container anyways
     with executor("thread", max_workers=8) as pool:
         futures = {
@@ -281,6 +286,15 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
+
+            # FIXME
+            if n_left % 10 == 0:
+                deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+                deploy(dirs_to_deploy=["node_attrs"])
+
+    # FIXME
+    deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+    deploy(dirs_to_deploy=["node_attrs"])
 
 
 def _build_graph_sequential(
