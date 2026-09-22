@@ -1983,7 +1983,7 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
     with open(src_pth) as f:
         data = f.read()
 
-    lzj_rts = make_lazy_json_retry_sequence(num_tries=1)
+    lzj_rts = make_lazy_json_retry_sequence()
     for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
@@ -2032,7 +2032,7 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
     msg : str
         The commit message.
     """
-    lzj_rts = make_lazy_json_retry_sequence(num_tries=1)
+    lzj_rts = make_lazy_json_retry_sequence()
     for tr, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
