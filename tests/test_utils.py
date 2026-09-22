@@ -1,4 +1,5 @@
 import contextlib
+import os
 import tempfile
 import textwrap
 from io import StringIO
@@ -259,7 +260,13 @@ def test_load_graph_file_does_not_exist(exists_mock: MagicMock):
     with mock.patch("builtins.open", mock_open(read_data=EMPTY_JSON)) as mock_file:
         load_graph()
 
-    mock_file.assert_has_calls([mock.call(DEFAULT_GRAPH_FILENAME, "w")])
+    mock_file.assert_has_calls(
+        [
+            mock.call(
+                os.path.join(os.path.abspath(os.getcwd()), DEFAULT_GRAPH_FILENAME), "w"
+            )
+        ]
+    )
 
 
 def test_load_existing_graph():
@@ -289,7 +296,13 @@ def test_load_existing_graph_file_does_not_exist(exists_mock: MagicMock):
         with pytest.raises(ValueError, match="empty JSON"):
             load_existing_graph()
 
-    mock_file.assert_has_calls([mock.call(DEFAULT_GRAPH_FILENAME, "w")])
+    mock_file.assert_has_calls(
+        [
+            mock.call(
+                os.path.join(os.path.abspath(os.getcwd()), DEFAULT_GRAPH_FILENAME), "w"
+            )
+        ]
+    )
 
 
 def test_munge_dict_repr():

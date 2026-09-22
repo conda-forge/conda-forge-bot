@@ -351,19 +351,20 @@ def _deploy_via_api(
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"[{full_repo_name}] pushing file '{pth_to_push}'", flush=True)
+                print(f"[{full_repo_name}] pushing file '{pth_to_push}' w/ dir '{context_dir}'", flush=True)
 
+            # FIXME
             # make a nice message for stuff managed via LazyJson
             # use path here for nice commit message
-            msg = _get_pth_commit_message(pth)
+            # msg = _get_pth_commit_message(pth)
 
-            if context_dir is not None:
-                ctx = pushd(context_dir)
-            else:
-                ctx = contextlib.nullcontext()
+            # if context_dir is not None:
+            #     ctx = pushd(context_dir)
+            # else:
+            #     ctx = contextlib.nullcontext()
 
-            with ctx:
-                push_file_via_gh_api(pth_to_push, full_repo_name, msg)
+            # with ctx:
+            #     push_file_via_gh_api(pth_to_push, full_repo_name, msg)
         except Exception as e:
             logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -379,19 +380,20 @@ def _deploy_via_api(
 
         try:
             with tqdm.tqdm.external_write_mode(file=sys.stdout):
-                print(f"[{full_repo_name}] deleting file '{pth}'", flush=True)
+                print(f"[{full_repo_name}] deleting file '{pth}' w/ dir '{context_dir}'", flush=True)
 
+            # FIXME
             # make a nice message for stuff managed via LazyJson
             # use path here for nice commit message
-            msg = _get_pth_commit_message(pth)
+            # msg = _get_pth_commit_message(pth)
 
-            if context_dir is not None:
-                ctx = pushd(context_dir)
-            else:
-                ctx = contextlib.nullcontext()
+            # if context_dir is not None:
+            #     ctx = pushd(context_dir)
+            # else:
+            #     ctx = contextlib.nullcontext()
 
-            with ctx:
-                delete_file_via_gh_api(pth_to_push, full_repo_name, msg)
+            # with ctx:
+            #     delete_file_via_gh_api(pth_to_push, full_repo_name, msg)
         except Exception as e:
             logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)

@@ -99,10 +99,14 @@ def make_outputs_lut_from_graph(gx):
     return outputs_lut
 
 
-def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
+def make_feedstock_required_lazy_json_refs(name, cwd: str | None = None, _in_vpri=None, _in_pri=None):
+    # FIXME
+    logger.info("MAKE REQUIRED LZJ REFS: %r", os.path.abspath(os.getcwd()))
+
     lzj_vpri = (
-        _in_vpri if _in_vpri is not None else LazyJson(f"version_pr_info/{name}.json")
+        _in_vpri if _in_vpri is not None else LazyJson(f"version_pr_info/{name}.json", cwd=cwd)
     )
+    # FIXME - error in write happens here
     with lzj_vpri as vpri:
         for key in [
             "new_version_attempts",
@@ -112,7 +116,10 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
             if key not in vpri:
                 vpri[key] = {}
 
-    lzj_pri = _in_pri if _in_pri is not None else LazyJson(f"pr_info/{name}.json")
+        # FIXME
+        logger.info("VERSION_PR_INFO CWD|NAME: %r|%r", vpri._cwd, name)
+
+    lzj_pri = _in_pri if _in_pri is not None else LazyJson(f"pr_info/{name}.json", cwd=cwd)
     with lzj_pri as pri:
         for key in [
             "pre_pr_migrator_status",
@@ -123,19 +130,20 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
                 pri[key] = {}
 
 
-def _add_required_lazy_json_refs(attrs, name):
+def _add_required_lazy_json_refs(attrs, name, cwd: str | None = None):
     for sub_lzj in ["version_pr_info", "pr_info"]:
         if sub_lzj not in attrs:
-            attrs[sub_lzj] = LazyJson(f"{sub_lzj}/{name}.json")
+            attrs[sub_lzj] = LazyJson(f"{sub_lzj}/{name}.json", cwd=cwd)
 
     make_feedstock_required_lazy_json_refs(
         name,
         _in_vpri=attrs["version_pr_info"],
         _in_pri=attrs["pr_info"],
+        cwd=cwd,
     )
 
 
-def try_load_feedstock(name: str, attrs: LazyJson, mark_not_archived=False) -> LazyJson:
+def try_load_feedstock(name: str, attrs: LazyJson, cwd: str | None = None, mark_not_archived=False) -> LazyJson:
     try:
         data = load_feedstock(name, attrs.data, mark_not_archived=mark_not_archived)
         if "parsing_error" not in data:
@@ -148,15 +156,15 @@ def try_load_feedstock(name: str, attrs: LazyJson, mark_not_archived=False) -> L
         trb = traceback.format_exc()
         attrs["parsing_error"] = sanitize_string(f"feedstock parsing error: {e}\n{trb}")
     finally:
-        _add_required_lazy_json_refs(attrs, name)
+        _add_required_lazy_json_refs(attrs, name, cwd=cwd)
 
     return attrs
 
 
-def get_attrs(name: str, mark_not_archived=False) -> LazyJson:
-    lzj = LazyJson(f"node_attrs/{name}.json")
+def get_attrs(name: str, cwd: str | None = None, mark_not_archived=False) -> LazyJson:
+    lzj = LazyJson(f"node_attrs/{name}.json", cwd=cwd)
     with lzj as sub_graph:
-        try_load_feedstock(name, sub_graph, mark_not_archived=mark_not_archived)
+        try_load_feedstock(name, sub_graph, cwd=cwd, mark_not_archived=mark_not_archived)
 
     return lzj
 
@@ -249,10 +257,14 @@ def _build_graph_process_pool(
     names: list[str],
     mark_not_archived=False,
 ) -> None:
+    from conda_forge_tick.deploy import deploy
+
+    cf_graph_dir = os.path.abspath(os.getcwd())
+
     # we use threads here since all of the work is done in a container anyways
     with executor("thread", max_workers=8) as pool:
         futures = {
-            pool.submit(get_attrs, name, mark_not_archived=mark_not_archived): name
+            pool.submit(get_attrs, name, cwd=cf_graph_dir, mark_not_archived=mark_not_archived): name
             for name in names
             if RNG.random() <= settings().frac_update_node_attrs
         }
@@ -281,6 +293,15 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
+
+            # FIXME
+            if n_left % 10 == 0:
+                deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+                deploy(dirs_to_deploy=["node_attrs"])
+
+    # FIXME
+    deploy(dirs_to_deploy=["version_pr_info", "pr_info"])
+    deploy(dirs_to_deploy=["node_attrs"])
 
 
 def _build_graph_sequential(
