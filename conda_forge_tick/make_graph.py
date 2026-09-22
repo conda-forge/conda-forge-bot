@@ -100,6 +100,9 @@ def make_outputs_lut_from_graph(gx):
 
 
 def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
+    # FIXME
+    logger.info("MAKE REQUIRED LZJ REFS: %r", os.path.abspath(os.getcwd()))
+
     lzj_vpri = (
         _in_vpri if _in_vpri is not None else LazyJson(f"version_pr_info/{name}.json")
     )
