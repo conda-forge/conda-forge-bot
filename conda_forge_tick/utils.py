@@ -127,8 +127,13 @@ DEFAULT_GRAPH_FILENAME = "graph.json"
 DEFAULT_CONTAINER_TMPFS_SIZE_MB = 6000
 
 
-def parse_munged_run_export(p: str) -> dict:
+def parse_munged_run_export(p: str | dict) -> dict:
     from urllib.parse import unquote_plus
+
+    # sometimes v1 recipes return dicts instead of strings
+    # for run exports
+    if isinstance(p, dict):
+        return p
 
     # get rid of comments
     p = p.split("#")[0].strip()

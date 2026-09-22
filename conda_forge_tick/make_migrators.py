@@ -10,6 +10,7 @@ import re
 import secrets
 import sys
 import time
+import traceback
 from collections.abc import Mapping, MutableMapping, MutableSequence
 from concurrent.futures import as_completed
 from pathlib import Path
@@ -792,12 +793,14 @@ def create_migration_yaml_creator(
     job: int = 1,
     n_jobs: int = 1,
 ):
+    logger.debug("making cfp graph")
     cfp_gx = copy.deepcopy(gx)
     for node in list(cfp_gx.nodes):
         if node != "conda-forge-pinning":
             pluck(cfp_gx, node)
     cfp_gx.remove_edges_from(nx.selfloop_edges(cfp_gx))
 
+    logger.debug("getting pinning names")
     with pushd(os.environ["CONDA_PREFIX"]):
         pinnings = parse_config_file(
             "conda_build_config.yaml",
@@ -830,7 +833,9 @@ def create_migration_yaml_creator(
         for pinning_name in pinning_names
         if _compute_job_for_name(pinning_name, n_jobs) == job
     ]
+    logger.debug("pinning names: %r", sorted(pinning_names))
 
+    logger.debug("computing pinnin graph sizes")
     pinning_migration_sizes = _compute_approximate_pinning_migration_sizes(
         gx,
         pinning_names,
@@ -839,6 +844,7 @@ def create_migration_yaml_creator(
         pinnings,
     )
 
+    logger.debug("generating pinning migrations")
     feedstocks_to_be_repinned = []
     for pinning_name in pinning_names:
         if (
@@ -873,6 +879,9 @@ def create_migration_yaml_creator(
                 sorted(gx.graph["outputs_lut"].get(package_name, {package_name})),
             ),
         )
+        logger.debug(
+            "computed feedstock '%s' for pin '%s'", feedstock_name, package_name
+        )
 
         if feedstock_name not in gx.nodes:
             continue
@@ -883,14 +892,23 @@ def create_migration_yaml_creator(
             or not feedstock_attrs.get("version")
             or feedstock_name in feedstocks_to_be_repinned
         ):
+            logger.debug(
+                "skipping pin due to it being archived, no version, or already found"
+            )
             continue
 
         current_pins = list(map(str, package_pin_list))
         current_version = _get_output_version(package_name, feedstock_attrs)
+        logger.debug(
+            "initial current version|pins: %r|%r", current_version, current_pins
+        )
 
         try:
             pin_spec, possible_p_dicts = _extract_most_stringent_pin_from_recipe(
                 feedstock_name, package_name, feedstock_attrs, gx
+            )
+            logger.debug(
+                "pin spec|possible pinning dicts: %r|%r", pin_spec, possible_p_dicts
             )
 
             # fall back to the pinning file or "x"
@@ -911,6 +929,9 @@ def create_migration_yaml_creator(
                 continue
 
             current_pin = str(max(map(VersionOrder, current_pins)))
+            logger.debug(
+                "final current version|pin: %r|%r", current_version, current_pin
+            )
             # If the current pin and the current version is the same nothing
             # to do even if the pin isn't accurate to the spec
             if current_pin != current_version and _outside_pin_range(
@@ -956,14 +977,14 @@ def create_migration_yaml_creator(
                             pin_impact=pinning_migration_sizes[pinning_name],
                         ),
                     )
-        except Exception as e:
+        except Exception:
             with fold_log_lines(
                 "failed to make pinning migrator for %s" % pinning_name
             ):
                 print("%s:" % pinning_name, flush=True)
                 print("    package name:", package_name, flush=True)
                 print("    feedstock name:", feedstock_name, flush=True)
-                print("    error:", repr(e), flush=True)
+                print("    error:\n", traceback.format_exc(), flush=True)
                 print(" ", flush=True)
             continue
 
