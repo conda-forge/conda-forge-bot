@@ -103,6 +103,7 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
     lzj_vpri = (
         _in_vpri if _in_vpri is not None else LazyJson(f"version_pr_info/{name}.json")
     )
+    # FIXME - error in write happens here
     with lzj_vpri as vpri:
         for key in [
             "new_version_attempts",
@@ -111,6 +112,9 @@ def make_feedstock_required_lazy_json_refs(name, _in_vpri=None, _in_pri=None):
         ]:
             if key not in vpri:
                 vpri[key] = {}
+
+        # FIXME
+        logger.info("VERSION_PR_INFO CWD|NAME: %r|%r", vpri._cwd, name)
 
     lzj_pri = _in_pri if _in_pri is not None else LazyJson(f"pr_info/{name}.json")
     with lzj_pri as pri:
