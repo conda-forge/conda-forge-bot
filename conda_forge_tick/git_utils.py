@@ -2006,7 +2006,7 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
                     )
             break
         except Exception as e:
-            logger.debug(
+            logger.warning(
                 "failed to push '%s' - trying %d more times",
                 dst_pth,
                 ntries - tr - 1,
@@ -2049,7 +2049,7 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
             break
 
         except Exception as e:
-            logger.debug(
+            logger.warning(
                 "failed to delete '%s' - trying %d more times",
                 dst_pth,
                 ntries - tr - 1,
