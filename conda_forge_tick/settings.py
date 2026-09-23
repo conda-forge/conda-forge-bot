@@ -162,6 +162,12 @@ class BotSettings(BaseSettings):
     Set to 0 to always refresh.
     """
 
+    max_attempts_for_share: float = 3.0
+    """The maximum number of attempts for a PR for it to count as a PR a migrator has to do. PRs
+    with more than this number are not specifically allocated time in the bot run, though every
+    migrator with any PRs to make is given a minimal amount of time.
+    """
+
 
 _use_settings_override: BotSettings | None = None
 """
