@@ -806,11 +806,17 @@ def _compute_time_per_migrator(migrators, max_attempts_for_share=3):
         # need to rework max_attempts_for_share to be set in global
         # settings
         if isinstance(migrator, Version):
+            old_limit = migrator.pr_limit
             # this threshold is set by experience
-            if num_to_do > 50:
-                migrator.pr_limit = migrator.pr_limit * 2
-            elif num_to_do > 100:
+            if num_to_do > 100:
                 migrator.pr_limit = migrator.pr_limit * 4
+            elif num_to_do > 50:
+                migrator.pr_limit = migrator.pr_limit * 2
+            logger.info(
+                "Adjusting Version migrator PR limit: %d -> %d",
+                old_limit,
+                migrator.pr_limit,
+            )
 
         pr_limit = getattr(migrator, "pr_limit", PR_LIMIT)
         _share = min(pr_limit, num_to_do)
