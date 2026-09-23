@@ -557,7 +557,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                     )
                     raise e
                 else:
-                    logger.debug(
+                    logger.warning(
                         "failed to push '%s' - waiting %f seconds then trying %d more times",
                         filename,
                         next_wait,
@@ -626,7 +626,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                     )
                     raise e
                 else:
-                    logger.debug(
+                    logger.warning(
                         "failed to delete '%s' - waiting %f seconds then trying %d more times",
                         filename,
                         next_wait,
@@ -682,7 +682,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                     )
                     raise e
                 else:
-                    logger.debug(
+                    logger.warning(
                         "failed to pull '%s' - waiting %f seconds then trying %d more times",
                         pth,
                         next_wait,
