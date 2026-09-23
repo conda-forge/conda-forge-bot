@@ -2011,18 +2011,18 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
     for tr, next_wait, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
-            repo = gh.get_repo(repo)
+            gh_repo = gh.get_repo(repo)
 
-            sha, cnt = _get_pth_blob_sha_and_content(dst_pth, repo)
+            sha, cnt = _get_pth_blob_sha_and_content(dst_pth, gh_repo)
             if sha is None:
-                repo.create_file(
+                gh_repo.create_file(
                     dst_pth,
                     msg,
                     data,
                 )
             else:
                 if cnt != data:
-                    repo.update_file(
+                    gh_repo.update_file(
                         dst_pth,
                         msg,
                         data,
@@ -2062,12 +2062,12 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
     for tr, next_wait, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
-            repo = gh.get_repo(repo)
+            gh_repo = gh.get_repo(repo)
 
-            sha, _ = _get_pth_blob_sha_and_content(dst_pth, repo)
+            sha, _ = _get_pth_blob_sha_and_content(dst_pth, gh_repo)
 
             if sha is not None:
-                repo.delete_file(
+                gh_repo.delete_file(
                     dst_pth,
                     msg,
                     sha,
