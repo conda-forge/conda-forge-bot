@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.23.08.33.41
+  version: 2026.09.23.11.08.12
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.23.08.33.41-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.23.11.08.12-hd8ed1ab_1.conda
   hash:
-    md5: 87f7bae5b86d46c14e65a98840610bd4
-    sha256: f06f3ee75e11df2a1174f4afb4058e4756a8dd1b774be33ca3ec8739e9459f53
+    md5: ad1141a39ae07719a3bdef15facdfbbd
+    sha256: b72ccaaafd75fdb0f80fdb89a75d23b98f325c0917f7fa17e5ea4c7b12517ba9
   category: main
   optional: false
 - name: conda-index
@@ -855,18 +855,18 @@ package:
   category: main
   optional: false
 - name: conda-lockfiles
-  version: 0.2.1
+  version: 0.2.2
   manager: conda
   platform: linux-64
   dependencies:
     conda: '>=26.3.0'
     pydantic: '>=2.12.5,<3'
-    python: '>=3.10'
+    python: '>=3.11'
     ruamel.yaml: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-lockfiles-0.2.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-lockfiles-0.2.2-pyhd8ed1ab_0.conda
   hash:
-    md5: 7f1b127b170f9f0d01eca4b54a046ee5
-    sha256: eb20fc63ce6438e10d7c64890bd23d0c68f62a479f2bae8b3c892e13949daf03
+    md5: dcd81bbc99124087023c0a9d884d8181
+    sha256: d5ab401d80ae2d0782e2ad27f44d25b2f9476e7469f28bec6c99d2da37ac7fac
   category: main
   optional: false
 - name: conda-oci-mirror
