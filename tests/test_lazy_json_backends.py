@@ -1144,7 +1144,15 @@ def test_lazy_json_file_read_only_backend(tmpdir):
 def test_lazy_json_make_lazy_json_retry_sequence():
     rts = make_lazy_json_retry_sequence(num_tries=20, base=2, factor=0.01, max_wait=2)
     start = time.time()
-    for _ in rts():
-        pass
+    istart = None
+    nitr = 0
+    for i, nw, nt in rts():
+        now = time.time()
+        if istart is not None:
+            assert now - istart <= 2
+        istart = now
+        print(i, nw, nt, flush=True)
+        nitr += 1
     end = time.time()
     assert end - start < 20 * 2
+    assert nitr == 20

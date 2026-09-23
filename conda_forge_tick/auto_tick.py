@@ -1247,14 +1247,7 @@ def _setup_limits():
 
 
 def _update_nodes_with_bot_rerun(gx: nx.DiGraph):
-    """Go through all the open PRs and check if they are rerun.
-
-    Raises
-    ------
-    KeyError
-        Raised if the required attributes `pr_info` or
-        `version_pr_info` are missing.
-    """
+    """Go through all the open PRs and check if they are rerun."""
     print("processing bot-rerun labels", flush=True)
 
     for i, (name, node) in enumerate(gx.nodes.items()):
@@ -1318,17 +1311,12 @@ def _update_nodes_with_bot_rerun(gx: nx.DiGraph):
                     name,
                     exc_info=e,
                 )
-                raise
+                # FIXME: do not raise, but key should not be missing
+                # raise
 
 
 def _update_nodes_with_new_versions(gx):
-    """Update every node with it's new version (when available).
-
-    Raises
-    ------
-    KeyError
-        Raised if the required attribute `version_pr_info` is missing.
-    """
+    """Update every node with it's new version (when available)."""
     print("updating nodes with new versions", flush=True)
 
     version_nodes = get_all_keys_for_hashmap("versions")
@@ -1375,7 +1363,8 @@ def _update_nodes_with_new_versions(gx):
                         node,
                         exc_info=e,
                     )
-                    raise
+                    # FIXME: figure out why this key might be missing
+                    # raise
 
 
 def _remove_closed_pr_json():

@@ -1824,24 +1824,41 @@ def test_git_utils_push_and_delete_file_via_gh_api():
         try:
             with open(fname, "w") as f:
                 f.write('{"uid": "initial_uid"}')
-            push_file_via_gh_api(fname, repo_name, f"testing - push - {fname}")
+            push_file_via_gh_api(
+                src_pth=fname,
+                dst_pth=fname,
+                repo=repo_name,
+                msg=f"testing - push - {fname}",
+            )
             _sleep()
             _, data = _get_pth_blob_sha_and_content(fname, repo)
             assert json.loads(data)["uid"] == "initial_uid"
 
             with open(fname, "w") as f:
                 f.write('{"uid": "new_uid"}')
-            push_file_via_gh_api(fname, repo_name, f"testing - push - {fname}")
+            push_file_via_gh_api(
+                src_pth=fname,
+                dst_pth=fname,
+                repo=repo_name,
+                msg=f"testing - push - {fname}",
+            )
             _sleep()
             sha, data = _get_pth_blob_sha_and_content(fname, repo)
             assert json.loads(data)["uid"] == "new_uid"
 
-            push_file_via_gh_api(fname, repo_name, f"testing - push - {fname}")
+            push_file_via_gh_api(
+                src_pth=fname,
+                dst_pth=fname,
+                repo=repo_name,
+                msg=f"testing - push - {fname}",
+            )
             _sleep()
             new_sha, data = _get_pth_blob_sha_and_content(fname, repo)
             assert sha == new_sha
 
-            delete_file_via_gh_api(fname, repo_name, f"testing - delete - {fname}")
+            delete_file_via_gh_api(
+                dst_pth=fname, repo=repo_name, msg=f"testing - delete - {fname}"
+            )
             _sleep()
             new_sha, data = _get_pth_blob_sha_and_content(fname, repo)
             assert new_sha is None

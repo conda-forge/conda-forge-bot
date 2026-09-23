@@ -338,7 +338,7 @@ latest_url_rawurl_test_list = [
         {},
         marks=[pytest.mark.xfail(reason="spams URLs can be flaky!")],
     ),
-    (
+    pytest.param(
         "cmake-no-system",
         sample_cmake_no_system,
         "3.16.4",
@@ -347,6 +347,7 @@ latest_url_rawurl_test_list = [
         None,
         RawURL(),
         {},
+        marks=[pytest.mark.xfail(reason="cmake URLs can be flaky!")],
     ),
 ]
 

@@ -3,7 +3,7 @@ name: bot-update-status-page
 on:
   workflow_dispatch: null
   schedule:
-    - cron: '10-59/15 * * * *'
+    - cron: '9-59/10 * * * *'
 
 concurrency: update-status-page
 

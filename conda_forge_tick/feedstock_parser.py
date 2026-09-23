@@ -27,7 +27,6 @@ from conda_forge_tick.migrators_types import (
     RequirementsTypedDict,
     TestTypedDict,
 )
-from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.settings import (
     ENV_CONDA_FORGE_ORG,
     ENV_GRAPH_GITHUB_BACKEND_REPO,
@@ -632,32 +631,34 @@ def _get_feedstock_commit_hash_and_timestamp(
     name: str,
 ) -> tuple[str | None, int | None]:
     git_url = f"https://github.com/{settings().conda_forge_org}/{name}-feedstock"
-    with tempfile.TemporaryDirectory() as tmpdir, pushd(tmpdir):
+    with tempfile.TemporaryDirectory() as tmpdir:
+        fs_dir = os.path.join(tmpdir, f"{name}-feedstock")
         try:
             subprocess.run(
-                ["git", "clone", "--depth", "1", git_url],
+                ["git", "clone", "--depth", "1", git_url, fs_dir],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 check=True,
             )
-            with pushd(f"{name}-feedstock"):
-                res = subprocess.run(
-                    ["git", "rev-parse", "HEAD"],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    check=True,
-                    text=True,
-                )
-                sha = res.stdout.strip()
+            res = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                check=True,
+                text=True,
+                cwd=fs_dir,
+            )
+            sha = res.stdout.strip()
 
-                res = subprocess.run(
-                    ["git", "log", "-1", "--format=%ct"],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    check=True,
-                    text=True,
-                )
-                ts = int(res.stdout.strip())
+            res = subprocess.run(
+                ["git", "log", "-1", "--format=%ct"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                check=True,
+                text=True,
+                cwd=fs_dir,
+            )
+            ts = int(res.stdout.strip())
         except subprocess.CalledProcessError:
             return None, None
 

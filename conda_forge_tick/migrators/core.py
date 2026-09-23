@@ -270,8 +270,10 @@ def make_from_lazy_json_data(data: dict | LazyJson):
     """Deserialize the migrator from LazyJson-compatible data."""
     import conda_forge_tick.migrators
 
-    if not hasattr(conda_forge_tick.migrators, data["class"]):
-        logger.warning("Migrator '%s' could not be loaded!", data["class"])
+    if ("class" not in data) or (
+        not hasattr(conda_forge_tick.migrators, data["class"])
+    ):
+        logger.warning("Migrator '%s' could not be loaded!", data.get("class", None))
         return None
 
     cls = getattr(conda_forge_tick.migrators, data["class"])

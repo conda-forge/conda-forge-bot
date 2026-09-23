@@ -79,7 +79,6 @@ from conda_forge_tick.migrators import (
 from conda_forge_tick.migrators.arch import LinuxRISCV64, OSXArm, WinArm64
 from conda_forge_tick.migrators.migration_yaml import MigrationYamlCreator
 from conda_forge_tick.migrators_types import BuildRunExportsDict, PackageName
-from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import (
     CB_CONFIG,
     fold_log_lines,
@@ -472,11 +471,10 @@ def migration_factory(
         "conda-forge",
         "migrations",
     )
-    with pushd(migrations_loc):
-        for yaml_file in sorted(glob.glob("*.y*ml")):
-            with open(yaml_file) as f:
-                yaml_contents = f.read()
-            migration_yamls.append((yaml_file, yaml_contents))
+    for yaml_file in sorted(glob.glob(f"{migrations_loc}/*.y*ml")):
+        with open(yaml_file) as f:
+            yaml_contents = f.read()
+        migration_yamls.append((yaml_file, yaml_contents))
 
     if only_keep is None:
         only_keep = [
@@ -548,7 +546,7 @@ def migration_factory(
                 migrators=migrators,
                 gx=gx,
                 migration_yaml=yaml_contents,
-                migration_name=os.path.splitext(yaml_file)[0],
+                migration_name=os.path.splitext(os.path.basename(yaml_file))[0],
                 config=migrator_config,
                 nominal_pr_limit=_pr_limit,
                 force_pr_after_solver_attempts=force_pr_after_solver_attempts,
@@ -801,18 +799,20 @@ def create_migration_yaml_creator(
     cfp_gx.remove_edges_from(nx.selfloop_edges(cfp_gx))
 
     logger.debug("getting pinning names")
-    with pushd(os.environ["CONDA_PREFIX"]):
-        pinnings = parse_config_file(
-            "conda_build_config.yaml",
-            config=Config(**CB_CONFIG),
-        )
+    pinnings = parse_config_file(
+        os.path.join(os.environ["CONDA_PREFIX"], "conda_build_config.yaml"),
+        config=Config(**CB_CONFIG),
+    )
 
-        fname = "share/conda-forge/migration_support/packages_to_migrate_together.yaml"
-        if os.path.exists(fname):
-            with open(fname) as f:
-                packages_to_migrate_together = yaml_safe_load(f)
-        else:
-            packages_to_migrate_together = {}
+    fname = os.path.join(
+        os.environ["CONDA_PREFIX"],
+        "share/conda-forge/migration_support/packages_to_migrate_together.yaml",
+    )
+    if os.path.exists(fname):
+        with open(fname) as f:
+            packages_to_migrate_together = yaml_safe_load(f)
+    else:
+        packages_to_migrate_together = {}
 
     packages_to_migrate_together_mapping = {}
 
@@ -1088,7 +1088,7 @@ def _make_version_migrator(
         version_migrator = Version(
             python_nodes=python_nodes,
             total_graph=gx,
-            pr_limit=PR_LIMIT,
+            pr_limit=MAX_PR_LIMIT,
             piggy_back_migrations=_make_mini_migrators_with_defaults(
                 extra_mini_migrators=[
                     PipWheelMigrator(),
