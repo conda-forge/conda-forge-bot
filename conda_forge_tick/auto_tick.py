@@ -1316,13 +1316,7 @@ def _update_nodes_with_bot_rerun(gx: nx.DiGraph):
 
 
 def _update_nodes_with_new_versions(gx):
-    """Update every node with it's new version (when available).
-
-    Raises
-    ------
-    KeyError
-        Raised if the required attribute `version_pr_info` is missing.
-    """
+    """Update every node with it's new version (when available)."""
     print("updating nodes with new versions", flush=True)
 
     version_nodes = get_all_keys_for_hashmap("versions")
@@ -1369,7 +1363,8 @@ def _update_nodes_with_new_versions(gx):
                         node,
                         exc_info=e,
                     )
-                    raise
+                    # FIXME: figure out why this key might be missing
+                    # raise
 
 
 def _remove_closed_pr_json():
