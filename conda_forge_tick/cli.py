@@ -1,5 +1,6 @@
 import logging
 import time
+from pathlib import Path
 
 import click
 from click import Context, IntRange
@@ -378,6 +379,17 @@ def react_to_event(
     from .events import react_to_event
 
     react_to_event(ctx, event, uid)
+
+
+@main.command(name="run-minimigrators")
+@click.argument(
+    "feedstock_dir", type=click.Path(exists=True, file_okay=False, path_type=Path)
+)
+def run_minimigrators(feedstock_dir: Path) -> None:
+    """Run the default set of minimigrators on a local recipe."""
+    from .run_minimigrators import run_minimigrators
+
+    run_minimigrators(feedstock_dir)
 
 
 if __name__ == "__main__":
