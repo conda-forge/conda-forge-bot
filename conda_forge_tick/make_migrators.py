@@ -546,7 +546,7 @@ def migration_factory(
                 migrators=migrators,
                 gx=gx,
                 migration_yaml=yaml_contents,
-                migration_name=os.path.splitext(yaml_file)[0],
+                migration_name=os.path.splitext(os.path.basename(yaml_file))[0],
                 config=migrator_config,
                 nominal_pr_limit=_pr_limit,
                 force_pr_after_solver_attempts=force_pr_after_solver_attempts,
