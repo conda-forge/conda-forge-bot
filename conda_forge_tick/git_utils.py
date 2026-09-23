@@ -1984,7 +1984,7 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
         data = f.read()
 
     lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in lzj_rts():
+    for tr, next_wait, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo)
@@ -2006,11 +2006,6 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
                     )
             break
         except Exception as e:
-            logger.warning(
-                "failed to push '%s' - trying %d more times",
-                dst_pth,
-                ntries - tr - 1,
-            )
             if tr == ntries - 1:
                 logger.exception(
                     "failed to push '%s'",
@@ -2018,6 +2013,13 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
                     exc_info=e,
                 )
                 raise e
+            else:
+                logger.warning(
+                    "failed to push '%s' - waiting %f seconds then trying %d more times",
+                    dst_pth,
+                    next_wait,
+                    ntries - tr - 1,
+                )
 
 
 def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
@@ -2033,7 +2035,7 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
         The commit message.
     """
     lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in lzj_rts():
+    for tr, next_wait, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo)
@@ -2049,11 +2051,6 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
             break
 
         except Exception as e:
-            logger.warning(
-                "failed to delete '%s' - trying %d more times",
-                dst_pth,
-                ntries - tr - 1,
-            )
             if tr == ntries - 1:
                 logger.exception(
                     "failed to delete '%s'",
@@ -2061,6 +2058,13 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
                     exc_info=e,
                 )
                 raise e
+            else:
+                logger.warning(
+                    "failed to delete '%s' - waiting %f seconds then trying %d more times",
+                    dst_pth,
+                    next_wait,
+                    ntries - tr - 1,
+                )
 
 
 @lock_git_operation()
