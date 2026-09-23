@@ -247,6 +247,7 @@ def _migrate_schema(name, sub_graph):
 
 def _build_graph_process_pool(
     names: list[str],
+    gx: nx.DiGraph,
     mark_not_archived=False,
 ) -> None:
 
@@ -282,10 +283,17 @@ def _build_graph_process_pool(
                     name,
                     exc_info=e,
                 )
+            finally:
+                lzj = LazyJson(f"node_attrs/{name}.json")
+                with lzj as attrs:
+                    _add_run_exports_per_node(
+                        attrs, gx.graph["outputs_lut"], gx.graph["strong_exports"]
+                    )
 
 
 def _build_graph_sequential(
     names: list[str],
+    gx: nx.DiGraph,
     mark_not_archived=False,
 ) -> None:
     for name in names:
@@ -297,6 +305,12 @@ def _build_graph_sequential(
             get_attrs(name, mark_not_archived=mark_not_archived)
         except Exception as e:
             logger.error("Error updating node %s", name, exc_info=e)
+        finally:
+            lzj = LazyJson(f"node_attrs/{name}.json")
+            with lzj as attrs:
+                _add_run_exports_per_node(
+                    attrs, gx.graph["outputs_lut"], gx.graph["strong_exports"]
+                )
 
 
 def _get_all_deps_for_node(attrs, outputs_lut):
@@ -385,20 +399,9 @@ def _add_graph_metadata(gx: nx.DiGraph):
     } | set(COMPILER_STUBS_WITH_STRONG_EXPORTS)
 
 
-def _add_run_exports(gx: nx.DiGraph, nodes_to_update: set[str]):
-    logger.info("adding run exports")
-
-    for node in nodes_to_update:
-        if node not in gx.nodes:
-            continue
-        with gx.nodes[node]["payload"] as attrs:
-            _add_run_exports_per_node(
-                attrs, gx.graph["outputs_lut"], gx.graph["strong_exports"]
-            )
-
-
 def _update_graph_nodes(
     names: list[str],
+    gx: nx.DiGraph,
     mark_not_archived=False,
     debug=False,
 ) -> nx.DiGraph:
@@ -406,6 +409,7 @@ def _update_graph_nodes(
     builder = _build_graph_sequential if debug else _build_graph_process_pool
     builder(
         names,
+        gx,
         mark_not_archived=mark_not_archived,
     )
     logger.info("feedstock fetch loop completed")
@@ -515,10 +519,10 @@ def main(
             else:
                 _update_graph_nodes(
                     names_for_this_job,
+                    gx,
                     mark_not_archived=True,
                     debug=ctx.debug,
                 )
-                _add_run_exports(gx, names_for_this_job)
 
                 _update_nodes_with_archived(
                     archived_names_for_this_job,

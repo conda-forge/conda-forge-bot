@@ -414,10 +414,13 @@ def test_migrators_to_json_all_load():
             for mg_key in tqdm.tqdm(
                 mg_keys, desc="loading migrators", total=len(mg_keys)
             ):
+                tqdm.tqdm.write(f"loading migrator {mg_key}")
                 lzj = LazyJson(f"migrators/{mg_key}.json")
                 with lzj as data:
                     mg = make_from_lazy_json_data(data)
-                    if not hasattr(conda_forge_tick.migrators, data["class"]):
+                    if ("class" not in data) or (
+                        not hasattr(conda_forge_tick.migrators, data["class"])
+                    ):
                         assert mg is None
                     else:
                         assert mg is not None
