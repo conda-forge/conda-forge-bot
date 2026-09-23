@@ -86,20 +86,21 @@ def get_github_backend_repo_for_hashmap(hashmap_name: str) -> str:
     )
 
 
-def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=0.1, max_wait=10):
+def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=1, max_wait=10):
     def _func():
         next_delta = None
-        for i in range(num_tries):
+        for i in range(-1, num_tries):
             if next_delta is not None:
                 time.sleep(next_delta)
 
-            start = factor * (base**i)
+            start = factor * (base ** (i + 1))
             end = start * base
             if end - start > max_wait:
                 end = start + max_wait
             next_delta = RNG.uniform(0, end - start)
 
-            yield i, next_delta, num_tries
+            if i >= 0:
+                yield i, next_delta, num_tries
 
     _func.num_tries = num_tries  # type: ignore[attr-defined]
     return _func
