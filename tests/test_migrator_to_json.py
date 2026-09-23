@@ -414,6 +414,7 @@ def test_migrators_to_json_all_load():
             for mg_key in tqdm.tqdm(
                 mg_keys, desc="loading migrators", total=len(mg_keys)
             ):
+                tqdm.tqdm.write(f"loading migrator {mg_key}")
                 lzj = LazyJson(f"migrators/{mg_key}.json")
                 with lzj as data:
                     mg = make_from_lazy_json_data(data)
