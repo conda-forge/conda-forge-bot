@@ -94,7 +94,11 @@ def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=1, max_wait=60):
             if end - start > max_wait:
                 end = start + max_wait
             if i > 0:
-                time.sleep(RNG.uniform(0, end - start))
+                delta = RNG.uniform(0, end - start)
+                print(
+                    f"{i + 1}/{num_tries}] waiting {delta} seconds to retry", flush=True
+                )
+                time.sleep(delta)
             yield i, num_tries
 
     _func.num_tries = num_tries  # type: ignore[attr-defined]
