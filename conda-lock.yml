@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.22.19.29.34
+  version: 2026.09.23.08.33.41
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.22.19.29.34-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.23.08.33.41-hd8ed1ab_1.conda
   hash:
-    md5: 5de1c9b0b5d56d21ce568b33414a6af4
-    sha256: 50c8710b2637e32f6c0ca2523e0dc882d7b8cceed3761af0a9e0c77b3849f16d
+    md5: 87f7bae5b86d46c14e65a98840610bd4
+    sha256: f06f3ee75e11df2a1174f4afb4058e4756a8dd1b774be33ca3ec8739e9459f53
   category: main
   optional: false
 - name: conda-index
@@ -3103,16 +3103,16 @@ package:
   category: main
   optional: false
 - name: libuuid
-  version: 2.42.3
+  version: 2.42.4
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libuuid-2.42.3-hcfc3c73_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libuuid-2.42.4-hcfc3c73_0.conda
   hash:
-    md5: 74a0a409d9f4561265d36b789d3f398a
-    sha256: aa58bbba56644ffd062a4a9b358782c5eb7560ccead2ab8f7c5c6ede0a7d33a6
+    md5: 54a948337e66706380ff24d6b5fde63f
+    sha256: f34b8d1de9a2bf62476d8608057d9b8a918d97444236dc53a47128f2fae79041
   category: main
   optional: false
 - name: libwebp-base
@@ -5281,7 +5281,7 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.17
+  version: 0.12.18
   manager: conda
   platform: linux-64
   dependencies:
@@ -5290,10 +5290,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.17-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.18-h841d291_0.conda
   hash:
-    md5: 59ce6897b85483cb667bc9b59c9f3a42
-    sha256: aa738ebe975460d704145538752047f1b660944bce23472ee6908f506ff67a68
+    md5: cc21ebd3202257969230912e3c24b799
+    sha256: b8443546fda374d709a2721a403ed7db44b6cbb1332b0619740f1d4ef8fb6c64
   category: main
   optional: false
 - name: vcs_versioning
