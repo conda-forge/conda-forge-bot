@@ -95,6 +95,28 @@ PR_KEYS_TO_KEEP = {
 
 RNG = secrets.SystemRandom()
 
+# start of code from conda-forge-webservices by C. Burr
+# How long a client will wait for a rate limit to reset before giving up. Has to
+# be at least GithubRetry's secondary_rate_wait of 60s, or secondary rate limits
+# raise rather than wait.
+MAX_RATE_LIMIT_WAIT = 300
+
+
+def github_retry(**kwargs) -> github.GithubRetry:
+    """Get the retry policy our GitHub clients share.
+
+    GithubRetry knows which 403s are rate limits and which are refusals, and
+    only retries the former. It waits for as long as the reset is away, though,
+    which can be most of an hour, so cap it: a job that fails is easier to deal
+    with than one sitting idle until it times out.
+    """
+    kwargs.setdefault("total", 10)
+    kwargs.setdefault("backoff_factor", 0.1)
+    return github.GithubRetry(max_rate_limit_wait=MAX_RATE_LIMIT_WAIT, **kwargs)
+
+
+# end of code from conda-forge-webservices by C. Burr
+
 
 def get_bot_app_token():
     """Get an app token for the bot.
@@ -239,12 +261,14 @@ def github_client(with_app_token: bool = False) -> github.Github:
         return github.Github(
             auth=github.Auth.Token(get_bot_app_token()),
             per_page=100,
+            retry=github_retry(),
         )
 
     if not hasattr(GITHUB_CLIENT, "client"):
         GITHUB_CLIENT.client = github.Github(
             auth=github.Auth.Token(get_bot_token()),
             per_page=100,
+            retry=github_retry(),
         )
     return GITHUB_CLIENT.client
 
@@ -1984,7 +2008,7 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
         data = f.read()
 
     lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in lzj_rts():
+    for tr, next_wait, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo)
@@ -2006,11 +2030,6 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
                     )
             break
         except Exception as e:
-            logger.debug(
-                "failed to push '%s' - trying %d more times",
-                dst_pth,
-                ntries - tr - 1,
-            )
             if tr == ntries - 1:
                 logger.exception(
                     "failed to push '%s'",
@@ -2018,6 +2037,13 @@ def push_file_via_gh_api(*, src_pth: str, dst_pth: str, repo: str, msg: str) -> 
                     exc_info=e,
                 )
                 raise e
+            else:
+                logger.warning(
+                    "failed to push '%s' - waiting %f seconds then trying %d more times",
+                    dst_pth,
+                    next_wait,
+                    ntries - tr - 1,
+                )
 
 
 def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
@@ -2033,7 +2059,7 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
         The commit message.
     """
     lzj_rts = make_lazy_json_retry_sequence()
-    for tr, ntries in lzj_rts():
+    for tr, next_wait, ntries in lzj_rts():
         try:
             gh = github_client(with_app_token=True)
             repo = gh.get_repo(repo)
@@ -2049,11 +2075,6 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
             break
 
         except Exception as e:
-            logger.debug(
-                "failed to delete '%s' - trying %d more times",
-                dst_pth,
-                ntries - tr - 1,
-            )
             if tr == ntries - 1:
                 logger.exception(
                     "failed to delete '%s'",
@@ -2061,6 +2082,13 @@ def delete_file_via_gh_api(*, dst_pth: str, repo: str, msg: str) -> None:
                     exc_info=e,
                 )
                 raise e
+            else:
+                logger.warning(
+                    "failed to delete '%s' - waiting %f seconds then trying %d more times",
+                    dst_pth,
+                    next_wait,
+                    ntries - tr - 1,
+                )
 
 
 @lock_git_operation()

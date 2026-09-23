@@ -86,16 +86,21 @@ def get_github_backend_repo_for_hashmap(hashmap_name: str) -> str:
     )
 
 
-def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=1, max_wait=60):
+def make_lazy_json_retry_sequence(num_tries=50, base=2, factor=1, max_wait=10):
     def _func():
-        for i in range(num_tries):
-            start = factor * (base ** (i - 1))
+        next_delta = None
+        for i in range(-1, num_tries):
+            if next_delta is not None:
+                time.sleep(next_delta)
+
+            start = factor * (base ** (i + 1))
             end = start * base
             if end - start > max_wait:
                 end = start + max_wait
-            if i > 0:
-                time.sleep(RNG.uniform(0, end - start))
-            yield i, num_tries
+            next_delta = RNG.uniform(0, end - start)
+
+            if i >= 0:
+                yield i, next_delta, num_tries
 
     _func.num_tries = num_tries  # type: ignore[attr-defined]
     return _func
@@ -516,7 +521,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
 
         # exponential backoff
         lazy_json_retry_sequence = make_lazy_json_retry_sequence()
-        for tr, ntries in lazy_json_retry_sequence():
+        for tr, next_wait, ntries in lazy_json_retry_sequence():
             try:
                 try:
                     _cnts = repo.get_contents(pth)
@@ -545,11 +550,6 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                         )
                 break
             except Exception as e:
-                logger.debug(
-                    "failed to push '%s' - trying %d more times",
-                    filename,
-                    ntries - tr - 1,
-                )
                 if tr == ntries - 1:
                     logger.exception(
                         "failed to push '%s'",
@@ -557,6 +557,13 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                         exc_info=e,
                     )
                     raise e
+                else:
+                    logger.warning(
+                        "failed to push '%s' - waiting %f seconds then trying %d more times",
+                        filename,
+                        next_wait,
+                        ntries - tr - 1,
+                    )
 
     def hmset(self, name: str, mapping: Mapping[str, str]) -> None:
         for key, value in mapping.items():
@@ -595,7 +602,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
 
         # exponential backoff
         lazy_json_retry_sequence = make_lazy_json_retry_sequence()
-        for tr, ntries in lazy_json_retry_sequence():
+        for tr, next_wait, ntries in lazy_json_retry_sequence():
             try:
                 try:
                     _cnts = repo.get_contents(pth)
@@ -612,11 +619,6 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                     )
                 break
             except Exception as e:
-                logger.debug(
-                    "failed to delete '%s' - trying %d more times",
-                    filename,
-                    ntries - tr - 1,
-                )
                 if tr == ntries - 1:
                     logger.exception(
                         "failed to delete '%s'",
@@ -624,6 +626,13 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                         exc_info=e,
                     )
                     raise e
+                else:
+                    logger.warning(
+                        "failed to delete '%s' - waiting %f seconds then trying %d more times",
+                        filename,
+                        next_wait,
+                        ntries - tr - 1,
+                    )
 
     def hdel(self, name: str, keys: Iterable[str]) -> None:
         for key in keys:
@@ -657,7 +666,7 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
 
         # exponential backoff
         lazy_json_retry_sequence = make_lazy_json_retry_sequence()
-        for tr, ntries in lazy_json_retry_sequence():
+        for tr, next_wait, ntries in lazy_json_retry_sequence():
             try:
                 cnts = requests.get(
                     f"https://api.github.com/repos/{repo_url}/contents/{pth}",
@@ -666,11 +675,6 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                 cnts.raise_for_status()
                 return cnts.text
             except Exception as e:
-                logger.debug(
-                    "failed to pull '%s' - trying %d more times",
-                    pth,
-                    ntries - tr - 1,
-                )
                 if tr == ntries - 1:
                     logger.exception(
                         "failed to pull '%s'",
@@ -678,6 +682,13 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
                         exc_info=e,
                     )
                     raise e
+                else:
+                    logger.warning(
+                        "failed to pull '%s' - waiting %f seconds then trying %d more times",
+                        pth,
+                        next_wait,
+                        ntries - tr - 1,
+                    )
 
         assert False, "There is at least one try, so this cannot be reached."
 
