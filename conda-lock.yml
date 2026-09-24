@@ -1561,15 +1561,15 @@ package:
   category: main
   optional: false
 - name: fsspec
-  version: 2026.7.0
+  version: 2026.9.0
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/fsspec-2026.7.0-pyhd8ed1ab_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/fsspec-2026.9.0-pyhd8ed1ab_0.conda
   hash:
-    md5: b9176565976c773a0739bd83deaf06cc
-    sha256: 3cd1c985695d8114bdba2a4a38c87e86d633fadd7cfe7a6733ebb3fe807fdc86
+    md5: 42de5cd170647599a84f468a42fabb89
+    sha256: 7d17272012e7479ba58f8a72b522d3e88e6837a04a111a278ff417aa82364255
   category: main
   optional: false
 - name: gdk-pixbuf
@@ -4807,7 +4807,7 @@ package:
   category: main
   optional: false
 - name: setuptools-scm
-  version: 10.2.3
+  version: 10.3.4
   manager: conda
   platform: linux-64
   dependencies:
@@ -4816,23 +4816,23 @@ package:
     setuptools: ''
     tomli: '>=1'
     typing_extensions: '>=4.1'
-    vcs_versioning: '>=2.3.2.dev0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.2.3-pyh5ded981_0.conda
+    vcs_versioning: '>=2.5.0.dev0,<3'
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools-scm-10.3.4-pyh5ded981_0.conda
   hash:
-    md5: 0191420c6b62796bfb7081a40f3d0873
-    sha256: cbb240e92689692f03de519f2bb4e565aca4ae2203ddae1ea10544389b257fa5
+    md5: 437557778d99cc6f311f3c0ce023ad85
+    sha256: 67f2e6e63cc4ef0c2e089ea32fb5054c129386d24af4e87f9acbd47f9eed07d4
   category: main
   optional: false
 - name: setuptools_scm
-  version: 10.2.3
+  version: 10.3.4
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: ==10.2.3
-  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.2.3-hc233242_0.conda
+    setuptools-scm: ==10.3.4
+  url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.3.4-hc3fbee1_0.conda
   hash:
-    md5: c61c941c3f35a0684d4606ec34f2bc13
-    sha256: bc29839a48e1255345b585d9c04e8ee43cf193aba8a054d1cc3ba5ce8d671059
+    md5: ff9dcd413b3af5336ba346987270535f
+    sha256: 44191de098a4522320826cf4dfd7bf8f21fe013e4c38c17dd58044cba0af29eb
   category: main
   optional: false
 - name: shellingham
