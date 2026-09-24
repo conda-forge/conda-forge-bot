@@ -49,7 +49,7 @@ if [[ "${clone_graph}" == "true" ]]; then
     dr_repo_remote="https://github.com/${dr_repo}.git"
     if [[ "${dr_repo}" != "${cf_graph_repo}" ]]; then
         # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
-        git clone --depth=5 "${dr_remote}" "${dr}" || false
+        git clone --depth=5 "${dr_remote}" "${dr}"
     fi
   done
 
@@ -68,7 +68,7 @@ for arg in "$@"; do
   fi
 done
 if [[ "${pull_cont}" == "true" ]]; then
-  docker pull "${docker_name}:${docker_tag}" || false
+  docker pull "${docker_name}:${docker_tag}"
 fi
 
 # left intact if already set
