@@ -1,8 +1,6 @@
 name: bot-prs
 
 on:
-  # FIXME: remove this trigger
-  pull_request: null
   workflow_dispatch: null
   schedule:
     - cron: '6-59/15 * * * *'

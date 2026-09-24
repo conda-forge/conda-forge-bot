@@ -353,10 +353,9 @@ def _deploy_via_api(
             # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            # FIXME: put back
-            # push_file_via_gh_api(
-            #     src_pth=pth, dst_pth=dst_pth, repo=full_repo_name, msg=msg
-            # )
+            push_file_via_gh_api(
+                src_pth=pth, dst_pth=dst_pth, repo=full_repo_name, msg=msg
+            )
         except Exception as e:
             logger.warning("git push via API failed", exc_info=e)
             files_to_try_again.add(pth)
@@ -379,8 +378,7 @@ def _deploy_via_api(
             # use path here for nice commit message
             msg = _get_pth_commit_message(pth)
 
-            # FIXME: put back
-            # delete_file_via_gh_api(dst_pth=dst_pth, repo=full_repo_name, msg=msg)
+            delete_file_via_gh_api(dst_pth=dst_pth, repo=full_repo_name, msg=msg)
         except Exception as e:
             logger.warning("git delete via API failed", exc_info=e)
             files_to_try_again.add(pth)
