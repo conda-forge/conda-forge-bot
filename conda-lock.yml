@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.24.04.24.45
+  version: 2026.09.24.13.13.12
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.24.04.24.45-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.24.13.13.12-hd8ed1ab_1.conda
   hash:
-    md5: 4e9ce3b035a89f4e763735eed00720df
-    sha256: 844aaedce18840c7e8a31dd9f6181e57e1e7c3d3caf76d6f638c1d22964603ea
+    md5: 7060c57b295efdff7a08e72fe239c622
+    sha256: eea5ba02f337bd8ef454ba5fc70b9ddb027e647f5efaf9859122097c0b142094
   category: main
   optional: false
 - name: conda-index
@@ -3000,7 +3000,7 @@ package:
   category: main
   optional: false
 - name: libsolv
-  version: 0.7.39
+  version: 0.7.40
   manager: conda
   platform: linux-64
   dependencies:
@@ -3008,10 +3008,10 @@ package:
     libgcc: '>=15'
     libstdcxx: '>=15'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libsolv-0.7.39-h72ddc62_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libsolv-0.7.40-h72ddc62_0.conda
   hash:
-    md5: f5ac3845eb3e5a6c74100e3a7730c110
-    sha256: c55a7242db95609b6f0b56b49ef2f5c1796060c0a221bbca3d61fbe19bf05add
+    md5: e204cb9b65c7e8a98d761513f55a8014
+    sha256: db6d6400d58c5318db9eeee418bba32e8c46c58a801e6b7d42179711abe31ffe
   category: main
   optional: false
 - name: libsqlite
@@ -4071,15 +4071,15 @@ package:
   category: main
   optional: false
 - name: pyjwt
-  version: 2.14.0
+  version: 2.15.0
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/pyjwt-2.14.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pyjwt-2.15.0-pyh5ded981_0.conda
   hash:
-    md5: 94360433faf8b6d7933de4e8af4f1b36
-    sha256: c4837529b9e8b7c6a6937893ea914a49440f06d5c28445ed80bf1adab2a3d37b
+    md5: 0c94c52967c6ca123726c94b85608131
+    sha256: c423341918e89fcba04e7f211c3406f753060f0161235af00ae10e9427e88aae
   category: main
   optional: false
 - name: pymongo
@@ -4910,15 +4910,15 @@ package:
   category: main
   optional: false
 - name: soupsieve
-  version: 2.9.2
+  version: '2.10'
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.9.2-pyhd8ed1ab_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.10-pyhd8ed1ab_0.conda
   hash:
-    md5: ba33e6c8a46ee373fdf6dd8665212778
-    sha256: 056d7a2e91e303a9ee37e580f6dde0511fc3fb72476581cc337aacf2cc747613
+    md5: 6c2382c11f0c0486f3300a761e5c1205
+    sha256: c0621a3f324de3eae52092416659674aa9af3617154380cb2a1a7ad7ab487f29
   category: main
   optional: false
 - name: spdlog
@@ -5106,15 +5106,15 @@ package:
   category: main
   optional: false
 - name: trove-classifiers
-  version: 2026.6.1.19
+  version: 2026.9.21.13
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/trove-classifiers-2026.6.1.19-pyhcf101f3_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/trove-classifiers-2026.9.21.13-pyh5ded981_0.conda
   hash:
-    md5: f23d5a5855f09bcb5026938486a9750d
-    sha256: 74dabeb087f26116a262a7580a78622f2bf109798a7e154d4d9b48234ed72b11
+    md5: ca71e34cacec0f00b1c7c312fbc884b7
+    sha256: 43cde9446d690a198ab5b35801d08e2926afe7202495aaa3df98702cb4a19f9a
   category: main
   optional: false
 - name: truststore
@@ -5297,17 +5297,17 @@ package:
   category: main
   optional: false
 - name: vcs_versioning
-  version: 2.3.4
+  version: 2.5.0
   manager: conda
   platform: linux-64
   dependencies:
     packaging: '>=26.2'
     python: '>=3.11'
     typing_extensions: '>=4.1'
-  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.3.4-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/vcs_versioning-2.5.0-pyh5ded981_0.conda
   hash:
-    md5: 935abb1ac9af6257ea25aab6b667353a
-    sha256: 5ae074d3d15d9a7654b7d7709dd006fbc916c00eaf1081773d0da4c3fed1fa79
+    md5: 137d3106e230ae55fe7b8ee09c55aaf0
+    sha256: f7763519c1cf319cb2383f9815f6f411bb79d90a7c79b81fc5abc291009b3703
   category: main
   optional: false
 - name: virtualenv
