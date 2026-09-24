@@ -21,11 +21,7 @@ from conda_forge_feedstock_ops.os_utils import (
 from conda_forge_tick.contexts import ClonedFeedstockContext
 from conda_forge_tick.lazy_json_backends import LazyJson, dumps
 from conda_forge_tick.settings import (
-    ENV_CONDA_FORGE_ORG,
-    ENV_GRAPH_GITHUB_BACKEND_REPO,
-    ENV_NODE_ATTRS_GITHUB_BACKEND_REPO,
-    ENV_VERSIONS_GITHUB_BACKEND_REPO,
-    settings,
+    get_container_env_command_args,
 )
 
 logger = logging.getLogger(__name__)
@@ -186,15 +182,8 @@ def run_migration_containerized(
             extra_container_args=[
                 "-e",
                 "RUN_URL",
-                "-e",
-                f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
-                "-e",
-                f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
-                "-e",
-                f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
-                "-e",
-                f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
-            ],
+            ]
+            + get_container_env_command_args(),
         )
 
         sync_dirs(

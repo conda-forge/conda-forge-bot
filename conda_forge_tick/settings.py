@@ -4,36 +4,35 @@ from typing import Annotated
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+SPLIT_GITHUB_BACKEND_REPOS = [
+    "versions",
+    "node_attrs",
+    "pr_info",
+    "version_pr_info",
+    "pr_json",
+    "migrators",
+]
+
 ENVIRONMENT_PREFIX = "CF_TICK_"
 """
 All environment variables are expected to be prefixed with this.
 """
 
+# NOTE: all of the ENV_{setting_name} variables below must match the field name
+# in the settings class.
+# These variables hold the name of the env var used to set the setting.
 ENV_CONDA_FORGE_ORG = ENVIRONMENT_PREFIX + "CONDA_FORGE_ORG"
-"""
-The environment variable used to set the `conda_forge_org` setting.
-Note: This must match the field name in the `BotSettings` class.
-"""
-
 ENV_GRAPH_GITHUB_BACKEND_REPO = ENVIRONMENT_PREFIX + "GRAPH_GITHUB_BACKEND_REPO"
-"""
-The environment variable used to set the `graph_github_backend_repo` setting.
-Note: This must match the field name in the `BotSettings` class.
-"""
-
 ENV_VERSIONS_GITHUB_BACKEND_REPO = ENVIRONMENT_PREFIX + "VERSIONS_GITHUB_BACKEND_REPO"
-"""
-The environment variable used to set the `versions_github_backend_repo` setting.
-Note: This must match the field name in the `BotSettings` class.
-"""
-
 ENV_NODE_ATTRS_GITHUB_BACKEND_REPO = (
     ENVIRONMENT_PREFIX + "NODE_ATTRS_GITHUB_BACKEND_REPO"
 )
-"""
-The environment variable used to set the `node_attrs_github_backend_repo` setting.
-Note: This must match the field name in the `BotSettings` class.
-"""
+ENV_PR_INFO_GITHUB_BACKEND_REPO = ENVIRONMENT_PREFIX + "PR_INFO_GITHUB_BACKEND_REPO"
+ENV_VERSION_PR_INFO_GITHUB_BACKEND_REPO = (
+    ENVIRONMENT_PREFIX + "VERSION_PR_INFO_GITHUB_BACKEND_REPO"
+)
+ENV_PR_JSON_GITHUB_BACKEND_REPO = ENVIRONMENT_PREFIX + "PR_JSON_GITHUB_BACKEND_REPO"
+ENV_MIGRATORS_GITHUB_BACKEND_REPO = ENVIRONMENT_PREFIX + "MIGRATORS_GITHUB_BACKEND_REPO"
 
 Fraction = Annotated[float, Field(ge=0.0, le=1.0)]
 
@@ -68,6 +67,14 @@ class BotSettings(BaseSettings):
     If you change the field name, you must also update the `ENV_GRAPH_GITHUB_BACKEND_REPO` constant.
     """
 
+    @property
+    def graph_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the graph_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return f"https://github.com/{self.graph_github_backend_repo}/raw/main/"
+
     versions_github_backend_repo: str = Field(
         "conda-forge/conda-forge-bot-data-versions", pattern=r"^[\w\.-]+/[\w\.-]+$"
     )
@@ -75,6 +82,14 @@ class BotSettings(BaseSettings):
     The GitHub repository to deploy version data to. Default: "conda-forge/conda-forge-bot-data-versions".
     If you change the field name, you must also update the `ENV_GRAPH_VERSIONS_BACKEND_REPO` constant.
     """
+
+    @property
+    def versions_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the versions_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return f"https://github.com/{self.versions_github_backend_repo}/raw/main/"
 
     node_attrs_github_backend_repo: str = Field(
         "conda-forge/conda-forge-bot-data-node_attrs", pattern=r"^[\w\.-]+/[\w\.-]+$"
@@ -84,44 +99,80 @@ class BotSettings(BaseSettings):
     If you change the field name, you must also update the `ENV_GRAPH_NODE_ATTRS_BACKEND_REPO` constant.
     """
 
-    graph_repo_default_branch: str = "main"
-    """
-    The default branch of the graph_github_backend_repo repository.
-    """
-
-    versions_repo_default_branch: str = "main"
-    """
-    The default branch of the versions_github_backend_repo repository.
-    """
-
-    node_attrs_repo_default_branch: str = "main"
-    """
-    The default branch of the node_attrs_github_backend_repo repository.
-    """
-
-    @property
-    def graph_github_backend_raw_base_url(self) -> str:
-        """
-        The base URL for the GitHub raw view of the graph_github_backend_repo repository.
-        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
-        """
-        return f"https://github.com/{self.graph_github_backend_repo}/raw/{self.graph_repo_default_branch}/"
-
-    @property
-    def versions_github_backend_raw_base_url(self) -> str:
-        """
-        The base URL for the GitHub raw view of the versions_github_backend_repo repository.
-        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
-        """
-        return f"https://github.com/{self.versions_github_backend_repo}/raw/{self.versions_repo_default_branch}/"
-
     @property
     def node_attrs_github_backend_raw_base_url(self) -> str:
         """
         The base URL for the GitHub raw view of the node_attrs_github_backend_repo repository.
         Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
         """
-        return f"https://github.com/{self.node_attrs_github_backend_repo}/raw/{self.node_attrs_repo_default_branch}/"
+        return f"https://github.com/{self.node_attrs_github_backend_repo}/raw/main/"
+
+    pr_info_github_backend_repo: str = Field(
+        "conda-forge/conda-forge-bot-data-pr_info", pattern=r"^[\w\.-]+/[\w\.-]+$"
+    )
+    """
+    The GitHub repository to deploy PR info to. Default: "conda-forge/conda-forge-bot-data".
+    If you change the field name, you must also update the `ENV_GRAPH_PR_INFO_BACKEND_REPO` constant.
+    """
+
+    @property
+    def pr_info_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the pr_info_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return f"https://github.com/{self.pr_info_github_backend_repo}/raw/main/"
+
+    version_pr_info_github_backend_repo: str = Field(
+        "conda-forge/conda-forge-bot-data-version_pr_info",
+        pattern=r"^[\w\.-]+/[\w\.-]+$",
+    )
+    """
+    The GitHub repository to deploy version PR info to. Default: "conda-forge/conda-forge-bot-data-version_pr_info".
+    If you change the field name, you must also update the `ENV_GRAPH_VERSION_PR_INFO_BACKEND_REPO` constant.
+    """
+
+    @property
+    def version_pr_info_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the version_pr_info_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return (
+            f"https://github.com/{self.version_pr_info_github_backend_repo}/raw/main/"
+        )
+
+    pr_json_github_backend_repo: str = Field(
+        "conda-forge/conda-forge-bot-data-pr_json", pattern=r"^[\w\.-]+/[\w\.-]+$"
+    )
+    """
+    The GitHub repository to deploy PR json to. Default: "conda-forge/conda-forge-bot-data-pr_json".
+    If you change the field name, you must also update the `ENV_GRAPH_PR_JSON_BACKEND_REPO` constant.
+    """
+
+    @property
+    def pr_json_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the pr_json_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return f"https://github.com/{self.pr_json_github_backend_repo}/raw/main/"
+
+    migrators_github_backend_repo: str = Field(
+        "conda-forge/conda-forge-bot-data-migrators", pattern=r"^[\w\.-]+/[\w\.-]+$"
+    )
+    """
+    The GitHub repository to deploy migrators to. Default: "conda-forge/conda-forge-bot-data-migrators".
+    If you change the field name, you must also update the `ENV_GRAPH_MIGRATORS_BACKEND_REPO` constant.
+    """
+
+    @property
+    def migrators_github_backend_raw_base_url(self) -> str:
+        """
+        The base URL for the GitHub raw view of the migrators_github_backend_repo repository.
+        Example: https://github.com/conda-forge/conda-forge-bot-data/raw/main.
+        """
+        return f"https://github.com/{self.migrators_github_backend_repo}/raw/main/"
 
     github_runner_debug: bool = Field(False, alias="RUNNER_DEBUG")
     """
@@ -160,6 +211,12 @@ class BotSettings(BaseSettings):
     Number of days after which to refresh PR cache for 'clean' PRs to detect potential conflicts.
     Works around GitHub API bug #5150 where Last-Modified caching can hide merge conflicts.
     Set to 0 to always refresh.
+    """
+
+    max_attempts_for_share: float = 3.0
+    """The maximum number of attempts for a PR for it to count as a PR a migrator has to do. PRs
+    with more than this number are not specifically allocated time in the bot run, though every
+    migrator with any PRs to make is given a minimal amount of time.
     """
 
 
@@ -202,3 +259,25 @@ def use_settings(s: BotSettings | None):
     yield
 
     _use_settings_override = old_settings
+
+
+def get_container_env_command_args() -> list[str]:
+    """Get the arguments to pass settings env vars into a container."""
+    return [
+        "-e",
+        f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
+        "-e",
+        f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
+        "-e",
+        f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
+        "-e",
+        f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
+        "-e",
+        f"{ENV_PR_INFO_GITHUB_BACKEND_REPO}={settings().pr_info_github_backend_repo}",
+        "-e",
+        f"{ENV_VERSION_PR_INFO_GITHUB_BACKEND_REPO}={settings().version_pr_info_github_backend_repo}",
+        "-e",
+        f"{ENV_PR_JSON_GITHUB_BACKEND_REPO}={settings().pr_json_github_backend_repo}",
+        "-e",
+        f"{ENV_MIGRATORS_GITHUB_BACKEND_REPO}={settings().migrators_github_backend_repo}",
+    ]

@@ -3,8 +3,6 @@ from importlib import resources
 
 from github import Auth, Github
 
-from conda_forge_tick.settings import settings
-
 from ._definitions import GitHubAccount, TestCase
 from ._integration_test_helper import IntegrationTestHelper
 from ._shared import FEEDSTOCK_SUFFIX, get_github_token
@@ -33,7 +31,7 @@ def reset_cf_graph():
             GitHubAccount.REGRO_ORG,
             "conda-forge-bot-data",
             empty_graph_dir,
-            branch=settings().graph_repo_default_branch,
+            branch="main",
         )
 
 

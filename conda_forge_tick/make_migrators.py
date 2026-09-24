@@ -79,6 +79,7 @@ from conda_forge_tick.migrators import (
 from conda_forge_tick.migrators.arch import LinuxRISCV64, OSXArm, WinArm64
 from conda_forge_tick.migrators.migration_yaml import MigrationYamlCreator
 from conda_forge_tick.migrators_types import BuildRunExportsDict, PackageName
+from conda_forge_tick.settings import settings
 from conda_forge_tick.utils import (
     CB_CONFIG,
     fold_log_lines,
@@ -1096,6 +1097,30 @@ def _make_version_migrator(
                     StdlibMigrator(),
                 ],
             ),
+        )
+
+        num_to_do = 0.0
+        for node_name in version_migrator.effective_graph.nodes:  # type: ignore[union-attr]
+            with version_migrator.effective_graph.nodes[node_name]["payload"] as attrs:  # type: ignore[union-attr]
+                if "version_pr_info" in attrs:
+                    with attrs["version_pr_info"] as vpri:
+                        _attempts = vpri.get("new_version_attempts", {}).get(
+                            vpri["new_version"], 0
+                        )
+
+                if _attempts < settings().max_attempts_for_share:
+                    num_to_do += 1.0
+
+        # we bump the version migrator pr_limit up adaptively
+        # if there is a backlog
+        old_limit = version_migrator.pr_limit
+        # this scaling is set by experience
+        factor = max(num_to_do, 50) / 50
+        version_migrator.pr_limit = version_migrator.pr_limit * factor
+        logger.info(
+            "Adjusting Version migrator PR limit: %d -> %d",
+            old_limit,
+            version_migrator.pr_limit,
         )
 
     return version_migrator

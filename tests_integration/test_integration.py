@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 from xprocess import ProcessStarter, XProcess
 
-from conda_forge_tick.settings import settings, use_settings
+from conda_forge_tick.settings import SPLIT_GITHUB_BACKEND_REPOS, settings, use_settings
 from tests_integration.lib import (
     TestCase,
     close_all_open_pull_requests,
@@ -68,12 +68,12 @@ def global_environment_setup():
     new_settings.graph_github_backend_repo = (
         f"{GitHubAccount.REGRO_ORG}/conda-forge-bot-data"
     )
-    new_settings.versions_github_backend_repo = (
-        f"{GitHubAccount.REGRO_ORG}/conda-forge-bot-data"
-    )
-    new_settings.node_attrs_github_backend_repo = (
-        f"{GitHubAccount.REGRO_ORG}/conda-forge-bot-data"
-    )
+    for dr in SPLIT_GITHUB_BACKEND_REPOS:
+        setattr(
+            new_settings,
+            f"{dr}_github_backend_repo",
+            f"{GitHubAccount.REGRO_ORG}/conda-forge-bot-data",
+        )
     new_settings.conda_forge_org = GitHubAccount.CONDA_FORGE_ORG
 
     with use_settings(new_settings):

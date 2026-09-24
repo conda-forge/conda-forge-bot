@@ -28,10 +28,7 @@ from conda_forge_tick.migrators_types import (
     TestTypedDict,
 )
 from conda_forge_tick.settings import (
-    ENV_CONDA_FORGE_ORG,
-    ENV_GRAPH_GITHUB_BACKEND_REPO,
-    ENV_NODE_ATTRS_GITHUB_BACKEND_REPO,
-    ENV_VERSIONS_GITHUB_BACKEND_REPO,
+    get_container_env_command_args,
     settings,
 )
 from conda_forge_tick.utils import (
@@ -842,16 +839,7 @@ def load_feedstock_containerized(
         args,
         json_loads=loads,
         input=json_blob,
-        extra_container_args=[
-            "-e",
-            f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
-            "-e",
-            f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
-            "-e",
-            f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
-            "-e",
-            f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
-        ],
+        extra_container_args=get_container_env_command_args(),
     )
 
     return data
