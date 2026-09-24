@@ -4,12 +4,10 @@
 # - CF_FEEDSTOCK_OPS_CONTAINER_NAME: The name of the container image to use for the bot (optional, not used but left intact)
 # - CF_FEEDSTOCK_OPS_CONTAINER_TAG: The tag of the container image to use for the bot (optional).
 # - CF_TICK_GRAPH_GITHUB_BACKEND_REPO: The GitHub repository to clone cf-graph from. Default: conda-forge/conda-forge-bot-data
-# - CF_TICK_VERSIONS_GITHUB_BACKEND_REPO: The GitHub repository to clone the versions data from. If this
+# - CF_TICK_XYZ_GITHUB_BACKEND_REPO: The GitHub repository to clone the XYZ data from. If this
 #   value differs from CF_TICK_GRAPH_GITHUB_BACKEND_REPO, then the repo is cloned to versions under the
-#   CF_TICK_GRAPH_GITHUB_BACKEND_REPO repo. Default: conda-forge/conda-forge-bot-data-versions
-# - CF_TICK_NODE_ATTRS_GITHUB_BACKEND_REPO: The GitHub repository to clone the node_attrs data from. If this
-#   value differs from CF_TICK_GRAPH_GITHUB_BACKEND_REPO, then the repo is cloned to node_attrs under the
-#   CF_TICK_GRAPH_GITHUB_BACKEND_REPO repo. Default: conda-forge/conda-forge-bot-data-node_attrs
+#   CF_TICK_GRAPH_GITHUB_BACKEND_REPO repo. Default: conda-forge/conda-forge-bot-data-XYZ
+#   XYZ = {"versions", "node_attrs", "pr_info"}
 
 # Sets the following environment variables via GITHUB_ENV:
 # - CF_FEEDSTOCK_OPS_CONTAINER_NAME (see above)
@@ -41,84 +39,19 @@ done
 if [[ "${clone_graph}" == "true" ]]; then
   cf_graph_repo=${CF_TICK_GRAPH_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data"}
   cf_graph_remote="https://github.com/${cf_graph_repo}.git"
+  git clone --depth=5 "${cf_graph_remote}" cf-graph
 
-  failed="true"
-  for itr in {1..5}; do
-    echo "clone iteration ${itr}"
-
-    set +e
-    # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
-    git clone --depth=5 "${cf_graph_remote}" cf-graph || false
-    set -e
-
-    if [[ "$?" == "0" ]]; then
-      failed="false"
-      break
-    else
-      rm -rf cf-graph
+  # This list of strings must match the values of SPLIT_GITHUB_BACKEND_REPOS in conda_forge_tick.settings
+  for dr in "versions" "node_attrs" "pr_info" "version_pr_info" "pr_json" "migrators"; do
+    dr_upper="${dr^^}"
+    repo_cmd="dr_repo=\${CF_TICK_${dr_upper}_GITHUB_BACKEND_REPO:-\"conda-forge/conda-forge-bot-data-${dr}\"}"
+    eval ${repo_cmd}
+    dr_repo_remote="https://github.com/${dr_repo}.git"
+    if [[ "${dr_repo}" != "${cf_graph_repo}" ]]; then
+        # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
+        git clone --depth=5 "${dr_remote}" "${dr}" || false
     fi
   done
-
-  if [[ "${failed}" == "true" ]]; then
-    echo "graph clone failed!"
-    exit 1
-  fi
-
-  versions_repo=${CF_TICK_VERSIONS_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data-versions"}
-  versions_remote="https://github.com/${versions_repo}.git"
-  if [[ "${versions_repo}" != "${cf_graph_repo}" ]]; then
-    failed="true"
-    for itr in {1..5}; do
-      echo "clone iteration ${itr}"
-
-      pushd cf-graph
-      set +e
-      # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
-      git clone --depth=5 "${versions_remote}" versions || false
-      set -e
-      popd
-
-      if [[ "$?" == "0" ]]; then
-        failed="false"
-        break
-      else
-        rm -rf cf-graph/versions
-      fi
-    done
-
-    if [[ "${failed}" == "true" ]]; then
-      echo "versions clone failed!"
-      exit 1
-    fi
-  fi
-
-  node_attrs_repo=${CF_TICK_NODE_ATTRS_GITHUB_BACKEND_REPO:-"conda-forge/conda-forge-bot-data-node_attrs"}
-  node_attrs_remote="https://github.com/${node_attrs_repo}.git"
-  if [[ "${node_attrs_repo}" != "${cf_graph_repo}" ]]; then
-    failed="true"
-    for itr in {1..5}; do
-      echo "clone iteration ${itr}"
-
-      pushd cf-graph
-      set +e
-      # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
-      git clone --depth=5 "${node_attrs_remote}" node_attrs || false
-      set -e
-      popd
-
-      if [[ "$?" == "0" ]]; then
-        failed="false"
-        break
-      else
-        rm -rf cf-graph/node_attrs
-      fi
-    done
-
-    if [[ "${failed}" == "true" ]]; then
-      echo "node_attrs clone failed!"
-      exit 1
-    fi
-  fi
 
 else
   echo "Skipping cloning of cf-graph"
@@ -135,24 +68,7 @@ for arg in "$@"; do
   fi
 done
 if [[ "${pull_cont}" == "true" ]]; then
-  failed="true"
-  for itr in {1..5}; do
-    echo "docker pull iteration ${itr}"
-
-    set +e
-    docker pull "${docker_name}:${docker_tag}" || false
-    set -e
-
-    if [[ "$?" == "0" ]]; then
-      failed="false"
-      break
-    fi
-  done
-
-  if [[ "${failed}" == "true" ]]; then
-    echo "docker pull failed!"
-    exit 1
-  fi
+  docker pull "${docker_name}:${docker_tag}" || false
 fi
 
 # left intact if already set

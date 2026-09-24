@@ -19,7 +19,7 @@ from conda_forge_tick.lazy_json_backends import (
     get_lazy_json_backends,
     lazy_json_override_backends,
 )
-from conda_forge_tick.settings import settings
+from conda_forge_tick.settings import SPLIT_GITHUB_BACKEND_REPOS, settings
 from conda_forge_tick.utils import (
     fold_log_lines,
     get_bot_run_url,
@@ -193,7 +193,7 @@ def _deploy_batch(
                         "git",
                         "push",
                         f"https://{get_bot_app_token()}@github.com/{settings().graph_github_backend_repo}.git",
-                        settings().graph_repo_default_branch,
+                        "main",
                     ],
                     token=get_bot_app_token(),
                 )
@@ -493,8 +493,10 @@ def deploy(
                 repo == settings().graph_github_backend_repo
                 for repo in [
                     settings().graph_github_backend_repo,
-                    settings().versions_github_backend_repo,
-                    settings().node_attrs_github_backend_repo,
+                ]
+                + [
+                    getattr(settings(), f"{dr}_github_backend_repo")
+                    for dr in SPLIT_GITHUB_BACKEND_REPOS
                 ]
             ):
                 raise RuntimeError(

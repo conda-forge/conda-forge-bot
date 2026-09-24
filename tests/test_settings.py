@@ -5,7 +5,9 @@ from pydantic import ValidationError
 
 from conda_forge_tick.settings import (
     ENV_CONDA_FORGE_ORG,
+    SPLIT_GITHUB_BACKEND_REPOS,
     BotSettings,
+    get_container_env_command_args,
     settings,
     use_settings,
 )
@@ -15,45 +17,26 @@ class TestBotSettings:
     def test_parse(self, temporary_environment):
         os.environ["CF_TICK_CONDA_FORGE_ORG"] = "myorg"
         os.environ["CF_TICK_GRAPH_GITHUB_BACKEND_REPO"] = "graph-owner/graph-repo"
-        os.environ["CF_TICK_GRAPH_REPO_DEFAULT_BRANCH"] = "mybranch"
         os.environ["RUNNER_DEBUG"] = "1"
         os.environ["CF_TICK_FRAC_UPDATE_UPSTREAM_VERSIONS"] = "0.5"
         os.environ["CF_TICK_FRAC_UPDATE_NODE_ATTRS"] = "0.7"
-        os.environ["CF_TICK_VERSIONS_GITHUB_BACKEND_REPO"] = (
-            "versions-owner/versions-repo"
-        )
-        os.environ["CF_TICK_VERSIONS_REPO_DEFAULT_BRANCH"] = "mybranch-versions"
-        os.environ["CF_TICK_NODE_ATTRS_GITHUB_BACKEND_REPO"] = (
-            "node_attrs-owner/node_attrs-repo"
-        )
-        os.environ["CF_TICK_NODE_ATTRS_REPO_DEFAULT_BRANCH"] = "mybranch-node_attrs"
+        for dr in SPLIT_GITHUB_BACKEND_REPOS:
+            os.environ[f"CF_TICK_{dr.upper()}_GITHUB_BACKEND_REPO"] = (
+                f"{dr}-owner/{dr}-repo"
+            )
 
         bot_settings = BotSettings()
 
         assert bot_settings.conda_forge_org == "myorg"
-        assert bot_settings.graph_github_backend_repo == "graph-owner/graph-repo"
-        assert (
-            bot_settings.versions_github_backend_repo == "versions-owner/versions-repo"
-        )
-        assert (
-            bot_settings.node_attrs_github_backend_repo
-            == "node_attrs-owner/node_attrs-repo"
-        )
-        assert bot_settings.graph_repo_default_branch == "mybranch"
-        assert bot_settings.versions_repo_default_branch == "mybranch-versions"
-        assert bot_settings.node_attrs_repo_default_branch == "mybranch-node_attrs"
-        assert (
-            bot_settings.graph_github_backend_raw_base_url
-            == "https://github.com/graph-owner/graph-repo/raw/mybranch/"
-        )
-        assert (
-            bot_settings.versions_github_backend_raw_base_url
-            == "https://github.com/versions-owner/versions-repo/raw/mybranch-versions/"
-        )
-        assert (
-            bot_settings.node_attrs_github_backend_raw_base_url
-            == "https://github.com/node_attrs-owner/node_attrs-repo/raw/mybranch-node_attrs/"
-        )
+        for dr in ["graph"] + SPLIT_GITHUB_BACKEND_REPOS:
+            assert (
+                getattr(bot_settings, f"{dr}_github_backend_repo")
+                == f"{dr}-owner/{dr}-repo"
+            )
+            assert (
+                getattr(bot_settings, f"{dr}_github_backend_raw_base_url")
+                == f"https://github.com/{dr}-owner/{dr}-repo/raw/main/"
+            )
         assert bot_settings.github_runner_debug is True
         assert bot_settings.frac_update_upstream_versions == 0.5
         assert bot_settings.frac_update_node_attrs == 0.7
@@ -67,12 +50,15 @@ class TestBotSettings:
         assert (
             bot_settings.graph_github_backend_repo == "conda-forge/conda-forge-bot-data"
         )
-        assert bot_settings.graph_repo_default_branch == "main"
-        assert (
-            bot_settings.versions_github_backend_repo
-            == "conda-forge/conda-forge-bot-data-versions"
-        )
-        assert bot_settings.versions_repo_default_branch == "main"
+        for dr in SPLIT_GITHUB_BACKEND_REPOS:
+            assert (
+                getattr(bot_settings, f"{dr}_github_backend_repo")
+                == f"conda-forge/conda-forge-bot-data-{dr}"
+            )
+            assert (
+                getattr(bot_settings, f"{dr}_github_backend_raw_base_url")
+                == f"https://github.com/conda-forge/conda-forge-bot-data-{dr}/raw/main/"
+            )
         assert bot_settings.github_runner_debug is False
         assert 0 <= bot_settings.frac_update_upstream_versions <= 1
         assert 0 <= bot_settings.frac_update_node_attrs <= 1
@@ -150,3 +136,17 @@ def test_use_settings(temporary_environment):
 
     # the settings should be restored
     assert settings().github_runner_debug is False
+
+
+def test_get_container_env_command_args():
+    args = get_container_env_command_args()
+    assert len(args) == 2 * (len(SPLIT_GITHUB_BACKEND_REPOS) + 1) + 2
+
+    for i in range(0, len(args), 2):
+        assert args[i] == "-e"
+
+    assert args[1] == f"CF_TICK_CONDA_FORGE_ORG={settings().conda_forge_org}"
+
+    for i, dr in zip(range(3, len(args), 2), ["graph"] + SPLIT_GITHUB_BACKEND_REPOS):
+        repo = getattr(settings(), f"{dr}_github_backend_repo")
+        assert args[i] == f"CF_TICK_{dr.upper()}_GITHUB_BACKEND_REPO={repo}"

@@ -33,7 +33,7 @@ import requests
 
 from .cli_context import CliContext
 from .executors import lock_git_operation
-from .settings import settings
+from .settings import SPLIT_GITHUB_BACKEND_REPOS, settings
 
 logger = logging.getLogger(__name__)
 
@@ -67,12 +67,13 @@ CF_TICK_GRAPH_GITHUB_BACKEND_NUM_DIRS = 5
 
 HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT = "graph_github_backend_repo"
 HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING = {
-    "versions": "versions_github_backend_repo",
-    "node_attrs": "node_attrs_github_backend_repo",
     # things without a directory always use the default
     "lazy_json": HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT,
     "": HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT,
 }
+HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING.update(
+    {dr: f"{dr}_versions_github_backend_repo" for dr in SPLIT_GITHUB_BACKEND_REPOS}
+)
 
 
 def get_github_backend_repo_for_hashmap(hashmap_name: str) -> str:
@@ -333,14 +334,16 @@ class GithubLazyJsonBackend(LazyJsonBackend):
 
     def __init__(self) -> None:
         self._graph_base_url = settings().graph_github_backend_raw_base_url
-        self._versions_base_url = settings().versions_github_backend_raw_base_url
-        self._node_attrs_base_url = settings().node_attrs_github_backend_raw_base_url
+        for dr in SPLIT_GITHUB_BACKEND_REPOS:
+            setattr(
+                self,
+                f"_{dr}_base_url",
+                getattr(settings(), f"{dr}_github_backend_raw_base_url"),
+            )
 
     def _get_base_url(self, name: str) -> str:
-        if name == "versions":
-            return self._versions_base_url
-        elif name == "node_attrs":
-            return self._node_attrs_base_url
+        if name in SPLIT_GITHUB_BACKEND_REPOS:
+            return getattr(self, f"_{name}_base_url")
         else:
             return self._graph_base_url
 
@@ -456,20 +459,18 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
 
         self._gh = github_client(with_app_token=True)
         self._graph_repo = self._gh.get_repo(
-            get_github_backend_repo_for_hashmap("default")
+            get_github_backend_repo_for_hashmap("lazy_json")
         )
-        self._versions_repo = self._gh.get_repo(
-            get_github_backend_repo_for_hashmap("versions")
-        )
-        self._node_attrs_repo = self._gh.get_repo(
-            get_github_backend_repo_for_hashmap("node_attrs")
-        )
+        for dr in SPLIT_GITHUB_BACKEND_REPOS:
+            setattr(
+                self,
+                f"_{dr}_repo",
+                self._gh.get_repo(get_github_backend_repo_for_hashmap(dr)),
+            )
 
     def _get_repo(self, name: str) -> github.Repository:
-        if name == "versions":
-            return self._versions_repo
-        elif name == "node_attrs":
-            return self._node_attrs_repo
+        if name in SPLIT_GITHUB_BACKEND_REPOS:
+            return getattr(self, f"_{name}_repo")
         else:
             return self._graph_repo
 
