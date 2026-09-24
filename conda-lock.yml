@@ -4083,7 +4083,7 @@ package:
   category: main
   optional: false
 - name: pymongo
-  version: 4.18.1
+  version: 4.18.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -4093,10 +4093,10 @@ package:
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.1-py312h1064dfc_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.2-py312h1064dfc_0.conda
   hash:
-    md5: c4e7c81331a22be7278662b5ba10e6df
-    sha256: 04a5b957f79ff2613c2cef8a4dafddd84bb70e26b1e18f7a65db14772ed165c9
+    md5: 5229896be998083ff369dacc35d3cf3b
+    sha256: 6455491f727ea957e2fb70847beb84ae11c03920fa65b3c8c7e8d5b564b35c5d
   category: main
   optional: false
 - name: pynacl
@@ -4436,15 +4436,15 @@ package:
   category: main
   optional: false
 - name: pytz
-  version: 2026.3.post1
+  version: '2026.4'
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytz-2026.3.post1-pyhcf101f3_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/pytz-2026.4-pyh5ded981_0.conda
   hash:
-    md5: eb2fb9070c0232e96ae5515d8b28e4f9
-    sha256: ad774abda71c759baef515983bfedbba34d56d6227974c23715c04612f812a90
+    md5: 88f9c01fa949cb51dcd33d36e547a30e
+    sha256: 0c711bf143729c33bcbca10333dac27cdcb67644dd54ec2a749d56f6e54cd484
   category: main
   optional: false
 - name: pyyaml
