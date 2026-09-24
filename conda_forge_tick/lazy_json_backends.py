@@ -72,7 +72,7 @@ HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING = {
     "": HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING_DEFAULT,
 }
 HASHMAP_NAME_TO_GITHUB_BACKEND_SETTING.update(
-    {dr: f"{dr}_versions_github_backend_repo" for dr in SPLIT_GITHUB_BACKEND_REPOS}
+    {dr: f"{dr}_github_backend_repo" for dr in SPLIT_GITHUB_BACKEND_REPOS}
 )
 
 
