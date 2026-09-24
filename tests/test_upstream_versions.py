@@ -2067,9 +2067,10 @@ def test_gittags_tag_glob_matches_bare_tag_not_full_ref(
     }
 
     gt = GitTags()
-    assert gt.get_version("https://github.com/UCL/STIR.git", node_attrs) == "6.4.0", (
-        "tag globs should match the bare tag name, not the full refs/tags/<tag> ref"
-    )
+    assert (
+        gt.get_version("https://github.com/example/no-such-repo.git", node_attrs)
+        == "6.4.0"
+    ), "tag globs should match the bare tag name, not the full refs/tags/<tag> ref"
 
 
 @pytest.mark.parametrize(
