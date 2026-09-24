@@ -194,7 +194,8 @@ class BotSettings(BaseSettings):
     In tests or when debugging, you probably need to set this to 1.0 to update all feedstocks.
     """
 
-    frac_update_pr_json: Fraction = 0.1
+    # FIXME: put this back to 0.1
+    frac_update_pr_json: Fraction = 0.01
     """
     The fraction of feedstocks (randomly selected) to update in the prs job.
     In tests or when debugging, you probably need to set this to 1.0 to update all feedstocks.

@@ -49,7 +49,7 @@ if [[ "${clone_graph}" == "true" ]]; then
     dr_repo_remote="https://github.com/${dr_repo}.git"
     if [[ "${dr_repo}" != "${cf_graph_repo}" ]]; then
         # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
-        git clone --depth=5 "${dr_remote}" "${dr}"
+        git clone --depth=5 "${dr_repo}" "${dr}"
     fi
   done
 
