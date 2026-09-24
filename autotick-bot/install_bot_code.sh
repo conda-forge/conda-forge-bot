@@ -41,6 +41,7 @@ if [[ "${clone_graph}" == "true" ]]; then
   cf_graph_remote="https://github.com/${cf_graph_repo}.git"
   git clone --depth=5 "${cf_graph_remote}" cf-graph
 
+  pushd cf-graph
   # This list of strings must match the values of SPLIT_GITHUB_BACKEND_REPOS in conda_forge_tick.settings
   for dr in "versions" "node_attrs" "pr_info" "version_pr_info" "pr_json" "migrators"; do
     dr_upper="${dr^^}"
@@ -49,9 +50,10 @@ if [[ "${clone_graph}" == "true" ]]; then
     dr_repo_remote="https://github.com/${dr_repo}.git"
     if [[ "${dr_repo}" != "${cf_graph_repo}" ]]; then
         # please make sure the cloning depth is always identical to the one used in the integration tests (test_integration.py)
-        git clone --depth=5 "${dr_repo}" "${dr}"
+        git clone --depth=5 "${dr_repo_remote}" "${dr}"
     fi
   done
+  popd
 
 else
   echo "Skipping cloning of cf-graph"
