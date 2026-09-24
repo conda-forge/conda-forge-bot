@@ -7,7 +7,7 @@
 # - CF_TICK_XYZ_GITHUB_BACKEND_REPO: The GitHub repository to clone the XYZ data from. If this
 #   value differs from CF_TICK_GRAPH_GITHUB_BACKEND_REPO, then the repo is cloned to versions under the
 #   CF_TICK_GRAPH_GITHUB_BACKEND_REPO repo. Default: conda-forge/conda-forge-bot-data-XYZ
-#   XYZ = {"versions", "node_attrs", "pr_info"}
+#   XYZ = value of conda_forge_tick.settings.SPLIT_GITHUB_BACKEND_REPOS
 
 # Sets the following environment variables via GITHUB_ENV:
 # - CF_FEEDSTOCK_OPS_CONTAINER_NAME (see above)
