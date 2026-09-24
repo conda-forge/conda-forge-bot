@@ -745,8 +745,9 @@ class GitTags(AbstractSource):
 
     def get_version(self, url: str, node_attrs: AttrsTypedDict) -> str | None:
         try:
+            # Do not show peeled tags or pseudorefs by using --refs
             output = subprocess.check_output(
-                ["git", "ls-remote", "--tags", url], text=True
+                ["git", "ls-remote", "--tags", "--refs", url], text=True
             )
         except Exception:
             return None
@@ -759,7 +760,9 @@ class GitTags(AbstractSource):
             fields = line.split(None, 1)
             if len(fields) != 2:
                 continue
-            tag = fields[1]
+            # strip the ref prefix so that the tag globs match the tag name
+            # itself, like the Github source
+            tag = fields[1].removeprefix("refs/tags/")
 
             if is_tag_ignored(node_attrs, tag):
                 continue

@@ -2042,6 +2042,36 @@ def test_github_release_tag_with_slash_respects_allowed_tag_globs(
     )
 
 
+@mock.patch("conda_forge_tick.update_sources.subprocess.check_output")
+def test_gittags_tag_glob_matches_bare_tag_not_full_ref(
+    check_output_mock: MagicMock,
+):
+    # mirrors the layout of `git ls-remote --tags --refs` output: full refs of
+    # the form refs/tags/<tag>, with no annotated-tag peel refs (<tag>^{})
+    check_output_mock.return_value = "\n".join(
+        [
+            "00fb232d047f0ce5646256a932e71b24e078ff7f\trefs/tags/rel_6.3.1",
+            "c08ecf2813d1e83563eb2f194450e8bd8a475543\trefs/tags/rel_6.4.0",
+            "3f98d3f77a195c1c5cff75fb4c4d91efc0d72d41\trefs/tags/course_MIC2018",
+        ]
+    )
+
+    node_attrs = {
+        "conda-forge.yml": {
+            "bot": {
+                "version_updates": {
+                    "allowed_tag_globs": "rel_*",
+                },
+            },
+        },
+    }
+
+    gt = GitTags()
+    assert gt.get_version("https://github.com/UCL/STIR.git", node_attrs) == "6.4.0", (
+        "tag globs should match the bare tag name, not the full refs/tags/<tag> ref"
+    )
+
+
 @pytest.mark.parametrize(
     "url, feedstock_version",
     [
