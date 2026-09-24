@@ -51,10 +51,7 @@ from . import sensitive_env
 from .lazy_json_backends import LazyJson
 from .migrators_types import AttrsTypedDict
 from .settings import (
-    ENV_CONDA_FORGE_ORG,
-    ENV_GRAPH_GITHUB_BACKEND_REPO,
-    ENV_NODE_ATTRS_GITHUB_BACKEND_REPO,
-    ENV_VERSIONS_GITHUB_BACKEND_REPO,
+    get_container_env_command_args,
     settings,
 )
 
@@ -401,16 +398,7 @@ def parse_recipe_yaml_containerized(
             input=text,
             mount_readonly=True,
             mount_dir=_mount_dir,
-            extra_container_args=[
-                "-e",
-                f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
-                "-e",
-                f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
-                "-e",
-                f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
-                "-e",
-                f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
-            ],
+            extra_container_args=get_container_env_command_args(),
         )
 
     args = [
@@ -1054,16 +1042,7 @@ def parse_meta_yaml_containerized(
             input=text,
             mount_readonly=True,
             mount_dir=_mount_dir,
-            extra_container_args=[
-                "-e",
-                f"{ENV_CONDA_FORGE_ORG}={settings().conda_forge_org}",
-                "-e",
-                f"{ENV_GRAPH_GITHUB_BACKEND_REPO}={settings().graph_github_backend_repo}",
-                "-e",
-                f"{ENV_VERSIONS_GITHUB_BACKEND_REPO}={settings().versions_github_backend_repo}",
-                "-e",
-                f"{ENV_NODE_ATTRS_GITHUB_BACKEND_REPO}={settings().node_attrs_github_backend_repo}",
-            ],
+            extra_container_args=get_container_env_command_args(),
         )
 
     if (cbc_path is not None and os.path.exists(cbc_path)) or (
