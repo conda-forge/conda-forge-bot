@@ -331,7 +331,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.98
+  version: 1.43.99
   manager: conda
   platform: linux-64
   dependencies:
@@ -339,10 +339,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.98-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.99-pyhd8ed1ab_0.conda
   hash:
-    md5: f8fa12f83ee2d1d031c0a2755f0a4338
-    sha256: bed0db7429cb6e0b30dcbcd7d59b5c873c71b6d1b6c91cd662d65fd95aa31114
+    md5: 13374108acb41cce6495c2cc06a2627d
+    sha256: d00844b1a738107d26926e969cfff24e848ab6897faff7fba59bbc486e66dbcb
   category: main
   optional: false
 - name: brotli-python
@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.23.15.06.48
+  version: 2026.09.24.00.35.33
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.23.15.06.48-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.24.00.35.33-hd8ed1ab_1.conda
   hash:
-    md5: f791bb81489856273eaa111a1fd3bcb6
-    sha256: d1014af2dade4f34fe168184b07e52358d6674d37b54950acf6db538c1f2fa99
+    md5: c94b2eecc2031e412c7d6c30a11b4acb
+    sha256: 1bd549425cb26f95b47f3e03688a72202446fcbbd0dee1bdc9965fe0eb1a5d98
   category: main
   optional: false
 - name: conda-index
@@ -2980,10 +2980,10 @@ package:
     libharfbuzz: '>=14.5.0'
     libxml2-16: '>=2.15.4'
     pango: '>=1.58.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/librsvg-2.62.3-ha427ee3_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/librsvg-2.62.3-ha427ee3_2.conda
   hash:
-    md5: d357bae89810ca378fdc9e1cf02a7a54
-    sha256: 9cd8f95157cd442b463649117c4814f1d8488a8b70b31ac926860bc43eb3685a
+    md5: ae183335a0ce1d3b8109e538bb3d2147
+    sha256: 22451190a0a04806ad86aa89fc04e117cbfd764bbf2981d0e635934d3d9d06e4
   category: main
   optional: false
 - name: libsodium
