@@ -1089,7 +1089,7 @@ def _make_version_migrator(
         version_migrator = Version(
             python_nodes=python_nodes,
             total_graph=gx,
-            pr_limit=PR_LIMIT,
+            pr_limit=MAX_PR_LIMIT,
             piggy_back_migrations=_make_mini_migrators_with_defaults(
                 extra_mini_migrators=[
                     PipWheelMigrator(),
@@ -1115,7 +1115,7 @@ def _make_version_migrator(
         # if there is a backlog
         old_limit = version_migrator.pr_limit
         # this scaling is set by experience
-        factor = max(num_to_do, 25) / 25
+        factor = max(num_to_do, 50) / 50
         version_migrator.pr_limit = version_migrator.pr_limit * factor
         logger.info(
             "Adjusting Version migrator PR limit: %d -> %d",
