@@ -1115,7 +1115,7 @@ def _make_version_migrator(
         # if there is a backlog
         old_limit = version_migrator.pr_limit
         # this scaling is set by experience
-        factor = max(num_to_do, 50) / 50
+        factor = max(num_to_do, 25) / 25
         version_migrator.pr_limit = version_migrator.pr_limit * factor
         logger.info(
             "Adjusting Version migrator PR limit: %d -> %d",
