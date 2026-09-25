@@ -331,7 +331,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.100
+  version: 1.43.102
   manager: conda
   platform: linux-64
   dependencies:
@@ -339,10 +339,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.100-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.102-pyhd8ed1ab_0.conda
   hash:
-    md5: 64e1ee2fdecaa0783ddfd188337fe7a6
-    sha256: c80080c29b58a696ade64445da24a4854fde528e3bf0fb66f61c7339e42e700d
+    md5: f7556cc721b1b2b472fbec8c310f7029
+    sha256: 0965f76ff66f627dd1260721439751e36d549aea1cf4b20f6376f7ac68b4488c
   category: main
   optional: false
 - name: brotli-python
@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.25.08.29.03
+  version: 2026.09.25.19.17.23
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.25.08.29.03-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.25.19.17.23-hd8ed1ab_1.conda
   hash:
-    md5: 91120d5516673108b500916ba65d4154
-    sha256: e85bf5395bd2b59be36123de9e995f7632a4703661569c231d5fafc0b8a711ea
+    md5: a8bfed5534fe7a9f720cdf6094fa08a0
+    sha256: a3648a87354ead405b1ad0757e8658862c4b10e6b4a8bb2629dadf3376880552
   category: main
   optional: false
 - name: conda-index
@@ -920,7 +920,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    conda-index: '>=0.12.0'
+    conda-index: '>=0.13.0'
     conda-package-streaming: '>=0.11'
     packaging: ''
     platformdirs: ''
@@ -928,10 +928,10 @@ package:
     python-build: ''
     python-installer: '>=1.0'
     unearth: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-pypi-0.12.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-pypi-0.12.0-pyh5ded981_1.conda
   hash:
-    md5: e294f0e16705c5678d8faf71636a5455
-    sha256: 5c41f9946b00966e1c216697ed34219bf054cb1c2fc9a41d2934bdce0c15c48c
+    md5: 6341bcf79e7fe3ab5d12a20fdc524188
+    sha256: 595b3cb9d5d2f0ecda0bbd0583bcdfe6ecbb00c7d7d8dfdc80635df3b6ee0bb3
   category: main
   optional: false
 - name: conda-rattler-solver
@@ -2411,16 +2411,16 @@ package:
   category: main
   optional: false
 - name: libexpat
-  version: 2.8.4
+  version: 2.8.5
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libexpat-2.8.4-hd2095e1_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libexpat-2.8.5-hd2095e1_0.conda
   hash:
-    md5: a77b44d6cbaad97f3ad050ab35fad55a
-    sha256: 2f5e90b621f7bf64c35d5c972bd85a645555d82404130569149a129dcbc8b8dd
+    md5: 72cfd2b95b0540247220b42f58a148d7
+    sha256: 6de73033a7c5f712c9c5a54124e4581e025691029835e5bceaf10a333a7e7bc0
   category: main
   optional: false
 - name: libffi
@@ -3761,15 +3761,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.11.12
+  version: 4.11.13
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.11.12-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.11.13-pyh5ded981_0.conda
   hash:
-    md5: 99714207349966378c112c2b8db785f5
-    sha256: 5d440bd9ccb80abc1c6d40022a4a54d007a133b2dd73a62762e7c18c470895cd
+    md5: 68cd791f764c7e158a61424eec38e67c
+    sha256: 9b63090f465ec1d113f8f23c43669542f6d8fb560740f0b1aa9e71f060f1a861
   category: main
   optional: false
 - name: pluggy
@@ -5281,7 +5281,7 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.18
+  version: 0.12.19
   manager: conda
   platform: linux-64
   dependencies:
@@ -5290,10 +5290,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.18-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.19-h841d291_0.conda
   hash:
-    md5: cc21ebd3202257969230912e3c24b799
-    sha256: b8443546fda374d709a2721a403ed7db44b6cbb1332b0619740f1d4ef8fb6c64
+    md5: 93d8d9ff6519484b67fd21038a562091
+    sha256: 032a2c37546d3d8e47cfd74ae46d988f9a6befcf770b8f2e130eddcdafb827e9
   category: main
   optional: false
 - name: vcs_versioning
