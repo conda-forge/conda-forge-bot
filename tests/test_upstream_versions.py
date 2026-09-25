@@ -1778,11 +1778,13 @@ def test_update_upstream_versions_sequential(
     assert "# 1     - testpackage2 - 1.2.4 -> 1.2.5" in caplog.text
 
 
+@mock.patch("conda_forge_tick.update_upstream_versions.sync_lazy_json_object")
 @mock.patch("conda_forge_tick.update_upstream_versions.executor")
 @mock.patch("conda_forge_tick.update_upstream_versions.LazyJson")
 def test_update_upstream_versions_process_pool(
     lazy_json_mock: MagicMock,
     executor_mock: MagicMock,
+    sync_mock: MagicMock,
     version_update_frac_always,
     caplog,
 ):
@@ -1837,15 +1839,19 @@ def test_update_upstream_versions_process_pool(
     lazy_json_instance.update.assert_any_call({"new_version": "2.2.4"})
     lazy_json_instance.update.assert_any_call({"new_version": "1.2.5"})
 
+    sync_mock.assert_called()
+
     assert "testpackage2 - 1.2.4 -> 1.2.5" in caplog.text
     assert "testpackage - 2.2.3 -> 2.2.4" in caplog.text
 
 
+@mock.patch("conda_forge_tick.update_upstream_versions.sync_lazy_json_object")
 @mock.patch("conda_forge_tick.update_upstream_versions.executor")
 @mock.patch("conda_forge_tick.update_upstream_versions.LazyJson")
 def test_update_upstream_versions_process_pool_exception(
     lazy_json_mock: MagicMock,
     executor_mock: MagicMock,
+    sync_mock: MagicMock,
     version_update_frac_always,
     caplog,
 ):
@@ -1883,15 +1889,18 @@ def test_update_upstream_versions_process_pool_exception(
     lazy_json_instance.update.assert_any_call(
         {"bad": "Upstream: Error getting upstream version"}
     )
+    sync_mock.assert_called_once()
 
     assert "source a error" in caplog.text
 
 
+@mock.patch("conda_forge_tick.update_upstream_versions.sync_lazy_json_object")
 @mock.patch("conda_forge_tick.update_upstream_versions.executor")
 @mock.patch("conda_forge_tick.update_upstream_versions.LazyJson")
 def test_update_upstream_versions_process_pool_exception_repr_exception(
     lazy_json_mock: MagicMock,
     executor_mock: MagicMock,
+    sync_mock: MagicMock,
     version_update_frac_always,
     caplog,
 ):
@@ -1929,6 +1938,8 @@ def test_update_upstream_versions_process_pool_exception_repr_exception(
     lazy_json_instance.update.assert_any_call(
         {"bad": "Upstream: Error getting upstream version"}
     )
+
+    sync_mock.assert_called_once()
 
     assert "Bad exception string" in caplog.text
     assert "broken exception" in caplog.text
