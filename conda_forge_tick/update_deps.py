@@ -528,10 +528,14 @@ def _apply_env_dep_comparison(
             new_deps.append(patch.after)  # type: ignore[arg-type]
         # Remove old package.
         elif patch.after is None:
-            new_deps.remove(patch.before)
+            if patch.before in new_deps:
+                new_deps.remove(patch.before)
         # Update existing package.
         else:
-            new_deps[new_deps.index(patch.before)] = patch.after
+            if patch.before in new_deps:
+                new_deps[new_deps.index(patch.before)] = patch.after
+            else:
+                new_deps.append(patch.after)  # type: ignore[arg-type]
     return new_deps
 
 
