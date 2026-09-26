@@ -534,6 +534,8 @@ def _apply_env_dep_comparison(
         else:
             if patch.before in new_deps:
                 new_deps[new_deps.index(patch.before)] = patch.after
+            else:
+                new_deps.append(patch.after)  # type: ignore[arg-type]
     return new_deps
 
 
