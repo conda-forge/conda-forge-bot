@@ -1,5 +1,7 @@
 import collections.abc
+import contextlib
 import copy
+import io
 import logging
 import os
 import pprint
@@ -193,14 +195,21 @@ def make_grayskull_recipe(attrs, version_key="version"):
         pkg_name,
         pkg_version,
     )
-    recipe, _ = create_python_recipe(
-        pkg_name=pkg_name,
-        version=pkg_version,
-        download=False,
-        is_strict_cf=True,
-        from_local_sdist=False,
-        is_arch=not is_noarch,
-    )
+
+    f = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
+            recipe, _ = create_python_recipe(
+                pkg_name=pkg_name,
+                version=pkg_version,
+                download=False,
+                is_strict_cf=True,
+                from_local_sdist=False,
+                is_arch=not is_noarch,
+            )
+    except Exception:
+        print(f.getvalue(), flush=True)
+        raise
 
     with tempfile.TemporaryDirectory() as td:
         pth = os.path.join(td, "meta.yaml")
@@ -306,53 +315,18 @@ def get_grayskull_comparison(attrs, version_key="version"):
     else:
         raise ValueError(f"Unknown recipe schema version: '{recipe_schema_version}'.")
 
-    # we put back python_min by hand since we render the recipe above before
-    # computing the dep comparison
-    python_min_slugs = [
-        "python ${{ python_min }}.*",
-        "python >=${{ python_min }}",
-        "python {{ python_min }}.*",
-        "python {{ python_min }}",
-        "python >={{ python_min }}",
-    ]
-    has_python_min = any(slug in grayskull_recipe for slug in python_min_slugs) and (
-        any(slug in attrs["raw_meta_yaml"] for slug in python_min_slugs)
-        or any(
-            line.strip().startswith("noarch: python")
-            for line in attrs["raw_meta_yaml"].splitlines()
-        )
-    )
-
-    def _replace_python_min(orig_set, section):
-        new_set = set()
-        for req in orig_set:
-            if req.split()[0] == "python" and has_python_min:
-                if recipe_schema_version == 1:
-                    if section == "host":
-                        new_set.add("python ${{ python_min }}.*")
-                    elif section == "run":
-                        new_set.add("python >=${{ python_min }}")
-                    else:
-                        new_set.add(req)
-                else:
-                    if section == "host":
-                        new_set.add("python {{ python_min }}")
-                    elif section == "run":
-                        new_set.add("python >={{ python_min }}")
-                    else:
-                        new_set.add(req)
-            else:
-                new_set.add(req)
-
-        return new_set
+    # python is difficult so we ignore it
+    def _ignore_python(orig_set):
+        return {req for req in orig_set if req.split()[0] != "python"}
 
     d: dict[str, dict[str, set[str]]] = {}
     for section in SECTIONS_TO_PARSE:
-        gs_run = _replace_python_min(
+        gs_run = _ignore_python(
             {c for c in new_attrs.get("total_requirements").get(section, set())},
-            section,
         )
-        cf_minus_df = {c for c in attrs.get("total_requirements").get(section, set())}
+        cf_minus_df = _ignore_python(
+            {c for c in attrs.get("total_requirements").get(section, set())},
+        )
 
         df_minus_cf = set()
         for req in gs_run:
@@ -428,7 +402,7 @@ def _ok_for_dep_updates(lines):
     return not is_multi_output
 
 
-def _update_sec_deps(recipe, dep_comparison, sections_to_update, update_python=False):
+def _update_sec_deps(recipe, dep_comparison, sections_to_update):
     updated_deps = False
 
     rqkeys = list(_gen_key_selector(recipe.meta, "requirements"))
@@ -449,7 +423,7 @@ def _update_sec_deps(recipe, dep_comparison, sections_to_update, update_python=F
                     dep_pkg_nm = dep.split(" ", 1)[0]
 
                     # do not touch python itself - to finicky
-                    if dep_pkg_nm == "python" and not update_python:
+                    if dep_pkg_nm == "python":
                         continue
 
                     # do not replace pin compatible keys
