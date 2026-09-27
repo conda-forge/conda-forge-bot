@@ -6,6 +6,7 @@ from typing import Literal
 
 import networkx as nx
 import pytest
+import requests
 from conda_forge_feedstock_ops.recipe_parser import CondaMetaYAML
 from test_migrators import run_test_migration
 
@@ -61,6 +62,7 @@ def test_generate_dep_hint():
     assert "but not in the meta.yaml" not in hint
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_make_grayskull_recipe():
     with open(
@@ -73,6 +75,7 @@ def test_make_grayskull_recipe():
     assert attrs["version"] in recipe
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_make_grayskull_recipe_github_url():
     with open(
@@ -85,6 +88,7 @@ def test_make_grayskull_recipe_github_url():
     assert attrs["version"] in recipe
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_grayskull_comparison():
     with open(
@@ -105,6 +109,7 @@ def test_get_grayskull_comparison():
     }
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_update_run_deps():
     with open(
@@ -184,6 +189,7 @@ extra:
 """
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_dep_updates_and_hints_praw():
     attrs = {
@@ -288,6 +294,7 @@ extra:
         "update-all",
     ],
 )
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_update_deps_version(caplog, tmp_path, update_kind):
     caplog.set_level(
@@ -455,6 +462,7 @@ extra:
 """  # noqa
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_update_deps_version_pyquil(caplog, tmp_path):
     caplog.set_level(
@@ -784,6 +792,7 @@ def _read_interpax():
     ],
     ids=["depfinder", "interpax"],
 )
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_grayskull_comparison_full(
     attrs: dict, expected_dep_comparison: DepComparison
@@ -952,6 +961,7 @@ extra:
         )
     ],
 )
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_update_deps_version_v1(
     update_kind: UpdateKind,
@@ -983,6 +993,7 @@ def test_update_deps_version_v1(
     )
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 def test_jsii_package_name_resolution():
     """Test that we get the PyPI name instead of feedstock package name for Grayskull.
 
@@ -996,6 +1007,7 @@ def test_jsii_package_name_resolution():
     assert resolved_name == "jsii"
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_grayskull_comparison_v1_python_min_mismatch():
     """Test that get_grayskull_comparison works for v1 recipes using python_min.
