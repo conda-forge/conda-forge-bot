@@ -1,0 +1,267 @@
+{
+  "archived": false,
+  "branch": "main",
+  "ci_support_linux_64_.yaml": "channel_sources:\n- conda-forge\nchannel_targets:\n- conda-forge main\ndocker_image:\n- quay.io/condaforge/linux-anvil-x86_64:alma9\npython_min:\n- '3.10'\n",
+  "ci_support_migrations": {},
+  "conda-forge.yml": {
+    "bot": {
+      "inspection": "update-grayskull"
+    },
+    "conda_build": {
+      "error_overlinking": true
+    },
+    "conda_forge_output_validation": true,
+    "github": {
+      "branch_name": "main",
+      "tooling_branch_name": "main"
+    }
+  },
+  "feedstock_hash": "21212c87ba40797e8d3dd13f57dee7298f260e69",
+  "feedstock_hash_ts": 1777050272,
+  "feedstock_name": "interpax",
+  "hash_type": "sha256",
+  "linux_64_meta_yaml": {
+    "about": {
+      "home": "https://github.com/f0uriest/interpax",
+      "license": "MIT",
+      "license_file": "LICENSE",
+      "summary": "Interpolation and function approximation with JAX"
+    },
+    "build": {
+      "noarch": "python",
+      "number": "0",
+      "script": "PYTHON -m pip install . -vv --no-deps --no-build-isolation"
+    },
+    "extra": {
+      "recipe-maintainers": [
+        "beckermr"
+      ]
+    },
+    "package": {
+      "name": "interpax",
+      "version": "0.3.14"
+    },
+    "requirements": {
+      "host": [
+        "python 3.10",
+        "pip",
+        "setuptools",
+        "versioneer"
+      ],
+      "run": [
+        "jaxtyping >=0.2.24,<0.4",
+        "lineax >=0.0.5,<=0.1.0",
+        "python >=3.10",
+        "equinox >=0.11.0,<0.14",
+        "jax >=0.4.30,<0.11",
+        "numpy >=1.19.0,<2.2"
+      ]
+    },
+    "schema_version": 0,
+    "source": {
+      "sha256": "f1f7d33373805c8bf2039740de4f3201963e46c7ee774561c97eaa8405970eae",
+      "url": "https://github.com/f0uriest/interpax/archive/refs/tags/v0.3.14.tar.gz"
+    },
+    "test": {
+      "commands": [
+        "pip check"
+      ],
+      "imports": [
+        "interpax"
+      ],
+      "requires": [
+        "pip",
+        "python 3.10"
+      ]
+    }
+  },
+  "linux_64_requirements": {
+    "build": {
+      "__set__": true,
+      "elements": []
+    },
+    "host": {
+      "__set__": true,
+      "elements": [
+        "pip",
+        "python",
+        "setuptools",
+        "versioneer"
+      ]
+    },
+    "run": {
+      "__set__": true,
+      "elements": [
+        "equinox",
+        "jax",
+        "jaxtyping",
+        "lineax",
+        "numpy",
+        "python"
+      ]
+    },
+    "test": {
+      "__set__": true,
+      "elements": [
+        "pip",
+        "python"
+      ]
+    }
+  },
+  "meta_yaml": {
+    "about": {
+      "home": "https://github.com/f0uriest/interpax",
+      "license": "MIT",
+      "license_file": "LICENSE",
+      "summary": "Interpolation and function approximation with JAX"
+    },
+    "build": {
+      "noarch": "python",
+      "number": "0",
+      "script": "PYTHON -m pip install . -vv --no-deps --no-build-isolation"
+    },
+    "extra": {
+      "recipe-maintainers": [
+        "beckermr"
+      ]
+    },
+    "package": {
+      "name": "interpax",
+      "version": "0.3.14"
+    },
+    "requirements": {
+      "host": [
+        "python 3.10",
+        "pip",
+        "setuptools",
+        "versioneer"
+      ],
+      "run": [
+        "jaxtyping >=0.2.24,<0.4",
+        "lineax >=0.0.5,<=0.1.0",
+        "python >=3.10",
+        "equinox >=0.11.0,<0.14",
+        "jax >=0.4.30,<0.11",
+        "numpy >=1.19.0,<2.2"
+      ]
+    },
+    "schema_version": 0,
+    "source": {
+      "sha256": "f1f7d33373805c8bf2039740de4f3201963e46c7ee774561c97eaa8405970eae",
+      "url": "https://github.com/f0uriest/interpax/archive/refs/tags/v0.3.14.tar.gz"
+    },
+    "test": {
+      "commands": [
+        "pip check"
+      ],
+      "imports": [
+        "interpax"
+      ],
+      "requires": [
+        "pip",
+        "python 3.10"
+      ]
+    }
+  },
+  "name": "interpax",
+  "outputs_names": {
+    "__set__": true,
+    "elements": [
+      "interpax"
+    ]
+  },
+  "parsing_error": false,
+  "platforms": [
+    "linux_64"
+  ],
+  "pr_info": {
+    "__lazy_json__": "pr_info/interpax.json"
+  },
+  "raw_meta_yaml": "{% set name = \"interpax\" %}\n{% set version = \"0.3.14\" %}\n{% set python_min = \"3.10\" %}\n\npackage:\n  name: {{ name|lower }}\n  version: {{ version }}\n\nsource:\n  url: https://github.com/f0uriest/interpax/archive/refs/tags/v{{ version }}.tar.gz\n  sha256: f1f7d33373805c8bf2039740de4f3201963e46c7ee774561c97eaa8405970eae\n\nbuild:\n  noarch: python\n  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation\n  number: 0\n\nrequirements:\n  host:\n    - python {{ python_min }}\n    - pip\n    - setuptools\n    - versioneer\n  run:\n    - jaxtyping >=0.2.24,<0.4\n    - lineax >=0.0.5,<=0.1.0\n    - python >={{ python_min }}\n    - equinox >=0.11.0,<0.14\n    - jax >=0.4.30,<0.11\n    - numpy >=1.19.0,<2.2\n\ntest:\n  imports:\n    - interpax\n  commands:\n    - pip check\n  requires:\n    - pip\n    - python {{ python_min }}\n\nabout:\n  home: https://github.com/f0uriest/interpax\n  summary: Interpolation and function approximation with JAX\n  license: MIT\n  license_file: LICENSE\n\nextra:\n  recipe-maintainers:\n    - beckermr\n",
+  "req": {
+    "__set__": true,
+    "elements": [
+      "equinox",
+      "jax",
+      "jaxtyping",
+      "lineax",
+      "numpy",
+      "pip",
+      "python",
+      "setuptools",
+      "versioneer"
+    ]
+  },
+  "requirements": {
+    "build": {
+      "__set__": true,
+      "elements": []
+    },
+    "host": {
+      "__set__": true,
+      "elements": [
+        "pip",
+        "python",
+        "setuptools",
+        "versioneer"
+      ]
+    },
+    "run": {
+      "__set__": true,
+      "elements": [
+        "equinox",
+        "jax",
+        "jaxtyping",
+        "lineax",
+        "numpy",
+        "python"
+      ]
+    },
+    "test": {
+      "__set__": true,
+      "elements": [
+        "pip",
+        "python"
+      ]
+    }
+  },
+  "strong_exports": false,
+  "total_requirements": {
+    "build": {
+      "__set__": true,
+      "elements": []
+    },
+    "host": {
+      "__set__": true,
+      "elements": [
+        "pip",
+        "python 3.10",
+        "setuptools",
+        "versioneer"
+      ]
+    },
+    "run": {
+      "__set__": true,
+      "elements": [
+        "equinox >=0.11.0,<0.14",
+        "jax >=0.4.30,<0.11",
+        "jaxtyping >=0.2.24,<0.4",
+        "lineax >=0.0.5,<=0.1.0",
+        "numpy >=1.19.0,<2.2",
+        "python >=3.10"
+      ]
+    },
+    "test": {
+      "__set__": true,
+      "elements": [
+        "pip",
+        "python 3.10"
+      ]
+    }
+  },
+  "url": "https://github.com/f0uriest/interpax/archive/refs/tags/v0.3.14.tar.gz",
+  "version": "0.3.14",
+  "version_pr_info": {
+    "__lazy_json__": "version_pr_info/interpax.json"
+  }
+}

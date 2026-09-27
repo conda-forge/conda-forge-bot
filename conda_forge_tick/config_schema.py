@@ -205,7 +205,7 @@ class BotConfig(BaseModel):
     )
 
     inspection: BotConfigInspectionChoice | None = Field(
-        default="disabled",
+        default="hint",
         description="Method for generating hints or updating recipe",
     )
 
@@ -245,6 +245,7 @@ class BotConfig(BaseModel):
 if __name__ == "__main__":
     # This is used to generate the model dump for conda-smithy internal use
     # and for documentation purposes.
+    # python conda_forge_tick/config_schema.py
 
     model = BotConfig()
 
