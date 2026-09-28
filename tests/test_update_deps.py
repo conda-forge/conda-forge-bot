@@ -424,8 +424,8 @@ requirements:
   run:
     - importlib-metadata >=3.7.3,<4.0.0
     - lark >=0.11.1,<0.12.0
-    - networkx >=2.5.0,<3.0.0
-    - numpy >=1.20.0,<2.0.0
+    - networkx >=2.5,<3.0
+    - numpy >=1.20,<2.0
     - python >=3.7,<4.0
     - qcs-api-client >=0.8.1,<0.21.0
     - retry >=0.9.2,<0.10.0
@@ -490,6 +490,11 @@ def test_update_deps_version_pyquil(caplog, tmp_path):
         },
         tmp_path=tmp_path,
         make_body=True,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyquil-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/59/86/4ae3b53259ae13148d161db460d8f962311adbed72f5291597350033dca7/pyquil-{{ version }}.tar.gz"
+            }
+        ],
     )
 
 

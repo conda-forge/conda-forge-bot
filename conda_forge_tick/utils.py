@@ -31,6 +31,8 @@ from typing import (
     cast,
 )
 
+import conda.models.match_spec
+import conda.models.version
 import dateparser
 import jinja2
 import jinja2.sandbox
@@ -1872,3 +1874,77 @@ def get_platform_arch_from_ci_support_filename(ci_support_filename):
             plat = plat[: -len(_tt)]
             break
     return (plat, arch)
+
+
+def _version_trees_are_equiv(t1, t2):
+    if isinstance(t1, tuple) and isinstance(t2, tuple):
+        if len(t1) != len(t2):
+            return False
+        else:
+            return all(_version_trees_are_equiv(tv1, tv2) for tv1, tv2 in zip(t1, t2))
+    elif isinstance(t1, str) and isinstance(t2, str):
+        if t1 == t2:
+            return True
+        elif t1 in ["|", ","] and t2 in ["|", ","]:
+            return t1 == t2
+        elif (
+            t1[0] in conda.models.version.OPERATOR_START
+            and t2[0] in conda.models.version.OPERATOR_START
+        ):
+            m1 = conda.models.version.version_relation_re.match(t1)
+            m2 = conda.models.version.version_relation_re.match(t2)
+
+            if m1 is None or m2 is None:
+                return False
+            else:
+                op1, v1str = m1.groups()
+                op2, v2str = m2.groups()
+
+                if op1 != op2:
+                    return False
+                elif op1 in [">", "<", ">=", "<="]:
+                    return conda.models.version.VersionOrder(
+                        v1str
+                    ) == conda.models.version.VersionOrder(v2str)
+                else:
+                    return False
+        elif (
+            t1[0] not in conda.models.version.OPERATOR_START
+            and t2[0] not in conda.models.version.OPERATOR_START
+        ):
+            # for conda-build, these are the same and we know the versions do not start with an operator
+            if t1.endswith(".*"):
+                t1 = t1[:-2]
+            if t2.endswith(".*"):
+                t2 = t2[:-2]
+            return conda.models.version.VersionOrder(
+                t1
+            ) == conda.models.version.VersionOrder(t2)
+        else:
+            return False
+    else:
+        return False
+
+
+def version_specs_are_equiv(s1: str, s2: str) -> bool:
+    """Test if two version specs are equivalent.
+
+    WARNING: This function may incorrectly return False in some edge cases.
+    """
+    # if we cannot parse them as match specs, then they cannot be equal
+    try:
+        conda.models.match_spec.MatchSpec("blah " + s1)
+    except Exception:
+        return False
+
+    try:
+        conda.models.match_spec.MatchSpec("blah " + s2)
+    except Exception:
+        return False
+
+    if s1 == s2:
+        return True
+    else:
+        t1 = conda.models.version.treeify(s1)
+        t2 = conda.models.version.treeify(s2)
+        return _version_trees_are_equiv(t1, t2)
