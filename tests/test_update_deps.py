@@ -995,6 +995,11 @@ def test_update_deps_version_v1(
         make_body=True,
         recipe_version=1,
         conda_build_config=conda_build_config,
+        allowed_text_replacements=[
+            {
+                "https://pypi.org/packages/source/f/fastapi/fastapi-${{ version }}.tar.gz": "https://files.pythonhosted.org/packages/78/d7/6c8b3bfe33eeffa208183ec037fee0cce9f7f024089ab1c5d12ef04bd27c/fastapi-${{ version }}.tar.gz"
+            }
+        ],
     )
 
 
