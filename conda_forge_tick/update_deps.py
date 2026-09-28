@@ -39,7 +39,7 @@ DepComparison = dict[Literal["host", "run"], EnvDepComparison]
 
 
 # these are packages on conda-forge that we always ignore
-CF_PACKAGES_TO_IGNORE = ["openssl", "python-abi3"]
+CF_PACKAGES_TO_IGNORE = ["cross-python", "openssl", "python-abi3"]
 SECTIONS_TO_PARSE = ["host", "run"]
 SECTIONS_TO_UPDATE = ["run"]
 
