@@ -51,7 +51,16 @@ VERY_FLAKY_TEST = "This test case is more flaky than usual."
             marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST),
         ),
         ("jinja2selsha", "4.7.2", None),
-        ("jinja2nameshasel", "4.7.2", None),
+        (
+            "jinja2nameshasel",
+            "4.7.2",
+            [
+                {
+                    "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/2f/56/ce6877fb43f6da8764e7dac961aaaeef54bd0ecbded164f1fff0c824841e/antlr4-python2-runtime-{{ version }}.tar.gz",
+                    "168cdcec8fb9152e84a87ca6fd261b3d54c8f6358f42ab3b813b14a7193bb50b": "580825bdd89ed6200170710cb26cc1e64f96f145870d8c2cfdf162cb0b8b9212",
+                }
+            ],
+        ),
         ("shaquotes", "0.6.0", None),
         ("cdiff", "0.15.0", None),
         ("selshaurl", "3.7.0", None),
@@ -103,7 +112,17 @@ VERY_FLAKY_TEST = "This test case is more flaky than usual."
             marks=pytest.mark.xfail(reason=VARIANT_SOURCES_NOT_IMPLEMENTED),
         ),
         # use conda build config variants directly to select source
-        ("polars_by_variant", "1.20.0", None),
+        (
+            "polars_by_variant",
+            "1.20.0",
+            [
+                {
+                    'https://pypi.org/packages/source/p/polars/polars-{{ version }}.tar.gz  # [polars_variant == "polars"]': 'https://files.pythonhosted.org/packages/dd/8f/1005f24c8c413d8a393973fcb45e6085a2311bb513ee0c6674d438e99c31/polars-{{ version }}.tar.gz  # [polars_variant == "polars"]',
+                    'https://pypi.org/packages/source/p/polars-lts-cpu/polars_lts_cpu-{{ version }}.tar.gz  # [polars_variant == "polars-lts-cpu"]': 'https://files.pythonhosted.org/packages/7f/24/025ae4beab8e9990f439218ffce8930897dfe82c0a59a1a0f1554c9cbbb2/polars_lts_cpu-{{ version }}.tar.gz  # [polars_variant == "polars-lts-cpu"]',
+                    'https://pypi.org/packages/source/p/polars-u64-idx/polars_u64_idx-{{ version }}.tar.gz  # [polars_variant == "polars-u64-idx"]': 'https://files.pythonhosted.org/packages/92/02/b1e5f138b8a9cc756ca404a9db37632d739de738ab9b41b196ecbae229c8/polars_u64_idx-{{ version }}.tar.gz  # [polars_variant == "polars-u64-idx"]',
+                },
+            ],
+        ),
         # upstream is not available
         # ("mumps", "5.2.1", None),
         # ("cb3multi", "6.0.0", None),
