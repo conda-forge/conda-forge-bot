@@ -47,6 +47,11 @@ def test_version_duplicate_lines_cleanup(slug, clean_slug, tmp_path):
             "version": "0.9",
         },
         tmp_path=tmp_path,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
+            }
+        ],
     )
 
 
@@ -82,4 +87,9 @@ def test_version_duplicate_lines_cleanup_skip(slug, clean_slug, tmp_path):
             "version": "0.9",
         },
         tmp_path=tmp_path,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
+            }
+        ],
     )

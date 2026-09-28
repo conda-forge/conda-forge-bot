@@ -37,4 +37,9 @@ def test_version_extra_jinja2_keys_cleanup(tmp_path):
             "version": "0.20.0",
         },
         tmp_path=tmp_path,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/7a/9e/23573828ee7fe1db09353b1d8ab8a3245e323d0e9c673f19b245995a0c75/satpy-{{ version }}.tar.gz",
+            }
+        ],
     )
