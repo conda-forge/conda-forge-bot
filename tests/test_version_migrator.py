@@ -24,78 +24,92 @@ VERY_FLAKY_TEST = "This test case is more flaky than usual."
 
 
 @pytest.mark.parametrize(
-    "case,new_ver",
+    "case,new_ver,atr",
     [
-        ("mpich", "4.1.1"),
-        ("mpichv0", "4.1.0"),
-        ("dash_extensions", "0.1.11"),
-        ("numpy", "1.24.1"),
-        ("python", "3.9.5"),
-        ("faiss-split", "1.7.3"),
-        ("docker-py", "6.0.1"),
-        ("allennlp", "2.10.1"),
-        ("dbt", "1.2.0"),
-        ("jinja2expr", "1.1.1"),
-        ("weird", "1.6.0"),
-        ("compress", "0.9"),
-        ("onesrc", "2.4.1"),
-        ("multisrc", "2.4.1"),
+        ("mpich", "4.1.1", None),
+        ("mpichv0", "4.1.0", None),
+        ("dash_extensions", "0.1.11", None),
+        ("numpy", "1.24.1", None),
+        ("python", "3.9.5", None),
+        ("faiss-split", "1.7.3", None),
+        ("docker-py", "6.0.1", None),
+        ("allennlp", "2.10.1", None),
+        ("dbt", "1.2.0", None),
+        ("jinja2expr", "1.1.1", None),
+        ("weird", "1.6.0", None),
+        ("compress", "0.9", None),
+        ("onesrc", "2.4.1", None),
+        ("multisrc", "2.4.1", None),
         pytest.param(
-            "jinja2sha", "2.4.1", marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST)
+            "jinja2sha", "2.4.1", None, marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST)
         ),
-        ("r", "1.3_2"),
+        ("r", "1.3_2", None),
         pytest.param(
-            "multisrclist", "2.25.0", marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST)
+            "multisrclist",
+            "2.25.0",
+            None,
+            marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST),
         ),
-        ("jinja2selsha", "4.7.2"),
-        ("jinja2nameshasel", "4.7.2"),
-        ("shaquotes", "0.6.0"),
-        ("cdiff", "0.15.0"),
-        ("selshaurl", "3.7.0"),
-        ("buildbumpmpi", "7.8.0"),
-        ("multisrclistnoup", "3.11.3"),
-        ("pypiurl", "0.7.1"),
-        ("githuburl", "1.1.0"),
-        ("ccacheerr", "3.7.7"),
-        ("cranmirror", "0.3.3"),
-        ("sha1", "5.0.1"),
-        ("icu", "68.1"),
-        ("libevent", "2.1.12"),
-        ("boost", "1.74.0"),
-        ("boostcpp", "1.74.0"),
-        ("event_stream", "1.6.3"),
-        ("21cmfast", "3.4.0"),
-        ("pyrsmq", "0.6.0"),
-        ("quart_trio", "0.11.1"),
-        ("reproc", "14.2.5"),
-        ("riskfolio_lib", "6.3.1"),
-        ("algotree", "0.7.3"),
-        ("py_entitymatching", "0.4.2"),
-        ("py_entitymatching_name", "0.4.2"),
+        ("jinja2selsha", "4.7.2", None),
+        ("jinja2nameshasel", "4.7.2", None),
+        ("shaquotes", "0.6.0", None),
+        ("cdiff", "0.15.0", None),
+        ("selshaurl", "3.7.0", None),
+        ("buildbumpmpi", "7.8.0", None),
+        ("multisrclistnoup", "3.11.3", None),
+        ("pypiurl", "0.7.1", None),
+        ("githuburl", "1.1.0", None),
+        ("ccacheerr", "3.7.7", None),
+        ("cranmirror", "0.3.3", None),
+        ("sha1", "5.0.1", None),
+        ("icu", "68.1", None),
+        ("libevent", "2.1.12", None),
+        ("boost", "1.74.0", None),
+        ("boostcpp", "1.74.0", None),
+        ("event_stream", "1.6.3", None),
+        ("21cmfast", "3.4.0", None),
+        ("pyrsmq", "0.6.0", None),
+        ("quart_trio", "0.11.1", None),
+        ("reproc", "14.2.5", None),
+        (
+            "riskfolio_lib",
+            "6.3.1",
+            [
+                {
+                    "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name | replace('-', '_') | lower }}-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/12/52/acaf7a457dfb0c60aed043c6170b3f8fe4cdaefd2c85c84262819572ac7a/riskfolio_lib-{{ version }}.tar.gz"
+                },
+            ],
+        ),
+        ("algotree", "0.7.3", None),
+        ("py_entitymatching", "0.4.2", None),
+        ("py_entitymatching_name", "0.4.2", None),
         # these contain sources that depend on conda build config variants
         pytest.param(
             "polars_mixed_selectors",
             "1.1.0",
+            None,
             marks=pytest.mark.xfail(reason=VARIANT_SOURCES_NOT_IMPLEMENTED),
         ),
         pytest.param(
             "polars_name_selectors",
             "1.1.0",
+            None,
             marks=pytest.mark.xfail(reason=VARIANT_SOURCES_NOT_IMPLEMENTED),
         ),
         pytest.param(
             "polars_variant_selectors",
             "1.1.0",
+            None,
             marks=pytest.mark.xfail(reason=VARIANT_SOURCES_NOT_IMPLEMENTED),
         ),
         # use conda build config variants directly to select source
-        ("polars_by_variant", "1.20.0"),
+        ("polars_by_variant", "1.20.0", None),
         # upstream is not available
-        # ("mumps", "5.2.1"),
-        # ("cb3multi", "6.0.0"),
+        # ("mumps", "5.2.1", None),
+        # ("cb3multi", "6.0.0", None),
     ],
 )
-def test_version_up(case, new_ver, tmp_path, caplog):
+def test_version_up(case, new_ver, tmp_path, caplog, atr):
     caplog.set_level(
         logging.DEBUG,
         logger="conda_forge_tick.migrators.version",
@@ -120,6 +134,7 @@ def test_version_up(case, new_ver, tmp_path, caplog):
             "version": new_ver,
         },
         tmp_path=tmp_path,
+        allowed_text_replacements=atr,
     )
 
 
@@ -245,6 +260,11 @@ def test_version_cupy(tmp_path, caplog):
             "version": new_ver,
         },
         tmp_path=tmp_path,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/14/2a/ef289e429be9021fab32f2a480a023efacb3cc9ff5e9496d788e98537c92/cupy-{{ version }}.tar.gz"
+            },
+        ],
     )
 
 
