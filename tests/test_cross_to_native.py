@@ -66,7 +66,7 @@ provider:
         recipe_version=recipe_version,
         allowed_text_replacements=[
             {
-                "url: https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
+                "https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
             }
         ],
     )
@@ -138,7 +138,7 @@ provider:
         recipe_version=recipe_version,
         allowed_text_replacements=[
             {
-                "url: https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
+                "https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
             }
         ],
     )
@@ -188,7 +188,7 @@ workflow_settings:
         recipe_version=recipe_version,
         allowed_text_replacements=[
             {
-                "url: https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
+                "https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
             }
         ],
     )
