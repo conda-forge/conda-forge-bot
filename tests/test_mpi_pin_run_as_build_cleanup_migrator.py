@@ -61,6 +61,11 @@ def test_version_mpi_pin_run_as_build_cleanup(vals, tmp_path):
             "version": "0.9",
         },
         tmp_path=tmp_path,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/v/viscm/viscm-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/b2/5b/fa640264b67062e9e881f42f5c0facf3205cf5378cd6067ef7060d08751a/viscm-{{ version }}.tar.gz"
+            }
+        ],
     )
 
     if len(vals) == 0 or "blah" not in cbc["pin_run_as_build"]:

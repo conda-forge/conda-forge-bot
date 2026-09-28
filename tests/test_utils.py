@@ -22,6 +22,7 @@ from conda_forge_tick.utils import (
     prune,
     replace_compiler_with_stub,
     run_command_hiding_token,
+    version_specs_are_equiv,
 )
 
 EMPTY_JSON = "{}"
@@ -609,3 +610,36 @@ def test_extract_section_from_yaml_text(
 )
 def test_replace_compiler_stub(text, expected):
     assert replace_compiler_with_stub(text) == expected
+
+
+@pytest.mark.parametrize(
+    "s1,s2,res",
+    [
+        ("1", "1.*", True),
+        ("1", "1", True),
+        ("1", "1.0", True),
+        ("1", "2", False),
+        ("1", "2.0", False),
+        ("==1", "==1", True),
+        (">1", ">1.0", True),
+        ("==1", "==2", False),
+        (">1", ">2.0", False),
+        ("1,<4", "1,<4.0", True),
+        ("1,>4", "1.0,>4", True),
+        ("1,<5", "2,<5", False),
+        ("1,!=3", "2.0,!=3.0", False),
+        ("==1|>4", "==1|>4.0", True),
+        (">1,<3", ">1.0,<3", True),
+        (">3|==1", ">3.0|==2", False),
+        ("!=4|>1", "!=4|>2.0", False),
+        ("~=2|(>1,<4)", "~=2.0|(>1,<4.0)", False),
+        ("!=2|(<1,>4)", "!=2|(<1.0,>4)", False),
+        ("<10|(>1,<5)", "<9|(>2,<5)", False),
+        ("(<1,!=3)|>3", "(<2.0,!=3.0)>3", False),
+        ("==1|>4,>3.0", "==1|>4.0,>3.0.0", True),
+        (">2,>1|<3", ">2,>1.0|<3", True),
+        (">2,>1|<3", ">2,>1.0|<3,<5", False),
+    ],
+)
+def test_version_specs_are_equiv(s1, s2, res):
+    assert version_specs_are_equiv(s1, s2) is res

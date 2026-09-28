@@ -19,7 +19,7 @@ from ruamel.yaml import YAML
 from souschef.recipe import Recipe
 
 from conda_forge_tick.feedstock_parser import load_feedstock
-from conda_forge_tick.utils import get_recipe_schema_version
+from conda_forge_tick.utils import get_recipe_schema_version, version_specs_are_equiv
 
 try:
     from grayskull.main import create_python_recipe
@@ -38,6 +38,8 @@ EnvDepComparison = dict[Literal["df_minus_cf", "cf_minus_df"], set[str]]
 DepComparison = dict[Literal["host", "run"], EnvDepComparison]
 
 
+# these are packages on conda-forge that we always ignore
+CF_PACKAGES_TO_IGNORE = ["cross-python", "openssl", "python-abi3"]
 SECTIONS_TO_PARSE = ["host", "run"]
 SECTIONS_TO_UPDATE = ["run"]
 
@@ -274,6 +276,23 @@ def _make_grayskull_recipe_v1(
     return recipe_str
 
 
+def _reqs_are_equal(r1, r2):
+    if r1 == r2:
+        return True
+    else:
+        p1 = r1.split(" ")
+        p2 = r2.split(" ")
+
+        if len(p1) == len(p2) and len(p2) == 2:
+            return p1[0] == p2[0] and version_specs_are_equiv(p1[1], p2[1])
+        else:
+            return False
+
+
+def _remove_cf_packages_to_ignore(reqs: set[str]) -> set[str]:
+    return {req for req in reqs if req.split(" ")[0] not in CF_PACKAGES_TO_IGNORE}
+
+
 def get_grayskull_comparison(attrs, version_key="version"):
     """Get the dependency comparison between the recipe and grayskull.
 
@@ -327,11 +346,16 @@ def get_grayskull_comparison(attrs, version_key="version"):
         cf_minus_df = _ignore_python(
             {c for c in attrs.get("total_requirements").get(section, set())},
         )
+        cf_minus_df = _remove_cf_packages_to_ignore(cf_minus_df)
 
         df_minus_cf = set()
         for req in gs_run:
-            if req in cf_minus_df:
-                cf_minus_df = cf_minus_df - {req}
+            cf_req = None
+            for cf_req_loop in cf_minus_df:
+                if _reqs_are_equal(req, cf_req_loop):
+                    cf_req = cf_req_loop
+            if cf_req is not None:
+                cf_minus_df = cf_minus_df - {cf_req}
             else:
                 df_minus_cf.add(req)
 
