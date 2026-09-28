@@ -38,6 +38,8 @@ EnvDepComparison = dict[Literal["df_minus_cf", "cf_minus_df"], set[str]]
 DepComparison = dict[Literal["host", "run"], EnvDepComparison]
 
 
+# these are packages on conda-forge that we always ignore
+CF_PACKAGES_TO_IGNORE = ["python-abi3"]
 SECTIONS_TO_PARSE = ["host", "run"]
 SECTIONS_TO_UPDATE = ["run"]
 
@@ -287,6 +289,10 @@ def _reqs_are_equal(r1, r2):
             return False
 
 
+def _remove_cf_packages_to_ignore(reqs: set[str]) -> set[str]:
+    return {req for req in reqs if req.split(" ")[0] not in CF_PACKAGES_TO_IGNORE}
+
+
 def get_grayskull_comparison(attrs, version_key="version"):
     """Get the dependency comparison between the recipe and grayskull.
 
@@ -340,6 +346,7 @@ def get_grayskull_comparison(attrs, version_key="version"):
         cf_minus_df = _ignore_python(
             {c for c in attrs.get("total_requirements").get(section, set())},
         )
+        cf_minus_df = _remove_cf_packages_to_ignore(cf_minus_df)
 
         df_minus_cf = set()
         for req in gs_run:
