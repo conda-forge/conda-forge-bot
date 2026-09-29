@@ -3384,7 +3384,7 @@ package:
   category: main
   optional: false
 - name: msgpack-python
-  version: 1.2.2
+  version: 1.2.3
   manager: conda
   platform: linux-64
   dependencies:
@@ -3393,10 +3393,10 @@ package:
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/msgpack-python-1.2.2-py312h9be0db6_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/msgpack-python-1.2.3-py312h9be0db6_0.conda
   hash:
-    md5: e9600e8080bf57f25ad2e9f78564c895
-    sha256: 147ba1c9ebaeba03c95c1ac018523978c8a07387e2413799b09b69017e976b58
+    md5: 9f6cd0c3ce48c45d9a9c1645ecb186d1
+    sha256: 46b34715512392aec0478da2b973f88d9340493f82cf7a610918b049b15e31b8
   category: main
   optional: false
 - name: msrest
