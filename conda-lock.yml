@@ -916,7 +916,7 @@ package:
   category: main
   optional: false
 - name: conda-pypi
-  version: 0.12.0
+  version: 0.13.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -928,10 +928,10 @@ package:
     python-build: ''
     python-installer: '>=1.0'
     unearth: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-pypi-0.12.0-pyh5ded981_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-pypi-0.13.0-pyh5ded981_0.conda
   hash:
-    md5: 6341bcf79e7fe3ab5d12a20fdc524188
-    sha256: 595b3cb9d5d2f0ecda0bbd0583bcdfe6ecbb00c7d7d8dfdc80635df3b6ee0bb3
+    md5: dd3434a97de7de0b8996f7cdc777601d
+    sha256: b95c9f3be8859b37433520f95fe5c0d788c1dc089b295bb23f9824176ceaf509
   category: main
   optional: false
 - name: conda-rattler-solver
@@ -1724,7 +1724,7 @@ package:
   category: main
   optional: false
 - name: grayskull
-  version: 3.1.1
+  version: 3.2.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -1744,10 +1744,10 @@ package:
     setuptools: '>=30.3.0'
     stdlib-list: ''
     tomli-w: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/grayskull-3.1.1-pyhc364b38_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/grayskull-3.2.0-pyhc364b38_0.conda
   hash:
-    md5: 0e7873aa5c4bb20851965053909b6134
-    sha256: 88329b02e3f7cdb200e0e01a919fe8400a1fc906a768f050385fc9f8b8c27f87
+    md5: a36e10523b14ec53911011e1399d6c5d
+    sha256: e1763fa0be1517bfdf171fd2927b8b238846a732b8a9e837227a91e74f2f030b
   category: main
   optional: false
 - name: gtk3
@@ -3362,13 +3362,13 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    python: ''
-    python_abi: 3.12.*
+    python: '>=3.11'
+    tomli: ''
     tomli-w: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/menuinst-2.5.2-py312h20c3967_2.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/menuinst-2.5.2-pyhba3e0a1_3.conda
   hash:
-    md5: 54a2bb444362732cf80e546c337c761c
-    sha256: 20644178f848dc8f3ad6289b0eaa6b6c1ce60ad33f22fcdad89bb0534c2cdb7b
+    md5: 2ee3eb3b78f61066534c7a64fd476392
+    sha256: adfcd5d6e3f2dbcdd17316d9d33434b8754b758444417bcc9a1f157f3f76bf9c
   category: main
   optional: false
 - name: more-itertools
