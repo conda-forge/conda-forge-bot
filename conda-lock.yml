@@ -643,7 +643,7 @@ package:
   category: main
   optional: false
 - name: conda
-  version: 26.7.3
+  version: 26.7.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -672,10 +672,10 @@ package:
     setuptools: '>=60.0.0'
     tqdm: '>=4'
     truststore: '>=0.8.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/conda-26.7.3-py312h20c3967_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/conda-26.7.2-py312h20c3967_2.conda
   hash:
-    md5: ac68f2634fa8ab547e127a6cb0fe8096
-    sha256: 39559ebffce2df36b37d6489e47911d934ebae67eee3c03dfc0ad35e1f7fb4b4
+    md5: 3739c8fa681e1328f00786d9ed9fdef0
+    sha256: 302e6446e55f839b44e91a2ab2633aeb4cb4e54226496c8e94f29139a8c5c466
   category: main
   optional: false
 - name: conda-build
@@ -1591,23 +1591,23 @@ package:
   category: main
   optional: false
 - name: git
-  version: 2.56.0
+  version: 2.55.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libcurl: '>=8.22.0,<9.0a0'
-    libexpat: '>=2.8.5,<3.0a0'
+    libexpat: '>=2.8.1,<3.0a0'
     libgcc: '>=15'
     libiconv: '>=1.18,<2.0a0'
     libzlib: '>=1.3.2,<2.0a0'
     openssl: '>=3.5.8,<4.0a0'
     pcre2: '>=10.47,<10.48.0a0'
     perl: 5.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.56.0-pl5440h3795e67_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/git-2.55.0-pl5321h3795e67_3.conda
   hash:
-    md5: 6dbccc130bb4e4f86c9d97af2b787a2a
-    sha256: d5654608f2bed18580fa05e22d80093fc746cc70dea1d6a208e7a9f65b1888e0
+    md5: a3ea529904edb09f7a0b22926ee24fd3
+    sha256: dc160f995b3d49627bf5c865f9c0db79d803c73a605a2c05c3f950d5f884936e
   category: main
   optional: false
 - name: gitdb
@@ -3384,7 +3384,7 @@ package:
   category: main
   optional: false
 - name: msgpack-python
-  version: 1.2.3
+  version: 1.2.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -3393,10 +3393,10 @@ package:
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/msgpack-python-1.2.3-py312h9be0db6_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/msgpack-python-1.2.2-py312h9be0db6_2.conda
   hash:
-    md5: 9f6cd0c3ce48c45d9a9c1645ecb186d1
-    sha256: 46b34715512392aec0478da2b973f88d9340493f82cf7a610918b049b15e31b8
+    md5: e9600e8080bf57f25ad2e9f78564c895
+    sha256: 147ba1c9ebaeba03c95c1ac018523978c8a07387e2413799b09b69017e976b58
   category: main
   optional: false
 - name: msrest
@@ -4397,7 +4397,7 @@ package:
   category: main
   optional: false
 - name: python-librt
-  version: 0.16.0
+  version: 0.15.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -4405,10 +4405,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/python-librt-0.16.0-py312h1b36aeb_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/python-librt-0.15.0-py312h1b36aeb_2.conda
   hash:
-    md5: 43a57694af193ac4e161342a63d817e7
-    sha256: 12671324ba50c377e2631c91f060ca42c36f548993178520a477d348cc3aa80d
+    md5: e4b266d7f7ae5cce6071f51de9d13588
+    sha256: 93eefb027858ef06d03e21560b704a4dd9f0a6e4fadeb332c601c16ff5bc54e8
   category: main
   optional: false
 - name: python-utils
