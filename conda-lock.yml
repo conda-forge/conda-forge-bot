@@ -765,14 +765,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.28.19.53.54
+  version: 2026.09.29.05.28.35
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.28.19.53.54-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.29.05.28.35-hd8ed1ab_1.conda
   hash:
-    md5: 5b6d0a65ac413573b22ccd56e6264c5e
-    sha256: c53ae4097393cfa7f6a8576992ed6a17766f4d10ce4d0088ef99e12104dac3ed
+    md5: 368038576d65bf37406e06d375f58fdd
+    sha256: 2d3bec2aaa6a6f3dcc14ef6d6a9b28510d5f7b88ac3e739afed57a56c0359c6f
   category: main
   optional: false
 - name: conda-index
@@ -4071,15 +4071,15 @@ package:
   category: main
   optional: false
 - name: pyjwt
-  version: 2.15.0
+  version: 2.15.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/pyjwt-2.15.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pyjwt-2.15.1-pyh5ded981_0.conda
   hash:
-    md5: 0c94c52967c6ca123726c94b85608131
-    sha256: c423341918e89fcba04e7f211c3406f753060f0161235af00ae10e9427e88aae
+    md5: ceb86f6237588761137d5b3387e049ca
+    sha256: aac9df67e9c6a8f092c46d1eeea393f6d6de756e0c0deac038b79ab68c485fb8
   category: main
   optional: false
 - name: pymongo
@@ -4545,7 +4545,7 @@ package:
   category: main
   optional: false
 - name: regex
-  version: 2026.9.10
+  version: 2026.9.29
   manager: conda
   platform: linux-64
   dependencies:
@@ -4553,10 +4553,10 @@ package:
     libgcc: '>=15'
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/regex-2026.9.10-py312h5cc1888_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/regex-2026.9.29-py312h5cc1888_0.conda
   hash:
-    md5: 5083c976e001ceebf78bf227e5a097d9
-    sha256: 3cbfc69e375ac28b3d3c1be01518737648c5cd080c94bcb48c94b2f0841eea49
+    md5: 1d56961a5fd459581aec61f7d3c8f137
+    sha256: a333c7936e02d5a6f605eb530385240f262e3df2459635d889f18816bb24088c
   category: main
   optional: false
 - name: reproc
@@ -5281,7 +5281,7 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.19
+  version: 0.12.20
   manager: conda
   platform: linux-64
   dependencies:
@@ -5290,10 +5290,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.19-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.20-h841d291_0.conda
   hash:
-    md5: 93d8d9ff6519484b67fd21038a562091
-    sha256: 032a2c37546d3d8e47cfd74ae46d988f9a6befcf770b8f2e130eddcdafb827e9
+    md5: 2bf4d15c28d9b16fd59abb5dbdd6b230
+    sha256: d69123461bb1321d9c5b0f099f319d9fb3f1f16bb78f58713b433879b0d7974d
   category: main
   optional: false
 - name: vcs_versioning
