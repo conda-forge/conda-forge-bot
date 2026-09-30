@@ -550,15 +550,19 @@ package:
   category: main
   optional: false
 - name: charset-normalizer
-  version: 3.5.1
+  version: 3.5.2
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-3.5.1-pyhd8ed1ab_0.conda
+    __glibc: '>=2.17,<3.0.a0'
+    _python_abi3_support: 1.*
+    cpython: '>=3.9'
+    libgcc: '>=15'
+    python: ''
+  url: https://conda.anaconda.org/conda-forge/linux-64/charset-normalizer-3.5.2-h1114479_0.conda
   hash:
-    md5: e0ac3accc64e23e40969d660e5f58ac8
-    sha256: cb60ef3e0631c8bacb4f7057196dee4496091a22baa3bb4b9bccb12c7e1c921b
+    md5: 78d5c6112c9320a1a797935cecfec7c2
+    sha256: e4f04b45d68716fcc47c808aeacbf165f6f295fb91bd20b91aa38942b8d2cdc6
   category: main
   optional: false
 - name: cirun
@@ -765,14 +769,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.09.29.05.28.35
+  version: 2026.09.30.16.41.47
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.29.05.28.35-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.09.30.16.41.47-hd8ed1ab_1.conda
   hash:
-    md5: 368038576d65bf37406e06d375f58fdd
-    sha256: 2d3bec2aaa6a6f3dcc14ef6d6a9b28510d5f7b88ac3e739afed57a56c0359c6f
+    md5: e6b37a504c3ae9a726a9ea97dec07e07
+    sha256: e2d48e3d5088f0659171038a347981f7d8a482eb9b4b22193e38b784b623aead
   category: main
   optional: false
 - name: conda-index
@@ -1640,17 +1644,17 @@ package:
   category: main
   optional: false
 - name: gitpython
-  version: 3.1.62
+  version: 3.2.0
   manager: conda
   platform: linux-64
   dependencies:
     gitdb: '>=4.0.1,<5'
     python: '>=3.11'
     typing_extensions: '>=3.10.0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/gitpython-3.1.62-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/gitpython-3.2.0-pyh5ded981_0.conda
   hash:
-    md5: bc66034cae0ff9168c130766eb2b33d1
-    sha256: c70321228e3b7e200791629bf2d598fa6a334407b77001511697b749e8ae171a
+    md5: a71c955d6cee9418cec14879e4bbc8d6
+    sha256: b28899d98ac49da80396bee4640455a9719caf0cd0c5ddda46dc0e3cf9e6f6a0
   category: main
   optional: false
 - name: glib-tools
@@ -3761,15 +3765,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.12.1
+  version: 4.12.2
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.12.1-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.12.2-pyh5ded981_0.conda
   hash:
-    md5: c2718a0d7dc28faf28e714807604a60d
-    sha256: d49105f431c6468ec3546d3f9eb08ce99c3426671312f307b46bf428df01dbc1
+    md5: 4b76957bed5e02e067a348eda60c6f94
+    sha256: f23f022bbbf809cd248940eca853d1132f05752e0404984cde7b014fd6384c97
   category: main
   optional: false
 - name: pluggy
@@ -5281,7 +5285,7 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.20
+  version: 0.12.21
   manager: conda
   platform: linux-64
   dependencies:
@@ -5290,10 +5294,10 @@ package:
     liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.20-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.21-h841d291_0.conda
   hash:
-    md5: 2bf4d15c28d9b16fd59abb5dbdd6b230
-    sha256: d69123461bb1321d9c5b0f099f319d9fb3f1f16bb78f58713b433879b0d7974d
+    md5: 2204e44142337b0848eba0236d12beb1
+    sha256: 89dae92f8e08497e363634fb3906c62a2b09c8831845ad724a1d1e7a13acfdde
   category: main
   optional: false
 - name: vcs_versioning
