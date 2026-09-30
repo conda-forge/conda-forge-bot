@@ -21,7 +21,7 @@ from conda_forge_feedstock_ops.container_utils import (
 
 from conda_forge_tick.cli_context import CliContext
 from conda_forge_tick.executors import executor
-from conda_forge_tick.lazy_json_backends import LazyJson, dumps
+from conda_forge_tick.lazy_json_backends import LazyJson, dumps, sync_lazy_json_object
 from conda_forge_tick.settings import (
     get_container_env_command_args,
     settings,
@@ -445,8 +445,12 @@ def _update_upstream_versions_process_pool(
             # writing out file
             lazyjson = LazyJson(f"versions/{node}.json")
             with lazyjson as version_attrs:
+                changed = version_attrs.data != version_data
                 version_attrs.clear()
                 version_attrs.update(version_data)
+
+            if changed:
+                sync_lazy_json_object(lazyjson, "file", ["github_api"])
 
 
 @functools.lru_cache(maxsize=1)

@@ -6,6 +6,7 @@ from typing import Literal
 
 import networkx as nx
 import pytest
+import requests
 from conda_forge_feedstock_ops.recipe_parser import CondaMetaYAML
 from test_migrators import run_test_migration
 
@@ -61,11 +62,11 @@ def test_generate_dep_hint():
     assert "but not in the meta.yaml" not in hint
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_make_grayskull_recipe():
     with open(
-        os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
+        os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
     ) as f:
         attrs = load(f)
     recipe = make_grayskull_recipe(attrs)
@@ -74,7 +75,7 @@ def test_make_grayskull_recipe():
     assert attrs["version"] in recipe
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_make_grayskull_recipe_github_url():
     with open(
@@ -87,41 +88,45 @@ def test_make_grayskull_recipe_github_url():
     assert attrs["version"] in recipe
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_grayskull_comparison():
     with open(
-        os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
+        os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
     ) as f:
         attrs = load(f)
     d, rs = get_grayskull_comparison(attrs)
     assert rs != ""
-    assert d["run"]["cf_minus_df"] == {"python <3.9", "stdlib-list"}
-    assert any(_d.startswith("python") for _d in d["run"]["df_minus_cf"])
+    assert d == {
+        "host": {
+            "cf_minus_df": {"versioneer", "setuptools"},
+            "df_minus_cf": {"wheel", "versioneer-518", "setuptools >=40.8.0"},
+        },
+        "run": {
+            "cf_minus_df": {"numpy >=1.19.0,<2.2"},
+            "df_minus_cf": {"numpy >=1.20.0,<2.5"},
+        },
+    }
 
 
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_update_run_deps():
     with open(
-        os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
+        os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
     ) as f:
         attrs = load(f)
     d, _ = get_grayskull_comparison(attrs)
+    print("grayskull comparison:\n" + repr(d))
 
     lines = attrs["raw_meta_yaml"].splitlines()
     lines = [ln + "\n" for ln in lines]
     recipe = CondaMetaYAML("".join(lines))
 
-    recipe.meta["requirements"]["run"].append("pyyaml")
-    updated_deps = _update_sec_deps(recipe, d, ["host", "run"], update_python=False)
-    print("\n" + recipe.dumps())
-    assert not updated_deps
-    assert "python <3.9" in recipe.dumps()
-
-    updated_deps = _update_sec_deps(recipe, d, ["host", "run"], update_python=True)
+    updated_deps = _update_sec_deps(recipe, d, ["host", "run"])
     print("\n" + recipe.dumps())
     assert updated_deps
-    assert "python >={{ python_min }}" in recipe.dumps()
+    assert "numpy >=1.20.0,<2.5" in recipe.dumps()
 
 
 praw_recipe = """\
@@ -152,7 +157,7 @@ requirements:
     - python >=3.7
     - prawcore >=2.1,<3
     - update_checker >=0.18
-    - websocket-client >=0.54.0
+    - websocket-client >=0.51.0
 
 test:
   requires:
@@ -184,7 +189,7 @@ extra:
 """
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_dep_updates_and_hints_praw():
     attrs = {
@@ -209,10 +214,16 @@ def test_get_dep_updates_and_hints_praw():
         )
 
     print(res[0], res[1], flush=True)
-    assert "python >={{ python_min }}" in res[1]
+    assert res[0] == {
+        "host": {"cf_minus_df": set(), "df_minus_cf": set()},
+        "run": {
+            "cf_minus_df": {"websocket-client >=0.51.0"},
+            "df_minus_cf": {"websocket-client >=0.54.0"},
+        },
+    }
+    assert "websocket-client >=0.54.0" in res[1]
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
 @pytest.mark.parametrize("disabled_param", ["disabled"])
 def test_get_dep_updates_and_hints_disabled(disabled_param):
     dep_comparison, hints = get_dep_updates_and_hints(
@@ -223,78 +234,85 @@ def test_get_dep_updates_and_hints_disabled(disabled_param):
     assert hints == ""
 
 
-out_yml_gs = """\
-{% set version = "2.3.0" %}
+out_yml_interpax = """\
+{% set name = "interpax" %}
+{% set version = "0.3.14" %}
+{% set python_min = "3.10" %}
 
 package:
-  name: depfinder
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/d/depfinder/depfinder-{{ version }}.tar.gz
-  sha256: 2694acbc8f7d94ca9bae55b8dc5b4860d5bc253c6a377b3b8ce63fb5bffa4000
+  url: https://github.com/f0uriest/interpax/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: 6d392d38626d05144695c62a5203914d4a665d1f3d7245946a5b722622c173b1
 
 build:
-  number: 0
   noarch: python
-  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
-  entry_points:
-    - depfinder = depfinder.cli:cli
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
 
 requirements:
   host:
-    # Python version is limited by stdlib-list.
-    - python <3.9
+    - python {{ python_min }}
     - pip
+    - setuptools
+    - versioneer
   run:
-    - python <3.9
-    - stdlib-list
+    - jaxtyping >=0.2.24,<0.4
+    - lineax >=0.0.5,<=0.1.0
+    - python >={{ python_min }}
+    - equinox >=0.11.0,<0.14
+    - jax >=0.4.30,<0.11
+    - numpy >=1.20.0,<2.5
 
 test:
-  commands:
-    - depfinder -h
   imports:
-    - depfinder
+    - interpax
+  commands:
+    - pip check
+  requires:
+    - pip
+    - python {{ python_min }}
 
 about:
-  home: http://github.com/ericdill/depfinder
-  license: BSD-3-Clause
+  home: https://github.com/f0uriest/interpax
+  summary: Interpolation and function approximation with JAX
+  license: MIT
   license_file: LICENSE
-  summary: Find all the unique imports in your library
 
 extra:
   recipe-maintainers:
-    - ericdill
-    - mariusvniekerk
-    - tonyfast
-    - ocefpaf
+    - beckermr
 """
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
 @pytest.mark.parametrize(
-    "update_kind,out_yml",
+    "update_kind",
     [
-        ("update-grayskull", out_yml_gs),
-        ("update-all", out_yml_gs),
+        "update-grayskull",
+        "update-all",
     ],
 )
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
-def test_update_deps_version(caplog, tmp_path, update_kind, out_yml):
+def test_update_deps_version(caplog, tmp_path, update_kind):
     caplog.set_level(
         logging.DEBUG,
         logger="conda_forge_tick.migrators.version",
     )
 
     with open(
-        os.path.join(os.path.dirname(__file__), "test_yaml", "depfinder.json"),
+        os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
     ) as f:
         attrs = load(f)
 
     in_yaml = (
-        attrs["raw_meta_yaml"].replace("2.3.0", "2.2.0").replace("2694acbc8f7", "")
+        attrs["raw_meta_yaml"]
+        .replace("0.3.14", "0.3.13")
+        .replace("f1f7d33373805c8b", "")
     )
-    new_ver = "2.3.0"
+    new_ver = "0.3.14"
 
     kwargs = {
         "new_version": new_ver,
@@ -304,7 +322,7 @@ def test_update_deps_version(caplog, tmp_path, update_kind, out_yml):
     run_test_migration(
         m=VERSION,
         inp=in_yaml,
-        output=out_yml,
+        output=out_yml_interpax,
         kwargs=kwargs,
         prb="Dependencies have been updated if changed",
         mr_out={
@@ -406,8 +424,8 @@ requirements:
   run:
     - importlib-metadata >=3.7.3,<4.0.0
     - lark >=0.11.1,<0.12.0
-    - networkx >=2.5.0,<3.0.0
-    - numpy >=1.20.0,<2.0.0
+    - networkx >=2.5,<3.0
+    - numpy >=1.20,<2.0
     - python >=3.7,<4.0
     - qcs-api-client >=0.8.1,<0.21.0
     - retry >=0.9.2,<0.10.0
@@ -444,15 +462,9 @@ extra:
 """  # noqa
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
-@pytest.mark.parametrize(
-    "update_kind,out_yml",
-    [
-        ("update-grayskull", out_yml_pyquil),
-    ],
-)
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
-def test_update_deps_version_pyquil(caplog, tmp_path, update_kind, out_yml):
+def test_update_deps_version_pyquil(caplog, tmp_path):
     caplog.set_level(
         logging.DEBUG,
         logger="conda_forge_tick.migrators.version",
@@ -462,13 +474,13 @@ def test_update_deps_version_pyquil(caplog, tmp_path, update_kind, out_yml):
 
     kwargs = {
         "new_version": new_ver,
-        "conda-forge.yml": {"bot": {"inspection": update_kind}},
+        "conda-forge.yml": {"bot": {"inspection": "update-grayskull"}},
     }
 
     run_test_migration(
         m=VERSION,
         inp=in_yml_pyquil,
-        output=out_yml,
+        output=out_yml_pyquil,
         kwargs=kwargs,
         prb="Dependencies have been updated if changed",
         mr_out={
@@ -478,10 +490,14 @@ def test_update_deps_version_pyquil(caplog, tmp_path, update_kind, out_yml):
         },
         tmp_path=tmp_path,
         make_body=True,
+        allowed_text_replacements=[
+            {
+                "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyquil-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/59/86/4ae3b53259ae13148d161db460d8f962311adbed72f5291597350033dca7/pyquil-{{ version }}.tar.gz"
+            }
+        ],
     )
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
 @pytest.mark.parametrize(
     "recipe, dep_comparison, new_recipe",
     [
@@ -666,7 +682,13 @@ def test_apply_dep_update_v1(
     assert recipe_file.read_text() == new_recipe
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
+def _read_interpax():
+    with open(
+        os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
+    ) as f:
+        return load(f)
+
+
 @pytest.mark.parametrize(
     "attrs, expected_dep_comparison",
     [
@@ -746,50 +768,36 @@ def test_apply_dep_update_v1(
             },
             {
                 "host": {
-                    "cf_minus_df": {"python <3.9"},
-                    "df_minus_cf": {"python {{ python_min }}"},
+                    "cf_minus_df": set(),
+                    "df_minus_cf": set(),
                 },
                 "run": {
-                    "cf_minus_df": {"python <3.9", "stdlib-list"},
-                    "df_minus_cf": {"python >={{ python_min }}"},
+                    "cf_minus_df": {"stdlib-list"},
+                    "df_minus_cf": set(),
                 },
             },
         ),
         (
+            _read_interpax(),
             {
-                "meta_yaml": {
-                    "schema_version": 1,
-                    "package": {
-                        "name": "azure-mgmt-synapse",
-                        "version": "1.0.0",
+                "host": {
+                    "cf_minus_df": {"setuptools", "versioneer"},
+                    "df_minus_cf": {
+                        "setuptools >=40.8.0",
+                        "versioneer-518",
+                        "wheel",
                     },
-                    "build": {"noarch": "python"},
                 },
-                "feedstock_name": "azure-mgmt-synapse",
-                "version_pr_info": {"version": "2.0.0"},
-                "total_requirements": {
-                    "build": set(),
-                    "host": {"pip", "python"},
-                    "run": {
-                        "msrest >=0.5.0",
-                        "azure-mgmt-core >=1.2.0,<2.0.0",
-                        "python",
-                        "numpy",
-                    },
-                    "test": {"pip"},
-                },
-            },
-            {
-                "host": {"cf_minus_df": set(), "df_minus_cf": set()},
                 "run": {
-                    "cf_minus_df": {"numpy", "msrest >=0.5.0"},
-                    "df_minus_cf": {"azure-common >=1.1,<2.dev0", "msrest >=0.6.21"},
+                    "cf_minus_df": {"numpy >=1.19.0,<2.2"},
+                    "df_minus_cf": {"numpy >=1.20.0,<2.5"},
                 },
             },
         ),
     ],
-    ids=["depfinder", "azure-mgmt-synapse"],
+    ids=["depfinder", "interpax"],
 )
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_grayskull_comparison_full(
     attrs: dict, expected_dep_comparison: DepComparison
@@ -806,7 +814,6 @@ def conda_build_config() -> str:
     return 'python_min: ["3.9"]\n'
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
 @pytest.mark.parametrize(
     "update_kind, original_recipe, new_version, expected_new_recipe",
     [
@@ -959,6 +966,7 @@ extra:
         )
     ],
 )
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_update_deps_version_v1(
     update_kind: UpdateKind,
@@ -987,10 +995,15 @@ def test_update_deps_version_v1(
         make_body=True,
         recipe_version=1,
         conda_build_config=conda_build_config,
+        allowed_text_replacements=[
+            {
+                "https://pypi.org/packages/source/f/fastapi/fastapi-${{ version }}.tar.gz": "https://files.pythonhosted.org/packages/78/d7/6c8b3bfe33eeffa208183ec037fee0cce9f7f024089ab1c5d12ef04bd27c/fastapi-${{ version }}.tar.gz"
+            }
+        ],
     )
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 def test_jsii_package_name_resolution():
     """Test that we get the PyPI name instead of feedstock package name for Grayskull.
 
@@ -1004,7 +1017,7 @@ def test_jsii_package_name_resolution():
     assert resolved_name == "jsii"
 
 
-@pytest.mark.xfail(reason="HTTP timeouts.")
+@pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.mongodb
 def test_get_grayskull_comparison_v1_python_min_mismatch():
     """Test that get_grayskull_comparison works for v1 recipes using python_min.

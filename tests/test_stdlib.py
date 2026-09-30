@@ -21,44 +21,53 @@ VERSION_WITH_STDLIB = Version(
 
 
 @pytest.mark.parametrize(
-    "feedstock,new_ver,expect_cbc",
+    "feedstock,new_ver,expect_cbc,atr",
     [
         # package with many outputs, includes inheritance from global build env
-        ("arrow", "1.10.0", False),
+        ("arrow", "1.10.0", False, None),
         # package without c compiler, but with selectors
-        ("daal4py", "1.10.0", False),
+        ("daal4py", "1.10.0", False, None),
         # problems with spurious selectors applied to stdlib
-        ("fenics", "1.10.0", False),
+        ("fenics", "1.10.0", False, None),
         # package involving selectors and m2w64_c compilers, and compilers in
         # unusual places (e.g. in host & run sections)
-        ("go", "1.10.0", True),
+        ("go", "1.10.0", True, None),
         # test that pure metapackages don't get stdlib added
-        ("htcondor", "1.10.0", True),
+        ("htcondor", "1.10.0", True, None),
         # package that got failed to get stdlib added
-        ("mgis", "1.10.0", False),
+        ("mgis", "1.10.0", False, None),
         # package that reuses feedstock-name; sole global build section
-        ("pagmo", "1.10.0", False),
+        ("pagmo", "1.10.0", False, None),
         # package with rust compilers
-        ("polars", "1.10.0", False),
+        ("polars", "1.10.0", False, None),
         # package that intentionally reuses feedstock-name for output
-        ("rdkit", "1.10.0", False),
+        ("rdkit", "1.10.0", False, None),
         # package without compilers, but with sysroot_linux-64
-        ("sinabs", "1.10.0", True),
+        ("sinabs", "1.10.0", True, None),
         # test that we skip recipes that already contain a {{ stdlib("c") }}
-        ("skip_migration", "1.10.0", False),
+        ("skip_migration", "1.10.0", False, None),
         # no-op on noatrch: python recipe
-        ("rucio-clients", "34.3.0", False),
+        (
+            "rucio-clients",
+            "34.3.0",
+            False,
+            [
+                {
+                    "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name | replace('-', '_') }}-{{ version }}.tar.gz": "https://files.pythonhosted.org/packages/91/69/9d0718180e0c88990bbda2b77e0c8cefe3dd54b13a8e2f2c969eea78a17c/rucio_clients-{{ version }}.tar.gz"
+                }
+            ],
+        ),
         # test recipe with templated name
-        ("gz-common", "5_5.6.0", False),
+        ("gz-common", "5_5.6.0", False, None),
         # test recipe with quoting
-        ("libhdbpp-timescale", "2.1.0", False),
+        ("libhdbpp-timescale", "2.1.0", False, None),
         # test section before build
-        ("unicorn", "2.0.1.post1", False),
+        ("unicorn", "2.0.1.post1", False, None),
         # commented compiler dep
-        ("pysyntect", "0.3.0", False),
+        ("pysyntect", "0.3.0", False, None),
     ],
 )
-def test_stdlib(feedstock, new_ver, expect_cbc, tmp_path):
+def test_stdlib(feedstock, new_ver, expect_cbc, tmp_path, atr):
     before = f"stdlib_{feedstock}_before_meta.yaml"
     with open(os.path.join(TEST_YAML_PATH, before)) as fp:
         in_yaml = fp.read()
@@ -80,6 +89,7 @@ def test_stdlib(feedstock, new_ver, expect_cbc, tmp_path):
         },
         tmp_path=tmp_path,
         should_filter=False,
+        allowed_text_replacements=atr,
     )
 
     cbc_pth = tmp_path / "recipe/conda_build_config.yaml"

@@ -4,6 +4,7 @@ import gc
 import glob
 import logging
 import os
+import sys
 import textwrap
 import time
 import traceback
@@ -839,8 +840,6 @@ def _run_migrator_on_feedstock_branch(
     good_prs,
 ):
     break_loop = False
-    sync_pr_info = False
-    sync_version_pr_info = False
     is_version = isinstance(migrator, Version)
     try:
         migrator_uid, pr_json = run_with_tmpdir(
@@ -875,10 +874,6 @@ def _run_migrator_on_feedstock_branch(
                     if "PRed" not in pri:
                         pri["PRed"] = []
                     pri["PRed"].append(d)
-
-            sync_pr_info = True
-            if isinstance(migrator, Version):
-                sync_version_pr_info = True
 
     except (github3.GitHubError, github.GithubException) as e:
         # TODO: pull this down into run() - also check the other exceptions
@@ -978,12 +973,11 @@ def _run_migrator_on_feedstock_branch(
             good_prs += 1
 
     finally:
-        if sync_pr_info:
-            with attrs["pr_info"] as pri:
-                pass
-            sync_lazy_json_object(pri, "file", ["github_api"])
+        with attrs["pr_info"] as pri:
+            pass
+        sync_lazy_json_object(pri, "file", ["github_api"])
 
-        if sync_version_pr_info:
+        if is_version:
             with attrs["version_pr_info"] as vpri:
                 pass
             sync_lazy_json_object(vpri, "file", ["github_api"])
@@ -1236,9 +1230,13 @@ def _setup_limits():
 
 def _update_nodes_with_bot_rerun(gx: nx.DiGraph):
     """Go through all the open PRs and check if they are rerun."""
-    print("processing bot-rerun labels", flush=True)
-
-    for i, (name, node) in enumerate(gx.nodes.items()):
+    for i, (name, node) in tqdm.tqdm(
+        enumerate(gx.nodes.items()),
+        ncols=80,
+        total=len(gx.nodes.items()),
+        desc="processing bot-rerun labels",
+        file=sys.stdout,
+    ):
         # logger.info(
         #     f"node: {i} memory usage: "
         #     f"{psutil.Process().memory_info().rss // 1024 ** 2}MB",
@@ -1305,11 +1303,15 @@ def _update_nodes_with_bot_rerun(gx: nx.DiGraph):
 
 def _update_nodes_with_new_versions(gx):
     """Update every node with it's new version (when available)."""
-    print("updating nodes with new versions", flush=True)
-
     version_nodes = get_all_keys_for_hashmap("versions")
 
-    for node in version_nodes:
+    for node in tqdm.tqdm(
+        version_nodes,
+        ncols=80,
+        total=len(version_nodes),
+        desc="ingesting new versions",
+        file=sys.stdout,
+    ):
         if node not in gx.nodes:
             continue
 
@@ -1366,7 +1368,13 @@ def _remove_closed_pr_json():
         ("version_pr_info", get_all_keys_for_hashmap("version_pr_info")),
     ]
     for name, nodes in name_nodes:
-        for node in nodes:
+        for node in tqdm.tqdm(
+            nodes,
+            ncols=80,
+            total=len(nodes),
+            desc=f"processing {name}",
+            file=sys.stdout,
+        ):
             lzj_pri = LazyJson(f"{name}/{node}.json")
             with lazy_json_transaction(), lzj_pri as pri:
                 for pr_ind in range(len(pri.get("PRed", []))):

@@ -1,5 +1,7 @@
 import collections.abc
+import contextlib
 import copy
+import io
 import logging
 import os
 import pprint
@@ -17,7 +19,7 @@ from ruamel.yaml import YAML
 from souschef.recipe import Recipe
 
 from conda_forge_tick.feedstock_parser import load_feedstock
-from conda_forge_tick.utils import get_recipe_schema_version
+from conda_forge_tick.utils import get_recipe_schema_version, version_specs_are_equiv
 
 try:
     from grayskull.main import create_python_recipe
@@ -36,6 +38,8 @@ EnvDepComparison = dict[Literal["df_minus_cf", "cf_minus_df"], set[str]]
 DepComparison = dict[Literal["host", "run"], EnvDepComparison]
 
 
+# these are packages on conda-forge that we always ignore
+CF_PACKAGES_TO_IGNORE = ["cross-python", "openssl", "python-abi3"]
 SECTIONS_TO_PARSE = ["host", "run"]
 SECTIONS_TO_UPDATE = ["run"]
 
@@ -193,14 +197,21 @@ def make_grayskull_recipe(attrs, version_key="version"):
         pkg_name,
         pkg_version,
     )
-    recipe, _ = create_python_recipe(
-        pkg_name=pkg_name,
-        version=pkg_version,
-        download=False,
-        is_strict_cf=True,
-        from_local_sdist=False,
-        is_arch=not is_noarch,
-    )
+
+    f = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
+            recipe, _ = create_python_recipe(
+                pkg_name=pkg_name,
+                version=pkg_version,
+                download=False,
+                is_strict_cf=True,
+                from_local_sdist=False,
+                is_arch=not is_noarch,
+            )
+    except Exception:
+        print(f.getvalue(), flush=True)
+        raise
 
     with tempfile.TemporaryDirectory() as td:
         pth = os.path.join(td, "meta.yaml")
@@ -265,6 +276,23 @@ def _make_grayskull_recipe_v1(
     return recipe_str
 
 
+def _reqs_are_equal(r1, r2):
+    if r1 == r2:
+        return True
+    else:
+        p1 = r1.split(" ")
+        p2 = r2.split(" ")
+
+        if len(p1) == len(p2) and len(p2) == 2:
+            return p1[0] == p2[0] and version_specs_are_equiv(p1[1], p2[1])
+        else:
+            return False
+
+
+def _remove_cf_packages_to_ignore(reqs: set[str]) -> set[str]:
+    return {req for req in reqs if req.split(" ")[0] not in CF_PACKAGES_TO_IGNORE}
+
+
 def get_grayskull_comparison(attrs, version_key="version"):
     """Get the dependency comparison between the recipe and grayskull.
 
@@ -306,58 +334,28 @@ def get_grayskull_comparison(attrs, version_key="version"):
     else:
         raise ValueError(f"Unknown recipe schema version: '{recipe_schema_version}'.")
 
-    # we put back python_min by hand since we render the recipe above before
-    # computing the dep comparison
-    python_min_slugs = [
-        "python ${{ python_min }}.*",
-        "python >=${{ python_min }}",
-        "python {{ python_min }}.*",
-        "python {{ python_min }}",
-        "python >={{ python_min }}",
-    ]
-    has_python_min = any(slug in grayskull_recipe for slug in python_min_slugs) and (
-        any(slug in attrs["raw_meta_yaml"] for slug in python_min_slugs)
-        or any(
-            line.strip().startswith("noarch: python")
-            for line in attrs["raw_meta_yaml"].splitlines()
-        )
-    )
-
-    def _replace_python_min(orig_set, section):
-        new_set = set()
-        for req in orig_set:
-            if req.split()[0] == "python" and has_python_min:
-                if recipe_schema_version == 1:
-                    if section == "host":
-                        new_set.add("python ${{ python_min }}.*")
-                    elif section == "run":
-                        new_set.add("python >=${{ python_min }}")
-                    else:
-                        new_set.add(req)
-                else:
-                    if section == "host":
-                        new_set.add("python {{ python_min }}")
-                    elif section == "run":
-                        new_set.add("python >={{ python_min }}")
-                    else:
-                        new_set.add(req)
-            else:
-                new_set.add(req)
-
-        return new_set
+    # python is difficult so we ignore it
+    def _ignore_python(orig_set):
+        return {req for req in orig_set if req.split()[0] != "python"}
 
     d: dict[str, dict[str, set[str]]] = {}
     for section in SECTIONS_TO_PARSE:
-        gs_run = _replace_python_min(
+        gs_run = _ignore_python(
             {c for c in new_attrs.get("total_requirements").get(section, set())},
-            section,
         )
-        cf_minus_df = {c for c in attrs.get("total_requirements").get(section, set())}
+        cf_minus_df = _ignore_python(
+            {c for c in attrs.get("total_requirements").get(section, set())},
+        )
+        cf_minus_df = _remove_cf_packages_to_ignore(cf_minus_df)
 
         df_minus_cf = set()
         for req in gs_run:
-            if req in cf_minus_df:
-                cf_minus_df = cf_minus_df - {req}
+            cf_req = None
+            for cf_req_loop in cf_minus_df:
+                if _reqs_are_equal(req, cf_req_loop):
+                    cf_req = cf_req_loop
+            if cf_req is not None:
+                cf_minus_df = cf_minus_df - {cf_req}
             else:
                 df_minus_cf.add(req)
 
@@ -428,7 +426,7 @@ def _ok_for_dep_updates(lines):
     return not is_multi_output
 
 
-def _update_sec_deps(recipe, dep_comparison, sections_to_update, update_python=False):
+def _update_sec_deps(recipe, dep_comparison, sections_to_update):
     updated_deps = False
 
     rqkeys = list(_gen_key_selector(recipe.meta, "requirements"))
@@ -449,7 +447,7 @@ def _update_sec_deps(recipe, dep_comparison, sections_to_update, update_python=F
                     dep_pkg_nm = dep.split(" ", 1)[0]
 
                     # do not touch python itself - to finicky
-                    if dep_pkg_nm == "python" and not update_python:
+                    if dep_pkg_nm == "python":
                         continue
 
                     # do not replace pin compatible keys
@@ -528,10 +526,14 @@ def _apply_env_dep_comparison(
             new_deps.append(patch.after)  # type: ignore[arg-type]
         # Remove old package.
         elif patch.after is None:
-            new_deps.remove(patch.before)
+            if patch.before in new_deps:
+                new_deps.remove(patch.before)
         # Update existing package.
         else:
-            new_deps[new_deps.index(patch.before)] = patch.after
+            if patch.before in new_deps:
+                new_deps[new_deps.index(patch.before)] = patch.after
+            else:
+                new_deps.append(patch.after)  # type: ignore[arg-type]
     return new_deps
 
 

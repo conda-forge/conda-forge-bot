@@ -1778,11 +1778,13 @@ def test_update_upstream_versions_sequential(
     assert "# 1     - testpackage2 - 1.2.4 -> 1.2.5" in caplog.text
 
 
+@mock.patch("conda_forge_tick.update_upstream_versions.sync_lazy_json_object")
 @mock.patch("conda_forge_tick.update_upstream_versions.executor")
 @mock.patch("conda_forge_tick.update_upstream_versions.LazyJson")
 def test_update_upstream_versions_process_pool(
     lazy_json_mock: MagicMock,
     executor_mock: MagicMock,
+    sync_mock: MagicMock,
     version_update_frac_always,
     caplog,
 ):
@@ -1837,15 +1839,19 @@ def test_update_upstream_versions_process_pool(
     lazy_json_instance.update.assert_any_call({"new_version": "2.2.4"})
     lazy_json_instance.update.assert_any_call({"new_version": "1.2.5"})
 
+    sync_mock.assert_called()
+
     assert "testpackage2 - 1.2.4 -> 1.2.5" in caplog.text
     assert "testpackage - 2.2.3 -> 2.2.4" in caplog.text
 
 
+@mock.patch("conda_forge_tick.update_upstream_versions.sync_lazy_json_object")
 @mock.patch("conda_forge_tick.update_upstream_versions.executor")
 @mock.patch("conda_forge_tick.update_upstream_versions.LazyJson")
 def test_update_upstream_versions_process_pool_exception(
     lazy_json_mock: MagicMock,
     executor_mock: MagicMock,
+    sync_mock: MagicMock,
     version_update_frac_always,
     caplog,
 ):
@@ -1883,15 +1889,18 @@ def test_update_upstream_versions_process_pool_exception(
     lazy_json_instance.update.assert_any_call(
         {"bad": "Upstream: Error getting upstream version"}
     )
+    sync_mock.assert_called_once()
 
     assert "source a error" in caplog.text
 
 
+@mock.patch("conda_forge_tick.update_upstream_versions.sync_lazy_json_object")
 @mock.patch("conda_forge_tick.update_upstream_versions.executor")
 @mock.patch("conda_forge_tick.update_upstream_versions.LazyJson")
 def test_update_upstream_versions_process_pool_exception_repr_exception(
     lazy_json_mock: MagicMock,
     executor_mock: MagicMock,
+    sync_mock: MagicMock,
     version_update_frac_always,
     caplog,
 ):
@@ -1929,6 +1938,8 @@ def test_update_upstream_versions_process_pool_exception_repr_exception(
     lazy_json_instance.update.assert_any_call(
         {"bad": "Upstream: Error getting upstream version"}
     )
+
+    sync_mock.assert_called_once()
 
     assert "Bad exception string" in caplog.text
     assert "broken exception" in caplog.text
@@ -2040,6 +2051,37 @@ def test_github_release_tag_with_slash_respects_allowed_tag_globs(
         gh.get_version("https://github.com/sass/dart-sass/releases.atom", node_attrs)
         == "17.5.0"
     )
+
+
+@mock.patch("conda_forge_tick.update_sources.subprocess.check_output")
+def test_gittags_tag_glob_matches_bare_tag_not_full_ref(
+    check_output_mock: MagicMock,
+):
+    # mirrors the layout of `git ls-remote --tags --refs` output: full refs of
+    # the form refs/tags/<tag>, with no annotated-tag peel refs (<tag>^{})
+    check_output_mock.return_value = "\n".join(
+        [
+            "00fb232d047f0ce5646256a932e71b24e078ff7f\trefs/tags/rel_6.3.1",
+            "c08ecf2813d1e83563eb2f194450e8bd8a475543\trefs/tags/rel_6.4.0",
+            "3f98d3f77a195c1c5cff75fb4c4d91efc0d72d41\trefs/tags/course_MIC2018",
+        ]
+    )
+
+    node_attrs = {
+        "conda-forge.yml": {
+            "bot": {
+                "version_updates": {
+                    "allowed_tag_globs": "rel_*",
+                },
+            },
+        },
+    }
+
+    gt = GitTags()
+    assert (
+        gt.get_version("https://github.com/example/no-such-repo.git", node_attrs)
+        == "6.4.0"
+    ), "tag globs should match the bare tag name, not the full refs/tags/<tag> ref"
 
 
 @pytest.mark.parametrize(
