@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
+import wurlitzer
 from conda_forge_feedstock_ops.recipe_parser import CONDA_SELECTOR, CondaMetaYAML
 from grayskull.config import Configuration
 from grayskull.utils import generate_recipe
@@ -201,14 +202,15 @@ def make_grayskull_recipe(attrs, version_key="version"):
     f = io.StringIO()
     try:
         with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
-            recipe, _ = create_python_recipe(
-                pkg_name=pkg_name,
-                version=pkg_version,
-                download=False,
-                is_strict_cf=True,
-                from_local_sdist=False,
-                is_arch=not is_noarch,
-            )
+            with wurlitzer.sys_pipes():
+                recipe, _ = create_python_recipe(
+                    pkg_name=pkg_name,
+                    version=pkg_version,
+                    download=False,
+                    is_strict_cf=True,
+                    from_local_sdist=False,
+                    is_arch=not is_noarch,
+                )
     except Exception:
         print(f.getvalue(), flush=True)
         raise
@@ -341,10 +343,22 @@ def get_grayskull_comparison(attrs, version_key="version"):
     d: dict[str, dict[str, set[str]]] = {}
     for section in SECTIONS_TO_PARSE:
         gs_run = _ignore_python(
-            {c for c in new_attrs.get("total_requirements").get(section, set())},
+            {
+                c
+                for c in (
+                    (new_attrs.get("total_requirements", {}) or {}).get(section, set())
+                    or set()
+                )
+            },
         )
         cf_minus_df = _ignore_python(
-            {c for c in attrs.get("total_requirements").get(section, set())},
+            {
+                c
+                for c in (
+                    (attrs.get("total_requirements", {}) or {}).get(section, set())
+                    or set()
+                )
+            },
         )
         cf_minus_df = _remove_cf_packages_to_ignore(cf_minus_df)
 
