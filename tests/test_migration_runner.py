@@ -3,6 +3,8 @@ import pprint
 import subprocess
 
 import networkx as nx
+import pytest
+from conftest import HAVE_CONTAINERS_AND_TEST_IMAGE
 from test_migrators import sample_yaml_rebuild, updated_yaml_rebuild
 
 from conda_forge_tick.migration_runner import run_migration, run_migration_local
@@ -80,7 +82,10 @@ def test_migration_runner_run_migration_local_yaml_rebuild(tmpdir):
     assert saved_migration == yaml_rebuild.yaml_contents
 
 
-def test_migration_runner_run_migration_version_gnureadline(tmpdir):
+@pytest.mark.skipif(
+    not HAVE_CONTAINERS_AND_TEST_IMAGE, reason="containers not available"
+)
+def test_migration_runner_run_migration_version_gnureadline(tmpdir, use_containers):
     recipe = """\
 {% set name = "gnureadline" %}
 {% set version = "8.2.13" %}
