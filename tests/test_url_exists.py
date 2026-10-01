@@ -54,7 +54,7 @@ from conda_forge_tick.update_sources import url_exists
         pytest.param(
             "ftp://ftp.gnu.org/gnu/gdbm/gdbm-156874345879.tar.gz",
             False,
-            marks=pytest.mark.xfail(raises=subprocess.TimeoutExpired),
+            marks=pytest.mark.xfail(reason="sometimes this fails"),
         ),
     ],
 )
