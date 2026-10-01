@@ -140,8 +140,10 @@ extra:
     - ocefpaf
     - scopatz
 """
-    os.makedirs(os.path.join(tmpdir, "recipe"), exist_ok=True)
-    with open(os.path.join(tmpdir, "recipe", "meta.yaml"), "w") as f:
+    os.makedirs(os.path.join(tmpdir, "gnureadline-feedstock", "recipe"), exist_ok=True)
+    with open(
+        os.path.join(tmpdir, "gnureadline-feedstock", "recipe", "meta.yaml"), "w"
+    ) as f:
         f.write(recipe)
 
     with pushd(tmpdir):
@@ -167,7 +169,7 @@ extra:
 
     migration_data = run_migration(
         migrator=Version([], total_graph=nx.DiGraph()),
-        feedstock_dir=tmpdir,
+        feedstock_dir=os.path.join(tmpdir, "gnureadline-feedstock"),
         feedstock_name="gnureadline",
         node_attrs=pmy,
         default_branch="main",
@@ -187,6 +189,8 @@ extra:
         "It is very likely that the current package version for this feedstock "
     )
 
-    with open(os.path.join(tmpdir, "recipe/meta.yaml")) as f:
+    with open(
+        os.path.join(tmpdir, "gnureadline-feedstock", "recipe", "meta.yaml")
+    ) as f:
         actual_output = f.read()
     assert '{% set version = "8.3.3" %}' in actual_output
