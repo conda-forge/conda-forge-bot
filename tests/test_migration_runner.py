@@ -85,7 +85,9 @@ def test_migration_runner_run_migration_local_yaml_rebuild(tmpdir):
 @pytest.mark.skipif(
     not HAVE_CONTAINERS_AND_TEST_IMAGE, reason="containers not available"
 )
-def test_migration_runner_run_migration_version_gnureadline(tmpdir, use_containers):
+def test_migration_runner_run_migration_containerized_version_gnureadline(
+    tmpdir, use_containers
+):
     recipe = """\
 {% set name = "gnureadline" %}
 {% set version = "8.2.13" %}
