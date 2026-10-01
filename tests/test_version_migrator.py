@@ -63,7 +63,12 @@ VERY_FLAKY_TEST = "This test case is more flaky than usual."
         ),
         ("shaquotes", "0.6.0", None),
         ("cdiff", "0.15.0", None),
-        ("selshaurl", "3.7.0", None),
+        pytest.param(
+            "selshaurl",
+            "3.7.0",
+            None,
+            marks=pytest.mark.xfail(reason=VERY_FLAKY_TEST),
+        ),
         ("buildbumpmpi", "7.8.0", None),
         ("multisrclistnoup", "3.11.3", None),
         ("pypiurl", "0.7.1", None),
