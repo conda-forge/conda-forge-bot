@@ -114,15 +114,15 @@ package:
   category: main
   optional: false
 - name: archspec
-  version: 0.2.5
+  version: 0.2.6
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/archspec-0.2.5-pyhd8ed1ab_0.conda
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/archspec-0.2.6-pyhd8ed1ab_0.conda
   hash:
-    md5: 845b38297fca2f2d18a29748e2ece7fa
-    sha256: eb68e1ce9e9a148168a4b1e257a8feebffdb0664b557bb526a1e4853f2d2fc00
+    md5: 220aede804de4d19b044897a7e1598ce
+    sha256: de2753aa37f1328171be054c93668f6efc14a0b32d3321139a92e09e23292a98
   category: main
   optional: false
 - name: ast-serialize
@@ -331,7 +331,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.103
+  version: 1.43.105
   manager: conda
   platform: linux-64
   dependencies:
@@ -339,10 +339,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.103-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.105-pyhd8ed1ab_0.conda
   hash:
-    md5: 8dd7c6ebc41c7f9b68fb792da3863c1b
-    sha256: 91c6aef89a4ec369e65d1f8822ce17823d25464e1efa6f78ce30d42bfc4d7145
+    md5: 056630014fc86894f8aab18926c1b635
+    sha256: e72f0bc728d41ded30c015907f671aad6d8c928a4c3fea27e5bba601168528cb
   category: main
   optional: false
 - name: brotli-python
@@ -683,15 +683,16 @@ package:
   category: main
   optional: false
 - name: conda-build
-  version: 26.7.1
+  version: 26.9.0
   manager: conda
   platform: linux-64
   dependencies:
     __linux: ''
     beautifulsoup4: ''
     chardet: ''
-    conda: '>=25.11.0'
+    conda: '>=26.1.0'
     conda-index: '>=0.4.0'
+    conda-launchers: '>=24.7.1'
     conda-package-handling: '>=2.2.0'
     evalidate: '>=2,<3.0a'
     filelock: ''
@@ -712,10 +713,10 @@ package:
     requests: ''
     ripgrep: ''
     tqdm: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.7.1-pyh31ec981_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.9.0-pyh0736eb8_0.conda
   hash:
-    md5: daffe9b1b3743cad3ece1ec284278ede
-    sha256: 32f9133d7011adde6dc7f4d1837319584d3451c2d4f28fd077d2cd5eae10e055
+    md5: 7688e11c9a7110bf7535c1b95332ac70
+    sha256: 06e9c90c628121dae23a1017ee35cf5f9b76d1d1dcbc861782f9c0e5d84b41b0
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
@@ -795,6 +796,17 @@ package:
   hash:
     md5: 2f36e8e974c0c8a889870669c96a93c5
     sha256: 3629dea4698cf120bb62ac9b6908c9182902a62d743f7d81bb8ecfb42d45fcbe
+  category: main
+  optional: false
+- name: conda-launchers
+  version: 24.7.1
+  manager: conda
+  platform: linux-64
+  dependencies: {}
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-launchers-24.7.1-74da2fe_gcc_5.conda
+  hash:
+    md5: 6c63509d650627679fa571cb2af39f09
+    sha256: c639bc3b2f062494b6cc2225e14dd2909bedcb68a9de0b9df9747eb5fe6dcf26
   category: main
   optional: false
 - name: conda-libmamba-solver
