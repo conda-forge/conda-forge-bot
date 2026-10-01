@@ -34,10 +34,9 @@ from conda_forge_tick.update_sources import url_exists
             False,
             marks=pytest.mark.xfail(raises=subprocess.TimeoutExpired),
         ),
-        pytest.param(
+        (
             "http://spams-devel.gforge.inria.fr/hitcounter2.php?file=37237/spams-python-v2.6.1-svn2017-12-08.tar.gz",  # noqa
-            True,
-            marks=pytest.mark.xfail(reason="spams changed something"),
+            False,
         ),
         (
             "https://github.com/Kitware/CMake/releases/download/v3.19.4/cmake-3.19.4.tar.gz",  # noqa
