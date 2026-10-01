@@ -20,7 +20,11 @@ from ruamel.yaml import YAML
 from souschef.recipe import Recipe
 
 from conda_forge_tick.feedstock_parser import load_feedstock
-from conda_forge_tick.utils import get_recipe_schema_version, version_specs_are_equiv
+from conda_forge_tick.utils import (
+    get_keys_default,
+    get_recipe_schema_version,
+    version_specs_are_equiv,
+)
 
 try:
     from grayskull.main import create_python_recipe
@@ -345,18 +349,16 @@ def get_grayskull_comparison(attrs, version_key="version"):
         gs_run = _ignore_python(
             {
                 c
-                for c in (
-                    (new_attrs.get("total_requirements", {}) or {}).get(section, set())
-                    or set()
+                for c in get_keys_default(
+                    new_attrs, ["total_requirements", section], {}, set()
                 )
             },
         )
         cf_minus_df = _ignore_python(
             {
                 c
-                for c in (
-                    (attrs.get("total_requirements", {}) or {}).get(section, set())
-                    or set()
+                for c in get_keys_default(
+                    attrs, ["total_requirements", section], {}, set()
                 )
             },
         )
