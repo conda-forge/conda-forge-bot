@@ -1,6 +1,7 @@
 import logging
 import re
 import typing
+from collections.abc import MutableSequence
 from pathlib import Path
 from typing import Any
 
@@ -126,6 +127,10 @@ def fold_branch(source: Any, dest: Any, branch: str, dest_branch: str) -> None:
         dest[dest_branch] = []
     elif isinstance(dest[dest_branch], str):
         dest[dest_branch] = [dest[dest_branch]]
+    if not isinstance(dest[dest_branch], MutableSequence):
+        dest[dest_branch] = [dest[dest_branch]]
+    if not isinstance(source_l, MutableSequence):
+        source_l = [source_l]
     dest[dest_branch].extend(source_l)
 
 

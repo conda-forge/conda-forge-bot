@@ -1,3 +1,5 @@
+import subprocess
+
 import pytest
 
 from conda_forge_tick.update_sources import url_exists
@@ -22,9 +24,10 @@ from conda_forge_tick.update_sources import url_exists
             True,
             marks=pytest.mark.xfail(reason="sourceforge changed something"),
         ),
-        (
+        pytest.param(
             "https://downloads.sourceforge.net/project/healpix/Healpix_3.345/Healpix_3.345_2016Aug26.tar.gz",  # noqa
             False,
+            marks=pytest.mark.xfail(raises=subprocess.TimeoutExpired),
         ),
         (
             "http://spams-devel.gforge.inria.fr/hitcounter2.php?file/38351/spams-2.34832948372903465.tar.gz",  # noqa
