@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
+import wurlitzer
 from conda_forge_feedstock_ops.recipe_parser import CONDA_SELECTOR, CondaMetaYAML
 from grayskull.config import Configuration
 from grayskull.utils import generate_recipe
@@ -19,7 +20,11 @@ from ruamel.yaml import YAML
 from souschef.recipe import Recipe
 
 from conda_forge_tick.feedstock_parser import load_feedstock
-from conda_forge_tick.utils import get_recipe_schema_version, version_specs_are_equiv
+from conda_forge_tick.utils import (
+    get_keys_default,
+    get_recipe_schema_version,
+    version_specs_are_equiv,
+)
 
 try:
     from grayskull.main import create_python_recipe
@@ -201,14 +206,15 @@ def make_grayskull_recipe(attrs, version_key="version"):
     f = io.StringIO()
     try:
         with contextlib.redirect_stdout(f), contextlib.redirect_stderr(f):
-            recipe, _ = create_python_recipe(
-                pkg_name=pkg_name,
-                version=pkg_version,
-                download=False,
-                is_strict_cf=True,
-                from_local_sdist=False,
-                is_arch=not is_noarch,
-            )
+            with wurlitzer.sys_pipes():
+                recipe, _ = create_python_recipe(
+                    pkg_name=pkg_name,
+                    version=pkg_version,
+                    download=False,
+                    is_strict_cf=True,
+                    from_local_sdist=False,
+                    is_arch=not is_noarch,
+                )
     except Exception:
         print(f.getvalue(), flush=True)
         raise
@@ -341,10 +347,20 @@ def get_grayskull_comparison(attrs, version_key="version"):
     d: dict[str, dict[str, set[str]]] = {}
     for section in SECTIONS_TO_PARSE:
         gs_run = _ignore_python(
-            {c for c in new_attrs.get("total_requirements").get(section, set())},
+            {
+                c
+                for c in get_keys_default(
+                    new_attrs, ["total_requirements", section], {}, set()
+                )
+            },
         )
         cf_minus_df = _ignore_python(
-            {c for c in attrs.get("total_requirements").get(section, set())},
+            {
+                c
+                for c in get_keys_default(
+                    attrs, ["total_requirements", section], {}, set()
+                )
+            },
         )
         cf_minus_df = _remove_cf_packages_to_ignore(cf_minus_df)
 

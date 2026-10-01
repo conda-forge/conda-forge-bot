@@ -3,10 +3,12 @@ import pprint
 import subprocess
 
 import networkx as nx
+import pytest
+from conftest import HAVE_CONTAINERS_AND_TEST_IMAGE
 from test_migrators import sample_yaml_rebuild, updated_yaml_rebuild
 
-from conda_forge_tick.migration_runner import run_migration_local
-from conda_forge_tick.migrators import MigrationYaml
+from conda_forge_tick.migration_runner import run_migration, run_migration_local
+from conda_forge_tick.migrators import MigrationYaml, Version
 from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import parse_meta_yaml
 
@@ -78,3 +80,117 @@ def test_migration_runner_run_migration_local_yaml_rebuild(tmpdir):
     with open(os.path.join(tmpdir, ".ci_support/migrations/hi.yaml")) as f:
         saved_migration = f.read()
     assert saved_migration == yaml_rebuild.yaml_contents
+
+
+@pytest.mark.skipif(
+    not HAVE_CONTAINERS_AND_TEST_IMAGE, reason="containers not available"
+)
+def test_migration_runner_run_migration_containerized_version_gnureadline(
+    tmpdir, use_containers
+):
+    recipe = """\
+{% set name = "gnureadline" %}
+{% set version = "8.2.13" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/gnureadline-{{ version }}.tar.gz
+  sha256: c9b9e1e7ba99a80bb50c12027d6ce692574f77a65bf57bc97041cf81c0f49bd1
+
+build:
+  number: 3
+  skip: true  # [not osx]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ stdlib("c") }}
+  host:
+    - python
+    - pip
+    - setuptools
+  run:
+    - python
+
+test:
+  imports:
+    - gnureadline
+    - override_readline
+    - readline
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: http://github.com/ludwigschwardt/python-gnureadline
+  license: GPL-3.0-only
+  license_family: GPL
+  license_file:
+    - LICENSE
+    - rl/readline-lib/COPYING
+  summary: The standard Python readline extension statically linked against the GNU readline library
+
+extra:
+  recipe-maintainers:
+    - ocefpaf
+    - scopatz
+"""
+    os.makedirs(os.path.join(tmpdir, "gnureadline-feedstock", "recipe"), exist_ok=True)
+    with open(
+        os.path.join(tmpdir, "gnureadline-feedstock", "recipe", "meta.yaml"), "w"
+    ) as f:
+        f.write(recipe)
+
+    with pushd(tmpdir):
+        subprocess.run(["git", "init", "-b", "main"])
+    # Load the meta.yaml (this is done in the graph)
+    try:
+        pmy = parse_meta_yaml(recipe)
+    except Exception:
+        pmy = {}
+    if pmy:
+        pmy["version"] = pmy["package"]["version"]
+        pmy["req"] = set()
+        for k in ["build", "host", "run"]:
+            pmy["req"] |= set(pmy.get("requirements", {}).get(k, set()))
+        try:
+            pmy["meta_yaml"] = parse_meta_yaml(recipe)
+        except Exception:
+            pmy["meta_yaml"] = {}
+    pmy["raw_meta_yaml"] = recipe
+    pmy["version_pr_info"] = {"new_version": "8.3.3"}
+    pmy["feedstock_name"] = "gnureadline"
+    pmy["name"] = "readline"
+
+    migration_data = run_migration(
+        migrator=Version([], total_graph=nx.DiGraph()),
+        feedstock_dir=os.path.join(tmpdir, "gnureadline-feedstock"),
+        feedstock_name="gnureadline",
+        node_attrs=pmy,
+        default_branch="main",
+    )
+
+    pprint.pprint(migration_data)
+
+    assert migration_data["migrate_return_value"] == {
+        "migrator_name": "Version",
+        "migrator_version": 0,
+        "bot_rerun": False,
+        "version": "8.3.3",
+    }
+    assert migration_data["commit_message"] == "updated v8.3.3"
+    assert migration_data["pr_title"] == "gnureadline v8.3.3"
+    assert migration_data["pr_body"].startswith(
+        "It is very likely that the current package version for this feedstock "
+    )
+
+    with open(
+        os.path.join(tmpdir, "gnureadline-feedstock", "recipe", "meta.yaml")
+    ) as f:
+        actual_output = f.read()
+    assert '{% set version = "8.3.3" %}' in actual_output
