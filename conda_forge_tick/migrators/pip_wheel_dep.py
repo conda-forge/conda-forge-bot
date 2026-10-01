@@ -3,7 +3,7 @@ import logging
 import os
 import tempfile
 import typing
-from typing import Any
+from typing import Any, cast
 
 import requests
 from packaging.requirements import Requirement
@@ -59,7 +59,7 @@ class PipWheelMigrator(MiniMigrator):
 
     def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
         run_reqs = attrs.get("requirements", {}).get("run", set())
-        source_url: str = attrs.get("url") or attrs.get("source", {}).get("url")  # type: ignore[assignment] # TODO: this assumes source.url exists
+        source_url: str = cast(str, attrs.get("url")) or ""
         url_names = ["pypi.python.org", "pypi.org", "pypi.io", "files.pythonhosted.org"]
         if not any(s in source_url for s in url_names):
             return True
