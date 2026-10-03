@@ -126,7 +126,7 @@ package:
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.11.2
+  version: 0.12.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -135,10 +135,10 @@ package:
     cpython: '>=3.11'
     libgcc: '>=15'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.11.2-py311hf77984d_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.12.0-py311hf77984d_0.conda
   hash:
-    md5: 954e55a97486ce671170f95b1a5ccc18
-    sha256: ad68b61411979d15ed172f9886908471244ad2d4d26b80ba88a41b4079ea095b
+    md5: 06bceaa776f97d5e2ebb7da1fae016c4
+    sha256: 7787e58cd6b3be85009668f7da73d4143ecf48b2deb0d68d35d627d090d2c310
   category: main
   optional: false
 - name: at-spi2-atk
@@ -331,7 +331,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.106
+  version: 1.43.107
   manager: conda
   platform: linux-64
   dependencies:
@@ -339,10 +339,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.106-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.107-pyhd8ed1ab_0.conda
   hash:
-    md5: 297a88b47c6e050fa3969bc29797bc10
-    sha256: b91618d474328597f49729fabfe891ea797cfba14cb5a62edca3d6c539877067
+    md5: 9cdc5223f6b7d29fe0561037835a6ee2
+    sha256: fdc47c7cda8994c15887afd2dc99802558c59d131b1d74e226d35d06b92b3918
   category: main
   optional: false
 - name: brotli-python
@@ -770,14 +770,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.10.02.19.10.32
+  version: 2026.10.03.11.07.52
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.02.19.10.32-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.03.11.07.52-hd8ed1ab_1.conda
   hash:
-    md5: 5a6847b0c2a4e4de529d3993de299c4d
-    sha256: 5dbb3ed94e201cbf856fb19eb1c227009ac8e0d4c05057431467bdb06130b37e
+    md5: f195074ea683ed85028e2e9588b21937
+    sha256: 8b859a712893048f34e789893140aa2ad16f5dbbba05307c5ba37a5e8f23b396
   category: main
   optional: false
 - name: conda-index
@@ -3333,18 +3333,18 @@ package:
   category: main
   optional: false
 - name: markupsafe
-  version: 3.0.3
+  version: 3.0.4
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
+    libgcc: '>=15'
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.3-py312h8a5da7c_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.4-py312hfd18d64_0.conda
   hash:
-    md5: 93a4752d42b12943a355b682ee43285b
-    sha256: 5f3aad1f3a685ed0b591faad335957dbdb1b73abfd6fc731a0d42718e0653b33
+    md5: 0e40354eb7b4fa9edabe2d5caf3f8efd
+    sha256: 81d00bd48d81ed8ca6857f2edc2708aba9c5d103ab459190c7a7fed1c50ac2f5
   category: main
   optional: false
 - name: mbedtls
