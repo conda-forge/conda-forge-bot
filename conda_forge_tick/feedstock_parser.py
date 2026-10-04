@@ -35,6 +35,7 @@ from conda_forge_tick.utils import (
     as_iterable,
     get_keys_default,
     get_platform_arch_from_ci_support_filename,
+    migrator_ts_to_epoch,
     parse_meta_yaml,
     parse_recipe_yaml,
     sanitize_string,
@@ -538,7 +539,7 @@ def populate_feedstock_attributes(
         with open(mfile) as fp:
             mdata = yaml_safe_load(fp.read())
         migration_file_info[key] = {
-            "migrator_ts": mdata.get("migrator_ts", None),
+            "migrator_ts": migrator_ts_to_epoch(mdata.get("migrator_ts", None)),
             "migration_number": get_keys_default(
                 mdata, ["__migrator", "migration_number"], {}, None
             ),

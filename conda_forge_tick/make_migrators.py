@@ -85,6 +85,7 @@ from conda_forge_tick.utils import (
     fold_log_lines,
     get_recipe_schema_version,
     load_existing_graph,
+    migrator_ts_to_epoch,
     parse_meta_yaml,
     parse_munged_run_export,
     parse_recipe_yaml,
@@ -517,7 +518,9 @@ def migration_factory(
             if "max_solver_attempts" in migrator_config:
                 del migrator_config["max_solver_attempts"]
 
-            age = time.time() - loaded_yaml.get("migrator_ts", time.time())
+            age = time.time() - migrator_ts_to_epoch(
+                loaded_yaml.get("migrator_ts", time.time())
+            )
             age /= 24 * 60 * 60
             print(
                 "migrator %s is %d days old" % (__mname, int(age)),
