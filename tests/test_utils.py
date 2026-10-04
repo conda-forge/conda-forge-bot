@@ -18,11 +18,13 @@ from conda_forge_tick.utils import (
     get_recipe_schema_version,
     load_existing_graph,
     load_graph,
+    migrator_ts_to_epoch,
     parse_munged_run_export,
     prune,
     replace_compiler_with_stub,
     run_command_hiding_token,
     version_specs_are_equiv,
+    yaml_safe_load,
 )
 
 EMPTY_JSON = "{}"
@@ -643,3 +645,46 @@ def test_replace_compiler_stub(text, expected):
 )
 def test_version_specs_are_equiv(s1, s2, res):
     assert version_specs_are_equiv(s1, s2) is res
+
+
+@pytest.mark.parametrize(
+    "ts",
+    [
+        "1790912420",
+        "1790912420.0",
+        "2026-10-02T03:40:20Z",
+        "2026-10-02T03:40:20+00:00",
+        "2026-10-01T23:40:20-04:00",
+    ],
+)
+def test_migrator_ts_to_epoch(ts):
+    loaded = yaml_safe_load(f"migrator_ts: {ts}")["migrator_ts"]
+    epoch = migrator_ts_to_epoch(loaded)
+    assert epoch == 1790912420
+    # it is stored in the graph, so it has to stay a plain number
+    assert isinstance(epoch, (int, float))
+
+
+def test_migrator_ts_to_epoch_missing():
+    assert migrator_ts_to_epoch(None) is None
+
+
+def test_migrator_ts_to_epoch_no_utc_offset():
+    loaded = yaml_safe_load("migrator_ts: 2026-10-02T03:40:20")["migrator_ts"]
+    with pytest.raises(ValueError):
+        migrator_ts_to_epoch(loaded)
+
+
+def test_migrator_ts_to_epoch_mixed_formats():
+    # the bot subtracts timestamps to get a migration's age
+    epoch = migrator_ts_to_epoch(yaml_safe_load("ts: 1790912420")["ts"])
+    one_hour_later = migrator_ts_to_epoch(
+        yaml_safe_load("ts: 2026-10-02T04:40:20Z")["ts"]
+    )
+    half_hour_later = migrator_ts_to_epoch(
+        yaml_safe_load("ts: 2026-10-02T00:10:20-04:00")["ts"]
+    )
+
+    assert one_hour_later - epoch == 3600
+    assert half_hour_later - epoch == 1800
+    assert one_hour_later - half_hour_later == 1800

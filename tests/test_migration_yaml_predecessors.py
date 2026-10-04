@@ -2,6 +2,7 @@ import networkx as nx
 import pytest
 
 from conda_forge_tick.migrators.migration_yaml import MigrationYaml
+from conda_forge_tick.utils import yaml_safe_load
 
 MIGRATION_TS = 1757000000.0
 YAML = f"""\
@@ -99,3 +100,25 @@ def test_missing_ci_support_migrations_is_not_migrated():
     del parent["ci_support_migrations"]
 
     assert not _migrator(parent).predecessor_already_migrated(parent)
+
+
+@pytest.mark.parametrize(
+    "iso_ts",
+    [
+        "2025-09-04T15:33:20Z",
+        "2025-09-04T15:33:20+00:00",
+        "2025-09-04T11:33:20-04:00",
+    ],
+)
+def test_iso_timestamp_matches_epoch(iso_ts):
+    # the same instant as MIGRATION_TS, written the way conda-smithy also accepts
+    parent = _payload(
+        "libfoo",
+        {"libfoo2": {"migration_number": 2, "migrator_ts": MIGRATION_TS}},
+    )
+    migrator = _migrator(parent)
+    migrator.loaded_yaml = yaml_safe_load(
+        YAML.replace(str(MIGRATION_TS), iso_ts),
+    )
+
+    assert migrator.predecessor_already_migrated(parent)

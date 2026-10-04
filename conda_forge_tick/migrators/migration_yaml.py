@@ -25,6 +25,7 @@ from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import (
     get_bot_run_url,
     get_keys_default,
+    migrator_ts_to_epoch,
     yaml_safe_dump,
     yaml_safe_load,
 )
@@ -350,7 +351,9 @@ class MigrationYaml(GraphMigrator):
             return False
 
         number_matches = info.get("migration_number") == self.obj_version
-        ts_matches = info.get("migrator_ts") == self.loaded_yaml.get("migrator_ts")
+        ts_matches = info.get("migrator_ts") == migrator_ts_to_epoch(
+            self.loaded_yaml.get("migrator_ts")
+        )
         return number_matches and ts_matches
 
     def filter_not_in_migration(self, attrs, not_bad_str_start=""):

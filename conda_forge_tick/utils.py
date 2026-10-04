@@ -272,6 +272,25 @@ def yaml_safe_load(stream):
     return ruamel.yaml.YAML(typ="safe", pure=True).load(stream)
 
 
+def migrator_ts_to_epoch(ts):
+    """Return a migration's ``migrator_ts`` as seconds since the Unix epoch.
+
+    A ``migrator_ts`` written as an ISO 8601 date and time is loaded from YAML
+    as a datetime, one written as seconds since the epoch as a number.
+
+    Raises
+    ------
+    ValueError
+        If an ISO 8601 ``migrator_ts`` has no UTC offset.
+    """
+    if isinstance(ts, datetime.datetime):
+        if ts.tzinfo is None:
+            # conda-smithy rejects these too, they depend on the local timezone
+            raise ValueError(f"migrator_ts {ts!r} must include a UTC offset")
+        return ts.timestamp()
+    return ts
+
+
 def yaml_safe_dump(data, stream=None):
     """Dump a yaml object."""
     yaml = ruamel.yaml.YAML(typ="safe", pure=True)
