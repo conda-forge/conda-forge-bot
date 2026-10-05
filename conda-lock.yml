@@ -683,7 +683,7 @@ package:
   category: main
   optional: false
 - name: conda-build
-  version: 26.9.0
+  version: 26.9.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -713,10 +713,10 @@ package:
     requests: ''
     ripgrep: ''
     tqdm: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.9.0-pyh0736eb8_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-build-26.9.1-pyh0736eb8_0.conda
   hash:
-    md5: 7688e11c9a7110bf7535c1b95332ac70
-    sha256: 06e9c90c628121dae23a1017ee35cf5f9b76d1d1dcbc861782f9c0e5d84b41b0
+    md5: c51fcd3ef830f3f70d1153fbc2b68e98
+    sha256: d4225ab281eb172fd10b60a01ce92e47857fc567a6ad1e913627c7d85411cba6
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
@@ -4687,7 +4687,7 @@ package:
   category: main
   optional: false
 - name: rpds-py
-  version: 2026.6.3
+  version: 2026.9.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -4695,10 +4695,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/rpds-py-2026.6.3-py312hc767a74_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/rpds-py-2026.9.1-py312hc767a74_0.conda
   hash:
-    md5: c5e7bd18dff14e8fdc74d6e623c5fe52
-    sha256: de56267c9c6e31e02eddd3239cce36154d500b325a6cbd83d57fb32bcc2ebe11
+    md5: a4020e3c967776e4084184cde4b64093
+    sha256: 92e00a1a6998f011c14fc5f9a76e8d4597dae1c1adaa7fb7f731f38ff8e1c00b
   category: main
   optional: false
 - name: ruamel.yaml
