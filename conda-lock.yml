@@ -770,14 +770,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.10.06.10.43.42
+  version: 2026.10.06.12.34.48
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.06.10.43.42-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.06.12.34.48-hd8ed1ab_1.conda
   hash:
-    md5: 377448fe944162c1e7212a57ae1fafc0
-    sha256: b286a582a66e8f77c1848b79e655af0e1471812eed9041b4d4bc6fbef402b609
+    md5: a10e5a1275ce69677ecb7e9f58a5e974
+    sha256: e930ecad10cc95609f5b0afa1bc536e4b7de09368f5b56e138a8769566916905
   category: main
   optional: false
 - name: conda-index
@@ -1081,16 +1081,16 @@ package:
   category: main
   optional: false
 - name: cpython
-  version: 3.12.14
+  version: 3.12.15
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.12,<3.13.0a0'
     python_abi: '*'
-  url: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.14-py312hd8ed1ab_3.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cpython-3.12.15-py312hd8ed1ab_0.conda
   hash:
-    md5: adee9213d9a98d7f8b5627209c8b4ae0
-    sha256: 1052869d599008850098c033f9568a2e28bb31238705969719be69a87474cc93
+    md5: f110e59cc8f93f33fe81e78a06963383
+    sha256: e85cd12bc2d3043c392d0ee72cf434659f61ea9d5877316946b4580f570f9bd5
   category: main
   optional: false
 - name: crashtest
@@ -4361,16 +4361,16 @@ package:
   category: main
   optional: false
 - name: python-gil
-  version: 3.12.14
+  version: 3.12.15
   manager: conda
   platform: linux-64
   dependencies:
-    cpython: 3.12.14.*
+    cpython: 3.12.15.*
     python_abi: '*'
-  url: https://conda.anaconda.org/conda-forge/noarch/python-gil-3.12.14-hd8ed1ab_3.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/python-gil-3.12.15-hd8ed1ab_0.conda
   hash:
-    md5: 7fafcd204183cfa7c1ae4ad9c2d8d414
-    sha256: 7096d98d7dd0cdb9256c5714d7228a8ce7aca3bd014304ea5c1673c259df72ef
+    md5: 6e7da2fb998dcc283dee309679a27f30
+    sha256: e7526c8869384fe7f474b4dec9b5b1f37449bc043415e52a99c1d8935a12cb29
   category: main
   optional: false
 - name: python-graphviz
