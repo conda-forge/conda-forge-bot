@@ -2968,17 +2968,17 @@ package:
   category: main
   optional: false
 - name: libpython
-  version: 3.12.14
+  version: 3.12.15
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libpython-3.12.14-h0c77377_3_cpython.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libpython-3.12.15-h0c77377_0_cpython.conda
   hash:
-    md5: d247b7632f09324c11f24b5270361385
-    sha256: 6be16a4906d83eb8e9e04375d524f339f426a847cffd294f1ceb0611988dc17a
+    md5: c29b86590e381370784c14f27039cf54
+    sha256: 6b06c6658d98b5c2b2c287e6b33110462495a15ae8280155806195824d84c982
   category: main
   optional: false
 - name: librsvg
@@ -4278,32 +4278,32 @@ package:
   category: main
   optional: false
 - name: python
-  version: 3.12.14
+  version: 3.12.15
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     bzip2: '>=1.0.8,<2.0a0'
     ld_impl_linux-64: '>=2.36.1'
-    libexpat: '>=2.8.1,<3.0a0'
+    libexpat: '>=2.8.5,<3.0a0'
     libffi: '>=3.7.0,<3.8.0a0'
     libgcc: '>=15'
     liblzma: '>=5.8.3,<6.0a0'
     libnsl: '>=2.0.1,<2.1.0a0'
-    libpython: 3.12.14
+    libpython: 3.12.15
     libsqlite: '>=3.53.4,<4.0a0'
-    libuuid: '>=2.42.3,<3.0a0'
+    libuuid: '>=2.42.4,<3.0a0'
     libxcrypt: '>=4.4.38'
     libzlib: '>=1.3.2,<2.0a0'
     ncurses: '>=6.6,<7.0a0'
-    openssl: '>=3.5.8,<4.0a0'
+    openssl: '>=3.5.9,<4.0a0'
     readline: '>=8.3,<9.0a0'
     tk: '>=8.6.13,<8.7.0a0'
     tzdata: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/python-3.12.14-h5f976f7_3_cpython.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/python-3.12.15-h5f976f7_0_cpython.conda
   hash:
-    md5: 98be3cf76eca2e8871f907a03aed3b84
-    sha256: 14c579b1016da04e4c9f1c5c857272d83ec447317d8c4074a07d59de3cef70ef
+    md5: b71b96d2ab338f0984539da3d3547ed7
+    sha256: 3a0c443f30030cb4ddce47907d580313f29f2f7b24402d398641e68ef156cfb0
   category: main
   optional: false
 - name: python-build
