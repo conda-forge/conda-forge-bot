@@ -770,14 +770,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.10.06.12.34.48
+  version: 2026.10.06.16.44.27
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.06.12.34.48-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.06.16.44.27-hd8ed1ab_1.conda
   hash:
-    md5: a10e5a1275ce69677ecb7e9f58a5e974
-    sha256: e930ecad10cc95609f5b0afa1bc536e4b7de09368f5b56e138a8769566916905
+    md5: f6f26fa01961e48e66ffd6c72e6c3b4b
+    sha256: 39dd6ea21c74cc2c345086da87748802c38e2a56963fad87695b49ba0395db4c
   category: main
   optional: false
 - name: conda-index
@@ -1852,15 +1852,15 @@ package:
   category: main
   optional: false
 - name: harfbuzz
-  version: 14.5.1
+  version: 14.6.0
   manager: conda
   platform: linux-64
   dependencies:
-    libharfbuzz-devel: 14.5.1
-  url: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.5.1-ha770c72_0.conda
+    libharfbuzz-devel: 14.6.0
+  url: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.6.0-ha770c72_0.conda
   hash:
-    md5: efe22611632c03e6dc124a6b19f788cc
-    sha256: cc0b3cc8e0200637d36ff51c865f7a83fefc9036347bdab21db4a721021947c2
+    md5: 72df47e04f92b9750f1c86cebbc6bb0c
+    sha256: 10193f2638797d59a24bdbb93ca6389ae2e8d199ad0f10247b9accc5f89ed4a5
   category: main
   optional: false
 - name: hatch
@@ -2670,7 +2670,7 @@ package:
   category: main
   optional: false
 - name: libharfbuzz
-  version: 14.5.1
+  version: 14.6.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -2685,14 +2685,14 @@ package:
     libpng: '>=1.6.59,<1.7.0a0'
     libstdcxx: '>=15'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-14.5.1-h23af247_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-14.6.0-h23af247_0.conda
   hash:
-    md5: c29c810ee25f6ef4f3fefc183142a0ab
-    sha256: eb8ee0fd0f11bcd8f73d260fd2e64c7338e7c829ed204d9abbfd9dc75e55b031
+    md5: 70c3825475d6be4ce0ac7d52d8a506bb
+    sha256: ef3f133d6fac067b9faa8030c6e2cab7d66a761f2e9edffeeab1b1edaa261232
   category: main
   optional: false
 - name: libharfbuzz-devel
-  version: 14.5.1
+  version: 14.6.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -2705,14 +2705,14 @@ package:
     libfreetype6: '>=2.14.3'
     libgcc: '>=15'
     libglib: '>=2.90.0,<3.0a0'
-    libharfbuzz: 14.5.1
+    libharfbuzz: 14.6.0
     libpng: '>=1.6.59,<1.7.0a0'
     libstdcxx: '>=15'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-devel-14.5.1-h23af247_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libharfbuzz-devel-14.6.0-h23af247_0.conda
   hash:
-    md5: a47242ec6e8ecd671e01892b296e55d2
-    sha256: 35df8453001507228da624c8c9ae2e19f29820b7adaefe9ff2af60f7012e51e8
+    md5: e700118a959db7f2b6241979b4a94b48
+    sha256: 42c621874c9a6284ac2167fa3cfa050decec967f7a955c08c979230137f67e61
   category: main
   optional: false
 - name: libiconv
