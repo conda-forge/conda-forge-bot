@@ -452,15 +452,15 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.2.0
+  version: 7.2.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.1-pyhd8ed1ab_0.conda
   hash:
-    md5: 3d61ab93a58be28d1b0036416d46770b
-    sha256: f437fbd00e7a357e854b1d59720bb56c5444c427aa3967d9e4a8767c95eeb438
+    md5: 11846d9fb4ea153dde7040287a1e996d
+    sha256: 76bfcd1da89486fcbbeeb14904adbdcb62601e509e7ecc5ea08772fc8b09df9e
   category: main
   optional: false
 - name: cairo
@@ -770,14 +770,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.10.05.12.02.10
+  version: 2026.10.06.00.01.32
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.05.12.02.10-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.06.00.01.32-hd8ed1ab_1.conda
   hash:
-    md5: 36e93b6ff99369e34d1323ec1bc4cc30
-    sha256: 3a0ff1d374c406d96a7f1aab7d7086620557f7f426d086f17e1f5140a4e354dd
+    md5: 01c4d4a8a76c86ccb17b0f6f52e27002
+    sha256: c76743cdcd62e558bbaa0bb356f44d0430afad297f504d713daafded09f3a516
   category: main
   optional: false
 - name: conda-index
