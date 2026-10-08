@@ -770,14 +770,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.10.08.02.29.29
+  version: 2026.10.08.03.25.21
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.08.02.29.29-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.08.03.25.21-hd8ed1ab_1.conda
   hash:
-    md5: ed1876af248c6a8ee4922cec8f1912f4
-    sha256: 694dd887671235ee25a8061324d71e854f24bfb8fb0f365cb46e610addccfddb
+    md5: fd518a9b7f346f7a59919daf51b90e93
+    sha256: 88d0891352c21b367595861723981361ec057779b59c2730c9a1930bd218df52
   category: main
   optional: false
 - name: conda-index
@@ -5296,19 +5296,18 @@ package:
   category: main
   optional: false
 - name: uv
-  version: 0.12.21
+  version: 0.12.23
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-    liblzma: '>=5.8.3,<6.0a0'
     libstdcxx: '>=15'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.21-h841d291_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/uv-0.12.23-h535ca38_0.conda
   hash:
-    md5: 2204e44142337b0848eba0236d12beb1
-    sha256: 89dae92f8e08497e363634fb3906c62a2b09c8831845ad724a1d1e7a13acfdde
+    md5: e8122d072b6235514c27bb381767c428
+    sha256: dcb1eb12f46762f42c1d8544c3a4cf9435f3d169d21601df68ce55ea9b94ced2
   category: main
   optional: false
 - name: vcs_versioning
