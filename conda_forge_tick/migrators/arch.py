@@ -351,8 +351,7 @@ class _CrossCompileRebuild(_ArchesConfiguredMixin, GraphMigrator):
     excluded_dependencies: set[str] = set()
     build_platform: dict[str, str] = {}
 
-    @property
-    def additional_keys(self):
+    def additional_keys(self, attrs: AttrsTypedDict) -> dict[str, dict[str, str] | str]:
         return {
             "build_platform": self.build_platform,
             "provider": self.arches,
@@ -467,7 +466,7 @@ class _CrossCompileRebuild(_ArchesConfiguredMixin, GraphMigrator):
 
             # we should do this recursively but the cf yaml is usually
             # one key deep so this is fine
-            for k, v in self.additional_keys.items():
+            for k, v in self.additional_keys(attrs).items():
                 if isinstance(v, dict):
                     if k not in y:
                         y[k] = {}
