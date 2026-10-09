@@ -4098,7 +4098,7 @@ package:
   category: main
   optional: false
 - name: pymongo
-  version: 4.18.2
+  version: 4.18.3
   manager: conda
   platform: linux-64
   dependencies:
@@ -4108,10 +4108,10 @@ package:
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.2-py312h1064dfc_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.3-py312h1064dfc_0.conda
   hash:
-    md5: 5229896be998083ff369dacc35d3cf3b
-    sha256: 6455491f727ea957e2fb70847beb84ae11c03920fa65b3c8c7e8d5b564b35c5d
+    md5: 351c05548a579d7164ba78e6c1f07fc3
+    sha256: 16b3774c4bd8f6a74203bad450411228f8b2794a7ede6e15a7a577841d5cf6cd
   category: main
   optional: false
 - name: pynacl
@@ -4519,15 +4519,15 @@ package:
     conda-build: ''
     jinja2: '>=3.0.2,<4'
     pygithub: ''
-    python: '>=3.10'
+    python: '>=3.11'
     rattler-build: ''
-    ruamel.yaml: ''
+    ruamel.yaml: '>=0.18.6,<0.19'
     tomli: ''
     typing-extensions: '>=4.12.2,<5'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.19-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.19-pyh5ded981_1.conda
   hash:
-    md5: 9c659638aaa22ce70f9a52479b6e8197
-    sha256: 0459956bf8afc41f24dd690bd0e63b9b95995f56a5a628f6650fa6a36ef245f8
+    md5: 1547d691a2129143d26dc48b0a57709f
+    sha256: ae6d997998f58286a809c09dacfa1cf8a72a21fc176dbf1e63d8bbb1858c607d
   category: main
   optional: false
 - name: readline
@@ -4702,16 +4702,19 @@ package:
   category: main
   optional: false
 - name: ruamel.yaml
-  version: 0.19.1
+  version: 0.18.17
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
+    __glibc: '>=2.17,<3.0.a0'
+    libgcc: '>=14'
+    python: ''
+    python_abi: 3.12.*
     ruamel.yaml.clib: '>=0.2.15'
-  url: https://conda.anaconda.org/conda-forge/noarch/ruamel.yaml-0.19.1-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/ruamel.yaml-0.18.17-py312h5253ce2_2.conda
   hash:
-    md5: 06ad944772941d5dae1e0d09848d8e49
-    sha256: b48bebe297a63ae60f52e50be328262e880702db4d9b4e86731473ada459c2a1
+    md5: f7ddc4a83cdcceb34c851e51ea64c903
+    sha256: 3f1137747c99d79d82fe76a5ab72ed56b85ad1412f809cb721bd330095770f40
   category: main
   optional: false
 - name: ruamel.yaml.clib
