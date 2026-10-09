@@ -770,14 +770,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.10.08.16.59.00
+  version: 2026.10.09.13.11.31
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.08.16.59.00-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.09.13.11.31-hd8ed1ab_1.conda
   hash:
-    md5: 98c8b8a0f684cae1ce1bf6d0d8eaeade
-    sha256: 2e5f82c8b7ec0b398544b545ca6525918ad6db19f10fb250412900ac1bf97692
+    md5: 3aafbe3b1c709b0f2bcf2c32eeebf7b3
+    sha256: 51bfab82a02465c6c0f0aad8e21f03fc6c95456a1ecb534d12a1ffdc72f12d43
   category: main
   optional: false
 - name: conda-index
@@ -3338,12 +3338,12 @@ package:
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-    python: '>=3.12,<3.13.0a0'
+    python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.4-py312hfd18d64_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.4-py312h8b7ec3f_1.conda
   hash:
-    md5: 0e40354eb7b4fa9edabe2d5caf3f8efd
-    sha256: 81d00bd48d81ed8ca6857f2edc2708aba9c5d103ab459190c7a7fed1c50ac2f5
+    md5: ee4135fc1ce77066d2be65475bcfbbff
+    sha256: a032b34f0c8e63ddb28714ec42f02f51cd6007d64b15a8269873574abe322931
   category: main
   optional: false
 - name: mbedtls
