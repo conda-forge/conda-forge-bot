@@ -4210,18 +4210,17 @@ package:
   category: main
   optional: false
 - name: pytest-env
-  version: 1.7.1
+  version: 1.8.0
   manager: conda
   platform: linux-64
   dependencies:
-    pytest: '>=9.0.2'
-    python: '>=3.10'
-    python-dotenv: '>=1.2.2'
-    tomli: '>=2.4'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.7.1-pyhd8ed1ab_0.conda
+    pytest: '>=9.1.1'
+    python: '>=3.11'
+    python-dotenv: '>=1.2.4'
+  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.8.0-pyhd8ed1ab_0.conda
   hash:
-    md5: 7ca471c3cf1a22d5208353b1496caa11
-    sha256: 2a425ac70e2244cf7030929a15bc342b142f3836de24339e02d75a209248bda4
+    md5: 111860acfb698c552d199c85f0e9c83d
+    sha256: c17447fbd1655e2977afc49e94cfe8d1140c48ac4063807bba1366d06f5339af
   category: main
   optional: false
 - name: pytest-retry
