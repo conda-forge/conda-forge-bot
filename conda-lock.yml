@@ -3777,15 +3777,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.12.4
+  version: 4.13.0
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.12.4-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.13.0-pyh5ded981_0.conda
   hash:
-    md5: 1a1ecf449d88e4a376c69519857f6a5d
-    sha256: 451ad43d7dbccf92c0fa7ee4b9734a7015885bd6008274c02e9a667050c512ef
+    md5: 35cc2a176fc6f886d6efa41ecb5f1de0
+    sha256: e75e5e85e0039c77f8b707baa862f029f25a582ff158bcae36cf361a409eaf59
   category: main
   optional: false
 - name: pluggy
@@ -3978,23 +3978,23 @@ package:
   category: main
   optional: false
 - name: pydantic
-  version: 2.14.0
+  version: 2.14.1
   manager: conda
   platform: linux-64
   dependencies:
     annotated-types: '>=0.6.0'
-    pydantic-core: 2.50.0
+    pydantic-core: 2.50.1
     python: '>=3.11'
     typing-inspection: '>=0.4.4'
     typing_extensions: '>=4.16.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-2.14.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-2.14.1-pyh5ded981_0.conda
   hash:
-    md5: e0dfbfa62d30535fa6e289b7a10e59f3
-    sha256: f6bda391a5072463e793a77695a112c2b49109b6b5f7eed99792f334fd5fb83c
+    md5: 0e25c99148247bf3f89625f06eb18bee
+    sha256: d7cbe20d76f3803e7c36cf6fb42f1a8ce7c74b89f4e9efd678b5353685602621
   category: main
   optional: false
 - name: pydantic-core
-  version: 2.50.0
+  version: 2.50.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -4003,10 +4003,10 @@ package:
     python: ''
     python_abi: 3.12.*
     typing-extensions: '>=4.6.0,!=4.7.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pydantic-core-2.50.0-py312hc767a74_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pydantic-core-2.50.1-py312hc767a74_0.conda
   hash:
-    md5: d2c7f6c8460998ca08e669ea6df2c855
-    sha256: fd5a875ad41e6d84426662d348c1a56469681ead7fed52ecfd1a206412822820
+    md5: b0cafd267ef198ad8b689d8383b2c909
+    sha256: f8efd457003b59e0872236e537d7fd13ed8d49f8b9b65a364ee3501406db1a15
   category: main
   optional: false
 - name: pydantic-extra-types
@@ -4427,16 +4427,16 @@ package:
   category: main
   optional: false
 - name: python-utils
-  version: 4.1.0
+  version: 4.1.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
     typing_extensions: '>3.10.0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/python-utils-4.1.0-pyhe730653_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/python-utils-4.1.1-pyhe730653_0.conda
   hash:
-    md5: 352c1928e2e02976a8c99511313ffa2d
-    sha256: bad081bf1d93706927e167bc99ea93a162655cb9622b849bb0c56f58c29051ac
+    md5: d1a0a3897fd38b1b884e2e09ac5b2f60
+    sha256: 1bb2714c3a0aeb86248bd137f276c9882d41938a89f0c0fd60722c02b812b507
   category: main
   optional: false
 - name: python_abi
