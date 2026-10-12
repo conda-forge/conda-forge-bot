@@ -9,8 +9,8 @@ on:
 concurrency: relock
 
 jobs:
-  relock:
-    name: relock
+  relock-conda-forge-pinning:
+    name: relock-conda-forge-pinning
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -26,11 +26,39 @@ jobs:
         run: |
           python autotick-bot/stop_me_if_needed.py
 
-      - uses: conda-incubator/relock-conda@a2bc3539342497f43c9f13d322b24d8f17276f6e # v28
+      - uses: conda-incubator/relock-conda@234fb1c7dc6554078cd39266851fc9ae23544601 # 2026.10.12
+        if: ${{ ! env.CI_SKIP }}
+        with:
+          github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
+          automerge: true
+          skip-if-pr-exists: false
+          git-user-name: regro-cf-autotick-bot
+          update-packages: conda-forge-pinning
+          merge-as-admin-packages: conda-forge-pinning
+          head-branch: relock-conda-forge-pinning
+
+  relock:
+    name: relock
+    needs: relock-conda-forge-pinning
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.14'
+
+      - name: stop me if needed
+        if: ${{ github.event_name == 'schedule' }}
+        run: |
+          python autotick-bot/stop_me_if_needed.py
+
+      - uses: conda-incubator/relock-conda@234fb1c7dc6554078cd39266851fc9ae23544601 # 2026.10.12
         if: ${{ ! env.CI_SKIP }}
         with:
           github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           automerge: true
           skip-if-pr-exists: true
           git-user-name: regro-cf-autotick-bot
-          merge-as-admin-packages: 'conda-forge-pinning'
