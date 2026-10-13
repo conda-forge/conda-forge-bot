@@ -126,7 +126,7 @@ package:
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.12.1
+  version: 0.13.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -135,10 +135,10 @@ package:
     cpython: '>=3.11'
     libgcc: '>=15'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.12.1-py311hf77984d_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.13.0-py311hf77984d_0.conda
   hash:
-    md5: 378c56d6a4ecd84c0ee6742f78a75737
-    sha256: 4c9212bd3446e8b6bb2ce22cc2a47ce8f5b3c6414141325db995b88265ee0e12
+    md5: e6c9cb22d4404ed44b25c9d9bbb1e203
+    sha256: 129ee69725b0809602d6567f111f2d56bd155f54c526c48123d93894b83657c2
   category: main
   optional: false
 - name: at-spi2-atk
@@ -331,7 +331,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.109
+  version: 1.43.111
   manager: conda
   platform: linux-64
   dependencies:
@@ -339,10 +339,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.109-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.111-pyhd8ed1ab_0.conda
   hash:
-    md5: 25a040fb8eaec93443752f97adfc6c73
-    sha256: 87381ac084bb29f8d31cff66a4b8990ae58778ff6fcb205813fc019e63b39ec3
+    md5: 9b0b65fb806d05f36f00c02d947a89ea
+    sha256: 21a49ed7b1a8678783d1c8cbca5edadd6ed6420f76a4dc2ae1be06bc8e8ab5e9
   category: main
   optional: false
 - name: brotli-python
@@ -770,14 +770,14 @@ package:
   category: main
   optional: false
 - name: conda-forge-pinning
-  version: 2026.10.12.05.56.53
+  version: 2026.10.13.13.09.16
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.12.05.56.53-hd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-pinning-2026.10.13.13.09.16-hd8ed1ab_1.conda
   hash:
-    md5: d943d36e3d989727ae0b3f9d16373946
-    sha256: 85d0bf50893cd8a29e476c2d0ab87fd817bb3bccc2bdb77fed9899f516d117a5
+    md5: 72ea4e99c2fd9a10dc3401a0b45fdeda
+    sha256: 6ee571a4e8ee686074f15a5ac392bfd8f5c93c3f66908d880b60adbd6aecccc3
   category: main
   optional: false
 - name: conda-index
@@ -886,21 +886,23 @@ package:
   category: main
   optional: false
 - name: conda-oci-mirror
-  version: 0.2.3
+  version: 0.3.0
   manager: conda
   platform: linux-64
   dependencies:
     click: ''
     conda-package-handling: ''
-    oras-py: 0.1.14.*
+    msgpack-python: ''
+    oras-py: 0.1.14
     packaging: ''
-    python: '>=3.9'
+    py-rattler: '>=0.15'
+    python: '>=3.11'
     requests: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-oci-mirror-0.2.3-pyhd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-oci-mirror-0.3.0-pyh5ded981_0.conda
   hash:
-    md5: cbb288cc5b97ac2e4a2a6b51c13d153e
-    sha256: e8b52f911efce98ab0397786b82bda58a2e1bd1653e9786e1ffadf3bc433ea8b
+    md5: 5ef8511883c4462bfde9f9e15f7414bf
+    sha256: 18ac85b028c64a8c3dfb896581152af7febcd38ac3b84eac4f0fb03f2a2a991d
   category: main
   optional: false
 - name: conda-package-handling
@@ -3801,20 +3803,20 @@ package:
   category: main
   optional: false
 - name: pre-commit
-  version: 4.6.2
+  version: 4.7.0
   manager: conda
   platform: linux-64
   dependencies:
     cfgv: '>=2.0.0'
     identify: '>=1.0.0'
     nodeenv: '>=0.11.1'
-    python: '>=3.10'
+    python: '>=3.11'
     pyyaml: '>=5.1'
     virtualenv: '>=20.10.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/pre-commit-4.6.2-pyha770c72_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pre-commit-4.7.0-pyha770c72_0.conda
   hash:
-    md5: c36b88db560b4e74f294380613f1a239
-    sha256: fc0a0620a8f829c46787a9a13ddbae8b6049f2e77da353a8a2adaa01af0da7e2
+    md5: 167169a52ede77767f9fa66b52983a20
+    sha256: d808ea63d685cc3e096a62a85820864b65467b4c273c7649a1450112f0295aa4
   category: main
   optional: false
 - name: progressbar2
@@ -4387,15 +4389,15 @@ package:
   category: main
   optional: false
 - name: python-installer
-  version: 1.0.1
+  version: 1.1.0
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/python-installer-1.0.1-pyh332efcf_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/python-installer-1.1.0-pyhe730653_0.conda
   hash:
-    md5: 5cc7e2e78962dc902cae9e29c2aa4b2f
-    sha256: 9c18fa1ebd0c839b6ea12e99d510a0968c2288cc423185cb34bf7332b97684e9
+    md5: d342a60951d6ee3dbfb0256f381de46b
+    sha256: 7aec79829c8288d0511558bb48989ef34f214c7dfc1379b3b24964de335bee3a
   category: main
   optional: false
 - name: python-libarchive-c
@@ -4928,15 +4930,15 @@ package:
   category: main
   optional: false
 - name: soupsieve
-  version: 3.0.1
+  version: 3.0.3
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-3.0.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-3.0.3-pyhd8ed1ab_0.conda
   hash:
-    md5: a9292eaeb58985cd42d41b0c2868aa66
-    sha256: 7fda5cf9c82d42aa632ef9ff3204d3685619ca1fb18095b04190a58311f33f41
+    md5: bd2ea090567b9d0a53240bd1367c87ad
+    sha256: 858ae626017ccba80201e7431db6b517e53d6322b32f00fd21b64159592fa7cd
   category: main
   optional: false
 - name: spdlog
@@ -5136,15 +5138,15 @@ package:
   category: main
   optional: false
 - name: truststore
-  version: 0.10.4
+  version: 0.10.5
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10,<4'
-  url: https://conda.anaconda.org/conda-forge/noarch/truststore-0.10.4-pyhcf101f3_0.conda
+    python: '>=3.11,<4'
+  url: https://conda.anaconda.org/conda-forge/noarch/truststore-0.10.5-pyh5ded981_0.conda
   hash:
-    md5: c2db35b004913ec69bcac64fb0783de0
-    sha256: eece5be81588c39a855a0b70da84e0febb878a6d91dd27d6d21370ce9e5c5a46
+    md5: 932e0e574fd29644d42c77b685885776
+    sha256: 4c7ef6ecf5304b1b2f6ead87b6b4baf4b47df3183915c60fe4d186fbe76388bc
   category: main
   optional: false
 - name: typer
