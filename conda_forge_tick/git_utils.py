@@ -2014,12 +2014,12 @@ def close_out_dirty_prs(
                 pr_json = lazy_update_pr_json(pr_json)
                 d = dict(pr_json)
 
-                # This makes _update_nodes_with_bot_rerun trigger. The label only
-                # exists in our copy of the PR json and is lost if another job
-                # refreshes the PR from GitHub first, so the rerun is also detected
-                # from the PR's closed_by (see pr_was_closed_by_bot). The long term
-                # solution is to add the bot to conda-forge so that it can add the
-                # label properly.
+                # This will cause the _update_nodes_with_bot_rerun to trigger
+                # properly unless another job overwrites the PR json first (see
+                # pr_was_closed_by_bot for that case), the long term solution here
+                # is to add the bot to conda-forge and then
+                # it should have label adding capability and we can just add
+                # the label properly
                 d["labels"].append(BOT_RERUN_LABEL)
 
         return d
