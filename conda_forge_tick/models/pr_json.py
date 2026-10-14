@@ -139,6 +139,11 @@ class PullRequestDataValid(ValidatedBaseModel):
     Note that this field is abused in PullRequestInfoSpecial.
     """
     closed_at: datetime | None = None
+    closed_by: str | None = None
+    """
+    The login of the user who closed the pull request, if it was closed without being merged.
+    This is not part of the pulls API response and is fetched from the issues API instead.
+    """
 
     mergeable_state: GithubPullRequestMergeableState | None = None
     """

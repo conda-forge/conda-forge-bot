@@ -38,6 +38,7 @@ from conda_forge_tick.git_utils import (
     RepositoryNotFoundError,
     github_backend,
     is_github_api_limit_reached,
+    pr_was_closed_by_bot,
 )
 from conda_forge_tick.lazy_json_backends import (
     LazyJson,
@@ -1268,8 +1269,11 @@ def _update_nodes_with_bot_rerun(gx: nx.DiGraph):
                             if (
                                 pr_json
                                 and not migration["data"]["bot_rerun"]
-                                and "bot-rerun"
-                                in [lb["name"] for lb in pr_json.get("labels", [])]
+                                and (
+                                    "bot-rerun"
+                                    in [lb["name"] for lb in pr_json.get("labels", [])]
+                                    or pr_was_closed_by_bot(pr_json)
+                                )
                             ):
                                 migration["data"]["bot_rerun"] = time.time()
                                 logger.info(
@@ -1387,6 +1391,8 @@ def _remove_closed_pr_json():
                                 "labels": [
                                     {"name": lb["name"]} for lb in pr.get("labels", [])
                                 ],
+                                "merged": pr.get("merged", None),
+                                "closed_by": pr.get("closed_by", None),
                             }
                             assert len(pr.file_name.split("/")) == 2
                             assert pr.file_name.split("/")[0] == "pr_json"
