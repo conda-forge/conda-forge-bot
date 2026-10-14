@@ -1630,17 +1630,17 @@ package:
   category: main
   optional: false
 - name: gitpython
-  version: 3.2.0
+  version: 3.2.1
   manager: conda
   platform: linux-64
   dependencies:
     gitdb: '>=4.0.1,<5'
     python: '>=3.11'
     typing_extensions: '>=3.10.0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/gitpython-3.2.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/gitpython-3.2.1-pyh5ded981_0.conda
   hash:
-    md5: a71c955d6cee9418cec14879e4bbc8d6
-    sha256: b28899d98ac49da80396bee4640455a9719caf0cd0c5ddda46dc0e3cf9e6f6a0
+    md5: 8f48abca8def349ff058d428807975fe
+    sha256: a081fcad22ba7fe59812d944bec574030e6d3b252390b9eaee735bb57b5b072b
   category: main
   optional: false
 - name: glib-tools
@@ -3475,22 +3475,22 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    cairo: '>=1.18.4,<2.0a0'
+    cairo: '>=1.18.6,<2.0a0'
     fontconfig: '>=2.18.3,<3.0a0'
     fonts-conda-ecosystem: ''
-    fribidi: '>=1.0.16,<2.0a0'
-    libexpat: '>=2.8.1,<3.0a0'
+    fribidi: '>=1.0.17,<2.0a0'
+    libexpat: '>=2.8.5,<3.0a0'
     libfreetype: '>=2.14.3'
     libfreetype6: '>=2.14.3'
     libgcc: '>=15'
-    libglib: '>=2.88.3,<3.0a0'
-    libharfbuzz: '>=14.4.0'
-    libpng: '>=1.6.58,<1.7.0a0'
+    libglib: '>=2.90.0,<3.0a0'
+    libharfbuzz: '>=14.6.0'
+    libpng: '>=1.6.59,<1.7.0a0'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h7bb47b9_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h7bb47b9_2.conda
   hash:
-    md5: 0b889b1c6b472d215d6332c6b195589c
-    sha256: 47c3d25a0bdb0ae50627f9ef2a10345fabfabe0e6620cbcff04e589a644542d3
+    md5: a3c89436a4e8ec941dbdfbd51f501255
+    sha256: c6e05ab7347d494f7651367bdfe5c170f336250ed2672b2a007cc085b636cb2c
   category: main
   optional: false
 - name: partd
@@ -3865,18 +3865,19 @@ package:
   category: main
   optional: false
 - name: pydantic-settings
-  version: 2.15.0
+  version: 2.16.0
   manager: conda
   platform: linux-64
   dependencies:
     pydantic: '>=2.7.0'
-    python: '>=3.10'
-    python-dotenv: '>=0.21.0'
+    python: '>=3.11'
+    python-dotenv: '>=1.2.2'
     typing-inspection: '>=0.4.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-settings-2.15.0-pyhcf101f3_0.conda
+    typing_extensions: '>=4.0.0'
+  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-settings-2.16.0-pyh5ded981_0.conda
   hash:
-    md5: 687adac0b3eb2dd73762e9f912b4549e
-    sha256: 674e1ba12010a88441f817a318d3cec7e7a7682813ebd3f427fbd1c6766a16af
+    md5: 3ffdbcefaa4e2a087696c44e390b9695
+    sha256: 0ddbc1a8d3fa4a50d5213b0e631a46c47b96497890669708d917255837e79e64
   category: main
   optional: false
 - name: pygit2
@@ -5208,7 +5209,7 @@ package:
   category: main
   optional: false
 - name: wrapt
-  version: 2.5.0
+  version: 2.5.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -5216,10 +5217,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.5.0-py312h1b36aeb_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.5.1-py312h1b36aeb_0.conda
   hash:
-    md5: d26183a2d743b74401a83de8c3d6b787
-    sha256: e13c81b66c59d5442e5705afbb46b419a5fb7771c86f82e3f90654184c6d283e
+    md5: 573cf52a9c8123f5b5c74df658f375b2
+    sha256: 57f70aefe6d6c8a47270a27d3aea5fa5ac26bc00cfa76df009dddd34eaf35531
   category: main
   optional: false
 - name: wurlitzer
