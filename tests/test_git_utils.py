@@ -30,6 +30,8 @@ from conda_forge_tick.git_utils import (
     _get_pth_blob_sha_and_content,
     delete_file_via_gh_api,
     github_client,
+    lazy_update_pr_json,
+    pr_was_closed_by_bot,
     push_file_via_gh_api,
     trim_pr_json_keys,
 )
@@ -1797,6 +1799,112 @@ def test_trim_pr_json_keys_src():
     assert pr_json["id"] == 435
     assert "r" not in pr_json
     assert pr_json["last_fetched"] == "2024-01-01T00:00:00+00:00"
+
+
+@pytest.mark.parametrize(
+    "pr_json, expected",
+    [
+        (
+            {"state": "closed", "merged": False, "closed_by": "regro-cf-autotick-bot"},
+            True,
+        ),
+        # merged PRs are done no matter who closed them
+        (
+            {"state": "closed", "merged": True, "closed_by": "regro-cf-autotick-bot"},
+            False,
+        ),
+        # a human closing a PR means the migration should be skipped
+        ({"state": "closed", "merged": False, "closed_by": "some-maintainer"}, False),
+        ({"state": "closed"}, False),
+    ],
+)
+def test_pr_was_closed_by_bot(pr_json: dict, expected: bool):
+    assert pr_was_closed_by_bot(pr_json) is expected
+
+
+def _stored_pr_json() -> dict:
+    return {
+        "Last-Modified": "Fri, 21 Aug 2026 02:00:00 GMT",
+        "base": {"repo": {"name": "libopus-feedstock"}},
+        "number": 18,
+        "state": "open",
+        "labels": [],
+    }
+
+
+def _github_get(pull: dict, issue: dict | None = None, issue_status: int = 200):
+    """Fake requests.get serving the pulls and (if given) issues endpoint of the PR."""
+
+    def get(url, **_kwargs):
+        response = requests.Response()
+        response.url = url
+        if url == "https://api.github.com/repos/conda-forge/libopus-feedstock/pulls/18":
+            response.status_code = 200
+            response.headers = CaseInsensitiveDict(
+                {"ETag": "etag", "Last-Modified": "Fri, 21 Aug 2026 02:48:08 GMT"}
+            )
+            response.json = lambda: _stored_pr_json() | pull
+            return response
+        if (
+            url
+            == "https://api.github.com/repos/conda-forge/libopus-feedstock/issues/18"
+            and issue is not None
+        ):
+            response.status_code = issue_status
+            response.json = lambda: issue
+            return response
+        assert False, f"Unexpected request: {url}"
+
+    return get
+
+
+@pytest.mark.parametrize(
+    "issue_closed_by, closed_by",
+    [({"login": "regro-cf-autotick-bot"}, "regro-cf-autotick-bot"), (None, None)],
+    ids=["bot", "null"],
+)
+@mock.patch("conda_forge_tick.git_utils.get_bot_token", new=MagicMock(return_value=""))
+@mock.patch("conda_forge_tick.git_utils.requests.get")
+def test_lazy_update_pr_json_records_closed_by(
+    get_mock: MagicMock, issue_closed_by: dict | None, closed_by: str | None
+):
+    get_mock.side_effect = _github_get(
+        {"state": "closed", "merged": False}, {"closed_by": issue_closed_by}
+    )
+
+    pr_json = lazy_update_pr_json(_stored_pr_json())
+
+    assert pr_json["state"] == "closed"
+    assert pr_json["closed_by"] == closed_by
+
+
+@pytest.mark.parametrize(
+    "state, merged", [("open", False), ("closed", True)], ids=["open", "merged"]
+)
+@mock.patch("conda_forge_tick.git_utils.get_bot_token", new=MagicMock(return_value=""))
+@mock.patch("conda_forge_tick.git_utils.requests.get")
+def test_lazy_update_pr_json_skips_closed_by(
+    get_mock: MagicMock, state: str, merged: bool
+):
+    # no issue response, so requesting closed_by fails the test
+    get_mock.side_effect = _github_get({"state": state, "merged": merged})
+
+    pr_json = lazy_update_pr_json(_stored_pr_json())
+
+    assert "closed_by" not in pr_json
+
+
+@mock.patch("conda_forge_tick.git_utils.get_bot_token", new=MagicMock(return_value=""))
+@mock.patch("conda_forge_tick.git_utils.requests.get")
+def test_lazy_update_pr_json_closed_by_unavailable(get_mock: MagicMock):
+    get_mock.side_effect = _github_get(
+        {"state": "closed", "merged": False}, {}, issue_status=503
+    )
+
+    pr_json = lazy_update_pr_json(_stored_pr_json())
+
+    # nothing is updated, so the PR still looks open and is fetched again next time
+    assert pr_json == _stored_pr_json()
 
 
 @pytest.mark.skipif(
