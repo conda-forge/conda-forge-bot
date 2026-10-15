@@ -86,7 +86,8 @@ jobs:
           pushd cf-graph
 
           export RUN_URL="https://github.com/conda-forge/conda-forge-bot/actions/runs/${RUN_ID}"
-          conda-forge-tick deploy-to-github
+          conda-forge-tick deploy-to-github --dirs-to-deploy=pr_info,version_pr_info
+          conda-forge-tick deploy-to-github --dirs-to-deploy=graph.json,outputs_to_feedstocks.json,node_attrs
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           RUN_ID: ${{ github.run_id }}
