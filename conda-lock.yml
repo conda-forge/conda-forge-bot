@@ -3255,15 +3255,15 @@ package:
   category: main
   optional: false
 - name: more-itertools
-  version: 11.2.0
+  version: 11.2.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/more-itertools-11.2.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/more-itertools-11.2.1-pyh5ded981_0.conda
   hash:
-    md5: c6455b18aa8daa5afd5eff5e900c3358
-    sha256: 7c3e39ef613dec67ba86479fd51cbfbdbbcaff29b349f863ed2faf6798e0377d
+    md5: c927a046b5b46ae73c42c82869e9d4b1
+    sha256: eac70c03e56f47de5003a76b74f55f8c7e6ed721ca71cc7e5ad5fd231cc5257a
   category: main
   optional: false
 - name: msgpack-python
@@ -3942,7 +3942,7 @@ package:
   category: main
   optional: false
 - name: pymongo
-  version: 4.18.3
+  version: 4.19.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -3952,10 +3952,10 @@ package:
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.18.3-py312h1064dfc_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.19.0-py312h1064dfc_0.conda
   hash:
-    md5: 351c05548a579d7164ba78e6c1f07fc3
-    sha256: 16b3774c4bd8f6a74203bad450411228f8b2794a7ede6e15a7a577841d5cf6cd
+    md5: fa6ea0eb66838ce1d99449b543f99eb1
+    sha256: 573600e640ab830c700d0d58ff7cfb5f7453fa2a9c0f1fc6f9d10cf97fcc44c5
   category: main
   optional: false
 - name: pynacl
