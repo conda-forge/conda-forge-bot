@@ -317,7 +317,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.111
+  version: 1.43.113
   manager: conda
   platform: linux-64
   dependencies:
@@ -325,10 +325,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.111-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.113-pyhd8ed1ab_0.conda
   hash:
-    md5: 9b0b65fb806d05f36f00c02d947a89ea
-    sha256: 21a49ed7b1a8678783d1c8cbca5edadd6ed6420f76a4dc2ae1be06bc8e8ab5e9
+    md5: a07d53c734fb9c7dde7d13e201c3088e
+    sha256: e718d56a0e3712463dc185c37dfee68ab7fd97d168856e9d7f62d0b40ac43a4c
   category: main
   optional: false
 - name: brotli-python
@@ -1047,10 +1047,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/coverage-7.16.2-py312h8b7ec3f_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/coverage-7.16.2-py312h8b7ec3f_1.conda
   hash:
-    md5: 1d1ef312ddf97e5f5218d3a3d56dd7a0
-    sha256: 9ea2907ca5b95350b3b28dd7b6107b89b0754ab9504e214220eff7603e72d111
+    md5: 10471ab5b1d6e4e095d6d6072e95db8c
+    sha256: 8f1e15238953756ea5b6ac52e9d9ef685dee457574bad502dcb0350137187297
   category: main
   optional: false
 - name: cpp-expected
@@ -3664,15 +3664,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.13.0
+  version: 4.13.3
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.13.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.13.3-pyh5ded981_0.conda
   hash:
-    md5: 35cc2a176fc6f886d6efa41ecb5f1de0
-    sha256: e75e5e85e0039c77f8b707baa862f029f25a582ff158bcae36cf361a409eaf59
+    md5: 26e0daf33cd13bca0dbdfb971dcb3e25
+    sha256: 0cc3be633856ea43a4c17e8d5009b07979e35d6e399f86b85afd63058df25162
   category: main
   optional: false
 - name: pluggy
@@ -4393,13 +4393,13 @@ package:
   platform: linux-64
   dependencies:
     conda-build: ''
-    jinja2: '>=3.0.2,<4'
+    jinja2: '>=3.0.2'
     pygithub: ''
     python: '>=3.11'
     rattler-build: ''
-    ruamel.yaml: '>=0.18.6,<0.19'
+    ruamel.yaml: '>=0.18.6'
     tomli: ''
-    typing-extensions: '>=4.12.2,<5'
+    typing-extensions: '>=4.12.2'
   url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.22-pyh5ded981_0.conda
   hash:
     md5: f0724449d6ee692efb333bab7855b0c8
@@ -4578,19 +4578,16 @@ package:
   category: main
   optional: false
 - name: ruamel.yaml
-  version: 0.18.17
+  version: 0.19.1
   manager: conda
   platform: linux-64
   dependencies:
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-    python: ''
-    python_abi: 3.12.*
+    python: '>=3.10'
     ruamel.yaml.clib: '>=0.2.15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/ruamel.yaml-0.18.17-py312h5253ce2_2.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/ruamel.yaml-0.19.1-pyhcf101f3_0.conda
   hash:
-    md5: f7ddc4a83cdcceb34c851e51ea64c903
-    sha256: 3f1137747c99d79d82fe76a5ab72ed56b85ad1412f809cb721bd330095770f40
+    md5: 06ad944772941d5dae1e0d09848d8e49
+    sha256: b48bebe297a63ae60f52e50be328262e880702db4d9b4e86731473ada459c2a1
   category: main
   optional: false
 - name: ruamel.yaml.clib
@@ -4936,15 +4933,15 @@ package:
   category: main
   optional: false
 - name: tomlkit
-  version: 0.15.1
+  version: 0.15.2
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/tomlkit-0.15.1-pyhcf101f3_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/tomlkit-0.15.2-pyh5ded981_0.conda
   hash:
-    md5: e4942e2de7436ff28be7f5645cf3c8d6
-    sha256: 5cf833b4d199688b7652fb322ecc134de9555e9444d9249750de9a153421ad0a
+    md5: eadfe340211fea481536d602af9ace99
+    sha256: e6aa9e1c4d4e229280ef5446ebbc99e7b65c874deb47f83be6a751ba20332cc8
   category: main
   optional: false
 - name: toolz
