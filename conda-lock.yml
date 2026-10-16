@@ -438,15 +438,15 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.2.1
+  version: 7.2.2
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.2-pyhd8ed1ab_0.conda
   hash:
-    md5: 11846d9fb4ea153dde7040287a1e996d
-    sha256: 76bfcd1da89486fcbbeeb14904adbdcb62601e509e7ecc5ea08772fc8b09df9e
+    md5: b3eaf33eadab58b810471d28f2e6d59a
+    sha256: 6e6ca4eed312298cfb500692f8c3e3d47cc2a4695f85a90143c8c6fdb3b19180
   category: main
   optional: false
 - name: cairo
