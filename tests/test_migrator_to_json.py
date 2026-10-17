@@ -372,7 +372,7 @@ def test_migrator_to_json_riscv64():
 @pytest.mark.parametrize(
     "klass",
     [
-        conda_forge_tick.migrators.RebuildBroken,
+        conda_forge_tick.migrators.CDTMigrator,
     ],
 )
 def test_migrator_to_json_others(klass):
