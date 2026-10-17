@@ -112,7 +112,7 @@ package:
   category: main
   optional: false
 - name: ast-serialize
-  version: 0.13.0
+  version: 0.13.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -121,10 +121,10 @@ package:
     cpython: '>=3.11'
     libgcc: '>=15'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.13.0-py311hf77984d_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/ast-serialize-0.13.1-py311hf77984d_0.conda
   hash:
-    md5: e6c9cb22d4404ed44b25c9d9bbb1e203
-    sha256: 129ee69725b0809602d6567f111f2d56bd155f54c526c48123d93894b83657c2
+    md5: a7552ec3837008b39098388e004fc461
+    sha256: 4ad7663308296e177d07ff2c3441e70541c71054fd950677a610cd199d5f7721
   category: main
   optional: false
 - name: at-spi2-atk
@@ -317,7 +317,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.113
+  version: 1.43.114
   manager: conda
   platform: linux-64
   dependencies:
@@ -325,10 +325,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.113-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.114-pyhd8ed1ab_0.conda
   hash:
-    md5: a07d53c734fb9c7dde7d13e201c3088e
-    sha256: e718d56a0e3712463dc185c37dfee68ab7fd97d168856e9d7f62d0b40ac43a4c
+    md5: cbb3cee2ace14b97c621e0447abe18a3
+    sha256: c6f097b612a3e9fcce74cd105225a42ae6c047cd2a90804422e9d55286e30253
   category: main
   optional: false
 - name: brotli-python
@@ -438,15 +438,15 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.2.2
+  version: 7.2.3
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.2-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.3-pyhd8ed1ab_0.conda
   hash:
-    md5: b3eaf33eadab58b810471d28f2e6d59a
-    sha256: 6e6ca4eed312298cfb500692f8c3e3d47cc2a4695f85a90143c8c6fdb3b19180
+    md5: 5793481345a92403917a0ab46195feed
+    sha256: c179f9cc6557aff61e2ef9cfb957b54d62846b22e86e6397dedfe3a3c2406304
   category: main
   optional: false
 - name: cairo
@@ -1213,15 +1213,15 @@ package:
   category: main
   optional: false
 - name: distlib
-  version: 0.4.3
+  version: 0.4.4
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/distlib-0.4.3-pyhcf101f3_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/distlib-0.4.4-pyh5ded981_0.conda
   hash:
-    md5: 58638f77697c4f6726753eb8be34818b
-    sha256: e2753997b8bd34205f42be01b8bab8037423dc30c02a1ec12de23e5b4c0b0a2e
+    md5: 555ccc837a00fc22c21e233009f65ce8
+    sha256: 9e40a7782d340ef20e0ead6d7ecc9c19f5db8a1a8b8fe9de66c2ab404fc20004
   category: main
   optional: false
 - name: distributed
@@ -1651,7 +1651,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libffi: ''
     libgcc: '>=15'
-    libglib: 2.90.0
+    libglib: ==2.90.0
   url: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.90.0-h3d503d9_0.conda
   hash:
     md5: d4adaebf8a2c9040ada6549c52a6b8d8
@@ -2716,8 +2716,8 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
-    libmamba-spdlog: 2.9.0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
+    libmamba-spdlog: ==2.9.0
     libstdcxx: '>=15'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.9,<4.0a0'
@@ -2831,7 +2831,7 @@ package:
     libglib: '>=2.90.0,<3.0a0'
     libharfbuzz: '>=14.6.0'
     libharfbuzz-devel: ''
-    libpango: 1.58.2
+    libpango: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/libpango-devel-1.58.2-h317d9d0_3.conda
   hash:
     md5: 8f2e0739636fe033c7324130121ab11c
@@ -2943,7 +2943,7 @@ package:
   category: main
   optional: false
 - name: libsqlite
-  version: 3.54.0
+  version: 3.54.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -2951,10 +2951,10 @@ package:
     icu: '>=78.3,<79.0a0'
     libgcc: '>=15'
     libzlib: '>=1.3.2,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libsqlite-3.54.0-h13e7031_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libsqlite-3.54.1-h13e7031_0.conda
   hash:
-    md5: bb145547395d3329f3a1d930de9848b2
-    sha256: 4823e42fe95fc318d7af6125dc6ef33bd60c1152054d41661413250dc0e84e6c
+    md5: 8f15f0ec9b69344df5c3bb5cce1751a1
+    sha256: 07b3c98282022f05781122d073f84e944bfb4299946e8457ece3ce6c384ff78e
   category: main
   optional: false
 - name: libssh2
@@ -3221,7 +3221,7 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
@@ -3519,7 +3519,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libpango-devel: 1.58.2
+    libpango-devel: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h2f58602_3.conda
   hash:
     md5: 4a1bbf999cdcdcf3ca1bfd819259f795
@@ -3652,15 +3652,15 @@ package:
   category: main
   optional: false
 - name: pkginfo
-  version: 1.12.1.2
+  version: 1.13.3
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/pkginfo-1.12.1.2-pyhd8ed1ab_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/pkginfo-1.13.3-pyhd8ed1ab_0.conda
   hash:
-    md5: dc702b2fae7ebe770aff3c83adb16b63
-    sha256: 353fd5a2c3ce31811a6272cd328874eb0d327b1eafd32a1e19001c4ad137ad3a
+    md5: 5a4affc299b2be2a11948327c648ec6a
+    sha256: de9167acc27d54b862faea3ddd62069b109368939716d09af09351224637c1bd
   category: main
   optional: false
 - name: platformdirs
@@ -3753,7 +3753,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    liblief: 1.0.0,>=1.0.0,<1.1.0a0
+    liblief: ==1.0.0,>=1.0.0,<1.1.0a0
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
@@ -4471,7 +4471,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-    reproc: 14.2.8.post0,>=14.2.8.post0,<14.3.0a0
+    reproc: ==14.2.8.post0,>=14.2.8.post0,<14.3.0a0
   url: https://conda.anaconda.org/conda-forge/linux-64/reproc-cpp-14.2.8.post0-h1c70be6_0.conda
   hash:
     md5: 04afaf7b13f8ac3c947230a24d835c94
@@ -4719,7 +4719,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: 10.3.4
+    setuptools-scm: ==10.3.4
   url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.3.4-hc3fbee1_0.conda
   hash:
     md5: ff9dcd413b3af5336ba346987270535f
@@ -5029,7 +5029,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    typing_extensions: 4.16.0
+    typing_extensions: ==4.16.0
   url: https://conda.anaconda.org/conda-forge/noarch/typing-extensions-4.16.0-h69aa097_0.conda
   hash:
     md5: c680b5747e8c4c8f23dca0bb7042a8fc
@@ -5485,7 +5485,7 @@ package:
   category: main
   optional: false
 - name: xorg-libxtst
-  version: 1.2.5
+  version: 1.2.6
   manager: conda
   platform: linux-64
   dependencies:
@@ -5494,10 +5494,10 @@ package:
     xorg-libx11: '>=1.8.13,<2.0a0'
     xorg-libxext: '>=1.3.7,<2.0a0'
     xorg-libxi: '>=1.8.3,<2.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/xorg-libxtst-1.2.5-h7cc23a3_4.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/xorg-libxtst-1.2.6-h7cc23a3_0.conda
   hash:
-    md5: 752a5ac9322e0fbbc24146c1ce3ae44e
-    sha256: d66525e7b1c492aa179c6c55610fc8dfb0a9a62ea7d4fb9f904fa6af62127f61
+    md5: 05e756ed9e8b2358591d47f6b8939db4
+    sha256: 9d8e7a2db860da3f362284650b447a96688b834bdb3122707b04bae512a1a178
   category: main
   optional: false
 - name: xorg-libxxf86vm
