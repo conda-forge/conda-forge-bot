@@ -59,7 +59,6 @@ class MigratorName(StrEnum):
     G_FORTRAN_OSX_REBUILD = "GFortranOSXRebuild"
     REPLACEMENT = "Replacement"
     MATPLOTLIB_BASE = "MatplotlibBase"
-    REBUILD_BROKEN = "RebuildBroken"
     MIGRATION_YAML_CREATOR = "MigrationYamlCreator"
     """
     Only operates on the conda-forge-pinning feedstock and updates the pinning version of packages.
