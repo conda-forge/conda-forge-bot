@@ -985,7 +985,7 @@ package:
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.9.23
+  version: 2026.10.19
   manager: conda
   platform: linux-64
   dependencies:
@@ -1003,7 +1003,7 @@ package:
     jsonschema: ''
     libarchive: ''
     license-expression: ''
-    py-rattler: '>=0.22.0,<0.26.0a0'
+    py-rattler: '>=0.22.0,<0.28.0a0'
     pycryptodome: ''
     pygit2: ''
     pygithub: '>=2,<3'
@@ -1018,10 +1018,10 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.9.23-unix_pyh707e725_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.10.19-unix_pyh707e725_0.conda
   hash:
-    md5: a27693b1ae9afeed77d7d24adc3074e5
-    sha256: 5dccfac9c33b7c4d13c95257f8fa1e21f99ac9e8c8d8ac4d725cfbe65ff8d812
+    md5: 9864645db493486afc0a8dd7834a0ddc
+    sha256: 4c36d033714a75c3b9d19b064dfc84c8edfac0ab954607b5bde983686ffab10b
   category: main
   optional: false
 - name: conda-souschef
