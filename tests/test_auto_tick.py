@@ -5,12 +5,15 @@ from pathlib import Path
 from unittest import mock
 from unittest.mock import ANY, MagicMock, create_autospec
 
+import networkx as nx
 import pytest
 from conftest import FakeLazyJson
 
 from conda_forge_tick.auto_tick import (
     _commit_migration,
     _prepare_feedstock_repository,
+    _remove_closed_pr_json,
+    _update_nodes_with_bot_rerun,
     run_with_tmpdir,
 )
 from conda_forge_tick.contexts import ClonedFeedstockContext, FeedstockContext
@@ -21,7 +24,9 @@ from conda_forge_tick.git_utils import (
     GitPlatformBackend,
     RepositoryNotFoundError,
 )
+from conda_forge_tick.lazy_json_backends import LazyJson, lazy_json_override_backends
 from conda_forge_tick.migrators_types import AttrsTypedDict
+from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.version_filters import filter_version
 
 demo_attrs: AttrsTypedDict = {
@@ -361,3 +366,56 @@ def test_filter_version():
     }
     assert filter_version(attrs_odd_even, "1.1.0") is False  # Odd minor -> filtered
     assert filter_version(attrs_odd_even, "1.2.0") == "1.2.0"  # Even minor -> kept
+
+
+@pytest.mark.parametrize(
+    "labels, closed_by, rerun",
+    [
+        # the bot closed the PR but its fake bot-rerun label was lost
+        ([], "regro-cf-autotick-bot", True),
+        ([{"name": "bot-rerun"}], None, True),
+        # a maintainer closed the PR to skip the migration
+        ([], "some-maintainer", False),
+    ],
+)
+def test_update_nodes_with_bot_rerun(labels, closed_by, rerun: bool):
+    pr_info = FakeLazyJson(
+        PRed=[
+            {
+                "PR": {"state": "closed", "labels": labels, "closed_by": closed_by},
+                "data": {"bot_rerun": False, "name": "support windows arm64 platform"},
+            }
+        ],
+    )
+    gx = nx.DiGraph()
+    gx.add_node(
+        "libopus",
+        payload=FakeLazyJson(pr_info=pr_info, version_pr_info=FakeLazyJson()),
+    )
+
+    _update_nodes_with_bot_rerun(gx)
+
+    assert bool(pr_info["PRed"][0]["data"]["bot_rerun"]) is rerun
+
+
+def test_remove_closed_pr_json_keeps_closed_by(tmp_path):
+    pr_json = {
+        "number": 18,
+        "state": "closed",
+        "labels": [],
+        "merged": False,
+        "closed_by": "regro-cf-autotick-bot",
+    }
+    with (
+        pushd(str(tmp_path)),
+        lazy_json_override_backends(["file"], use_file_cache=False),
+    ):
+        pr = LazyJson("pr_json/4077898229.json")
+        with pr:
+            pr.update(pr_json)
+        with LazyJson("pr_info/libopus.json") as pr_info:
+            pr_info["PRed"] = [{"PR": pr, "data": {}}]
+
+        _remove_closed_pr_json()
+
+        assert LazyJson("pr_info/libopus.json")["PRed"][0]["PR"] == pr_json

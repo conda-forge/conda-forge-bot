@@ -493,7 +493,7 @@ class OSXArm(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {}  # equivalent to {"osx_arm64": "osx_arm64"} i.e. native
+    build_platform = {"osx_arm64": "osx_arm64"}  # i.e. native
     pkg_list_filename = "osx_arm64.txt"
     arches = {"osx_arm64": "default"}
 
@@ -534,7 +534,7 @@ class WinArm64(_CrossCompileRebuild):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {}
+    build_platform = {"win_arm64": "win_arm64"}  # i.e. native
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "default"}
     ignored_packages = {

@@ -83,6 +83,7 @@ PR_KEYS_TO_KEEP = {
     "updated_at": None,
     "merged_at": None,
     "closed_at": None,
+    "closed_by": None,
     "state": None,
     "mergeable_state": None,
     "labels": None,
@@ -1728,6 +1729,38 @@ def trim_pr_json_keys(
     return pr_json
 
 
+def _get_pr_closed_by(repo_name: str, number: int) -> str | None:
+    """Get the login of whoever closed a PR, or None if GitHub does not report one.
+
+    The pulls API does not report this, but the issues API does. Raises a
+    `requests.RequestException` if the request fails.
+    """
+    r = requests.get(
+        f"https://api.github.com/repos/conda-forge/{repo_name}/issues/{number}",
+        headers={
+            "Authorization": f"token {get_bot_token()}",
+            "Accept": "application/vnd.github.v3+json",
+        },
+    )
+    r.raise_for_status()
+    return (r.json().get("closed_by") or {}).get("login", None)
+
+
+def pr_was_closed_by_bot(pr_json: dict | LazyJson) -> bool:
+    """Return True if the bot closed this PR without it being merged.
+
+    The bot only closes its own PRs so they can be remade (see `close_out_labels`
+    and `close_out_dirty_prs`), so this is equivalent to the PR having the
+    `bot-rerun` label. Unlike the label, it is stored on GitHub and so is not
+    lost when the PR json is refreshed.
+    """
+    return (
+        pr_json.get("state", None) == "closed"
+        and not pr_json.get("merged", False)
+        and pr_json.get("closed_by", None) in CF_BOT_NAMES
+    )
+
+
 def lazy_update_pr_json(
     pr_json: dict | LazyJson, force: bool = False
 ) -> dict | LazyJson:
@@ -1781,7 +1814,26 @@ def lazy_update_pr_json(
     )
 
     if r.status_code == 200:
-        pr_json = trim_pr_json_keys(pr_json, src_pr_json=r.json())
+        src_pr_json = r.json()
+        if src_pr_json.get("state") == "closed" and not src_pr_json.get("merged"):
+            repo_name = pr_json["base"]["repo"]["name"]
+            try:
+                src_pr_json["closed_by"] = _get_pr_closed_by(
+                    repo_name, pr_json["number"]
+                )
+            except RequestException as e:
+                # Keep the old data, including the Last-Modified header, so that the
+                # PR is fetched again next time. Once it is recorded as closed it is
+                # never refreshed, so it must not be stored without its closed_by.
+                logger.warning(
+                    "could not get closed_by for %s#%s, not updating the PR json",
+                    repo_name,
+                    pr_json["number"],
+                    exc_info=e,
+                )
+                return trim_pr_json_keys(pr_json)
+
+        pr_json = trim_pr_json_keys(pr_json, src_pr_json=src_pr_json)
         pr_json["ETag"] = r.headers["ETag"]
         pr_json["Last-Modified"] = r.headers["Last-Modified"]
         # Record the current time as when we last fetched fresh data
@@ -1963,8 +2015,8 @@ def close_out_dirty_prs(
                 d = dict(pr_json)
 
                 # This will cause the _update_nodes_with_bot_rerun to trigger
-                # properly and shouldn't be overridden since
-                # this is the last function to run, the long term solution here
+                # properly unless another job overwrites the PR json first (see
+                # pr_was_closed_by_bot for that case), the long term solution here
                 # is to add the bot to conda-forge and then
                 # it should have label adding capability and we can just add
                 # the label properly
