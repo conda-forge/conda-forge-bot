@@ -30,7 +30,16 @@ VERY_FLAKY_TEST = "This test case is more flaky than usual."
         ("mpichv0", "4.1.0", None),
         ("dash_extensions", "0.1.11", None),
         ("numpy", "1.24.1", None),
-        ("python", "3.9.5", None),
+        (
+            "python",
+            "3.9.5",
+            [
+                {
+                    "url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip  # [win]": "url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.tar.gz  # [win]",
+                    "sha256: 02b6d6f1e0369940e7e1f0d324992e069d09f5f3d32d86e2d22cd8b82ac3fb3f  # [win]": "sha256: 46c61b5c76ab16d18c8a091c4ad91cf53c86266510bafe26bfc382a84ae58660  # [win]",
+                }
+            ],
+        ),
         ("faiss-split", "1.7.3", None),
         ("docker-py", "6.0.1", None),
         ("allennlp", "2.10.1", None),
