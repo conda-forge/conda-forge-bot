@@ -14,6 +14,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: ${{ github.event_name != 'issue_comment' }}
         with:
           token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
 
@@ -22,12 +23,12 @@ jobs:
           python-version: '3.14'
 
       - name: stop me if needed
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule' && github.event_name != 'issue_comment' }}
         run: |
           python autotick-bot/stop_me_if_needed.py
 
       - uses: conda-incubator/relock-conda@234fb1c7dc6554078cd39266851fc9ae23544601 # 2026.10.12
-        if: ${{ ! env.CI_SKIP }}
+        if: ${{ (! env.CI_SKIP) && github.event_name != 'issue_comment' }}
         with:
           github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           automerge: true
@@ -62,4 +63,4 @@ jobs:
           automerge: true
           skip-if-pr-exists: true
           git-user-name: regro-cf-autotick-bot
-          ignored-packages: conda-forge-pinning
+          ignored-packages: ${{ case(github.event_name != 'issue_comment', 'conda-forge-pinning', '') }}
