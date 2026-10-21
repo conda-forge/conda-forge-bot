@@ -6,6 +6,8 @@ platforms:
 dependencies:
   - backoff
   - bcrypt
+  - certifi >=2026.10.19
+  - ca-certificates >=2026.10.19  
   - cachecontrol
   - cachetools
   - click
