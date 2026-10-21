@@ -36,6 +36,7 @@ dependencies:
   - networkx >=2.8.6
   - orjson
   - packaging
+  - pixi >=0.82.1
   - psutil
   - py-rattler>=0.22.0,<0.26.0a0
   - pydantic >=2.13
