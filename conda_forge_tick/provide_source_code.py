@@ -23,14 +23,6 @@ from conda_forge_tick.utils import yaml_safe_dump
 
 logger = logging.getLogger(__name__)
 
-CONDA_BUILD_SPECIAL_KEYS = (
-    "pin_run_as_build",
-    "ignore_version",
-    "ignore_build_only_deps",
-    "extend_keys",
-    "zip_keys",
-)
-
 
 @contextmanager
 def provide_source_code(recipe_dir, use_container=None):

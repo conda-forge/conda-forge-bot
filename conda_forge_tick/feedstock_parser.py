@@ -32,6 +32,7 @@ from conda_forge_tick.settings import (
     settings,
 )
 from conda_forge_tick.utils import (
+    CONDA_BUILD_SPECIAL_KEYS,
     as_iterable,
     get_keys_default,
     get_platform_arch_from_ci_support_filename,
@@ -39,6 +40,7 @@ from conda_forge_tick.utils import (
     parse_meta_yaml,
     parse_recipe_yaml,
     sanitize_string,
+    yaml_safe_dumps,
     yaml_safe_load,
 )
 
@@ -270,6 +272,19 @@ def _clean_req_nones(reqs):
     return reqs
 
 
+def _extract_default_key_values(ci_support_files):
+    excluded_keys = list(CONDA_BUILD_SPECIAL_KEYS) + ["target_platform"]
+    cbc = {}
+    for ci_support_file in ci_support_files:
+        with open(ci_support_file) as fp:
+            _cbc = yaml_safe_load(fp)
+            for k, v in _cbc.items():
+                if k not in cbc and k not in excluded_keys:
+                    cbc[k] = v
+
+    return cbc
+
+
 def populate_feedstock_attributes(
     name: str,
     existing_node_attrs: typing.MutableMapping[str, typing.Any],
@@ -370,6 +385,10 @@ def populate_feedstock_attributes(
 
     if feedstock_dir is not None:
         logger.debug(
+            "ci support files: %r",
+            list(feedstock_dir.joinpath(".ci_support").glob("*.yaml")),
+        )
+        logger.debug(
             "# of ci support files: %s",
             len(list(feedstock_dir.joinpath(".ci_support").glob("*.yaml"))),
         )
@@ -395,6 +414,8 @@ def populate_feedstock_attributes(
                 with open(str(ci_support_files[0])) as fp:
                     saved_cbc_value = fp.read()
 
+                default_cbc = _extract_default_key_values(ci_support_files)
+
             variant_yamls = []
             plat_archs = []
             for cbc_path in ci_support_files:
@@ -402,38 +423,50 @@ def populate_feedstock_attributes(
                 plat, arch = get_platform_arch_from_ci_support_filename(cbc_path.name)
                 plat_archs.append((plat, arch))
 
-                if isinstance(meta_yaml, str):
-                    variant_yamls.append(
-                        parse_meta_yaml(
-                            meta_yaml,
-                            platform=plat,
-                            arch=arch,
-                            cbc_path=cbc_path,
-                            orig_cbc_path=os.path.join(
-                                recipe_dir,
-                                "conda_build_config.yaml",
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    final_cbc_path = os.path.join(tmpdir, "conda_build_config.yaml")
+                    with open(cbc_path) as fp:
+                        orig_cbc = yaml_safe_load(fp)
+
+                    for k, v in default_cbc.items():
+                        if k not in orig_cbc:
+                            orig_cbc[k] = v
+
+                    with open(final_cbc_path, "w") as fp:
+                        fp.write(yaml_safe_dumps(orig_cbc))
+
+                    if isinstance(meta_yaml, str):
+                        variant_yamls.append(
+                            parse_meta_yaml(
+                                meta_yaml,
+                                platform=plat,
+                                arch=arch,
+                                cbc_path=final_cbc_path,
+                                orig_cbc_path=os.path.join(
+                                    recipe_dir,
+                                    "conda_build_config.yaml",
+                                ),
+                                use_container=use_container,
                             ),
-                            use_container=use_container,
-                        ),
-                    )
-                    variant_yamls[-1]["schema_version"] = 0
-                elif isinstance(recipe_yaml, str):
-                    platform_arch = (
-                        f"{plat}-{arch}"
-                        if isinstance(plat, str) and isinstance(arch, str)
-                        else None
-                    )
-                    variant_yamls.append(
-                        parse_recipe_yaml(
-                            recipe_yaml,
-                            platform_arch=platform_arch,
-                            cbc_path=cbc_path,
-                            use_container=use_container,
-                        ),
-                    )
-                    variant_yamls[-1]["schema_version"] = variant_yamls[-1].get(
-                        "schema_version", 1
-                    )
+                        )
+                        variant_yamls[-1]["schema_version"] = 0
+                    elif isinstance(recipe_yaml, str):
+                        platform_arch = (
+                            f"{plat}-{arch}"
+                            if isinstance(plat, str) and isinstance(arch, str)
+                            else None
+                        )
+                        variant_yamls.append(
+                            parse_recipe_yaml(
+                                recipe_yaml,
+                                platform_arch=platform_arch,
+                                cbc_path=final_cbc_path,
+                                use_container=use_container,
+                            ),
+                        )
+                        variant_yamls[-1]["schema_version"] = variant_yamls[-1].get(
+                            "schema_version", 1
+                        )
 
                 # sometimes the requirements come out to None or [None]
                 # and this ruins the aggregated meta_yaml / breaks stuff
@@ -486,7 +519,9 @@ def populate_feedstock_attributes(
         else:
             logger.debug("doing generic parsing")
             plat_archs = [("win", "64"), ("osx", "64"), ("linux", "64")]
-            for k in set(node_attrs["conda-forge.yml"].get("provider", {})):
+            for k in set(
+                (node_attrs.get("conda-forge.yml", {}) or {}).get("provider", {}) or {}
+            ):
                 if "_" in k:
                     plat_archs.append(tuple(k.split("_")))
             if isinstance(meta_yaml, str):
@@ -763,7 +798,7 @@ def load_feedstock_local(
                     "Either `meta.yaml` or `recipe.yaml` need to be present in the feedstock"
                 )
 
-        if conda_forge_yaml is None:
+        if conda_forge_yaml is None and not isinstance(feedstock_dir, Response):
             conda_forge_yaml_path = Path(feedstock_dir).joinpath("conda-forge.yml")
             if conda_forge_yaml_path.exists():
                 conda_forge_yaml = conda_forge_yaml_path.read_text()
@@ -787,7 +822,9 @@ def load_feedstock_local(
             recipe_yaml=recipe_yaml,
             conda_forge_yaml=conda_forge_yaml,
             mark_not_archived=mark_not_archived,
-            feedstock_dir=feedstock_dir,
+            feedstock_dir=None
+            if isinstance(feedstock_dir, Response)
+            else feedstock_dir,
             use_container=False,
         )
 

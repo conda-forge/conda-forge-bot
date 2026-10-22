@@ -322,6 +322,7 @@ def get_grayskull_comparison(attrs, version_key="version"):
     recipe_schema_version = get_recipe_schema_version(attrs)
     if recipe_schema_version == 0:
         grayskull_recipe = make_grayskull_recipe(attrs, version_key=version_key)
+        logger.debug("generated v0 recipe: %s", grayskull_recipe)
         new_attrs = load_feedstock(
             attrs.get("feedstock_name"), {}, meta_yaml=grayskull_recipe
         )
@@ -334,6 +335,7 @@ def get_grayskull_comparison(attrs, version_key="version"):
             package_version=attrs["version_pr_info"][version_key],
             package_is_noarch=bool(recipe["build"].get("noarch")),
         )
+        logger.debug("generated v1 recipe: %s", grayskull_recipe)
         new_attrs = load_feedstock(
             attrs.get("feedstock_name"), {}, recipe_yaml=grayskull_recipe
         )

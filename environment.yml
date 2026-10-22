@@ -48,7 +48,7 @@ dependencies:
   - pynamodb
   - python-dateutil
   - python-graphviz
-  - rattler-build >=0.74,<0.76.0a0
+  - rattler-build >=0.77.0,<0.78.0a0
   - rattler-build-conda-compat >=1.4.13,<2
   - requests
   - ruamel.yaml

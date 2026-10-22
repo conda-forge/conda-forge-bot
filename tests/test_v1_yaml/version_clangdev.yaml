@@ -1,0 +1,1009 @@
+context:
+  version: "23.1.3"
+  build_number: 1
+  # derived quanities
+  major_version: "${{ (version | split('.'))[0] }}"
+  # tail is not necessarily equal to patch version; e.g. 23.1.0.rc1
+  tail_version: "${{ (version | split('.'))[-1] }}"
+  # sover always includes minor as of v18, see https://github.com/llvm/llvm-project/issues/76273
+  maj_min: "${{ (version | split('.'))[:2] | join('.') }}"
+  # construct full sover, which contains extra suffixes for rc/dev builds
+  # as of LLVM 19, we expect an "-rcX" suffix for the release candidates
+  extra: ${{ "git" if tail_version|trim("0123456789") == "dev" else "-" ~ tail_version if tail_version not in "0123456789" else "" }}
+  sover: ${{ maj_min ~ extra }}
+
+  # see https://github.com/llvm/llvm-project/blob/release/22.x/clang/tools/libclang/CMakeLists.txt#L14
+  libclang_soversion: "13"
+
+recipe:
+  name: clangdev
+  version: ${{ version }}
+
+source:
+  - url: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${{ version|replace(".rc", "-rc") }}.tar.gz
+    sha256: 791b560dee8f65fdf7b19ad5db0b4ac627467824d8b687957d8a437b806103f0
+    patches:
+      - patches/0001-Find-conda-gcc-installation.patch
+      - patches/0002-Fix-sysroot-detection-for-linux.patch
+      - patches/0003-clang-add-conda-specific-env-var-CONDA_BUILD_SYSROOT.patch
+      - patches/0004-Fix-normalizeProgramName-s-handling-of-dots-outside-.patch
+      - patches/0005-set-libclang-SOVERSION-unconditionally.patch
+      - patches/0006-Make-PIE-default-on-macOS-too.patch
+      - patches/0007-Find-ROCm-device-library-in-conda-layout.patch
+      - patches/0008-Add-conda-mingw-paths.patch
+      - patches/0009-Look-for-libLTO.dylib-in-the-versioned-ResourceDir.patch
+    filter:
+      # we don't want to accidentally build more than clang here
+      - cmake/*
+      - clang/*
+      - clang-tools-extra/*
+
+build:
+  number: ${{ build_number }}
+
+outputs:
+  - staging:
+      name: clangdev-stage
+    build:
+      script:
+        file: build
+        # this is a work-around for something rattler-build should be doing,
+        # see https://github.com/prefix-dev/rattler-build/issues/2587
+        env:
+          PKG_VERSION: ${{ version }}
+          TARGET: ${{ TARGET }}
+          TARGET_NO_VER: ${{ TARGET_NO_VER }}
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+        - cmake
+        # "compiling .pyc files" fails without this
+        - python >3
+        - if: unix
+          then: make
+          else:
+            - ninja
+            - create-forwarder-dll
+        - if: build_platform != target_platform
+          then:
+            - llvmdev ==${{ version }}
+            - libxml2-devel
+            - zlib
+            - zstd
+      host:
+        - llvmdev ==${{ version }}
+        - libxml2-devel
+        - zlib
+        - zstd
+        - if: osx
+          then: libcxx-devel ${{ cxx_compiler_version }}.*
+        - if: win
+          then: llvm-openmp ==${{ version }}
+
+  - package:
+      name: clangdev
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: unix
+          then:
+            - include/clang/*
+            - include/clang-c/*
+            - include/clang-tidy/*
+            - lib/cmake/clang/*
+            - lib/libclang*.a
+            - lib/libfindAllSymbols.a
+          else:
+            - Library/include/clang/*
+            - Library/include/clang-c/*
+            - Library/include/clang-tidy/*
+            - Library/lib/cmake/clang/*
+            - Library/lib/clang*.lib
+            - Library/lib/findAllSymbols.lib
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        # these deps are added because of the static libraries
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+      host:
+        # Use the same requirements as the top-level requirements
+        # these deps are added because of the static libraries
+        - llvm ==${{ version }}
+        - libxml2-devel
+        - zlib
+        - zstd
+      run:
+        # without pin_subpackage because we want clangdev to be independent of cfg/nocfg
+        - clang ==${{ version }} ${{ variant }}_*_${{ build_number }}
+        - clangxx ==${{ version }} ${{ variant }}_*_${{ build_number }}
+        - ${{ pin_subpackage("clang-tools", exact=True) }}
+        - ${{ pin_subpackage("libclang", exact=True) }}
+        - ${{ pin_subpackage("libclang-cpp", exact=True) }}
+        - llvmdev ==${{ version }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+    tests:
+      - package_contents:
+          include:
+            - clang/Config/config.h
+            - clang/Lex/Lexer.h
+          files:
+            # static libraries
+            - if: unix
+              then:
+                - lib/libclangAST.a
+                - lib/libclangBasic.a
+              else:
+                - Library/lib/clangAST.lib
+                - Library/lib/clangBasic.lib
+      - requirements:
+          run:
+            - ${{ compiler('cxx') }}
+            - cmake
+            - ninja
+        files:
+          recipe:
+            - mytest.c
+            - cmake_test/*
+        script:
+          - if: unix
+            then:
+              # symlinks
+              - $PREFIX/bin/clang --version
+              - $PREFIX/bin/clang++ --version
+              - $PREFIX/bin/clang-check --version
+              # basic compilation
+              - $PREFIX/bin/clang -v -c mytest.c
+            else:
+              - '%LIBRARY_BIN%/clang -v -c mytest.c'
+          # ensure CMake metadata is correct & working
+          - cd cmake_test
+          - if: unix
+            then: cmake -GNinja $CMAKE_ARGS .
+            else: 'cmake -GNinja %CMAKE_ARGS% .'
+
+  - package:
+      name: libclang-cpp${{ maj_min }}
+    inherit: clangdev-stage
+    build:
+      skip: win
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: linux
+          then: lib/libclang-cpp.so.${{ sover }}
+          else: lib/libclang-cpp.${{ sover }}.dylib
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+      host:
+        - llvm ==${{ version }}
+      run:
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+      run_exports:
+        - ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+    tests:
+      - package_contents:
+          files:
+            # presence of versioned library
+            exists:
+              - if: linux
+                then: lib/libclang-cpp.so.${{ sover }}
+                else: lib/libclang-cpp.${{ sover }}.dylib
+            # absence of unversioned library
+            not_exists:
+              - if: linux
+                then: lib/libclang-cpp.so
+                else: lib/libclang-cpp.dylib
+
+  - package:
+      name: libclang-cpp
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: linux
+          then: lib/libclang-cpp.so
+        - if: osx
+          then: lib/libclang-cpp.dylib
+        # this is just an empty wrapper on windows; use a dummy file to work around broken
+        # rattler-build default: https://github.com/prefix-dev/rattler-build/issues/2753
+        - if: win
+          then: lib/this_does_not_exist
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      run:
+        - if: unix
+          then: ${{ pin_subpackage("libclang-cpp" ~ maj_min, exact=True) }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+      run_exports:
+        - if: unix
+          then: ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+    tests:
+      - package_contents:
+          strict: true
+          files:
+            # presence of versioned library on unix
+            - if: linux
+              then: lib/libclang-cpp.so
+            - if: osx
+              then: lib/libclang-cpp.dylib
+
+  - package:
+      name: libclang${{ libclang_soversion }}
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: linux
+          then: lib/libclang.so.${{ libclang_soversion }}
+        - if: osx
+          then: lib/libclang.${{ libclang_soversion }}.dylib
+        - if: win
+          then: Library/bin/libclang-${{ libclang_soversion }}.dll
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+      host:
+        # Use the same requirements as the top-level requirements, but only
+        # the ones required for run_exports
+        - llvm ==${{ version }}
+        - if: win
+          then:
+            - zlib
+            - zstd
+      run:
+        - if: unix
+          then: ${{ pin_subpackage("libclang-cpp" ~ maj_min, exact=True) }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+      run_exports:
+        # note that the name (e.g. libclang13) does not necessarily
+        # match the version lower bound (e.g. >=14.0.0)
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, upper_bound=None) }}
+    tests:
+      - package_contents:
+          files:
+            # presence of versioned libraries
+            exists:
+              - if: linux
+                then: lib/libclang.so.${{ libclang_soversion }}
+              - if: osx
+                then: lib/libclang.${{ libclang_soversion }}.dylib
+              - if: win
+                then: Library/bin/libclang-${{ libclang_soversion }}.dll
+            # absence of unversioned (or misversioned) libraries
+            not_exists:
+              - if: linux
+                then:
+                  - lib/libclang.so
+                  - lib/libclang.so.${{ major_version }}
+                  - lib/libclang.so.${{ version }}
+              - if: osx
+                then:
+                  - lib/libclang.dylib
+                  - libclang.${{ major_version }}.dylib
+                  - libclang.${{ version }}.dylib
+              - if: win
+                then:
+                  - Library/lib/libclang.lib
+                  - Library/bin/libclang.dll
+                  - Library/bin/libclang-${{ major_version }}.dll
+                  - Library/bin/libclang-${{ version }}.dll
+
+  - package:
+      name: libclang
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: linux
+          then: lib/libclang.so
+        - if: osx
+          then: lib/libclang.dylib
+        - if: win
+          then:
+            - Library/bin/libclang.dll
+            - Library/lib/libclang.lib
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      host:
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, exact=True) }}
+        - llvmdev ==${{ version }}
+        - llvm ==${{ version }}
+          # Use the same requirements as the top-level requirements
+        - libxml2-devel
+        - zlib
+        - zstd
+        - if: osx
+          then: libcxx-devel ${{ cxx_compiler_version }}.*
+      run:
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, exact=True) }}
+        - if: osx
+          #  we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+      run_exports:
+        # note that the name (e.g. libclang13) does not necessarily
+        # match the version lower bound (e.g. >=14.0.0)
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, upper_bound=None) }}
+    tests:
+      - package_contents:
+          files:
+            - if: linux
+              then: lib/libclang.so
+            - if: osx
+              then: lib/libclang.dylib
+            - if: win
+              then:
+                - Library/bin/libclang.dll
+                - Library/lib/libclang.lib
+
+  - package:
+      name: clang-${{ major_version }}
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: unix
+          then:
+            - lib/clang/${{ major_version }}/*
+            - bin/clang-${{ major_version }}
+            - bin/clang-cl-${{ major_version }}
+            - bin/clang-cpp-${{ major_version }}
+            - bin/clang++-${{ major_version }}
+          else:
+            - Library/lib/clang/${{ major_version }}/*
+            - Library/bin/clang-${{ major_version }}.exe
+            - Library/bin/clang++-${{ major_version }}.exe
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+      host:
+        - if: unix
+          then: ${{ pin_subpackage("libclang-cpp" ~ maj_min, exact=True) }}
+        # Use the same requirements as the top-level requirements, but only
+        # the ones required for run_exports
+        - llvm ==${{ version }}
+        - if: win
+          then:
+            - zlib
+            - zstd
+      run:
+        - compiler-rt${{ major_version }} ==${{ version }}
+        - if: unix
+          then: ${{ pin_subpackage("libclang-cpp" ~ maj_min, exact=True) }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+    tests:
+      - package_contents:
+          files:
+            exists:
+              # headers in clang-specific locations
+              - if: unix
+                then:
+                  - lib/clang/${{ major_version }}/include/stdatomic.h
+                  - lib/clang/${{ major_version }}/include/omp.h
+                else:
+                  - Library/lib/clang/${{ major_version }}/include/stdatomic.h
+                  - Library/lib/clang/${{ major_version }}/include/omp.h
+              - if: osx
+                then: lib/clang/${{ major_version }}/lib/libLTO.dylib
+            not_exists:
+              # absence of unversioned libraries (should only be in `libclang-cpp`)
+              - if: linux
+                then: lib/libclang-cpp.so
+              - if: osx
+                then: libclang-cpp.dylib
+              # absence of unversioned binaries
+              - if: unix
+                then:
+                  - bin/clang
+                  - bin/clang-cl
+                  - bin/clang-cpp
+                else:
+                  - Library/bin/clang.exe
+                  - Library/bin/clang-cl.exe
+                  - Library/bin/clang-cpp.exe
+      - requirements:
+          run:
+            - llvm-openmp ==${{ version }}
+        script:
+          # versioned binaries
+          - clang-${{ major_version }} --version
+          - clang++-${{ major_version }} --version
+          # check that relevant libraries are where clang needs them;
+          # cannot be `package_contents.files` tests because those apply only
+          # to the output under test as packaged, whereas these libraries live
+          # in other outputs: libclang-cpp<maj_min> & compiler-rt<major_version>
+          - if: linux
+            then: test -f $PREFIX/lib/libclang-cpp.so.${{ sover }}
+          - if: osx
+            then: test -f $PREFIX/lib/libclang-cpp.${{ sover }}.dylib
+          - if: linux and x86_64
+            then: test -f $PREFIX/lib/clang/${{ major_version }}/lib/linux/clang_rt.crtend-x86_64.o
+          - if: linux and aarch64
+            then: test -f $PREFIX/lib/clang/${{ major_version }}/lib/linux/clang_rt.crtend-aarch64.o
+          - if: linux and ppc64le
+            then: test -f $PREFIX/lib/clang/${{ major_version }}/lib/linux/clang_rt.crtend-powerpc64le.o
+          - if: linux and riscv64
+            then: test -f $PREFIX/lib/clang/${{ major_version }}/lib/linux/clang_rt.crtend-riscv64.o
+          - if: osx
+            then: test -f $PREFIX/lib/clang/${{ major_version }}/lib/darwin/libclang_rt.osx.a
+          - if: win
+            then: 'if not exist %LIBRARY_PREFIX%/lib/clang/${{ major_version }}/lib/windows/clang_rt.builtins-x86_64.lib exit 1'
+
+  - package:
+      name: clang_impl_${{ target_platform }}
+    inherit: clangdev-stage
+    build:
+      skip: win
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - bin/${{ TARGET }}-clang
+        - bin/${{ TARGET }}-clang-cpp
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      run:
+        # cannot use exact pins on osx due to separation of compiler activation; see #437
+        - if: osx
+          then: clang-${{ major_version }} ==${{ version }} ${{ variant }}_*
+          else: ${{ pin_subpackage("clang-" ~ major_version, exact=True) }}
+        - compiler-rt_${{ target_platform }} ==${{ version }}
+        - compiler-rt ==${{ version }}
+        - if: linux
+          then:
+            - binutils_impl_${{ target_platform }}
+            - libgcc-devel_${{ target_platform }}
+            - sysroot_${{ target_platform }}
+          else:
+            - cctools_impl_${{ target_platform }}
+            - ld64_${{ target_platform }} * llvm${{ maj_min|replace(".", "_") }}_*
+    tests:
+      - script:
+          - if: linux and x86_64
+            then:
+              - x86_64-conda-linux-gnu-clang --version
+              - x86_64-conda-linux-gnu-clang-cpp --version
+          - if: linux and aarch64
+            then:
+              - aarch64-conda-linux-gnu-clang --version
+              - aarch64-conda-linux-gnu-clang-cpp --version
+          - if: linux and ppc64le
+            then:
+              - powerpc64le-conda-linux-gnu-clang --version
+              - powerpc64le-conda-linux-gnu-clang-cpp --version
+          - if: linux and riscv64
+            then:
+              - riscv64-conda-linux-gnu-clang --version
+              - riscv64-conda-linux-gnu-clang-cpp --version
+          - if: osx and x86_64
+            then:
+              - x86_64-apple-darwin13.4.0-clang --version
+              - x86_64-apple-darwin13.4.0-clang-cpp --version
+          - if: osx and arm64
+            then:
+              - arm64-apple-darwin20.0.0-clang --version
+              - arm64-apple-darwin20.0.0-clang-cpp --version
+
+  - package:
+      name: clang
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_${{ "cfg" if with_cfg else "nocfg" }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: unix
+          then:
+            - bin/clang
+            - bin/clang-cl
+            - bin/clang-cpp
+          else:
+            - Library/bin/clang.exe
+            - Library/bin/clang-cl.exe
+            - Library/bin/clang-cpp.exe
+        - if: unix and with_cfg
+          then:
+            # we add configuration files for with_cfg only. `_NO_VER` is only relevant on osx.
+            # on linux, the --sysroot argument is added for non-cfg builds as well,
+            # through the file bin/<TARGET>.cfg that's present in the sysroot package
+            - bin/${{ TARGET_NO_VER }}-clang.cfg
+            - bin/${{ TARGET_NO_VER }}-clang-cl.cfg
+            - bin/${{ TARGET_NO_VER }}-clang-cpp.cfg
+            # technically the flang cfg files should be in flang, but it's easier to consolidate them here.
+            - bin/${{ TARGET_NO_VER }}-flang.cfg
+        - if: osx and with_cfg
+          then:
+            # only for macos to avoid conflicts with gcc
+            - bin/cc
+            - bin/cpp
+      variant:
+        # increasing numbers correspond to decreasing priority
+        # 0:     with_cfg, variant == "default"
+        # 1: not with_cfg, variant == "default"
+        # 2:     with_cfg, variant != "default"
+        # 3: not with_cfg, variant != "default"
+        down_prioritize_variant: ${{ ((not with_cfg) | int) + 2 * ((variant != "default") | int) }}
+    requirements:
+      build:
+        # for run-export on win. This is just a symlink on unix
+        - if: win
+          then:
+            - ${{ stdlib('c') }}
+            - ${{ compiler('cxx') }}
+      host:
+        - if: win
+          then:
+            - zlib
+            - zstd
+      run:
+        # cannot use exact pins on osx due to separation of compiler activation; see #437
+        - if: osx
+          then: clang-${{ major_version }} ==${{ version }} ${{ variant }}_*
+          else: ${{ pin_subpackage("clang-" ~ major_version, exact=True) }}
+        - llvm-openmp >=${{ version }}
+        - if: unix
+          then: ${{ pin_subpackage("clang_impl_" ~ target_platform, exact=True) }}
+        - if: linux
+          then:
+            - binutils
+            - libgcc-devel_${{ target_platform }}
+            - sysroot_${{ target_platform }}
+        - if: osx
+          then:
+            - cctools
+            - ld64
+            - ld64_${{ target_platform }} * llvm${{ maj_min|replace(".", "_") }}_*
+            - llvm-tools ==${{ version }}
+      ignore_run_exports:
+        from_package:
+          # the build fails if it doesn't find the following, but it's not used
+          - libxml2-devel
+          - if: unix
+            then:
+              - zlib
+              - zstd
+    tests:
+      - script:
+          - clang --version
+          - clang-cl --version
+          - clang-cpp --version
+
+  - package:
+      name: clang-no-conda-cfg
+    # don't inherit due to https://github.com/prefix-dev/rattler-build/issues/2753
+    # inherit: clangdev-stage
+    build:
+      skip: with_cfg
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files: []
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      run:
+        - clang ==${{ version }} ${{ variant }}_nocfg_*_${{ build_number }}
+    tests:
+      # pure metapackage -- should be empty!
+      - package_contents:
+          strict: true
+          files: []
+
+  - package:
+      name: clangxx_impl_${{ target_platform }}
+    inherit: clangdev-stage
+    build:
+      skip: win
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - bin/${{ TARGET }}-clang++
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      run:
+        # cannot use exact pins on osx due to separation of compiler activation; see #437
+        - if: osx
+          then: clang-${{ major_version }} ==${{ version }} ${{ variant }}_*
+          else: ${{ pin_subpackage("clang-" ~ major_version, exact=True) }}
+        - ${{ pin_subpackage("clang_impl_" ~ target_platform, exact=True) }}
+        - ${{ pin_subpackage("clang-scan-deps", exact=True) }}
+        - if: linux
+          then: libstdcxx-devel_${{ target_platform }}
+          # only minor-pin to avoid issues when building new libcxx versions
+          else: libcxx-devel ${{ maj_min }}.*
+    tests:
+      - script:
+          - if: linux and x86_64
+            then: x86_64-conda-linux-gnu-clang++ --version
+          - if: linux and aarch64
+            then: aarch64-conda-linux-gnu-clang++ --version
+          - if: linux and ppc64le
+            then: powerpc64le-conda-linux-gnu-clang++ --version
+          - if: linux and riscv64
+            then: riscv64-conda-linux-gnu-clang++ --version
+          - if: osx and x86_64
+            then: x86_64-apple-darwin13.4.0-clang++ --version
+          - if: osx and arm64
+            then: arm64-apple-darwin20.0.0-clang++ --version
+
+  - package:
+      name: clangxx
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_${{ "cfg" if with_cfg else "nocfg" }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: unix
+          then: bin/clang++
+          else: Library/bin/clang++.exe
+        - if: unix and with_cfg
+          then: bin/${{ TARGET_NO_VER }}-clang++.cfg
+        - if: osx and with_cfg
+          # only for macos to avoid conflicts with gcc
+          then: bin/c++
+      variant:
+        # increasing numbers correspond to decreasing priority
+        # 0:     with_cfg, variant == "default"
+        # 1: not with_cfg, variant == "default"
+        # 2:     with_cfg, variant != "default"
+        # 3: not with_cfg, variant != "default"
+        down_prioritize_variant: ${{ ((not with_cfg) | int) + 2 * ((variant != "default") | int) }}
+    requirements:
+      build:
+        # for run-export on win. This is just a symlink on unix
+        - if: win
+          then:
+            - ${{ stdlib('c') }}
+            - ${{ compiler('cxx') }}
+      host:
+        - if: win
+          then:
+            - zlib
+            - zstd
+      run:
+        - ${{ pin_subpackage("clang", exact=True) }}
+        - if: unix
+          # we'd like to do the equivalent of pin_subpackage here (modulo cfg/nocfg); however,
+          # https://github.com/conda-forge/clang-compiler-activation-feedstock now depends on
+          # being able to co-install `clangxx_impl_${{ cross_target_platform }}` (built on that
+          # feedstock) with a `clangxx` from here (to have the symlinks available also for the
+          # bootstrap compilers), so we can't pin the build number either
+          then: clangxx_impl_${{ target_platform }} ==${{ version }} ${{ variant }}_*
+        - if: linux
+          then: libstdcxx-devel_${{ target_platform }}
+        - if: osx
+          # only minor-pin to avoid issues when building new libcxx versions
+          then: libcxx-devel ${{ maj_min }}.*
+    tests:
+      - requirements:
+          run:
+            - if: win
+              then:
+                # on windows, we need the compiler activation to find the C++ stdlib
+                - ${{ compiler("cxx") }}
+                # for testing mingw target
+                - gxx_impl_${{ target_platform }}
+        files:
+          recipe:
+            - mytest.cxx
+        script:
+          - if: win
+            then:
+              # avoid CMake picking up random clang in image when using unactivated compilers
+              - rmdir /s /q "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\Llvm" || true
+              - rmdir /s /q "C:\Program Files\Microsoft Visual Studio\2026\Enterprise\VC\Tools\Llvm" || true
+          - clang++ --version
+          - clang++-${{ major_version }} --version
+          - clang++ -v -c mytest.cxx
+          # test that compilers work without CONDA_BUILD_SYSROOT
+          - if: unix
+            then: unset CONDA_BUILD_SYSROOT
+            else: set "CONDA_BUILD_SYSROOT="
+          - clang++ -v -c mytest.cxx
+          - if: win
+            then: clang++ -v mytest.cxx --target=x86_64-w64-mingw32
+
+  - package:
+      name: clang-format-${{ major_version }}
+    inherit: clangdev-stage
+    build:
+      skip: win
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - bin/clang-format-${{ major_version }}
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+      host:
+        - ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+        # Use the same requirements as the top-level requirements, but only
+        # the ones required for run_exports
+        - llvm ==${{ version }}
+      run:
+        - ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+    tests:
+      - package_contents:
+          files:
+            not_exists:
+              - bin/clang-format
+              - bin/c-index-test
+      - script:
+          - clang-format-${{ major_version }} --version
+
+  - package:
+      name: clang-format
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - if: unix
+          then: bin/clang-format
+          else: Library/bin/clang-format.exe
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        # for run-export on win. This is just a symlink on unix
+        - if: win
+          then:
+            - ${{ stdlib('c') }}
+            - ${{ compiler('cxx') }}
+      run:
+        - if: unix
+          then:
+            - ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+            - ${{ pin_subpackage("clang-format-" ~ major_version, exact=True) }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+    tests:
+      - package_contents:
+          files:
+            not_exists:
+              - if: unix
+                then: bin/c-index-test
+                else: bin/c-index-test.exe
+      - script:
+          - clang-format --version
+
+  - package:
+      name: clang-scan-deps
+    inherit: clangdev-stage
+    build:
+      skip: win
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        - bin/clang-scan-deps
+        - bin/clang-scan-deps-${{ major_version }}
+        - if: linux and x86_64
+          then: bin/x86_64-conda-linux-gnu-clang-scan-deps
+        - if: linux and aarch64
+          then: bin/aarch64-conda-linux-gnu-clang-scan-deps
+        - if: linux and ppc64le
+          then: bin/powerpc64le-conda-linux-gnu-clang-scan-deps
+        - if: linux and riscv64
+          then: bin/riscv64-conda-linux-gnu-clang-scan-deps
+        - if: osx and x86_64
+          then: bin/x86_64-apple-darwin13.4.0-clang-scan-deps
+        - if: osx and arm64
+          then: bin/arm64-apple-darwin20.0.0-clang-scan-deps
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+      host:
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, upper_bound=None) }}
+        - ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+        - llvm ==${{ version }}
+      run:
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, upper_bound=None) }}
+        - ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+    tests:
+      - script:
+          - clang-scan-deps --version
+          - clang-scan-deps-${{ major_version }} --version
+          - if: linux and x86_64
+            then: x86_64-conda-linux-gnu-clang-scan-deps --version
+          - if: linux and aarch64
+            then: aarch64-conda-linux-gnu-clang-scan-deps --version
+          - if: linux and ppc64le
+            then: powerpc64le-conda-linux-gnu-clang-scan-deps --version
+          - if: linux and riscv64
+            then: riscv64-conda-linux-gnu-clang-scan-deps --version
+          - if: osx and x86_64
+            then: x86_64-apple-darwin13.4.0-clang-scan-deps --version
+          - if: osx and arm64
+            then: arm64-apple-darwin20.0.0-clang-scan-deps --version
+
+  - package:
+      name: clang-tools
+    inherit: clangdev-stage
+    build:
+      string: ${{ variant }}_h${{ hash }}_${{ build_number }}
+      files:
+        include:
+          - if: unix
+            then:
+              - bin/*
+              - lib/libear/*
+              - lib/libscanbuild/*
+              - libexec/*
+              - share/*
+            else:
+              - Library/bin/*
+              - Library/lib/libear/*
+              - Library/lib/libscanbuild/*
+              - Library/libexec/*
+              - Library/share/*
+          - if: osx
+            # osx-specifc, see #420
+            then: lib/libClangdXPCLib*
+        exclude:
+          - if: unix
+            then:
+              - bin/c++
+              - bin/cc
+              - bin/cpp
+              - bin/clang
+              - bin/clang++
+              - bin/clang-cl
+              - bin/clang-cpp
+              - bin/clang-format
+              - bin/clang-scan-deps
+              - bin/clang-${{ major_version }}
+              - bin/clang++-${{ major_version }}
+              - bin/clang-cl-${{ major_version }}
+              - bin/clang-cpp-${{ major_version }}
+              - bin/clang-format-${{ major_version }}
+              - bin/clang-scan-deps-${{ major_version }}
+              - bin/${{ TARGET }}-*
+              - bin/*.cfg
+            else:
+              - Library/bin/*.dll
+              - Library/bin/clang.exe
+              - Library/bin/clang++.exe
+              - Library/bin/clang-cl.exe
+              - Library/bin/clang-cpp.exe
+              - Library/bin/clang-format.exe
+              - Library/bin/clang-${{ major_version }}.exe
+              - Library/bin/clang++-${{ major_version }}.exe
+      variant:
+        down_prioritize_variant: ${{ 0 if variant == "default" else 1 }}
+    requirements:
+      build:
+        - ${{ stdlib('c') }}
+        - ${{ compiler('cxx') }}
+      host:
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, upper_bound=None) }}
+        - if: unix
+          then: ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+        # Use the same requirements as the top-level requirements, but only
+        # the ones required for run_exports
+        - llvm ==${{ version }}
+        - libxml2-devel
+        - if: win
+          then:
+            - zlib
+            - zstd
+      run:
+        - ${{ pin_subpackage("clang-format", exact=True) }}
+        - ${{ pin_subpackage("libclang" ~ libclang_soversion, upper_bound=None) }}
+        - if: unix
+          then:
+            - ${{ pin_subpackage("clang-scan-deps", exact=True) }}
+            - ${{ pin_subpackage("libclang-cpp" ~ maj_min, upper_bound="x.x") }}
+        - if: osx
+          # we need to do this manually because clang_bootstrap has no run-export
+          then: libcxx >=${{ version }}
+        - if: win and x86_64
+          then: ucrt
+      run_constraints:
+        - clangdev ==${{ version }}
+    tests:
+      - script:
+          - clang-check --version
+          - clang-tidy --version
+          - if: unix
+            # absence of "doubly versioned" binaries
+            then: test -z "$(find "${PREFIX}/bin" -name '*-${{ major_version }}-${{ major_version }}' -print)"
+
+  - package:
+      name: python-clang
+    inherit: clangdev-stage
+    build:
+      noarch: python
+      # Building this output using this recipe is only supported on unix
+      # It can still be installed on Windows as it is marked as `noarch: python`
+      skip: not (linux and x86_64 and ${{ variant }} == "default")
+      string: h${{ hash }}_${{ build_number }}
+      script:
+        file: build_python_bindings
+      files:
+        # see https://github.com/prefix-dev/rattler-build/issues/2730
+        - lib/python${{ python_min }}/site-packages/clang
+    requirements:
+      host:
+        - python ${{ python_min }}.*
+      run:
+        - python >=${{ python_min }}
+        - libclang ==${{ version }}
+      ignore_run_exports:
+        from_package:
+          - ${{ stdlib('c') }}
+          - ${{ compiler('cxx') }}
+    tests:
+      - package_contents:
+          strict: true
+          files:
+            - site-packages/clang/__init__.py
+            - site-packages/clang/cindex.py
+            - etc/conda/test-files/python-clang/*
+      - python:
+          imports:
+            - clang
+            - clang.cindex
+          python_version:
+            - ${{ python_min }}.*
+            - "*"
+      - requirements:
+          run:
+            - python ${{ python_min }}.*
+        files:
+          source:
+            - clang/bindings/python/tests
+            - clang/bindings/python/examples/cindex
+            - clang/include/clang-c
+        script:
+            - cd clang/bindings/python
+            - python -m unittest discover -v
+
+about:
+  license: Apache-2.0 WITH LLVM-exception
+  license_file: clang/LICENSE.TXT
+  summary: Development headers and libraries for Clang
+  homepage: http://llvm.org/
+  repository: https://github.com/llvm/llvm-project
+  documentation: https://clang.llvm.org/
+
+extra:
+  recipe-maintainers:
+    - JohanMabille
+    - inducer
+    - isuruf
+    - jakirkham
+    - katietz
+    - SylvainCorlay
+    - timsnyder
+    - chrisburr
+    - xhochy
+    - h-vetinari
+  feedstock-name: clangdev
