@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 92760b50a6239b3170b464c5a2197586508451697f25a4ef43530ad1c912e591
+    linux-64: 36f749966fbcba1438c01a2c6f6079e61fa74cae69c6209afd22034cbaf524e2
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -332,7 +332,7 @@ package:
   category: main
   optional: false
 - name: brotli-python
-  version: 1.2.0
+  version: 1.2.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -341,10 +341,10 @@ package:
     libstdcxx: '>=15'
     python: '>=3.12,<3.13.0a0'
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/brotli-python-1.2.0-py312he9c40d5_4.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/brotli-python-1.2.1-py312he9c40d5_0.conda
   hash:
-    md5: edb667e7ce56106424e8afab2dc0f0cb
-    sha256: 6e4f440a7015d7d78120b3a3f90a4ec3d7bb6de7bc65458123c52433755db5f0
+    md5: c813f38fa69f34c13f2c01cdc8f65ece
+    sha256: eaefe3a5d0dc0e586b38ea943c406b768cd4fa5886c424f88039526fc31ab62e
   category: main
   optional: false
 - name: bzip2
@@ -484,7 +484,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.11'
+    python: '>=3.10'
   url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.19-pyhd8ed1ab_0.conda
   hash:
     md5: 94480ec10238da5dd5659ae0b933634b
@@ -795,17 +795,17 @@ package:
   category: main
   optional: false
 - name: conda-libmamba-solver
-  version: 26.7.0
+  version: 26.10.0
   manager: conda
   platform: linux-64
   dependencies:
     boltons: '>=23.0.0'
-    libmambapy: '>=2.0.0,!=2.6.2'
+    libmambapy: '>=2.3.2,!=2.6.2'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-libmamba-solver-26.7.0-pyh5ded981_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-libmamba-solver-26.10.0-pyh5ded981_0.conda
   hash:
-    md5: db2bc0038a988d4fe85e6cdc3a623113
-    sha256: 1ac59ef5e3056fbd152c81a287efec4153f002deddbb3766644acecb8dd87388
+    md5: 747c1730a751f4aeb0e17020dad08335
+    sha256: 2659f646a19704da3809df5b2420279974e3361fa1021d06d3741dbd0c93ad1f
   category: main
   optional: false
 - name: conda-lock
@@ -4789,15 +4789,15 @@ package:
   category: main
   optional: false
 - name: soupsieve
-  version: 3.0.3
+  version: 3.0.4
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-3.0.3-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-3.0.4-pyhd8ed1ab_0.conda
   hash:
-    md5: bd2ea090567b9d0a53240bd1367c87ad
-    sha256: 858ae626017ccba80201e7431db6b517e53d6322b32f00fd21b64159592fa7cd
+    md5: 142303fd418a612bfc7163b546902156
+    sha256: 0c2452c60adedba707238f04c70eb252020e029357fd89cc772aaa5b3b5e41a2
   category: main
   optional: false
 - name: spdlog
@@ -5568,15 +5568,15 @@ package:
   category: main
   optional: false
 - name: zipp
-  version: 4.1.1
+  version: 4.1.2
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.2-pyh5ded981_0.conda
   hash:
-    md5: 6cad4d2cec9b7b64538c225ac91d2e8a
-    sha256: 3aa601ef121f42dcb79400375e72f833ddc68bc6243f3e5535168b2d69cc9c70
+    md5: 3a99defa674883e167603f141728de7e
+    sha256: 4e5c50cf5ecc00d83a20b987c52d49b78fa96026437ab09b11f4b7c46b7fc061
   category: main
   optional: false
 - name: zlib
