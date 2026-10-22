@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 92760b50a6239b3170b464c5a2197586508451697f25a4ef43530ad1c912e591
+    linux-64: 36f749966fbcba1438c01a2c6f6079e61fa74cae69c6209afd22034cbaf524e2
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -484,7 +484,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.11'
+    python: '>=3.10'
   url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.19-pyhd8ed1ab_0.conda
   hash:
     md5: 94480ec10238da5dd5659ae0b933634b
@@ -5568,15 +5568,15 @@ package:
   category: main
   optional: false
 - name: zipp
-  version: 4.1.1
+  version: 4.1.2
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.2-pyh5ded981_0.conda
   hash:
-    md5: 6cad4d2cec9b7b64538c225ac91d2e8a
-    sha256: 3aa601ef121f42dcb79400375e72f833ddc68bc6243f3e5535168b2d69cc9c70
+    md5: 3a99defa674883e167603f141728de7e
+    sha256: 4e5c50cf5ecc00d83a20b987c52d49b78fa96026437ab09b11f4b7c46b7fc061
   category: main
   optional: false
 - name: zlib
