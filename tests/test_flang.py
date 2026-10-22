@@ -20,21 +20,29 @@ VERSION_WITH_FLANG = Version(
 
 
 @pytest.mark.parametrize(
-    "feedstock,new_ver",
+    "feedstock,new_ver,atr",
     [
         # multiple outputs
-        ("lapack", "1.10.0"),
+        ("lapack", "1.10.0", None),
         # comments in compiler block
-        ("prima", "1.10.0"),
+        ("prima", "1.10.0", None),
         # remove selector for non-m2w64 fortran compilers
-        ("mfront", "1.10.0"),
+        (
+            "mfront",
+            "1.10.0",
+            [
+                {
+                    "url: https://github.com/scipy/scipy/archive/refs/tags/v{{ version }}.zip": "sha256: a43ff481661fd6d0b055679b13e1aeee6ec2032609b7028d9b692c615ec867b2",
+                }
+            ],
+        ),
         # includes cxx (non-m2w64) as a language
-        ("plplot", "1.10.0"),
+        ("plplot", "1.10.0", None),
         # includes m2w64_cxx compiler
-        ("pcmsolver-split", "1.10.0"),
+        ("pcmsolver-split", "1.10.0", None),
     ],
 )
-def test_flang(feedstock, new_ver, tmp_path):
+def test_flang(feedstock, new_ver, tmp_path, atr):
     before = f"flang_{feedstock}_before_meta.yaml"
     with open(os.path.join(TEST_YAML_PATH, before)) as fp:
         in_yaml = fp.read()
@@ -56,4 +64,5 @@ def test_flang(feedstock, new_ver, tmp_path):
         },
         tmp_path=tmp_path,
         should_filter=False,
+        allowed_text_replacements=atr,
     )
