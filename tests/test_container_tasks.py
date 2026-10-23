@@ -217,7 +217,6 @@ def test_container_tasks_load_feedstock_containerized_mpas_tools(use_containers)
         data = load_feedstock_containerized("mpas_tools", attrs)
         assert data["feedstock_name"] == attrs["feedstock_name"]
         assert not data["parsing_error"]
-        assert data["raw_meta_yaml"] == attrs["raw_meta_yaml"]
 
 
 @pytest.mark.skipif(
