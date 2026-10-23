@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 36f749966fbcba1438c01a2c6f6079e61fa74cae69c6209afd22034cbaf524e2
+    linux-64: e3aea377fa390e2893dc69f05748ed8ce42b02175192da3769ed0a8474a9fc47
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -2726,7 +2726,7 @@ package:
   category: main
   optional: false
 - name: libmamba
-  version: 2.10.0
+  version: 2.9.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -2747,37 +2747,37 @@ package:
     spdlog: '>=1.17.0,<1.18.0a0'
     yaml-cpp: '>=0.8.0,<0.9.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-2.10.0-py312he3a525c_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-2.9.0-py312he3a525c_3.conda
   hash:
-    md5: d8c614779734ef56994589d33ca8e2fa
-    sha256: 786dd793a1f72a50fa876a7b7a44fcfc000697dc030f814fa2d33bbf26da61b3
+    md5: ee4976d7ddb64175efb3db9bbf0e69c2
+    sha256: 9d0cb7b4d6095253c7ec651bf76942b711b4bfaba971f7770ac0a7a72d235606
   category: main
   optional: false
 - name: libmamba-spdlog
-  version: 2.10.0
+  version: 2.9.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-    libmamba: '>=2.10.0,<2.11.0a0'
+    libmamba: '>=2.9.0,<2.10.0a0'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-spdlog-2.10.0-h690c557_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libmamba-spdlog-2.9.0-h1d9068b_3.conda
   hash:
-    md5: 51a89a1ed1be5208d788a9fdec11c6ec
-    sha256: c13feefabe91387df47daa369912c174e552a158e654a9185a5152b4e13ce249
+    md5: 6d6560be4bdd3ea2de73473e49b3b364
+    sha256: b31c1b7e1721ad86264992d703e7b7a27a5c7152333c14a62007ccd3685ab29f
   category: main
   optional: false
 - name: libmambapy
-  version: 2.10.0
+  version: 2.9.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    libmamba: ==2.10.0,>=2.10.0,<2.11.0a0
-    libmamba-spdlog: ==2.10.0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
+    libmamba-spdlog: ==2.9.0
     libstdcxx: '>=15'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.9,<4.0a0'
@@ -2787,10 +2787,10 @@ package:
     spdlog: '>=1.17.0,<1.18.0a0'
     yaml-cpp: '>=0.8.0,<0.9.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libmambapy-2.10.0-py312h9618fe0_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/libmambapy-2.9.0-py312h8da4627_3.conda
   hash:
-    md5: 06a91b0b4feeb9f997c52665b1750565
-    sha256: 18345a53dd5fe503078e0e186f90f073575ffe2e0723ee860011eea7c5272fce
+    md5: 05bb1450010a5bff4069cf9c770c867a
+    sha256: 19435b8550f8168ef0a56843145c20b8dcba409bb1af6e052fb06de3fe638fe7
   category: main
   optional: false
 - name: libmsgpack-c
@@ -3276,19 +3276,19 @@ package:
   category: main
   optional: false
 - name: mamba
-  version: 2.10.0
+  version: 2.9.0
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libmamba: ==2.10.0,>=2.10.0,<2.11.0a0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/mamba-2.10.0-h0c9b5e1_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/mamba-2.9.0-hef6a35a_3.conda
   hash:
-    md5: 961d0d28a28212c6be271187ad3c6760
-    sha256: caed5229fadda73cb2666eebfb23c70b19de708a344078e850288133cef2982a
+    md5: 4a7abf5494de2a9a6e4f0cc71be5424f
+    sha256: 927e1d3b81af99424031438586238b57ffda20e6f6e7e617de1f995c90ccf591
   category: main
   optional: false
 - name: markdown-it-py
