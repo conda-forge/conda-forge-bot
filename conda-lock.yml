@@ -480,15 +480,15 @@ package:
   category: main
   optional: false
 - name: certifi
-  version: 2026.10.19
+  version: 2026.10.23
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.19-pyhd8ed1ab_0.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.23-pyhd8ed1ab_0.conda
   hash:
-    md5: 94480ec10238da5dd5659ae0b933634b
-    sha256: ee3bca803cac13760131b6147e2fe60c97e769978e7542d678842b65e285d239
+    md5: 484e26532435808425148c83bf58aa0b
+    sha256: 04e641ccaa58278b431e97f2a43090bafc676436d04b5860dfd9b18166f2b326
   category: main
   optional: false
 - name: cffi
@@ -1651,7 +1651,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libffi: ''
     libgcc: '>=15'
-    libglib: 2.90.0
+    libglib: ==2.90.0
   url: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.90.0-h3d503d9_0.conda
   hash:
     md5: d4adaebf8a2c9040ada6549c52a6b8d8
@@ -1899,16 +1899,16 @@ package:
   category: main
   optional: false
 - name: importlib-metadata
-  version: 9.0.1
+  version: 9.1.0
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
+    python: '>=3.11'
     zipp: '>=3.20'
-  url: https://conda.anaconda.org/conda-forge/noarch/importlib-metadata-9.0.1-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/importlib-metadata-9.1.0-pyh5ded981_0.conda
   hash:
-    md5: 77ec68e0aa61c3fff9ecbf840f93d64e
-    sha256: 95a074a7d3f58b3494c068d4789c364dcb591c56b70ca6b12f149a540f9aeea4
+    md5: e382279821a43230da19787559a3d047
+    sha256: efa8481068db967f5190393935cb72c7a2c575dc58b056a5b74db1d485a8a1d5
   category: main
   optional: false
 - name: importlib_resources
@@ -2716,8 +2716,8 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
-    libmamba-spdlog: 2.9.0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
+    libmamba-spdlog: ==2.9.0
     libstdcxx: '>=15'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.9,<4.0a0'
@@ -2831,7 +2831,7 @@ package:
     libglib: '>=2.90.0,<3.0a0'
     libharfbuzz: '>=14.6.0'
     libharfbuzz-devel: ''
-    libpango: 1.58.2
+    libpango: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/libpango-devel-1.58.2-h317d9d0_3.conda
   hash:
     md5: 8f2e0739636fe033c7324130121ab11c
@@ -3221,7 +3221,7 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
@@ -3519,7 +3519,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libpango-devel: 1.58.2
+    libpango-devel: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h2f58602_3.conda
   hash:
     md5: 4a1bbf999cdcdcf3ca1bfd819259f795
@@ -3753,7 +3753,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    liblief: 1.0.0,>=1.0.0,<1.1.0a0
+    liblief: ==1.0.0,>=1.0.0,<1.1.0a0
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
@@ -4471,7 +4471,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-    reproc: 14.2.8.post0,>=14.2.8.post0,<14.3.0a0
+    reproc: ==14.2.8.post0,>=14.2.8.post0,<14.3.0a0
   url: https://conda.anaconda.org/conda-forge/linux-64/reproc-cpp-14.2.8.post0-h1c70be6_0.conda
   hash:
     md5: 04afaf7b13f8ac3c947230a24d835c94
@@ -4719,7 +4719,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: 10.3.4
+    setuptools-scm: ==10.3.4
   url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.3.4-hc3fbee1_0.conda
   hash:
     md5: ff9dcd413b3af5336ba346987270535f
@@ -5029,7 +5029,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    typing_extensions: 4.16.0
+    typing_extensions: ==4.16.0
   url: https://conda.anaconda.org/conda-forge/noarch/typing-extensions-4.16.0-h69aa097_0.conda
   hash:
     md5: c680b5747e8c4c8f23dca0bb7042a8fc
@@ -5062,14 +5062,14 @@ package:
   category: main
   optional: false
 - name: tzdata
-  version: 2026c
+  version: 2026e
   manager: conda
   platform: linux-64
   dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/noarch/tzdata-2026c-h151e31d_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/tzdata-2026e-h5d301ff_0.conda
   hash:
-    md5: fcb489df604d100968b737f2cb6076c6
-    sha256: b928c30ddcb0e3f544c6eade8352737e6e610e263276b90232db6a578ef899d8
+    md5: abccc3810d2b97e570dee487f2b46e38
+    sha256: 2b7ca858879f183ce2dcc65b300f48a0133d5430550f35b23d80d405a0788dbf
   category: main
   optional: false
 - name: tzlocal
