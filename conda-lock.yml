@@ -374,15 +374,15 @@ package:
   category: main
   optional: false
 - name: ca-certificates
-  version: 2026.10.19
+  version: 2026.10.23
   manager: conda
   platform: linux-64
   dependencies:
     __unix: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.10.19-hbd8a1cb_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.10.23-hbd8a1cb_0.conda
   hash:
-    md5: a1d1bf676059d2863f000d5e2777743f
-    sha256: 9404ee878c6bd5b260655ab651366db43fac6be8d465fcc0acd0f7a50be91acb
+    md5: 3fd02989038a1e1cee627c14c2d73f29
+    sha256: 95619b9c1184be7175392eeb0ee7eeb5ccf25d280951f4225f2d62e725790be3
   category: main
   optional: false
 - name: cachecontrol
