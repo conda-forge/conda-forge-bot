@@ -999,7 +999,7 @@ package:
   category: main
   optional: false
 - name: conda-smithy
-  version: 2026.10.21
+  version: 2026.10.24
   manager: conda
   platform: linux-64
   dependencies:
@@ -1032,10 +1032,10 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.10.21-unix_pyh707e725_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.10.24-unix_pyh707e725_0.conda
   hash:
-    md5: 000388ccc2fc9503f9e28a521ae2daf2
-    sha256: adb9f074349430724ffc31165bd9efe2631be0602292fecaeff37426e7b68bf4
+    md5: 0901af17eff7141b843c644ccc7e3442
+    sha256: da86448ddd620ca48e73132b8b9f5c135a1fab79bea69e87950ca9153dae25e0
   category: main
   optional: false
 - name: conda-souschef
