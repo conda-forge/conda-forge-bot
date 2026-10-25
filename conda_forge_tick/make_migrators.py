@@ -38,7 +38,6 @@ from conda_forge_tick.lazy_json_backends import (
 from conda_forge_tick.migrators import (
     ArchRebuild,
     CDTMigrator,
-    CombineV1ConditionsMigrator,
     CondaForgeYAMLCleanup,
     CrossCompilationForARMAndPower,
     CrossPythonMigrator,
@@ -114,7 +113,6 @@ DEFAULT_MINI_MIGRATORS = [
     NoCondaInspectMigrator,
     MPIPinRunAsBuildCleanup,
     PyPIOrgMigrator,
-    CombineV1ConditionsMigrator,
 ]
 
 
@@ -295,7 +293,6 @@ def add_arch_migrate(
                         CrossPythonMigrator(),
                         NoCondaInspectMigrator(),
                         MPIPinRunAsBuildCleanup(),
-                        CombineV1ConditionsMigrator(),
                     ],
                 ),
             )
@@ -314,7 +311,6 @@ def add_arch_migrate(
                         CrossPythonMigrator(),
                         NoCondaInspectMigrator(),
                         MPIPinRunAsBuildCleanup(),
-                        CombineV1ConditionsMigrator(),
                     ],
                 ),
             )
@@ -334,7 +330,6 @@ def add_arch_migrate(
                         CrossPythonMigrator(),
                         NoCondaInspectMigrator(),
                         MPIPinRunAsBuildCleanup(),
-                        CombineV1ConditionsMigrator(),
                     ],
                 ),
             )
