@@ -337,3 +337,40 @@ def test_version_rand_frac(tmp_path, caplog):
         tmp_path=tmp_path,
     )
     assert "random_fraction_to_keep: 0.1" in caplog.text
+
+
+def test_version_clangdev(tmp_path, caplog):
+    case = "clangdev"
+    new_ver = "23.1.4"
+    caplog.set_level(
+        logging.DEBUG,
+        logger="conda_forge_tick.migrators.version",
+    )
+
+    in_yaml = (YAML_V1_PATH / f"version_{case}.yaml").read_text()
+    out_yaml = (YAML_V1_PATH / f"version_{case}_correct.yaml").read_text()
+
+    try:
+        conda_build_config = (
+            YAML_V1_PATH / f"version_{case}_variants.yaml"
+        ).read_text()
+    except FileNotFoundError:
+        conda_build_config = None
+
+    kwargs = {"new_version": new_ver}
+
+    run_test_migration(
+        m=VERSION,
+        inp=in_yaml,
+        output=out_yaml,
+        kwargs=kwargs,
+        prb="Dependencies have been updated if changed",
+        mr_out={
+            "migrator_name": Version.name,
+            "migrator_version": Version.migrator_version,
+            "version": new_ver,
+        },
+        tmp_path=tmp_path,
+        recipe_version=1,
+        conda_build_config=conda_build_config,
+    )

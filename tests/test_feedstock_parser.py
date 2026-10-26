@@ -154,3 +154,14 @@ def test_feedstock_parser_load_feedstock_local_nemo_relay():
     assert attrs["feedstock_name"] == "nemo-relay"
     assert attrs["parsing_error"] is False
     assert isinstance(attrs["ci_support_migrations"], dict)
+
+
+def test_feedstock_parser_load_feedstock_local_clangdev():
+    attrs = load_feedstock_local(
+        "clangdev",
+        {},
+    )
+    assert attrs["feedstock_name"] == "clangdev"
+    assert attrs["version"] == attrs["meta_yaml"]["outputs"][0]["version"]
+    assert attrs["parsing_error"] is False
+    assert isinstance(attrs["ci_support_migrations"], dict)

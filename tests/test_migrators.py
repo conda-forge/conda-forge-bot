@@ -1,6 +1,7 @@
 import copy
 import itertools
 import json
+import logging
 import os
 import re
 import subprocess
@@ -27,6 +28,8 @@ from conda_forge_tick.utils import (
     yaml_safe_dumps,
     yaml_safe_load,
 )
+
+logger = logging.getLogger(__name__)
 
 sample_yaml_rebuild = """
 {% set version = "1.3.2" %}
@@ -553,7 +556,8 @@ def run_test_migration(
             ]
             if name is None:
                 name = "blah"
-        except Exception:
+        except Exception as e:
+            logger.error("error parsing input recipe for name!", exc_info=e)
             name = "blah"
 
         pmy = populate_feedstock_attributes(
@@ -576,7 +580,8 @@ def run_test_migration(
             ]
             if name is None:
                 name = "blah"
-        except Exception:
+        except Exception as e:
+            logger.error("error parsing input recipe for name!", exc_info=e)
             name = "blah"
 
         pmy = populate_feedstock_attributes(

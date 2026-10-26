@@ -1,6 +1,7 @@
 context:
   version: 1.6.0
   commit: b31f58de6fa8bbda5353b3c77d9be4914399724d
+  build: 1
 
 recipe:
   name: pytorch-recipe
@@ -25,13 +26,13 @@ source:
   rev: ${{ commit }}
 
 build:
-  number: 1
+  number: ${{ build }}
 
 outputs:
   - package:
       name: pytorch
     build:
-      string: cpu_py{{ CONDA_PY }}h{{ hash }}_{{ PKG_BUILDNUM }}
+      string: cpu_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build }}
     requirements:
       build:
         - ${{ compiler('c') }}
