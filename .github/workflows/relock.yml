@@ -27,7 +27,7 @@ jobs:
         run: |
           python autotick-bot/stop_me_if_needed.py
 
-      - uses: conda-incubator/relock-conda@234fb1c7dc6554078cd39266851fc9ae23544601 # 2026.10.12
+      - uses: conda-incubator/relock-conda@1d6a65e4f7caa9cb53573af00fa3e4f959cba572 # 2026.10.22
         if: ${{ (! env.CI_SKIP) && github.event_name != 'issue_comment' }}
         with:
           github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
@@ -56,7 +56,7 @@ jobs:
         run: |
           python autotick-bot/stop_me_if_needed.py
 
-      - uses: conda-incubator/relock-conda@234fb1c7dc6554078cd39266851fc9ae23544601 # 2026.10.12
+      - uses: conda-incubator/relock-conda@1d6a65e4f7caa9cb53573af00fa3e4f959cba572 # 2026.10.22
         if: ${{ ! env.CI_SKIP }}
         with:
           github-token: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
