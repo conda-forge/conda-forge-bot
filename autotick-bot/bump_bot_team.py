@@ -24,15 +24,13 @@ for _issue in repo.get_issues():
         break
 
 if issue is None:
-    body = (
-        textwrap.dedent(
-            """\
+    body = textwrap.dedent(
+        """\
         Hey @conda-forge/bot!
 
         It appears that the bot job(s) below failed! :(
 
         """
-        )
     )
     issue = repo.create_issue(
         title=issue_title,
