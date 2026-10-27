@@ -129,8 +129,16 @@ def next_version(ver: str, increment_alpha: bool = False) -> Iterator[str]:
                 else:
                     continue
 
-    for ver in _yield_splits_from_index(0, ver_split, 2):
-        yield ver
+    # Some projects omit the patch component in a new release's archive
+    # name, e.g. binutils-2.46.1.tar.bz2 -> binutils-2.47.tar.bz2.
+    short_releases = set()
+    if match := re.fullmatch(r"([0-9]+)\.([0-9]+)\.[0-9]+", ver):
+        short_releases = {f"{match[1]}.{int(match[2]) + 1}", f"{int(match[1]) + 1}.0"}
+
+    for candidate in _yield_splits_from_index(0, ver_split, 2):
+        yield candidate
+        if candidate.endswith(".0") and candidate[:-2] in short_releases:
+            yield candidate[:-2]
 
 
 class AbstractSource(abc.ABC):

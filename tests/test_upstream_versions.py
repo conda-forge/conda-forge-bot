@@ -631,10 +631,12 @@ def test_latest_version_no_sources_are_skipped(caplog):
                 "8.1.6",
                 "8.1.7",
                 "8.2.0",
+                "8.2",
                 "8.2.1",
                 "8.3.0",
                 "8.3.1",
                 "9.0.0",
+                "9.0",
                 "9.0.1",
                 "9.1.0",
                 "10.0.0",
@@ -772,6 +774,79 @@ def test_next_version(in_ver, ver_test):
 
 
 @pytest.mark.parametrize(
+    "current, expected",
+    [
+        ("2.46.1", "2.47"),  # Binutils
+        ("5.2.37", "5.3"),  # Bash
+        ("3.10.2", "4.0"),  # Nettle
+        ("1.9.0", "1.10"),
+    ],
+)
+def test_next_version_short_release(current, expected):
+    candidates = list(next_version(current))
+    index = candidates.index(f"{expected}.0")
+    assert candidates[index + 1] == expected
+    assert candidates.count(expected) == 1
+
+
+@pytest.mark.parametrize(
+    "current",
+    ["2_46_1", "2-46-1", "2.46.1.0", "2.46.1a", "2.46.1-1"],
+)
+def test_next_version_short_release_only_three_numeric_components(current):
+    assert "2.47" not in next_version(current)
+
+
+def test_next_version_short_release_only_immediate_minor_and_major():
+    candidates = list(next_version("2.46.1"))
+    assert "2.48" not in candidates
+    assert "3.1" not in candidates
+    assert "4.0" not in candidates
+
+
+@pytest.mark.parametrize(
+    "name, current, next_release",
+    [
+        ("binutils", "2.46.1", "2.47"),
+        ("bash", "5.2.37", "5.3"),
+        ("nettle", "3.10.2", "4.0"),
+    ],
+)
+@pytest.mark.parametrize("original_spelling_exists", [False, True])
+def test_rawurl_short_release(name, current, next_release, original_spelling_exists):
+    recipe = f'''{{% set version = "{current}" %}}
+package:
+  name: {name}
+  version: {{{{ version }}}}
+source:
+  url: https://example.com/{name}-{{{{ version }}}}.tar.gz
+  sha256: {"0" * 64}
+'''
+    attrs = {
+        "feedstock_name": name,
+        "version": current,
+        "raw_meta_yaml": recipe,
+        "meta_yaml": parse_meta_yaml(recipe),
+    }
+    expected = f"{next_release}.0" if original_spelling_exists else next_release
+    available_urls = {f"https://example.com/{name}-{next_release}.tar.gz"}
+    if original_spelling_exists:
+        available_urls.add(f"https://example.com/{name}-{next_release}.0.tar.gz")
+
+    def url_exists(url, **kwargs):
+        return url in available_urls, url
+
+    with (
+        patch(
+            "conda_forge_tick.update_sources.url_exists_swap_exts",
+            side_effect=url_exists,
+        ),
+        patch("conda_forge_tick.update_sources.get_sha256", return_value="1" * 64),
+    ):
+        assert RawURL().get_url(attrs) == expected
+
+
+@pytest.mark.parametrize(
     "in_ver, ver_test",
     [
         ("8.1", ["8.2", "8.3", "9.0", "9.1", "10.0", "10.1"]),
@@ -781,10 +856,12 @@ def test_next_version(in_ver, ver_test):
                 "8.1.6",
                 "8.1.7",
                 "8.2.0",
+                "8.2",
                 "8.2.1",
                 "8.3.0",
                 "8.3.1",
                 "9.0.0",
+                "9.0",
                 "9.0.1",
                 "9.1.0",
                 "10.0.0",
