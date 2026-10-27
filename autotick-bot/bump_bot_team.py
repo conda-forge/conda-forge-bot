@@ -6,7 +6,7 @@ from datetime import datetime
 import github
 
 today = datetime.today().strftime("%Y-%m-%d")
-issue_title = f"[{today}] failed job {os.environ['ACTION_NAME']}"
+issue_title = f"[{today}] failed jobs"
 
 gh = github.Github(auth=github.Auth.Token(os.environ["BOT_TOKEN"]))
 repo = gh.get_repo("conda-forge/conda-forge-bot")
@@ -29,11 +29,10 @@ if issue is None:
             """\
         Hey @conda-forge/bot!
 
-        It appears that the bot `%s` job(s) below failed! :(
+        It appears that the bot job(s) below failed! :(
 
         """
         )
-        % os.environ["ACTION_NAME"]
     )
     issue = repo.create_issue(
         title=issue_title,
@@ -44,7 +43,7 @@ else:
 
 new_body = body + (
     f"""\
-- [ ] {os.environ["ACTION_URL"]}
+- [ ] {os.environ["ACTION_NAME"]}: {os.environ["ACTION_URL"]}
 """
 )
 
