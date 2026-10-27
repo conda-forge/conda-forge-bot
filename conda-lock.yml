@@ -331,7 +331,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.118
+  version: 1.43.119
   manager: conda
   platform: linux-64
   dependencies:
@@ -339,10 +339,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.118-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.119-pyhd8ed1ab_0.conda
   hash:
-    md5: a08d5361ed0ef246e4d61a22673322c3
-    sha256: acedb861b2e32b3ca747649308c2100e9cd6b17b367e7fd41414e0b9cd10c3d6
+    md5: 83162bc73dfdf5a72debeaafc65253b1
+    sha256: cf255535eff361d72ceb50dad6380461d09cd608470c33b172682290b099287e
   category: main
   optional: false
 - name: brotli-python
@@ -3313,10 +3313,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.12.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.4-py312h8b7ec3f_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.4-py312h8b7ec3f_3.conda
   hash:
-    md5: ee4135fc1ce77066d2be65475bcfbbff
-    sha256: a032b34f0c8e63ddb28714ec42f02f51cd6007d64b15a8269873574abe322931
+    md5: b290eee2e186496939673d76480cf479
+    sha256: 92e976f5c0e4c1656c91af836ab71849f46097791f683f9ce7aa085a29f008ff
   category: main
   optional: false
 - name: mbedtls
@@ -4146,17 +4146,17 @@ package:
   category: main
   optional: false
 - name: pytest-env
-  version: 1.8.1
+  version: 1.8.3
   manager: conda
   platform: linux-64
   dependencies:
     pytest: '>=9.1.1'
     python: '>=3.11'
     python-dotenv: '>=1.2.4'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.8.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.8.3-pyhd8ed1ab_0.conda
   hash:
-    md5: cbf81f2246300fd1072f14b8eda16b6f
-    sha256: 8c0afd307a5b9de6e38a9565d60cd62ed396c13eeda65b8685606d42d97273f7
+    md5: da59e190aeba1153c6791131724d0326
+    sha256: 9112b53a823ef31b55859880f93e8845ae9eb62c23ba0d4a009d70c1c5e7340c
   category: main
   optional: false
 - name: pytest-retry
