@@ -96,19 +96,19 @@ def _rattler_record_to_conda_record(record: rattler.PackageRecord) -> PackageRec
         channel_url = ""
 
     return PackageRecord(
-        name=record.name.source,
+        name=str(record.name.source),
         version=str(record.version),
-        build=record.build,
+        build=str(record.build),
         build_number=record.build_number,
         channel=channel_url,
-        subdir=record.subdir,
-        fn=record.file_name,
+        subdir=str(record.subdir),
+        fn=str(record.file_name),
         md5=_hash_to_str(record.md5),
         legacy_bz2_md5=_hash_to_str(record.legacy_bz2_md5),
         legacy_bz2_size=record.legacy_bz2_size,
-        url=record.url,
+        url=str(record.url),
         sha256=_hash_to_str(record.sha256),
-        arch=record.arch,
+        arch=str(record.arch),
         platform=str(record.platform or "") or None,
         depends=record.depends or (),
         constrains=record.constrains or (),
@@ -116,13 +116,13 @@ def _rattler_record_to_conda_record(record: rattler.PackageRecord) -> PackageRec
         features=record.features or (),
         noarch=noarch,
         # preferred_env=record.preferred_env,
-        license=record.license,
-        license_family=record.license_family,
+        license=str(record.license),
+        license_family=str(record.license_family),
         # package_type=record.package_type,
         timestamp=timestamp,
         # date=record.date,
         size=record.size or 0,
-        python_site_packages_path=record.python_site_packages_path,
+        python_site_packages_path=str(record.python_site_packages_path),
     )
 
 

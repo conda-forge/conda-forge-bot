@@ -1,7 +1,6 @@
 import abc
 import collections.abc
 import copy
-import functools
 import json
 import logging
 import os
@@ -11,7 +10,7 @@ import tempfile
 import typing
 import urllib.parse
 import urllib.request
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from pathlib import Path
 
 import feedparser
@@ -565,7 +564,7 @@ def url_exists_swap_exts(url: str, use_curl: bool = False):
 
 class BaseRawURL(AbstractSource):
     name = "BaseRawURL"
-    next_ver_func: Callable[[str], Iterator[str]]
+    increment_alpha = False
 
     def get_url(self, node_attrs: AttrsTypedDict) -> str | None:
         if "feedstock_name" not in node_attrs:
@@ -616,7 +615,9 @@ class BaseRawURL(AbstractSource):
 
         while found and count < max_count:
             found = False
-            for next_ver in self.next_ver_func(current_ver):
+            for next_ver in next_version(
+                ver=current_ver, increment_alpha=self.increment_alpha
+            ):
                 logger.debug("trying version: %s", next_ver)
 
                 if is_version_ignored(node_attrs, next_ver):
@@ -723,12 +724,12 @@ class BaseRawURL(AbstractSource):
 
 class RawURL(BaseRawURL):
     name = "RawURL"
-    next_ver_func = functools.partial(next_version, increment_alpha=False)
+    increment_alpha = False
 
 
 class IncrementAlphaRawURL(BaseRawURL):
     name = "IncrementAlphaRawURL"
-    next_ver_func = functools.partial(next_version, increment_alpha=True)
+    increment_alpha = True
     feedstock_ok_list = ["openssl", "tzcode", "tzdata", "jpeg", "cddlib"]
 
     def get_url(self, node_attrs: AttrsTypedDict) -> str | None:
