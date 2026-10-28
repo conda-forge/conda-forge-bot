@@ -195,6 +195,7 @@ class ArchRebuild(_ArchesConfiguredMixin, GraphMigrator):
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
+    pkg_list_filename = "arch_rebuild.txt"
     rerender = True
     # We purposefully don't want to bump build number for this migrator
     bump_number = 0
@@ -224,7 +225,7 @@ class ArchRebuild(_ArchesConfiguredMixin, GraphMigrator):
         if total_graph is not None:
             if target_packages is None:
                 # We are constraining the scope of this migrator
-                target_packages = load_target_packages("arch_rebuild.txt")
+                target_packages = load_target_packages(self.pkg_list_filename)
 
             outputs_lut = get_outputs_lut(total_graph, graph, effective_graph)
 
@@ -355,7 +356,6 @@ class _CrossCompileRebuild(_ArchesConfiguredMixin, GraphMigrator):
     def additional_keys(self):
         return {
             "build_platform": self.build_platform,
-            "provider": self.arches,
             "test": "native_and_emulated",
         }
 
@@ -488,12 +488,12 @@ class _CrossCompileRebuild(_ArchesConfiguredMixin, GraphMigrator):
         return muid
 
 
-class OSXArm(_CrossCompileRebuild):
+class OSXArm(ArchRebuild):
     """A Migrator that adds osx-arm64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
+    ignored_packages: set[str] = set()
     migrator_version = 1
-    build_platform = {"osx_arm64": "osx_arm64"}  # i.e. native
     pkg_list_filename = "osx_arm64.txt"
     arches = {"osx_arm64": "default"}
 
@@ -508,6 +508,12 @@ class OSXArm(_CrossCompileRebuild):
             return f"[{branch}] " + title
         else:
             return title
+
+    @property
+    def additional_keys(self):
+        return {
+            "provider": self.arches,
+        }
 
     def pr_body(
         self, feedstock_ctx: ClonedFeedstockContext, add_label_text: bool = True
@@ -529,12 +535,11 @@ class OSXArm(_CrossCompileRebuild):
         return super().remote_branch(feedstock_ctx) + "_arm_osx"
 
 
-class WinArm64(_CrossCompileRebuild):
+class WinArm64(ArchRebuild):
     """A Migrator that adds win-arm64 builds to feedstocks."""
 
     allowed_schema_versions = {0, 1}
     migrator_version = 1
-    build_platform = {"win_arm64": "win_arm64"}  # i.e. native
     pkg_list_filename = "win_arm64.txt"
     arches = {"win_arm64": "default"}
     ignored_packages = {
@@ -542,6 +547,12 @@ class WinArm64(_CrossCompileRebuild):
         "gfortran_impl_osx-64",
         "gfortran_osx-64",
     }
+
+    @property
+    def additional_keys(self):
+        return {
+            "provider": self.arches,
+        }
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support windows arm64 platform")
