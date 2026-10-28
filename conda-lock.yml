@@ -1017,7 +1017,7 @@ package:
     jsonschema: ''
     libarchive: ''
     license-expression: ''
-    py-rattler: '>=0.22.0,<0.28.0a0'
+    py-rattler: '>=0.22.0,<0.29.0a0'
     pycryptodome: ''
     pygit2: ''
     pygithub: '>=2,<3'
@@ -1032,10 +1032,10 @@ package:
     tomli: '>=1.0.0'
     toolz: ''
     vsts-python-api: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.10.24-unix_pyh707e725_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-smithy-2026.10.24-unix_pyh707e725_1.conda
   hash:
-    md5: 0901af17eff7141b843c644ccc7e3442
-    sha256: da86448ddd620ca48e73132b8b9f5c135a1fab79bea69e87950ca9153dae25e0
+    md5: ca1668775d14ae9455e614f204f92b65
+    sha256: 062c763e47791252ab78adc9883eda12bbbe78142d0116864cdb5d3715494d79
   category: main
   optional: false
 - name: conda-souschef
@@ -1665,7 +1665,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libffi: ''
     libgcc: '>=15'
-    libglib: 2.90.0
+    libglib: ==2.90.0
   url: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.90.0-h3d503d9_0.conda
   hash:
     md5: d4adaebf8a2c9040ada6549c52a6b8d8
@@ -2671,16 +2671,16 @@ package:
   category: main
   optional: false
 - name: libjpeg-turbo
-  version: 3.2.0
+  version: 3.2.1
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libjpeg-turbo-3.2.0-hb03c661_1.conda
+    libgcc: '>=15'
+  url: https://conda.anaconda.org/conda-forge/linux-64/libjpeg-turbo-3.2.1-h7cc23a3_0.conda
   hash:
-    md5: 898d1c9793eaa52efc4727bd84d2e39a
-    sha256: bba8538e6538ed58a8479b332337b96986561f975d06cfa2039a016c2d246ee4
+    md5: 5fd2b2218f7c28c71e95738a4fffaf78
+    sha256: 2f7d092a3212884825c43814575225fde8a9190611bc0e38c55e0dae45e329ac
   category: main
   optional: false
 - name: liblapack
@@ -2776,8 +2776,8 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
-    libmamba-spdlog: 2.9.0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
+    libmamba-spdlog: ==2.9.0
     libstdcxx: '>=15'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.9,<4.0a0'
@@ -2891,7 +2891,7 @@ package:
     libglib: '>=2.90.0,<3.0a0'
     libharfbuzz: '>=14.6.0'
     libharfbuzz-devel: ''
-    libpango: 1.58.2
+    libpango: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/libpango-devel-1.58.2-h317d9d0_3.conda
   hash:
     md5: 8f2e0739636fe033c7324130121ab11c
@@ -3281,7 +3281,7 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
@@ -3579,7 +3579,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libpango-devel: 1.58.2
+    libpango-devel: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h2f58602_3.conda
   hash:
     md5: 4a1bbf999cdcdcf3ca1bfd819259f795
@@ -3813,7 +3813,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    liblief: 1.0.0,>=1.0.0,<1.1.0a0
+    liblief: ==1.0.0,>=1.0.0,<1.1.0a0
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.12.*
@@ -4112,22 +4112,21 @@ package:
   category: main
   optional: false
 - name: pytest
-  version: 9.1.1
+  version: 9.2.0
   manager: conda
   platform: linux-64
   dependencies:
-    colorama: ''
     exceptiongroup: '>=1'
-    iniconfig: '>=1.0.1'
-    packaging: '>=22'
-    pluggy: '>=1.5,<2'
-    pygments: '>=2.7.2'
+    iniconfig: '>=2'
+    packaging: '>=24'
+    pluggy: '>=1.6,<2'
+    pygments: '>=2.15'
     python: '>=3.10'
-    tomli: '>=1'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytest-9.1.1-pyhc364b38_2.conda
+    tomli: '>=2'
+  url: https://conda.anaconda.org/conda-forge/noarch/pytest-9.2.0-pyhc364b38_0.conda
   hash:
-    md5: 64c98a12c4e23eb238bf66bbecafdf3c
-    sha256: 430051d80765207a7d782b2b188230ba1489d35c6e75fd9903f76cb9fda4af16
+    md5: bf463a625eeca81d2abfa2d0addcc270
+    sha256: eb41d804a100ed7ccc0b1abd48a72ece54e8bdeba2af15adf17c524699281454
   category: main
   optional: false
 - name: pytest-cov
@@ -4531,7 +4530,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-    reproc: 14.2.8.post0,>=14.2.8.post0,<14.3.0a0
+    reproc: ==14.2.8.post0,>=14.2.8.post0,<14.3.0a0
   url: https://conda.anaconda.org/conda-forge/linux-64/reproc-cpp-14.2.8.post0-h1c70be6_0.conda
   hash:
     md5: 04afaf7b13f8ac3c947230a24d835c94
@@ -4779,7 +4778,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: 10.3.4
+    setuptools-scm: ==10.3.4
   url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.3.4-hc3fbee1_0.conda
   hash:
     md5: ff9dcd413b3af5336ba346987270535f
@@ -4799,17 +4798,17 @@ package:
   category: main
   optional: false
 - name: simdjson
-  version: 5.0.5
+  version: 5.0.6
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-5.0.5-h4dbf13b_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-5.0.6-h4dbf13b_0.conda
   hash:
-    md5: c2297d5bc118e70773153ed6fd2b310c
-    sha256: 7c1d22517e62695708aadf088272c6194635d8b1998869f0e9bf95ac01543f26
+    md5: 2a62a581da89a4b12231e62eb7e153d4
+    sha256: af620adeb886b8e2d61100faeb7c4085b48171559fb36ee793ea7b8a0d1f8743
   category: main
   optional: false
 - name: six
@@ -5101,7 +5100,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    typing_extensions: 4.16.0
+    typing_extensions: ==4.16.0
   url: https://conda.anaconda.org/conda-forge/noarch/typing-extensions-4.16.0-h69aa097_0.conda
   hash:
     md5: c680b5747e8c4c8f23dca0bb7042a8fc
