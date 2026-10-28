@@ -596,6 +596,7 @@ class LinuxRISCV64(_CrossCompileRebuild):
     # the compiler versions
     bump_number = 1
     pkg_list_filename = "linux_riscv64.txt"
+    arches = {"linux_riscv64": "linux_64"}
     ignored_packages = {
         # already built compiler packages that get caught in a cycle
         "_openmp_mutex",
