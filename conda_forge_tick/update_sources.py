@@ -636,21 +636,31 @@ class BaseRawURL(AbstractSource):
                     new_content = "\n".join(_new_lines)
                 else:
                     new_content = content.replace(orig_ver, next_ver)
-                if node_attrs["meta_yaml"].get("schema_version", 0) == 0:
-                    if cbc_data is not None:
-                        with tempfile.TemporaryDirectory() as tmpdir:
-                            cbc_pth = os.path.join(tmpdir, "conda_build_config.yaml")
-                            with open(cbc_pth, "w") as fp:
-                                fp.write(cbc_data)
-                            new_meta = parse_meta_yaml(
-                                new_content, platform=plat, arch=arch, cbc_path=cbc_pth
-                            )
+                try:
+                    if node_attrs["meta_yaml"].get("schema_version", 0) == 0:
+                        if cbc_data is not None:
+                            with tempfile.TemporaryDirectory() as tmpdir:
+                                cbc_pth = os.path.join(
+                                    tmpdir, "conda_build_config.yaml"
+                                )
+                                with open(cbc_pth, "w") as fp:
+                                    fp.write(cbc_data)
+                                new_meta = parse_meta_yaml(
+                                    new_content,
+                                    platform=plat,
+                                    arch=arch,
+                                    cbc_path=cbc_pth,
+                                )
+                        else:
+                            new_meta = parse_meta_yaml(new_content)
                     else:
-                        new_meta = parse_meta_yaml(new_content)
-                else:
-                    new_meta = parse_recipe_yaml(
-                        new_content, platform_arch=platform_arch, cbc_path=cbc_data
-                    )
+                        new_meta = parse_recipe_yaml(
+                            new_content, platform_arch=platform_arch, cbc_path=cbc_data
+                        )
+                except Exception as e:
+                    logger.debug("Error parsing recipe with new version:", exc_info=e)
+                    continue
+
                 new_urls = urls_from_meta(new_meta)
                 if len(new_urls) == 0:
                     logger.debug("No URL in meta.yaml")
