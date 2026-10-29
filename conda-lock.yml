@@ -815,7 +815,7 @@ package:
   category: main
   optional: false
 - name: conda-lock
-  version: 4.0.3
+  version: 4.0.4
   manager: conda
   platform: linux-64
   dependencies:
@@ -855,10 +855,10 @@ package:
     typing_extensions: '>=4.6.1'
     virtualenv: '>=20.26.6,<21.0.0'
     zstandard: '>=0.15'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-lock-4.0.3-pyh4a3486f_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-lock-4.0.4-pyh4a3486f_0.conda
   hash:
-    md5: 43c29756eaa5d2ae5949644b62774665
-    sha256: 4406f5b4ba1eae73d3335117ed54f67e828407b8f0083fdbef78d32911999c06
+    md5: 530a4bf288f1f2715ed1fd8e881c6795
+    sha256: ff55efe51135a61f903d198224079f01dfce6839ab48a68f4fa70b56c4a35c66
   category: main
   optional: false
 - name: conda-lockfiles
