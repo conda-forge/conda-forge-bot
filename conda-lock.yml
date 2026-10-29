@@ -448,15 +448,15 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.2.6
+  version: 7.2.7
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.6-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.7-pyhd8ed1ab_0.conda
   hash:
-    md5: cbd27cb24c0ac0fc2f01460f90a37e3f
-    sha256: 15b69f3f0dd72bb3f39aa5b828175c3e95e31fdbba121c9c6647a571df6d8ff8
+    md5: 04361d97bbf393d4e32feded89263713
+    sha256: 43390ae25c8b8343d65258dc839eb0491eb8f02a8005419ac719de2c3ae17a6a
   category: main
   optional: false
 - name: cairo
@@ -3725,15 +3725,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.13.7
+  version: 4.14.0
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.13.7-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.14.0-pyh5ded981_0.conda
   hash:
-    md5: 6e3ebb6d1962f0c26e2d92845b0032f9
-    sha256: ffeb3eb9aa6adb38ce43d04ecebc05dcab7ec76619d8cb0ce69332e936d0d794
+    md5: 52d5056682918ea3da8b710d6a290a4f
+    sha256: 3e2c85ffb833db5b3efb411f45b860fb83c5e4069e01d54fbdc02729fd8c0d80
   category: main
   optional: false
 - name: pluggy
@@ -4117,6 +4117,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
+    colorama: ''
     exceptiongroup: '>=1'
     iniconfig: '>=2'
     packaging: '>=24'
@@ -4124,10 +4125,10 @@ package:
     pygments: '>=2.15'
     python: '>=3.10'
     tomli: '>=2'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytest-9.2.0-pyhc364b38_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pytest-9.2.0-pyhc364b38_1.conda
   hash:
-    md5: bf463a625eeca81d2abfa2d0addcc270
-    sha256: eb41d804a100ed7ccc0b1abd48a72ece54e8bdeba2af15adf17c524699281454
+    md5: f0cfded84ced11a9dfb3790c4c1c0b63
+    sha256: a9cf3571e80a4e86992502068eb1d29a109e88345c39babf03b10450895056af
   category: main
   optional: false
 - name: pytest-cov
@@ -4405,14 +4406,14 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
+    libgcc: '>=15'
     python: '>=3.14,<3.15.0a0'
     python_abi: 3.14.*
     yaml: '>=0.2.5,<0.3.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pyyaml-6.0.3-py314h67df5f8_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pyyaml-6.0.3-py314hd42368d_2.conda
   hash:
-    md5: 2035f68f96be30dc60a5dfd7452c7941
-    sha256: b318fb070c7a1f89980ef124b80a0b5ccf3928143708a85e0053cde0169c699d
+    md5: 8d497dd9f127c5de8fe9c265ac016547
+    sha256: 74448bbfbfcc0209b72bab8bd952da296abec429c46104dd7df2bd0fb03c05d2
   category: main
   optional: false
 - name: rapidfuzz
@@ -4803,17 +4804,17 @@ package:
   category: main
   optional: false
 - name: simdjson
-  version: 5.0.6
+  version: 5.0.7
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-5.0.6-h4dbf13b_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-5.0.7-h4dbf13b_0.conda
   hash:
-    md5: 2a62a581da89a4b12231e62eb7e153d4
-    sha256: af620adeb886b8e2d61100faeb7c4085b48171559fb36ee793ea7b8a0d1f8743
+    md5: 423b80d0044d1aa5b6f59c260c6e1828
+    sha256: e60bc2a317eb36e3e369e0eff2d4d67fce27de5e8bddc02fc22590f7f62d4a09
   category: main
   optional: false
 - name: six
@@ -5419,14 +5420,14 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=13'
-    xorg-libx11: '>=1.8.10,<2.0a0'
-    xorg-libxfixes: '>=6.0.1,<7.0a0'
-    xorg-libxrender: '>=0.9.11,<0.10.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/xorg-libxcursor-1.2.3-hb9d3cd8_0.conda
+    libgcc: '>=15'
+    xorg-libx11: '>=1.8.14,<2.0a0'
+    xorg-libxfixes: '>=6.0.2,<7.0a0'
+    xorg-libxrender: '>=0.9.13,<0.10.0a0'
+  url: https://conda.anaconda.org/conda-forge/linux-64/xorg-libxcursor-1.2.3-h7cc23a3_1.conda
   hash:
-    md5: 2ccd714aa2242315acaf0a67faea780b
-    sha256: 832f538ade441b1eee863c8c91af9e69b356cd3e9e1350fff4fe36cc573fc91a
+    md5: 6115d96e6728a7518358314701a27f75
+    sha256: 5a819cd8d06656559349175be63bab398947e9755fe54692fab1bfab5385211a
   category: main
   optional: false
 - name: xorg-libxdamage
