@@ -2746,7 +2746,7 @@ package:
     openssl: '>=3.5.9,<4.0a0'
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
-    simdjson: '>=5.0.5,<5.1.0a0'
+    simdjson: '>=5.0.5,<5.0.7a0'
     spdlog: '>=1.17.0,<1.18.0a0'
     yaml-cpp: '>=0.8.0,<0.9.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
@@ -3407,12 +3407,12 @@ package:
   category: main
   optional: false
 - name: mypy
-  version: 2.4.0
+  version: 2.4.1
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    ast-serialize: '>=0.11.2,<1.0.0'
+    ast-serialize: '>=0.12.1,<1.0.0'
     libgcc: '>=15'
     mypy_extensions: '>=1.0.0'
     pathspec: '>=1.0.0'
@@ -3420,11 +3420,11 @@ package:
     python: ''
     python-librt: '>=0.16.0'
     python_abi: 3.14.*
-    typing_extensions: '>=4.14.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/mypy-2.4.0-py314hfe1a184_0.conda
+    typing_extensions: '>=4.16.0'
+  url: https://conda.anaconda.org/conda-forge/linux-64/mypy-2.4.1-py314hfe1a184_0.conda
   hash:
-    md5: 3ce5fd409299cd3e0978c107e2d1772b
-    sha256: 83c3f948997ea2b0d4505c82249f6cb037ad954746c49cf05fbedbc2c71589fb
+    md5: 79b7d8f63488d40947acddd023f7014c
+    sha256: 559e7fed89d9b57d7f41f23c3cd1844d180df9746f4dd51dd3708ec0ce3aa013
   category: main
   optional: false
 - name: mypy_extensions
@@ -4804,17 +4804,17 @@ package:
   category: main
   optional: false
 - name: simdjson
-  version: 5.0.7
+  version: 5.0.6
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-5.0.7-h4dbf13b_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/simdjson-5.0.6-h4dbf13b_0.conda
   hash:
-    md5: 423b80d0044d1aa5b6f59c260c6e1828
-    sha256: e60bc2a317eb36e3e369e0eff2d4d67fce27de5e8bddc02fc22590f7f62d4a09
+    md5: 2a62a581da89a4b12231e62eb7e153d4
+    sha256: af620adeb886b8e2d61100faeb7c4085b48171559fb36ee793ea7b8a0d1f8743
   category: main
   optional: false
 - name: six
