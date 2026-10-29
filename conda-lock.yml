@@ -1643,7 +1643,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libffi: ''
     libgcc: '>=15'
-    libglib: 2.90.0
+    libglib: ==2.90.0
   url: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.90.0-h3d503d9_0.conda
   hash:
     md5: d4adaebf8a2c9040ada6549c52a6b8d8
@@ -2779,8 +2779,8 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
-    libmamba-spdlog: 2.9.0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
+    libmamba-spdlog: ==2.9.0
     libstdcxx: '>=15'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.9,<4.0a0'
@@ -2894,7 +2894,7 @@ package:
     libglib: '>=2.90.0,<3.0a0'
     libharfbuzz: '>=14.6.0'
     libharfbuzz-devel: ''
-    libpango: 1.58.2
+    libpango: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/libpango-devel-1.58.2-h317d9d0_3.conda
   hash:
     md5: 8f2e0739636fe033c7324130121ab11c
@@ -3284,7 +3284,7 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libmamba: 2.9.0,>=2.9.0,<2.10.0a0
+    libmamba: ==2.9.0,>=2.9.0,<2.10.0a0
     reproc: '>=14.2.8.post0,<14.3.0a0'
     reproc-cpp: '>=14.2.8.post0,<14.3.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
@@ -3582,7 +3582,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libpango-devel: 1.58.2
+    libpango-devel: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h2f58602_3.conda
   hash:
     md5: 4a1bbf999cdcdcf3ca1bfd819259f795
@@ -3814,7 +3814,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    liblief: 1.0.0,>=1.0.0,<1.1.0a0
+    liblief: ==1.0.0,>=1.0.0,<1.1.0a0
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.14.*
@@ -3826,7 +3826,7 @@ package:
   category: main
   optional: false
 - name: py-rattler
-  version: 0.28.0
+  version: 0.28.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -3836,10 +3836,10 @@ package:
     libgcc: '>=15'
     openssl: '>=3.5.9,<4.0a0'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-0.28.0-py311hc91d8b8_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-0.28.1-py311hc91d8b8_0.conda
   hash:
-    md5: 98e2def9b0086ad0b7b299d89fa62743
-    sha256: f478a924ec7b703f81112cd38a6deb73f24e52b4bebbbb9d7a0c3a4657ec4b78
+    md5: 5372f7af3bd02484bf49d68f42f1bae6
+    sha256: a205cc0cbdc40f7ca84aec0741ca241a8d007f46130898bfb6b4648769ddb222
   category: main
   optional: false
 - name: py-rattler-build
@@ -4389,15 +4389,15 @@ package:
   category: main
   optional: false
 - name: pytz
-  version: '2026.5'
+  version: '2026.6'
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytz-2026.5-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pytz-2026.6-pyh5ded981_0.conda
   hash:
-    md5: c5e97ff094d2214da824ccc08ebc5499
-    sha256: 553084a7bbaad42224dc70376d3acfcc57165751f08e54951b1bd21b605e3510
+    md5: 9b60b8aadafa78f7581c49a057764e7f
+    sha256: 624d4243a9a2ebec6349587d34bd64c8b04ab6ed174acf102e02a441afde5ae0
   category: main
   optional: false
 - name: pyyaml
@@ -4533,7 +4533,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-    reproc: 14.2.8.post0,>=14.2.8.post0,<14.3.0a0
+    reproc: ==14.2.8.post0,>=14.2.8.post0,<14.3.0a0
   url: https://conda.anaconda.org/conda-forge/linux-64/reproc-cpp-14.2.8.post0-h1c70be6_0.conda
   hash:
     md5: 04afaf7b13f8ac3c947230a24d835c94
@@ -4784,7 +4784,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: 10.3.4
+    setuptools-scm: ==10.3.4
   url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.3.4-hc3fbee1_0.conda
   hash:
     md5: ff9dcd413b3af5336ba346987270535f
@@ -5106,7 +5106,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    typing_extensions: 4.16.0
+    typing_extensions: ==4.16.0
   url: https://conda.anaconda.org/conda-forge/noarch/typing-extensions-4.16.0-h69aa097_0.conda
   hash:
     md5: c680b5747e8c4c8f23dca0bb7042a8fc
