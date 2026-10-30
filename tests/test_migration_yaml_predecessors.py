@@ -122,3 +122,16 @@ def test_iso_timestamp_matches_epoch(iso_ts):
     )
 
     assert migrator.predecessor_already_migrated(parent)
+
+
+def test_matching_migration_file_counts_as_migrated():
+    # libfoo got the migration file without a PR from this migrator,
+    # so this migrator must not open another one
+    parent = _payload(
+        "libfoo",
+        {"libfoo2": {"migration_number": 2, "migrator_ts": MIGRATION_TS}},
+    )
+    migrator = _migrator(parent)
+
+    assert migrator.filter_node_migrated(parent)
+    assert not migrator.filter_node_migrated(_payload("bar"))
