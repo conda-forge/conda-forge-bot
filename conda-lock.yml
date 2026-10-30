@@ -1531,15 +1531,15 @@ package:
   category: main
   optional: false
 - name: frozendict
-  version: 2.4.7
+  version: 2.5.0
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/frozendict-2.4.7-pyh851646a_2.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/frozendict-2.5.0-pyhb5810a6_0.conda
   hash:
-    md5: 43fdb6bcc1227a22290d0bc02a9484c9
-    sha256: 32b75b9a3097c4156ba5070739bbfdcc0bc23890c0faa0dbff569ecb16b8f44f
+    md5: fc0cbbf1c37e7641fb0b2fc6da62cb9d
+    sha256: dfe16188d0d54c1f0ea36131a08d771e043d07eb06b73b59a80b048ddf1c642e
   category: main
   optional: false
 - name: fsspec
@@ -3476,16 +3476,16 @@ package:
   category: main
   optional: false
 - name: nodeenv
-  version: 1.11.0
+  version: 1.11.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
     setuptools: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/nodeenv-1.11.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/nodeenv-1.11.1-pyhd8ed1ab_0.conda
   hash:
-    md5: e1eb254aa865b2b34d7e2aaa50c2805c
-    sha256: ebbcbe6cbc91432c93caeb5f0242f7da2495acff53af8a757c77d9a7967db106
+    md5: b8c82ccc3c94d261e95dadb1b442dada
+    sha256: ae4d5f53ccad602299afd67e410ac5fde370db80f2b1d48f3ab30347d96dfef8
   category: main
   optional: false
 - name: numpy
@@ -5304,7 +5304,7 @@ package:
   category: main
   optional: false
 - name: wrapt
-  version: 2.5.1
+  version: 2.5.2
   manager: conda
   platform: linux-64
   dependencies:
@@ -5312,10 +5312,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.14.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.5.1-py314hfe1a184_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/wrapt-2.5.2-py314hfe1a184_0.conda
   hash:
-    md5: 52c3f9cf4f11091f2881fdabb837aacf
-    sha256: d0adbd01def18365addf341fd0a20b8a91498d23f7335e8ee7f1ead968569ab7
+    md5: bcc76af5b1a9c1445950aea8c641f05c
+    sha256: 3bac0999051f29c79a72f621df1c1a97787d31f7741d912319f9600bbff97afd
   category: main
   optional: false
 - name: wurlitzer
