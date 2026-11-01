@@ -448,15 +448,15 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.2.7
+  version: 7.2.8
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.7-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.8-pyhd8ed1ab_0.conda
   hash:
-    md5: 04361d97bbf393d4e32feded89263713
-    sha256: 43390ae25c8b8343d65258dc839eb0491eb8f02a8005419ac719de2c3ae17a6a
+    md5: f7d0202ea1fcba4c8d7aff01dada35be
+    sha256: 5beaa882510778979aa8ab77bc0bdceb4e342daa73ab9960ad4623e728eba02c
   category: main
   optional: false
 - name: cairo
@@ -1192,16 +1192,16 @@ package:
   category: main
   optional: false
 - name: deprecated
-  version: 3.0.0
+  version: 3.0.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.12'
     wrapt: '>=1.16,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/deprecated-3.0.0-pyhc364b38_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/deprecated-3.0.1-pyhc364b38_0.conda
   hash:
-    md5: ca0e7a4b610d5052edccca1007d40c13
-    sha256: 83ee4ca0b2f761bee4c57d95d4d0146a840a68dcdae6d92b0785d29cbfd63d47
+    md5: 3e3aa1ff1a1042830bbaa446def7b80c
+    sha256: edf3e0e1e985b463ceaeebc4a762ab3d15609759dbc10bf41cbcc596bd364e2b
   category: main
   optional: false
 - name: distlib
@@ -1531,15 +1531,15 @@ package:
   category: main
   optional: false
 - name: frozendict
-  version: 2.4.7
+  version: 2.5.0
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/frozendict-2.4.7-pyh851646a_2.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/frozendict-2.5.0-pyhb5810a6_0.conda
   hash:
-    md5: 43fdb6bcc1227a22290d0bc02a9484c9
-    sha256: 32b75b9a3097c4156ba5070739bbfdcc0bc23890c0faa0dbff569ecb16b8f44f
+    md5: fc0cbbf1c37e7641fb0b2fc6da62cb9d
+    sha256: dfe16188d0d54c1f0ea36131a08d771e043d07eb06b73b59a80b048ddf1c642e
   category: main
   optional: false
 - name: fsspec
@@ -3476,16 +3476,16 @@ package:
   category: main
   optional: false
 - name: nodeenv
-  version: 1.11.0
+  version: 1.11.1
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
     setuptools: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/nodeenv-1.11.0-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/nodeenv-1.11.1-pyhd8ed1ab_0.conda
   hash:
-    md5: e1eb254aa865b2b34d7e2aaa50c2805c
-    sha256: ebbcbe6cbc91432c93caeb5f0242f7da2495acff53af8a757c77d9a7967db106
+    md5: b8c82ccc3c94d261e95dadb1b442dada
+    sha256: ae4d5f53ccad602299afd67e410ac5fde370db80f2b1d48f3ab30347d96dfef8
   category: main
   optional: false
 - name: numpy
@@ -3508,7 +3508,7 @@ package:
   category: main
   optional: false
 - name: oauthlib
-  version: 4.0.0
+  version: 4.0.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -3516,10 +3516,10 @@ package:
     cryptography: ''
     pyjwt: '>=1.0.0'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/oauthlib-4.0.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/oauthlib-4.0.1-pyh5ded981_0.conda
   hash:
-    md5: 8d7af7efd2e3247a06a0e8d065d12c37
-    sha256: 6c1f75a430288a1cff369adabbae6a554de57c9f43acefee12fadef95542e759
+    md5: c0857f922fec23e9eac98c3a13005467
+    sha256: 404a880006c32764b3079753e8efbb8a32d9e3c9d0f234fb9dae5e41a6ea63ec
   category: main
   optional: false
 - name: openssl
@@ -3725,15 +3725,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.14.0
+  version: 4.14.2
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.14.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.14.2-pyh5ded981_0.conda
   hash:
-    md5: 52d5056682918ea3da8b710d6a290a4f
-    sha256: 3e2c85ffb833db5b3efb411f45b860fb83c5e4069e01d54fbdc02729fd8c0d80
+    md5: 19566b2ad4adfacba95b984fef9dc1c9
+    sha256: 460c222145488e825537f0b623f836a5ba602be9fc27fe38f64555ff018c6802
   category: main
   optional: false
 - name: pluggy
