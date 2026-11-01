@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: free disk space
         if: ${{ needs.check.outputs.skip-check != 'true' }}
-        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
+        uses: endersonmenezes/free-disk-space@8b8cd4e2277836962939a8f3b4ea0ee4bc006156 # v4.0.1
         with:
           remove_android: true
           remove_dotnet: true
@@ -215,7 +215,7 @@ jobs:
     steps:
       - name: free disk space
         if: ${{ needs.check.outputs.skip-check != 'true' }}
-        uses: endersonmenezes/free-disk-space@2a22f8c59cae9cddae7194b33e6b92d023b2b4b8 # v4.0.0
+        uses: endersonmenezes/free-disk-space@8b8cd4e2277836962939a8f3b4ea0ee4bc006156 # v4.0.1
         with:
           remove_android: true
           remove_dotnet: true
@@ -369,7 +369,7 @@ jobs:
               - conda-forge
 
       - name: download coverage artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           pattern: coverage-*
@@ -397,7 +397,7 @@ jobs:
             test-durations-
 
       - name: download test duration artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           pattern: test-durations-*
