@@ -458,9 +458,7 @@ class MigrationYaml(GraphMigrator):
         wait_for_migrators = migrator_payload.get("wait_for_migrators", [])
         # we only wait for migrators that are currently active or paused.
         # we ignore anything that has been closed and removed.
-        wait_for_migrators = list(
-            set(wait_for_migrators) & get_current_migrations()
-        )
+        wait_for_migrators = list(set(wait_for_migrators) & get_current_migrations())
 
         need_to_wait = False
         if wait_for_migrators:
