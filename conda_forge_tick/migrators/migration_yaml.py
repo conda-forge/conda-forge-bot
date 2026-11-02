@@ -456,8 +456,11 @@ class MigrationYaml(GraphMigrator):
     def filter_node_not_ready_to_be_migrated(self, attrs, not_bad_str_start=""):
         migrator_payload = self.loaded_yaml.get("__migrator", {})
         wait_for_migrators = migrator_payload.get("wait_for_migrators", [])
-        # we only wait for migrators that are currently active.
-        wait_for_migrators = wait_for_migrators & get_current_migrations()
+        # we only wait for migrators that are currently active or paused.
+        # we ignore anything that has been closed and removed.
+        wait_for_migrators = list(
+            set(wait_for_migrators) & get_current_migrations()
+        )
 
         need_to_wait = False
         if wait_for_migrators:
