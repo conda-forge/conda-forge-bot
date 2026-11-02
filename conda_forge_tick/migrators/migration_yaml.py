@@ -1,4 +1,5 @@
 import copy
+import glob
 import logging
 import os
 import re
@@ -6,6 +7,7 @@ import secrets
 import time
 from collections import defaultdict
 from collections.abc import Sequence
+from functools import lru_cache
 from typing import Any, Literal
 
 import networkx as nx
@@ -34,6 +36,20 @@ from ..migrators_types import AttrsTypedDict, MigrationUidTypedDict, PackageName
 
 RNG = secrets.SystemRandom()
 logger = logging.getLogger(__name__)
+
+
+@lru_cache(maxsize=1)
+def get_current_migrations() -> set[str]:
+    migrations_loc = os.path.join(
+        os.environ["CONDA_PREFIX"],
+        "share",
+        "conda-forge",
+        "migrations",
+    )
+    return {
+        os.path.splitext(os.path.basename(yaml_file))[0]
+        for yaml_file in sorted(glob.glob(f"{migrations_loc}/*.y*ml"))
+    }
 
 
 def _patch_dict(cfg, patches):
@@ -440,6 +456,8 @@ class MigrationYaml(GraphMigrator):
     def filter_node_not_ready_to_be_migrated(self, attrs, not_bad_str_start=""):
         migrator_payload = self.loaded_yaml.get("__migrator", {})
         wait_for_migrators = migrator_payload.get("wait_for_migrators", [])
+        # we only wait for migrators that are currently active.
+        wait_for_migrators = wait_for_migrators & get_current_migrations()
 
         need_to_wait = False
         if wait_for_migrators:
