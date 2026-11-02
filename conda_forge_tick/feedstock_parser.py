@@ -321,7 +321,7 @@ def populate_feedstock_attributes(
     """
     from conda_forge_tick.chaindb import ChainDB, _convert_to_dict
 
-    node_attrs = {key: value for key, value in existing_node_attrs.items()}
+    node_attrs = {**existing_node_attrs}
 
     if isinstance(feedstock_dir, str):
         feedstock_dir = Path(feedstock_dir)
@@ -356,9 +356,7 @@ def populate_feedstock_attributes(
     # Get the conda-forge.yml
     if isinstance(conda_forge_yaml, str):
         try:
-            node_attrs["conda-forge.yml"] = {
-                k: v for k, v in yaml_safe_load(conda_forge_yaml).items()
-            }
+            node_attrs["conda-forge.yml"] = {**yaml_safe_load(conda_forge_yaml)}
         except Exception as e:
             import traceback
 
@@ -718,7 +716,7 @@ def load_feedstock_local(
         If neither `meta_yaml` nor `recipe_yaml` are provided and no file is present in
         the feedstock.
     """
-    new_sub_graph = {key: value for key, value in sub_graph.items()}
+    new_sub_graph = {**sub_graph}
 
     if meta_yaml is not None and recipe_yaml is not None:
         raise ValueError("Only either `meta_yaml` or `recipe_yaml` can be overridden.")
