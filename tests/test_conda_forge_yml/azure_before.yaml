@@ -2,10 +2,17 @@ azure:
   store_build_artifacts: true
   free_disk_space: true
   settings_linux:
+    pool:
+      vmImage: ubuntu-22.04
     swapfile_size: 8GiB
     variables:
       CONDA_FORGE_DOCKER_RUN_ARGS: --cap-add SYS_ADMIN
+  settings_osx:
+    pool:
+      vmImage: macos-14
   settings_win:
+    pool:
+      vmImage: windows-latest
     variables:
       SET_PAGEFILE: "True"
       MINIFORGE_HOME: D:\miniforge3
