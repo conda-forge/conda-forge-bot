@@ -85,7 +85,7 @@ def _gen_keys_selector(meta, base):
 
 
 def _has_key_selector(meta, base):
-    return len([val for val in _gen_keys_selector(meta, base)]) > 0
+    return len([*_gen_keys_selector(meta, base)]) > 0
 
 
 def _adjust_test_dict(meta, key, mapping, groups, parent_group=None):
