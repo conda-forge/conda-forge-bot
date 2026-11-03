@@ -496,10 +496,10 @@ package:
   dependencies:
     ca-certificates: '>=2026.10.23'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.23-pyhd8ed1ab_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.23-pyhd8ed1ab_2.conda
   hash:
-    md5: 1d1d90254f14df0988bff49cb109301d
-    sha256: c0012e650ac7f0b0072ac940df089c9ca416cf25b7352f6b4da42951f1c22e64
+    md5: f740f29f97ec6441482dd5194ee0dd27
+    sha256: 29a0ef0e05beae7be404d08f6b85dcd518eabf0068cd9bf3f1c7fa4ea11c324b
   category: main
   optional: false
 - name: cffi
@@ -816,7 +816,7 @@ package:
   category: main
   optional: false
 - name: conda-lock
-  version: 4.0.4
+  version: 4.0.5
   manager: conda
   platform: linux-64
   dependencies:
@@ -828,7 +828,7 @@ package:
     click: '>=8.0'
     click-default-group: ''
     crashtest: '>=0.4.1,<0.5.0'
-    dulwich: '>=0.22.6,<0.25.0'
+    dulwich: '>=1.2.20,<2'
     ensureconda: '>=1.4.7'
     filelock: ''
     gitpython: '>=3.1.30'
@@ -856,10 +856,10 @@ package:
     typing_extensions: '>=4.6.1'
     virtualenv: '>=20.26.6,<21.0.0'
     zstandard: '>=0.15'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-lock-4.0.4-pyh4a3486f_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-lock-4.0.5-pyh4a3486f_0.conda
   hash:
-    md5: 530a4bf288f1f2715ed1fd8e881c6795
-    sha256: ff55efe51135a61f903d198224079f01dfce6839ab48a68f4fa70b56c4a35c66
+    md5: 980a37faa599222e220f033ebbb64137
+    sha256: 8f523989a8cf0966b7452d1e0c31e0e6c64c98d436bd36a1dc6695937cced9d9
   category: main
   optional: false
 - name: conda-lockfiles
@@ -1283,20 +1283,20 @@ package:
   category: main
   optional: false
 - name: dulwich
-  version: 0.24.10
+  version: 1.2.20
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=14'
-    python: '>=3.14,<3.15.0a0'
+    libgcc: '>=15'
+    python: ''
     python_abi: 3.14.*
     setuptools: ''
     urllib3: '>=2.2.2'
-  url: https://conda.anaconda.org/conda-forge/linux-64/dulwich-0.24.10-py314ha5689aa_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/dulwich-1.2.20-py314h7e8cd81_0.conda
   hash:
-    md5: 03e145cc6df0840bf11d25c6626bc285
-    sha256: ae648ced9142f5992c027c94932e0ac00d25948cc9b46e4153262d09b0f62445
+    md5: 34429889bf96bc761b1e50f6a2bd5291
+    sha256: e8b6b6c847d3efa90f448984c3b03741d5b9dfa99531497cba7bef28324ccfed
   category: main
   optional: false
 - name: ensureconda
@@ -1309,12 +1309,12 @@ package:
     conda-package-streaming: ''
     filelock: ''
     packaging: ''
-    python: '>=3.11'
+    python: '>=3.10'
     requests: '>=2'
-  url: https://conda.anaconda.org/conda-forge/noarch/ensureconda-1.7.0-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/ensureconda-1.7.0-pyhc364b38_1.conda
   hash:
-    md5: b7e9f003c56dee4638e19cd0136c6f8b
-    sha256: 587cbd16cb08bc9217aa29b57b16951df5a0b6303a3448eacc3a0508a295559e
+    md5: e1605cf7fe9b61bb4d2c25d8855d78c2
+    sha256: b33f31cde42210a6b25665fbd320c198d12ed0f6c1f8abeaa9391ac9b55cc948
   category: main
   optional: false
 - name: epoxy
@@ -3666,10 +3666,10 @@ package:
   dependencies:
     ca-certificates: '>=2026.10.19'
     python: '>=3.13.0a0'
-  url: https://conda.anaconda.org/conda-forge/noarch/pip-26.2.2-pyh145f28c_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pip-26.2.2-pyh145f28c_2.conda
   hash:
-    md5: 63f4cc1f78c0da07623849c916ce71d7
-    sha256: 98512be0d093df23271bc63a72e8365a3746ca08d8136258e2fb125ae3b2708a
+    md5: 48dd7d949a3d2106ed942dcd8f9ceb80
+    sha256: 05d34ae3b49973c05c0f2f0f742e202acc6145f733460a0798944b231efd5c1a
   category: main
   optional: false
 - name: pixi
@@ -4396,13 +4396,13 @@ package:
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-    python: '>=3.14,<3.15.0a0'
+    python: ''
     python_abi: 3.14.*
     yaml: '>=0.2.5,<0.3.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pyyaml-6.0.3-py314hd42368d_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pyyaml-6.0.3-py314h19d427c_3.conda
   hash:
-    md5: 8d497dd9f127c5de8fe9c265ac016547
-    sha256: 74448bbfbfcc0209b72bab8bd952da296abec429c46104dd7df2bd0fb03c05d2
+    md5: 7af5ff517ac8e6e64d47e307cec0500e
+    sha256: da909204ceee34fc54bd49b96b9151fd3297dec02f4f6c09b7671890e8cb0366
   category: main
   optional: false
 - name: rapidfuzz
