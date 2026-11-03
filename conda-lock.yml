@@ -327,7 +327,7 @@ package:
   category: main
   optional: false
 - name: botocore
-  version: 1.43.120
+  version: 1.43.123
   manager: conda
   platform: linux-64
   dependencies:
@@ -335,10 +335,10 @@ package:
     python: '>=3.10'
     python-dateutil: '>=2.1,<3.0.0'
     urllib3: '>=1.25.4,!=2.2.0,<3'
-  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.120-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/botocore-1.43.123-pyhd8ed1ab_0.conda
   hash:
-    md5: d47e45474c79d0dc2ef4ed31eef5d7e7
-    sha256: dab298b5e5e107b9ec913deb8e72f5fe44d73d0ac378fe7ada96c6948e47910f
+    md5: 7c3ac02b2758ee96c6f15296dc20b8c8
+    sha256: 6a1f9a33682e2d0e8d104428d9de49cfc67840f6c7e4d06d9042cdd2dad250f7
   category: main
   optional: false
 - name: brotli-python
@@ -495,11 +495,11 @@ package:
   platform: linux-64
   dependencies:
     ca-certificates: '>=2026.10.23'
-    python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.23-pyhd8ed1ab_2.conda
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.23-pyhd8ed1ab_3.conda
   hash:
-    md5: f740f29f97ec6441482dd5194ee0dd27
-    sha256: 29a0ef0e05beae7be404d08f6b85dcd518eabf0068cd9bf3f1c7fa4ea11c324b
+    md5: 6e761a5c8fd92be3a9fec46ade31b481
+    sha256: e17d21d2f133cae8eede0eef5a8acfa076b1999d00f11e714e1d18c2c8fd02c6
   category: main
   optional: false
 - name: cffi
@@ -532,15 +532,18 @@ package:
   category: main
   optional: false
 - name: chardet
-  version: 7.6.0
+  version: 7.7.0
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/chardet-7.6.0-pyhcf101f3_0.conda
+    __glibc: '>=2.17,<3.0.a0'
+    libgcc: '>=15'
+    python: ''
+    python_abi: 3.14.*
+  url: https://conda.anaconda.org/conda-forge/linux-64/chardet-7.7.0-py314h93e9acf_2.conda
   hash:
-    md5: c63ff7d1ea0ff4efbbdce9e64a4a176a
-    sha256: 80874e53c80c2c0c96d718b5cd95e9a16c619e9ecf8a796768d4e125a3dcff83
+    md5: de54dcc9577385d8ffb6f76f1fb0c9e3
+    sha256: 300d0a3ed9ab767be2d39c2b793eb00c63c13bb53cfca61a6861b0aa645e75f4
   category: main
   optional: false
 - name: charset-normalizer
@@ -3304,10 +3307,10 @@ package:
     libgcc: '>=15'
     python: ''
     python_abi: 3.14.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.4-py314h93e9acf_3.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.4-py314h93e9acf_4.conda
   hash:
-    md5: b091871bca4a3a9bf21a5de16cd5aba1
-    sha256: d89cd25b2ab933669f8a5d3a620d89a264f8995f3d7c7b923698242087f5b860
+    md5: c4d7267de79ee9aefb92ee64428fc1b7
+    sha256: 35b412b97ad6c65e2c5aef1e2039981bc53f847bd0673610a76f133628f24e3b
   category: main
   optional: false
 - name: mbedtls
@@ -3673,7 +3676,7 @@ package:
   category: main
   optional: false
 - name: pixi
-  version: 0.83.0
+  version: 0.84.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -3681,10 +3684,10 @@ package:
     libgcc: '>=15'
     libstdcxx: '>=15'
     openssl: '>=3.5.9,<4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pixi-0.83.0-hb5a6893_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pixi-0.84.0-hb5a6893_0.conda
   hash:
-    md5: 03bff0bbb7fdc7123d329b4da7d18909
-    sha256: 3c893c6112d64f12eb4455097dc3d1b9b581091f0ea97a847898e334d8adab1f
+    md5: a53419a4967af9c26d4249c958bdddb6
+    sha256: 1bc4f367ea15799367155bedf054ad74f9a86bcf4fa41ea1a74c356e982ccbd1
   category: main
   optional: false
 - name: pixman
