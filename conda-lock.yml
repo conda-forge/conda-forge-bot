@@ -948,17 +948,17 @@ package:
   category: main
   optional: false
 - name: conda-rattler-solver
-  version: 26.10.1
+  version: 26.10.2
   manager: conda
   platform: linux-64
   dependencies:
     conda: '>=26.7.0'
     py-rattler: '>=0.28.1,<0.29.0a0'
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-rattler-solver-26.10.1-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-rattler-solver-26.10.2-pyh5ded981_0.conda
   hash:
-    md5: 04eefe6d214736223360ea59655599f4
-    sha256: 5a28b18ba4019698deeffc2ac48a0c29ab3c21547049f518784c1a2e2265f522
+    md5: d3d33eb1776456fb7c3cc9aaed71a23e
+    sha256: ba2cfe03d55c4c5a8bfacf78d5902075b8cdbbe78feecc6996fe00aa82450864
   category: main
   optional: false
 - name: conda-recipe-manager
@@ -1177,7 +1177,7 @@ package:
   category: main
   optional: false
 - name: dateparser
-  version: 1.4.3
+  version: 1.5.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -1186,10 +1186,10 @@ package:
     pytz: '>=2024.2'
     regex: '>=2024.9.11'
     tzlocal: '>=0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.4.3-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/dateparser-1.5.0-pyh5ded981_0.conda
   hash:
-    md5: 1ff16017992b6683a6b4d0ace93992c7
-    sha256: 3ec9dd85b08cab2428f99060d340b0c6122b51253bc70382c75ba0c80e677418
+    md5: 20f136d0ac0b00c1a842fe9e36ba194c
+    sha256: fa647b8aa8e236ca87a9a8a71a7176e7ea9008f1f06c09f0d576d868111890c6
   category: main
   optional: false
 - name: dbus
@@ -3717,15 +3717,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.14.3
+  version: 4.14.4
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.14.3-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.14.4-pyh5ded981_0.conda
   hash:
-    md5: daff0ce2e3cbdbf6ac353fd380b4087f
-    sha256: 64c5fd37793044743fc6aa3ce04a84c3fdb11242d46bc240b175ef942ec5d8f5
+    md5: 6647af536612180875a49ae0068a21da
+    sha256: aaa41cf1e60b363e61b6e9be8b5e6a3ab9e9aa85d7369f973898b1f0fa2cc89a
   category: main
   optional: false
 - name: pluggy
@@ -4139,17 +4139,17 @@ package:
   category: main
   optional: false
 - name: pytest-env
-  version: 1.8.4
+  version: 1.8.5
   manager: conda
   platform: linux-64
   dependencies:
     pytest: '>=9.1.1'
     python: '>=3.11'
     python-dotenv: '>=1.2.4'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.8.4-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.8.5-pyhd8ed1ab_0.conda
   hash:
-    md5: c4bfd052dfe31bb6797d12d4bca66508
-    sha256: 15718059ea0f777c92aaa068e1bdec21df106182b4bb8c9561713383445effda
+    md5: db9d7765802b5c9b0ed7f9986d89bb25
+    sha256: e936df00945a42c2aab38f945649640ad19dc9e357067839b5a9616ace7305da
   category: main
   optional: false
 - name: pytest-retry
@@ -4843,15 +4843,15 @@ package:
   category: main
   optional: false
 - name: soupsieve
-  version: 3.0.4
+  version: '4.0'
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-3.0.4-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/soupsieve-4.0-pyhd8ed1ab_0.conda
   hash:
-    md5: 142303fd418a612bfc7163b546902156
-    sha256: 0c2452c60adedba707238f04c70eb252020e029357fd89cc772aaa5b3b5e41a2
+    md5: f88d4c37826388432b940453773cd329
+    sha256: 85a5d481eb7f0140455916d32b650c3fc3c2b53f9f5ac1e309fb11bf70a5aed5
   category: main
   optional: false
 - name: spdlog
@@ -5091,16 +5091,16 @@ package:
   category: main
   optional: false
 - name: typing-inspection
-  version: 0.4.4
+  version: 0.4.5
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
+    python: '>=3.11'
     typing_extensions: '>=4.15.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/typing-inspection-0.4.4-pyhcf101f3_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/typing-inspection-0.4.5-pyh5ded981_0.conda
   hash:
-    md5: 880e91eac5d926568ef278e20554148e
-    sha256: 293c66b208468d186a94ff486c2ffbf67859a2bde8c88e965fc9d06c517191b2
+    md5: 9b49216bf058592d9ef924e64602f029
+    sha256: 88c08476c98f264047d6c6bfeb1e8545684dfbcf2c61da338f71033ec17e1f33
   category: main
   optional: false
 - name: typing_extensions
