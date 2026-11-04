@@ -3347,10 +3347,10 @@ package:
     python: '>=3.11'
     tomli: ''
     tomli-w: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/menuinst-2.5.2-pyhba3e0a1_3.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/menuinst-2.5.2-pyhba3e0a1_4.conda
   hash:
-    md5: 2ee3eb3b78f61066534c7a64fd476392
-    sha256: adfcd5d6e3f2dbcdd17316d9d33434b8754b758444417bcc9a1f157f3f76bf9c
+    md5: c904bd9ef826a8d9ac59fd4891f3cfe4
+    sha256: acf8a880ed5bedb00631aa8c3949eb8dde65f421ae37be32e1d83943aa2b70ab
   category: main
   optional: false
 - name: more-itertools
@@ -3676,7 +3676,7 @@ package:
   category: main
   optional: false
 - name: pixi
-  version: 0.84.0
+  version: 0.84.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -3684,10 +3684,10 @@ package:
     libgcc: '>=15'
     libstdcxx: '>=15'
     openssl: '>=3.5.9,<4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pixi-0.84.0-hb5a6893_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pixi-0.84.1-hb5a6893_0.conda
   hash:
-    md5: a53419a4967af9c26d4249c958bdddb6
-    sha256: 1bc4f367ea15799367155bedf054ad74f9a86bcf4fa41ea1a74c356e982ccbd1
+    md5: 0dcc7683ab9841ce4739b5c394e97c65
+    sha256: 16f7b686d1afc52a7a3c4f2db3fa10532c12acad8430c24552c335b85c90380d
   category: main
   optional: false
 - name: pixman
