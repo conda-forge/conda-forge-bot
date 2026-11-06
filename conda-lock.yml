@@ -715,7 +715,7 @@ package:
   category: main
   optional: false
 - name: conda-forge-feedstock-ops
-  version: 0.20.3
+  version: 0.20.4
   manager: conda
   platform: linux-64
   dependencies:
@@ -740,10 +740,10 @@ package:
     ruamel.yaml.jinja2: ''
     wurlitzer: ''
     zstandard: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.20.3-pyh5ded981_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/conda-forge-feedstock-ops-0.20.4-pyh5ded981_0.conda
   hash:
-    md5: d3c3658459a80bb477545e08dd114372
-    sha256: 98faff2a780ea5aa7df2db7c1853d828493e1031f5e8a638f4083fd52972d23a
+    md5: d41d822e3a531f8e5d4588bdf6847e59
+    sha256: 45b4cdd5c603f5d648fed0c0bd3dc4219aa1471dffb44dadb5e7ac4043306f32
   category: main
   optional: false
 - name: conda-forge-metadata
@@ -3890,19 +3890,19 @@ package:
   category: main
   optional: false
 - name: pycryptodome
-  version: 3.23.0
+  version: 3.24.1
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     gmp: '>=6.3.0,<7.0a0'
-    libgcc: '>=14'
-    python: '>=3.14,<3.15.0a0'
+    libgcc: '>=15'
+    python: ''
     python_abi: 3.14.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pycryptodome-3.23.0-py314h11b9afc_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pycryptodome-3.24.1-py314h8abc1fb_0.conda
   hash:
-    md5: cad55c9615968a78dc1e0b5d644f30c4
-    sha256: ff3359008b0c86629acba02f8943ad3bb67f9bee2d48dbdf24e5a78360c5f95a
+    md5: f3624f0b1b749006bd485c1036427af4
+    sha256: 121522dbca42d9059d9502cc0c7974c6ba07e3845eaf3cfb225c4bcd9bc488df
   category: main
   optional: false
 - name: pydantic
@@ -5063,7 +5063,7 @@ package:
   category: main
   optional: false
 - name: typer
-  version: 0.27.3
+  version: 0.28.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -5072,10 +5072,10 @@ package:
     python: '>=3.11'
     rich: '>=13.8.0'
     shellingham: '>=1.3.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/typer-0.27.3-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/typer-0.28.0-pyh5ded981_0.conda
   hash:
-    md5: 3251bd81ef66ec6432b3159944c70d57
-    sha256: 50cef25b46782fbb8291427459ed60c701165b0b70bdb3aebae2503e9915f66a
+    md5: 6305ac02375885a697c01db0cecae296
+    sha256: b24f989f5e011853c5bb9ee370e676168c79fe7f361a493f3d2ff1ee60568584
   category: main
   optional: false
 - name: typing-extensions
