@@ -448,15 +448,15 @@ package:
   category: main
   optional: false
 - name: cachetools
-  version: 7.2.8
+  version: 7.3.0
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.2.8-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/cachetools-7.3.0-pyhd8ed1ab_0.conda
   hash:
-    md5: f7d0202ea1fcba4c8d7aff01dada35be
-    sha256: 5beaa882510778979aa8ab77bc0bdceb4e342daa73ab9960ad4623e728eba02c
+    md5: 3bcfa89219c46a5b7c047eca5ece20bf
+    sha256: bca3b83480983877e94e771141a77974721fa298f343bd79de04af96bdc98b82
   category: main
   optional: false
 - name: cairo
@@ -5011,18 +5011,18 @@ package:
   category: main
   optional: false
 - name: tornado
-  version: 6.5.10
+  version: '6.6'
   manager: conda
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
-    python: '>=3.14,<3.15.0a0'
+    python: ''
     python_abi: 3.14.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/tornado-6.5.10-py314h89acca1_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/tornado-6.6-py314hfe1a184_0.conda
   hash:
-    md5: d2bd0918d9c10df4fe2355e33fe7bc63
-    sha256: c205ceaa1536a8729bdad405ca711e94d2196aba30771029793557f250294598
+    md5: 7e03e02f22cf9e7cdc0f81aba1e166fd
+    sha256: a49a4bb39d55580d81827343685a0bf1657b98ac0014929dd66a87d84662d731
   category: main
   optional: false
 - name: tqdm
