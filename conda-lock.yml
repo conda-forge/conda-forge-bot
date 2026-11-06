@@ -4442,7 +4442,7 @@ package:
   category: main
   optional: false
 - name: rattler-build-conda-compat
-  version: 1.4.22
+  version: 1.4.23
   manager: conda
   platform: linux-64
   dependencies:
@@ -4454,10 +4454,10 @@ package:
     ruamel.yaml: '>=0.18.6'
     tomli: ''
     typing-extensions: '>=4.12.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.22-pyh5ded981_1.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/rattler-build-conda-compat-1.4.23-pyh5ded981_0.conda
   hash:
-    md5: 12ddf46cf2bb2aefb3696d05994a0b89
-    sha256: a9f38b4973b4cd85982455e280366f054348773f141b77091df3f6e336349abe
+    md5: 15ca54127fba3158591ca6fbc1cec678
+    sha256: 5d4ba60177ef8d02e8985db9719eb85d885c581888fca20df8446381b60747ca
   category: main
   optional: false
 - name: readline
