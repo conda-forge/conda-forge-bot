@@ -469,10 +469,13 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
             with open("status/closed_status.json", "rb") as fp:
                 old_closed_status = orjson.loads(fp.read())
         else:
-            old_closed_status = {}
+            old_closed_status = None
 
-        with open("status/total_status.json", "rb") as fp:
-            old_total_status = orjson.loads(fp.read())
+        if os.path.exists("status/total_status.json"):
+            with open("status/total_status.json", "rb") as fp:
+                old_total_status = orjson.loads(fp.read())
+        else:
+            old_total_status = None
 
         smithy_version: str = eval_cmd(["conda", "smithy", "--version"]).strip()
         pinning_version: str = cast(
@@ -616,19 +619,20 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
             )
         )
 
-    closed_status = _compute_recently_closed(
-        total_status,
-        old_closed_status,
-        old_total_status,
-    )
-    with open("./status/closed_status.json", "wb") as f:
-        f.write(
-            orjson.dumps(
-                closed_status,
-                option=orjson.OPT_SORT_KEYS | orjson.OPT_INDENT_2,
-                default=_sorted_set_json,
-            )
+    if old_closed_status is not None and old_total_status is not None:
+        closed_status = _compute_recently_closed(
+            total_status,
+            old_closed_status,
+            old_total_status,
         )
+        with open("./status/closed_status.json", "wb") as f:
+            f.write(
+                orjson.dumps(
+                    closed_status,
+                    option=orjson.OPT_SORT_KEYS | orjson.OPT_INDENT_2,
+                    default=_sorted_set_json,
+                )
+            )
 
     # remove old status files
     old_files = glob.glob("./status/migration_*/*.*")
