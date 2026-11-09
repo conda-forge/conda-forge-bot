@@ -625,18 +625,19 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
             old_closed_status,
             old_total_status,
         )
-        with open("./status/closed_status.json", "wb") as f:
-            f.write(
-                orjson.dumps(
-                    closed_status,
-                    option=orjson.OPT_SORT_KEYS | orjson.OPT_INDENT_2,
-                    default=_sorted_set_json,
-                )
-            )
     elif old_closed_status is not None:
         closed_status = copy.deepcopy(old_closed_status)
     else:
         closed_status = {}
+
+    with open("./status/closed_status.json", "wb") as f:
+        f.write(
+            orjson.dumps(
+                closed_status,
+                option=orjson.OPT_SORT_KEYS | orjson.OPT_INDENT_2,
+                default=_sorted_set_json,
+            )
+        )
 
     # remove old status files
     old_files = glob.glob("./status/migration_*/*.*")
