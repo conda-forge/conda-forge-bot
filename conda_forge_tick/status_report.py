@@ -633,6 +633,10 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
                     default=_sorted_set_json,
                 )
             )
+    elif old_closed_status is not None:
+        closed_status = copy.deepcopy(old_closed_status)
+    else:
+        closed_status = {}
 
     # remove old status files
     old_files = glob.glob("./status/migration_*/*.*")
