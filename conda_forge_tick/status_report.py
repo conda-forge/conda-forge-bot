@@ -103,6 +103,9 @@ def write_version_migrator_status(migrator, mctx):
             if attrs.get("archived", False):
                 continue
 
+            if "version_pr_info" not in attrs:
+                continue
+
             with attrs["version_pr_info"] as vpri:
                 version_from_data = filter_version(
                     attrs,
