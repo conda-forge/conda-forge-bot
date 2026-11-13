@@ -4374,7 +4374,7 @@ package:
   category: main
   optional: false
 - name: rattler-build
-  version: 0.80.0
+  version: 0.80.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -4383,10 +4383,10 @@ package:
     libstdcxx: '>=15'
     openssl: '>=3.5.9,<4.0a0'
     patchelf: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/rattler-build-0.80.0-hf01adef_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/rattler-build-0.80.1-hf01adef_0.conda
   hash:
-    md5: 0a0da6c91e654109ebdf539d6dcb3237
-    sha256: a336fa8f1577e1acdccea42429f7c685517102b763720f1774e9ddf228580da6
+    md5: a6c14db0cb2ad77f5f7099e62405bb33
+    sha256: 00cd6e3178f2844516a63f165d191874e5a113e786bb410d3813bd811538a7a8
   category: main
   optional: false
 - name: rattler-build-conda-compat
