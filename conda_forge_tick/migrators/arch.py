@@ -1,5 +1,6 @@
 import copy
 import os
+import re
 from collections.abc import Collection, Sequence
 from textwrap import dedent
 from typing import Any, Literal
@@ -143,6 +144,58 @@ def _filter_stubby_and_ignored_nodes(graph, outputs_lut, ignored_packages):
         # lapack->blas is a genuine edge; blas->lapack is the bot getting confused
         # by outputs with the same name that are being built on several feedstocks
         graph.remove_edges_from([("blas", "lapack")])
+
+
+# linux-riscv64 has no sysroot older than this glibc
+LINUX_RISCV64_MIN_GLIBC = (2, 39)
+
+_LINUX_SELECTOR_RE = re.compile(r"#\s*\[\s*linux\s*\]")
+_CBC_VERSION_ITEM_RE = re.compile(r"""^\s*-\s*["']?(\d+(?:\.\d+)*)["']?\s*(?:#|$)""")
+
+
+def _exclude_riscv64_from_linux_stdlib_pin(cbc_text: str) -> str:
+    """Restrict a ``c_stdlib_version`` pin selected with ``# [linux]`` to
+    non-riscv64 platforms when the pinned glibc is older than riscv64 supports.
+
+    A recipe-local ``c_stdlib_version: # [linux]`` pin of e.g. 2.17 would
+    otherwise override the global riscv64 baseline and request a
+    ``sysroot_linux-riscv64`` that does not exist.
+    """
+    lines = cbc_text.splitlines(keepends=True)
+    i = 0
+    while i < len(lines):
+        start = i
+        i += 1
+        if not lines[start].startswith("c_stdlib_version:"):
+            continue
+        while i < len(lines) and (
+            not lines[i].strip() or lines[i][0] in (" ", "\t", "-", "#")
+        ):
+            i += 1
+        # only handle blocks whose key is itself selected with "# [linux]",
+        # otherwise riscv64 could be left with the key but no values
+        if not _LINUX_SELECTOR_RE.search(lines[start]):
+            continue
+
+        linux_items = []
+        for j in range(start + 1, i):
+            if not lines[j].strip() or lines[j].lstrip().startswith("#"):
+                continue
+            m = _CBC_VERSION_ITEM_RE.match(lines[j])
+            if m is None or not _LINUX_SELECTOR_RE.search(lines[j]):
+                # an entry we can't reason about, or one without the same
+                # selector as the key (it would be orphaned), leave it alone
+                linux_items = []
+                break
+            if tuple(int(x) for x in m.group(1).split(".")) >= LINUX_RISCV64_MIN_GLIBC:
+                linux_items = []
+                break
+            linux_items.append(j)
+
+        if linux_items:
+            for j in [start, *linux_items]:
+                lines[j] = _LINUX_SELECTOR_RE.sub("# [linux and not riscv64]", lines[j])
+    return "".join(lines)
 
 
 def _arches_are_configured(attrs: "AttrsTypedDict", arches: dict) -> bool:
@@ -612,6 +665,20 @@ class LinuxRISCV64(_CrossCompileRebuild):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "support linux riscv64 platform")
         super().__init__(*args, **kwargs)
+
+    def migrate(
+        self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any
+    ) -> MigrationUidTypedDict | Literal[False]:
+        cbc_path = os.path.join(recipe_dir, "conda_build_config.yaml")
+        if os.path.exists(cbc_path):
+            with open(cbc_path) as f:
+                cbc_text = f.read()
+            new_cbc_text = _exclude_riscv64_from_linux_stdlib_pin(cbc_text)
+            if new_cbc_text != cbc_text:
+                with open(cbc_path, "w") as f:
+                    f.write(new_cbc_text)
+
+        return super().migrate(recipe_dir, attrs, **kwargs)
 
     def pr_title(self, feedstock_ctx: FeedstockContext) -> str:
         title = "Support linux-riscv64 platform"
