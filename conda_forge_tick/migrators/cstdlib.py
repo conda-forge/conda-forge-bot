@@ -260,9 +260,11 @@ class StdlibMigrator(MiniMigrator):
             with open(fname, "a") as fp:
                 # append ("a") to existing CBC (or create it if it exista already),
                 # no need to differentiate as no-one is using c_stdlib_version yet;
-                # selector can just be linux as that matches default on aarch/ppc
+                # 2.17 matches the default on x86_64/aarch64/ppc64le, while
+                # linux-riscv64 has no sysroot that old and keeps its own baseline
                 fp.write(
-                    '\nc_stdlib_version:   # [linux]\n  - "2.17"          # [linux]\n'
+                    "\nc_stdlib_version:   # [linux and not riscv64]\n"
+                    '  - "2.17"          # [linux and not riscv64]\n'
                 )
 
         if os.path.exists(fname):
