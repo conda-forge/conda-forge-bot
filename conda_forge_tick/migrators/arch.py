@@ -177,7 +177,7 @@ def _exclude_riscv64_from_linux_stdlib_pin(cbc_text: str) -> str:
         if not _LINUX_SELECTOR_RE.search(lines[start]):
             continue
 
-        linux_items = []
+        linux_items: list[int] = []
         for j in range(start + 1, i):
             if not lines[j].strip() or lines[j].lstrip().startswith("#"):
                 continue
