@@ -3899,7 +3899,7 @@ package:
   category: main
   optional: false
 - name: pydantic-settings
-  version: 2.16.2
+  version: 2.16.3
   manager: conda
   platform: linux-64
   dependencies:
@@ -3908,10 +3908,10 @@ package:
     python-dotenv: '>=1.2.2'
     typing-inspection: '>=0.4.0'
     typing_extensions: '>=4.0.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-settings-2.16.2-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-settings-2.16.3-pyh5ded981_0.conda
   hash:
-    md5: a48e4865f21e2f584b5c74c9b38af6f5
-    sha256: f0e44693581d1b9f4530bcee3b353650fc0d98ce20a998c8fd1b19723881985f
+    md5: c6ad95cd657b865f9db6e1b8d1974dc2
+    sha256: 2208bdcdde639f922dbf5febb2d02da933805fe304d751f49874f3dd1b7fb8c6
   category: main
   optional: false
 - name: pygit2
@@ -4305,16 +4305,16 @@ package:
   category: main
   optional: false
 - name: python-utils
-  version: 4.2.1
+  version: 4.2.2
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
     typing_extensions: '>3.10.0.2'
-  url: https://conda.anaconda.org/conda-forge/noarch/python-utils-4.2.1-pyhe730653_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/python-utils-4.2.2-pyhe730653_0.conda
   hash:
-    md5: d3f6e79cad4d91fd581e30840acb814c
-    sha256: bf152249a67ef9a061aa0373133f160f392079b6beef577c396594068b0545d6
+    md5: f8d86ae8ea2cc587674ae4486e73e882
+    sha256: afaed565d17a417d8505ffd5a507b19ad071a1bb59cacc16c5a651f595279945
   category: main
   optional: false
 - name: python_abi
