@@ -9,6 +9,7 @@ from conda_forge_tick.migrators import (
     CrossCompilationForARMAndPower,
     CrossPythonMigrator,
     CrossRBaseMigrator,
+    CudaWinArm64Migrator,
     GuardTestingMigrator,
     GuardTestingWinMigrator,
     NoCondaInspectMigrator,
@@ -446,3 +447,41 @@ if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}
 fi
 """
         )
+
+
+@pytest.fixture
+def cuda_win_arm64_yaml(tmp_path, monkeypatch):
+    migrations = tmp_path / "prefix" / "share" / "conda-forge" / "migrations"
+    migrations.mkdir(parents=True)
+    yaml_file = migrations / f"{CudaWinArm64Migrator.migration_name}.yaml"
+    yaml_file.write_text("migrator_ts: 1\n")
+    monkeypatch.setenv("CONDA_PREFIX", str(tmp_path / "prefix"))
+    return yaml_file
+
+
+@pytest.mark.parametrize(
+    "attrs,expected",
+    [
+        ({"requirements": {"build": {"cuda_compiler_stub"}}}, False),
+        ({"requirements": {"build": {"c_compiler_stub"}}}, True),
+    ],
+)
+def test_cuda_win_arm64_filter(cuda_win_arm64_yaml, attrs, expected):
+    attrs = {"meta_yaml": {}, **attrs}
+    assert CudaWinArm64Migrator().filter(attrs) is expected
+
+
+def test_cuda_win_arm64_filter_missing_yaml(cuda_win_arm64_yaml):
+    cuda_win_arm64_yaml.unlink()
+    attrs = {"meta_yaml": {}, "requirements": {"build": {"cuda_compiler_stub"}}}
+    assert CudaWinArm64Migrator().filter(attrs) is True
+
+
+def test_cuda_win_arm64_migrate(cuda_win_arm64_yaml, tmp_path):
+    recipe_dir = tmp_path / "feedstock" / "recipe"
+    recipe_dir.mkdir(parents=True)
+    CudaWinArm64Migrator().migrate(str(recipe_dir), {})
+    migration = (
+        recipe_dir.parent / ".ci_support" / "migrations" / cuda_win_arm64_yaml.name
+    )
+    assert migration.read_text() == cuda_win_arm64_yaml.read_text()
