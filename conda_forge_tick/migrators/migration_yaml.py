@@ -407,9 +407,10 @@ class MigrationYaml(GraphMigrator):
             or not all_noarch(
                 attrs,
                 only_python=only_python,
-                version_independent_is_noarch=not _is_freethreading_migration(
-                    self.loaded_yaml
-                ),
+                # abi3 builds are only exempt from python migrations: they are
+                # still compiled per platform, so any other pin must rebuild them
+                version_independent_is_noarch=only_python
+                and not _is_freethreading_migration(self.loaded_yaml),
             )
         )
 
@@ -679,7 +680,12 @@ def _compute_pin_impact(
                 bh = host or build
                 only_python = "python" in package_names
                 inclusion_criteria = bh & set(package_names) and (
-                    not all_noarch(attrs, only_python=only_python)
+                    not all_noarch(
+                        attrs,
+                        only_python=only_python,
+                        # abi3 is only exempt for python pins, as in the filter
+                        version_independent_is_noarch=only_python,
+                    )
                 )
                 if inclusion_criteria and node not in excluded_feedstocks:
                     included_nodes += 1
