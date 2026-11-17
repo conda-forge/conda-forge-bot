@@ -13,7 +13,10 @@ import networkx as nx
 import pytest
 from conftest import FakeLazyJson
 
-from conda_forge_tick.migrators.migration_yaml import MigrationYaml
+from conda_forge_tick.migrators.migration_yaml import (
+    MigrationYaml,
+    _compute_pin_impact,
+)
 
 FREETHREADING_YAML = """\
 migrator_ts: 1755739493
@@ -163,3 +166,45 @@ def test_abi3_node_gates_its_dependents_under_freethreading():
     assert migrator.package_names == {"python"}
     assert "abi3pkg" in migrator.graph
     assert migrator.predecessors_not_yet_built(DOWNSTREAM)
+
+
+# a pin on a package that is not python: abi3 builds are not exempt
+LIBFOO_YAML = """\
+migrator_ts: 1755739493
+__migrator:
+  commit_message: Rebuild for libfoo 2
+  migration_number: 1
+  kind: version
+libfoo:
+- '2'
+"""
+
+ABI3_LIBFOO = _payload(
+    "abi3libfoo",
+    {"number": 0, "python": {"version_independent": True}},
+    host=("libfoo", "python"),
+)
+
+
+def test_non_python_migration_includes_abi3():
+    gx = nx.DiGraph()
+    gx.graph["outputs_lut"] = {}
+    gx.add_node("abi3libfoo", payload=ABI3_LIBFOO)
+    migrator = MigrationYaml(
+        LIBFOO_YAML,
+        name="libfoo2",
+        migration_number=1,
+        package_names={"libfoo"},
+        graph=gx,
+        effective_graph=gx.copy(),
+        check_solvable=False,
+    )
+    assert migrator.filter_not_in_migration(ABI3_LIBFOO) is False
+
+
+def test_pin_impact_counts_abi3_for_non_python_pin():
+    gx = nx.DiGraph()
+    for payload in (ABI3_LIBFOO, PINNING):
+        gx.add_node(payload["feedstock_name"], payload=payload)
+    # the abi3 recipe and conda-forge-pinning
+    assert _compute_pin_impact(gx, ("libfoo",), {}) == 2
