@@ -63,15 +63,15 @@ package:
   category: main
   optional: false
 - name: annotated-doc
-  version: 0.0.6
+  version: 0.0.7
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.6-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/annotated-doc-0.0.7-pyh5ded981_0.conda
   hash:
-    md5: 9fca85fe0c3f76ab2199f576d7d115c0
-    sha256: ade8040829ed573c628afb85868a74bd03df7f3c663be318f6e5bbad2e905f78
+    md5: dd8f5c3e084aafe50b3a71e94f96a398
+    sha256: 65a864053fd0af87af651bef89d9be310642917d348a51cedb059021e7e60cbd
   category: main
   optional: false
 - name: annotated-types
@@ -3897,23 +3897,23 @@ package:
   category: main
   optional: false
 - name: pydantic
-  version: 2.14.3
+  version: 2.14.4
   manager: conda
   platform: linux-64
   dependencies:
     annotated-types: '>=0.6.0'
-    pydantic-core: 2.50.4
+    pydantic-core: 2.50.5
     python: '>=3.11'
     typing-inspection: '>=0.4.4'
     typing_extensions: '>=4.16.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-2.14.3-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pydantic-2.14.4-pyh5ded981_0.conda
   hash:
-    md5: 1c56381ccdf1762377714aba33912d53
-    sha256: faafe38d963939f374556ca0aa0cba61654aaca8a0ee6892fa9661be466cb92b
+    md5: 7d1c1c1a2f13cdd32eb4fafbef4d2ce7
+    sha256: d010123c72bc95bd3e101b9f1a0ba345e82237f743fa8cb010931781867c4b44
   category: main
   optional: false
 - name: pydantic-core
-  version: 2.50.4
+  version: 2.50.5
   manager: conda
   platform: linux-64
   dependencies:
@@ -3922,10 +3922,10 @@ package:
     python: ''
     python_abi: 3.14.*
     typing-extensions: '>=4.16.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pydantic-core-2.50.4-py314h7e8cd81_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pydantic-core-2.50.5-py314h7e8cd81_0.conda
   hash:
-    md5: d0f1aed8e7e8a71a5c88d82e47c1af11
-    sha256: 3b102eaefa3d6f815a109bab07b1709db1596422474e280c4da3b5a253f926e0
+    md5: d5c269c2e79865d4400b0c7cc2ac4c77
+    sha256: cbcd8cb6a4356fa48671869671c159548facd900eae091df980b53916c2eaa39
   category: main
   optional: false
 - name: pydantic-extra-types
