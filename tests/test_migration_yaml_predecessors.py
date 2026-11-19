@@ -124,14 +124,28 @@ def test_iso_timestamp_matches_epoch(iso_ts):
     assert migrator.predecessor_already_migrated(parent)
 
 
-def test_matching_migration_file_counts_as_migrated():
-    # libfoo got the migration file without a PR from this migrator,
-    # so this migrator must not open another one
+@pytest.mark.parametrize(
+    "file_migration_number, migrated",
+    [
+        # libfoo got the migration file without a PR from this migrator,
+        # so this migrator must not open another one
+        (2, True),
+        # the migration was reissued with a bumped migration_number, so libfoo's
+        # older copy does not count and this migrator must still open a PR
+        (1, False),
+    ],
+)
+def test_matching_migration_file_counts_as_migrated(file_migration_number, migrated):
     parent = _payload(
         "libfoo",
-        {"libfoo2": {"migration_number": 2, "migrator_ts": MIGRATION_TS}},
+        {
+            "libfoo2": {
+                "migration_number": file_migration_number,
+                "migrator_ts": MIGRATION_TS,
+            }
+        },
     )
     migrator = _migrator(parent)
 
-    assert migrator.filter_node_migrated(parent)
+    assert migrator.filter_node_migrated(parent) is migrated
     assert not migrator.filter_node_migrated(_payload("bar"))
