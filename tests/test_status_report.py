@@ -56,7 +56,7 @@ def test_unmigrated_node_does_not_report_as_done():
 @pytest.mark.parametrize(
     "file_migration_number, migrated",
     [
-        # libfoo carries this exact migration file without a PR from the migrator,
+        # libfoo carries this migration's file already
         # e.g., it was added by hand. It should still report as done.
         (2, True),
         # the migration was reissued with a bumped migration_number, so libfoo's
