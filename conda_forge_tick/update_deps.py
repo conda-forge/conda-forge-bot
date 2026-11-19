@@ -347,20 +347,10 @@ def get_grayskull_comparison(attrs, version_key="version"):
     d: dict[str, dict[str, set[str]]] = {}
     for section in SECTIONS_TO_PARSE:
         gs_run = _ignore_python(
-            {
-                c
-                for c in get_keys_default(
-                    new_attrs, ["total_requirements", section], {}, set()
-                )
-            },
+            {*get_keys_default(new_attrs, ["total_requirements", section], {}, set())},
         )
         cf_minus_df = _ignore_python(
-            {
-                c
-                for c in get_keys_default(
-                    attrs, ["total_requirements", section], {}, set()
-                )
-            },
+            {*get_keys_default(attrs, ["total_requirements", section], {}, set())},
         )
         cf_minus_df = _remove_cf_packages_to_ignore(cf_minus_df)
 

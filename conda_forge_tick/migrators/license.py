@@ -216,9 +216,7 @@ def _scrape_license_string(pkg):
 
     cmeta = CondaMetaYAML("".join(meta_yaml))
 
-    d["license_file"] = [
-        lf for lf in cmeta.meta.get("about", {}).get("license_file", [])
-    ]
+    d["license_file"] = [*cmeta.meta.get("about", {}).get("license_file", [])]
     if len(d["license_file"]) == 0:  # type: ignore[arg-type] # this is not a typed dict
         d["license_file"] = None
 

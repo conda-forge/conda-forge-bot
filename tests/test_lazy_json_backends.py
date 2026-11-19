@@ -510,7 +510,7 @@ def test_lazy_json(tmpdir, backend):
                 assert ff.read() == dumps({"hi": "globe"})
 
             assert len(lj) == 1
-            assert {k for k in lj} == {"hi"}
+            assert {*lj} == {"hi"}
 
             with lj as attrs:
                 attrs.clear()
@@ -593,7 +593,7 @@ def test_lazy_json_default(tmpdir):
         assert lj["hi"] == "world"
 
         assert len(lj) == 1
-        assert {k for k in lj} == {"hi"}
+        assert {*lj} == {"hi"}
 
         with pytest.raises(AssertionError):
             lj.clear()
@@ -667,7 +667,7 @@ def test_lazy_json_stub_default(tmpdir):
         assert lj["hi"] == "world"
 
         assert len(lj) == 1
-        assert {k for k in lj} == {"hi"}
+        assert {*lj} == {"hi"}
 
         with pytest.raises(AssertionError):
             lj.clear()
@@ -1122,7 +1122,7 @@ def test_lazy_json_file_read_only_backend(tmpdir):
                 assert ff.read() == dumps({"hi": "world"})
 
             assert len(lj) == 1
-            assert {k for k in lj} == {"hi"}
+            assert {*lj} == {"hi"}
 
             with lj as attrs:
                 attrs.clear()

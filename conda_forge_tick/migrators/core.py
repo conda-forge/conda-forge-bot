@@ -57,7 +57,7 @@ def load_target_packages(package_list_file: str) -> set[str]:
     )
 
     with fname.open() as f:
-        target_packages = set(f.read().split())
+        target_packages = {pkg for line in f for pkg in line.partition("#")[0].split()}
 
     return target_packages
 

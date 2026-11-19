@@ -704,7 +704,8 @@ def _extract_most_stringent_pin_from_recipe(
                 feedstock_name
                 in gx.graph["outputs_lut"].get(
                     p.get("package_name", ""),
-                    set(),
+                    # outputs_lut drops entries that map to themselves
+                    {p.get("package_name", "")},
                 )
             )
         ]

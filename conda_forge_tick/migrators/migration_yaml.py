@@ -1,4 +1,5 @@
 import copy
+import glob
 import logging
 import os
 import re
@@ -6,6 +7,7 @@ import secrets
 import time
 from collections import defaultdict
 from collections.abc import Sequence
+from functools import lru_cache
 from typing import Any, Literal
 
 import networkx as nx
@@ -34,6 +36,20 @@ from ..migrators_types import AttrsTypedDict, MigrationUidTypedDict, PackageName
 
 RNG = secrets.SystemRandom()
 logger = logging.getLogger(__name__)
+
+
+@lru_cache(maxsize=1)
+def get_current_migrations() -> set[str]:
+    migrations_loc = os.path.join(
+        os.environ["CONDA_PREFIX"],
+        "share",
+        "conda-forge",
+        "migrations",
+    )
+    return {
+        os.path.splitext(os.path.basename(yaml_file))[0]
+        for yaml_file in sorted(glob.glob(f"{migrations_loc}/*.y*ml"))
+    }
 
 
 def _patch_dict(cfg, patches):
@@ -398,9 +414,10 @@ class MigrationYaml(GraphMigrator):
             or not all_noarch(
                 attrs,
                 only_python=only_python,
-                version_independent_is_noarch=not _is_freethreading_migration(
-                    self.loaded_yaml
-                ),
+                # abi3 builds are only exempt from python migrations: they are
+                # still compiled per platform, so any other pin must rebuild them
+                version_independent_is_noarch=only_python
+                and not _is_freethreading_migration(self.loaded_yaml),
             )
         )
 
@@ -447,6 +464,9 @@ class MigrationYaml(GraphMigrator):
     def filter_node_not_ready_to_be_migrated(self, attrs, not_bad_str_start=""):
         migrator_payload = self.loaded_yaml.get("__migrator", {})
         wait_for_migrators = migrator_payload.get("wait_for_migrators", [])
+        # we only wait for migrators that are currently active or paused.
+        # we ignore anything that has been closed and removed.
+        wait_for_migrators = list(set(wait_for_migrators) & get_current_migrations())
 
         need_to_wait = False
         if wait_for_migrators:
@@ -667,7 +687,12 @@ def _compute_pin_impact(
                 bh = host or build
                 only_python = "python" in package_names
                 inclusion_criteria = bh & set(package_names) and (
-                    not all_noarch(attrs, only_python=only_python)
+                    not all_noarch(
+                        attrs,
+                        only_python=only_python,
+                        # abi3 is only exempt for python pins, as in the filter
+                        version_independent_is_noarch=only_python,
+                    )
                 )
                 if inclusion_criteria and node not in excluded_feedstocks:
                     included_nodes += 1

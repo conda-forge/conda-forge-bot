@@ -142,8 +142,7 @@ def parse_munged_run_export(p: str | dict) -> dict:
 
     # unquote
     if p.startswith("__quote_plus__") or p.endswith("__quote_plus__"):
-        if p.startswith("__quote_plus__"):
-            p = p[len("__quote_plus__") :]
+        p = p.removeprefix("__quote_plus__")
         if p.endswith("__quote_plus__"):
             p = p[: -len("__quote_plus__")]
         p = unquote_plus(p)

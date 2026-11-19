@@ -228,8 +228,7 @@ class VersionFromFeed(AbstractSource, abc.ABC):
                 ver = ver.rsplit("/", 1)[1]
 
             for prefix in self.ver_prefix_remove:
-                if ver.startswith(prefix):
-                    ver = ver[len(prefix) :]
+                ver = ver.removeprefix(prefix)
             if any(s in ver.lower() for s in self.dev_vers):
                 continue
             # Extract version number starting at the first digit.

@@ -103,6 +103,9 @@ def write_version_migrator_status(migrator, mctx):
             if attrs.get("archived", False):
                 continue
 
+            if "version_pr_info" not in attrs:
+                continue
+
             with attrs["version_pr_info"] as vpri:
                 version_from_data = filter_version(
                     attrs,
@@ -469,10 +472,13 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
             with open("status/closed_status.json", "rb") as fp:
                 old_closed_status = orjson.loads(fp.read())
         else:
-            old_closed_status = {}
+            old_closed_status = None
 
-        with open("status/total_status.json", "rb") as fp:
-            old_total_status = orjson.loads(fp.read())
+        if os.path.exists("status/total_status.json"):
+            with open("status/total_status.json", "rb") as fp:
+                old_total_status = orjson.loads(fp.read())
+        else:
+            old_total_status = None
 
         smithy_version: str = eval_cmd(["conda", "smithy", "--version"]).strip()
         pinning_version: str = cast(
@@ -616,11 +622,17 @@ def main(migrator_filter: str | list[str] | None = None) -> None:
             )
         )
 
-    closed_status = _compute_recently_closed(
-        total_status,
-        old_closed_status,
-        old_total_status,
-    )
+    if old_closed_status is not None and old_total_status is not None:
+        closed_status = _compute_recently_closed(
+            total_status,
+            old_closed_status,
+            old_total_status,
+        )
+    elif old_closed_status is not None:
+        closed_status = copy.deepcopy(old_closed_status)
+    else:
+        closed_status = {}
+
     with open("./status/closed_status.json", "wb") as f:
         f.write(
             orjson.dumps(

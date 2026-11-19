@@ -768,7 +768,7 @@ def test_latest_version_no_sources_are_skipped(caplog):
     ],
 )
 def test_next_version(in_ver, ver_test):
-    next_vers = [v for v in next_version(in_ver)]
+    next_vers = [*next_version(in_ver)]
     print(next_vers)
     assert next_vers == ver_test, next_vers
 
@@ -1018,7 +1018,7 @@ source:
     ],
 )
 def test_next_version_openssl(in_ver, ver_test):
-    next_vers = [v for v in next_version(in_ver, increment_alpha=True)]
+    next_vers = [*next_version(in_ver, increment_alpha=True)]
     print(next_vers)
     assert next_vers == ver_test
 
