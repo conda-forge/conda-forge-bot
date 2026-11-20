@@ -632,15 +632,15 @@ package:
   category: main
   optional: false
 - name: cloudpickle
-  version: 3.1.2
+  version: 3.1.3
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/cloudpickle-3.1.2-pyhcf101f3_1.conda
+    python: '>=3.11'
+  url: https://conda.anaconda.org/conda-forge/noarch/cloudpickle-3.1.3-pyh5ded981_0.conda
   hash:
-    md5: 61b8078a0905b12529abc622406cb62c
-    sha256: 4c287c2721d8a34c94928be8fe0e9a85754e90189dd4384a31b1806856b50a67
+    md5: ace8fcab8fce1b26619fdfaaf0864512
+    sha256: fc24ea87a1b11d52403201eab7b90be48d57196fd373adc9c4bbce6e3fe689b5
   category: main
   optional: false
 - name: codecov
@@ -1374,16 +1374,16 @@ package:
   category: main
   optional: false
 - name: exceptiongroup
-  version: 1.3.1
+  version: 1.3.2
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.10'
+    python: '>=3.11'
     typing_extensions: '>=4.6.0'
-  url: https://conda.anaconda.org/conda-forge/noarch/exceptiongroup-1.3.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/exceptiongroup-1.3.2-pyh5ded981_0.conda
   hash:
-    md5: 8e662bd460bda79b1ea39194e3c4c9ab
-    sha256: ee6cf346d017d954255bbcbdb424cddea4d14e4ed7e9813e429db1d795d01144
+    md5: 0af4199bba4905751d25634be9caf7bc
+    sha256: 91df6efaccbc119fc485d31bf6e32ca02b3f52e6def22b4fece6ddc1a98683a1
   category: main
   optional: false
 - name: execnet
@@ -3696,15 +3696,15 @@ package:
   category: main
   optional: false
 - name: platformdirs
-  version: 4.14.7
+  version: 4.14.8
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.11'
-  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.14.7-pyh5ded981_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/platformdirs-4.14.8-pyh5ded981_0.conda
   hash:
-    md5: f5ead77823454e222b1e7c4d8266f6c3
-    sha256: 961bf26704dc91e4c90e04d73b4553237a3f8fd3e28c1602375da4b5162f8319
+    md5: 931c5dbcadedadde154b21fddc8c951d
+    sha256: b90d4f1eefe9d1d50925c0e12eac9e0d3ac5fa6167e5929fd249d0fbeca15a80
   category: main
   optional: false
 - name: pluggy
@@ -4129,17 +4129,17 @@ package:
   category: main
   optional: false
 - name: pytest-env
-  version: 1.8.6
+  version: 1.8.7
   manager: conda
   platform: linux-64
   dependencies:
     pytest: '>=9.1.1'
     python: '>=3.11'
     python-dotenv: '>=1.2.4'
-  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.8.6-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/pytest-env-1.8.7-pyhd8ed1ab_0.conda
   hash:
-    md5: aac25494eee44206b92cc881364e53fc
-    sha256: 4e04091e756cd906597d2292064a4cc626650cc77322c4e56bae4d8d4569cee2
+    md5: 703ee2233c0eede3c9c84b1f514fbe03
+    sha256: 69c8f6fe4caf9aab49a04c6c1a0bb8289ffa857d79c573bbbc58192970e89eee
   category: main
   optional: false
 - name: pytest-retry
