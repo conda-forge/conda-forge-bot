@@ -415,7 +415,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    cachecontrol: 0.15.0
+    cachecontrol: ==0.15.0
     filelock: '>=3.8.0'
     python: '>=3.11'
   url: https://conda.anaconda.org/conda-forge/noarch/cachecontrol-with-filecache-0.15.0-pyhc367140_0.conda
@@ -1677,7 +1677,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libffi: ''
     libgcc: '>=15'
-    libglib: 2.90.1
+    libglib: ==2.90.1
   url: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.90.1-h876c321_3.conda
   hash:
     md5: f68c210114fbae3b35e07a9f1a230972
@@ -1881,7 +1881,7 @@ package:
   platform: linux-64
   dependencies:
     anyio: ''
-    httpcore2: 2.12.0
+    httpcore2: ==2.12.0
     idna: '>=3.18'
     python: '>=3.10'
     truststore: '>=0.10'
@@ -2749,8 +2749,8 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=14'
-    libmamba: 2.8.1,>=2.8.1,<2.9.0a0
-    libmamba-spdlog: 2.8.1
+    libmamba: ==2.8.1,>=2.8.1,<2.9.0a0
+    libmamba-spdlog: ==2.8.1
     libstdcxx: '>=14'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.6,<4.0a0'
@@ -2864,7 +2864,7 @@ package:
     libglib: '>=2.90.0,<3.0a0'
     libharfbuzz: '>=14.6.0'
     libharfbuzz-devel: ''
-    libpango: 1.58.2
+    libpango: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/libpango-devel-1.58.2-h317d9d0_3.conda
   hash:
     md5: 8f2e0739636fe033c7324130121ab11c
@@ -3242,7 +3242,7 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libmamba: 2.8.1,>=2.8.1,<2.9.0a0
+    libmamba: ==2.8.1,>=2.8.1,<2.9.0a0
     reproc: '>=14.2,<15.0a0'
     reproc-cpp: '>=14.2,<15.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
@@ -3540,7 +3540,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libpango-devel: 1.58.2
+    libpango-devel: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h2f58602_3.conda
   hash:
     md5: 4a1bbf999cdcdcf3ca1bfd819259f795
@@ -3683,19 +3683,6 @@ package:
     sha256: 829d8288764282de5a9f7b9169acb75cc7dc0b6c3fe2535cfe87dea3436bbc5d
   category: main
   optional: false
-- name: pkgconf
-  version: 3.0.11
-  manager: conda
-  platform: linux-64
-  dependencies:
-    __glibc: '>=2.17,<3.0.a0'
-    libgcc: '>=15'
-  url: https://conda.anaconda.org/conda-forge/linux-64/pkgconf-3.0.11-pkg_config_hf2a7378_0.conda
-  hash:
-    md5: c319153d0a00b9f82d13d66d45560929
-    sha256: 7231904776e73ccb27d7c2e5e67086efcf92b3d4bae45d01dc7f7cea06bd91c9
-  category: main
-  optional: false
 - name: pkginfo
   version: '2.0'
   manager: conda
@@ -3798,7 +3785,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    liblief: 1.0.0,>=1.0.0,<1.1.0a0
+    liblief: ==1.0.0,>=1.0.0,<1.1.0a0
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.14.*
@@ -4031,7 +4018,7 @@ package:
   category: main
   optional: false
 - name: pymongo
-  version: 4.20.0
+  version: 4.20.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -4041,10 +4028,10 @@ package:
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.14.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.20.0-py314h27a2112_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/pymongo-4.20.1-py314h27a2112_0.conda
   hash:
-    md5: fb3a32849b08e40335c660fb55f045fd
-    sha256: b3c44c133e3baf18647d98bb27980aae5e0c7c176d9ce76c64d63834d1f5ec2a
+    md5: 52887f4acf7634c4c9f9633c2ae2ac15
+    sha256: dcd4ccff1167153e24cf82b1685ac4d80ae16c46b00a95b318f0b0d9417ab90b
   category: main
   optional: false
 - name: pynacl
@@ -4529,7 +4516,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-    reproc: 14.2.8.post0,>=14.2.8.post0,<14.3.0a0
+    reproc: ==14.2.8.post0,>=14.2.8.post0,<14.3.0a0
   url: https://conda.anaconda.org/conda-forge/linux-64/reproc-cpp-14.2.8.post0-h1c70be6_0.conda
   hash:
     md5: 04afaf7b13f8ac3c947230a24d835c94
@@ -4677,13 +4664,12 @@ package:
     liblapack: '>=3.9.0,<4.0a0'
     libstdcxx: '>=15'
     numpy: <2.8,>=1.25,<3,>=2.0.0
-    pkgconf: '>=3.0.11,<4.0a0'
     python: ''
     python_abi: 3.14.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.18.1-py314hd3a7d6b_3.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.18.1-py314hd3a7d6b_4.conda
   hash:
-    md5: e9b04fb22bb04765608b4eef2bfe96b0
-    sha256: d0058e85415e71891f038e2e4a4926a9fcf5f1a54fcb378fca1936c750991b50
+    md5: 39e55bd564b1b5186547ab8b2fd52146
+    sha256: 4451083282eb89c89453c2ac53eda7a3cd0d603cc5b9afcae2296b090fd7b5e5
   category: main
   optional: false
 - name: scrypt
@@ -4753,7 +4739,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: 10.3.4
+    setuptools-scm: ==10.3.4
   url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.3.4-hc3fbee1_0.conda
   hash:
     md5: ff9dcd413b3af5336ba346987270535f
@@ -5052,7 +5038,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    typing_extensions: 4.16.0
+    typing_extensions: ==4.16.0
   url: https://conda.anaconda.org/conda-forge/noarch/typing-extensions-4.16.0-h69aa097_0.conda
   hash:
     md5: c680b5747e8c4c8f23dca0bb7042a8fc
