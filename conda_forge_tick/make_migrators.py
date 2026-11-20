@@ -44,6 +44,7 @@ from conda_forge_tick.migrators import (
     CrossRBaseMigrator,
     CrossRBaseWinMigrator,
     CrossToNativeMigrator,
+    CudaWinArm64Migrator,
     DependencyUpdateMigrator,
     DuplicateLinesCleanup,
     ExtraJinja2KeysCleanup,
@@ -311,6 +312,7 @@ def add_arch_migrate(
                         CrossPythonMigrator(),
                         NoCondaInspectMigrator(),
                         MPIPinRunAsBuildCleanup(),
+                        CudaWinArm64Migrator(),
                     ],
                 ),
             )

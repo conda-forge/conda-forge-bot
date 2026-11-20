@@ -16,6 +16,7 @@ from .cross_compile import (
     CrossPythonMigrator,
     CrossRBaseMigrator,
     CrossRBaseWinMigrator,
+    CudaWinArm64Migrator,
     GuardTestingMigrator,
     GuardTestingWinMigrator,
     NoCondaInspectMigrator,
