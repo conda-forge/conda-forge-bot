@@ -217,7 +217,7 @@ def _parse_bad_attr(attrs: "AttrsTypedDict", not_bad_str_start: str) -> bool:
     else:
         bad_bool = bad
 
-    return bad_bool or bool(attrs.get("parsing_error", False))
+    return bad_bool
 
 
 def _gen_active_feedstocks_payloads(nodes, gx):
@@ -556,7 +556,13 @@ class Migrator:
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
     ) -> bool:
         """If true don't act on a node in a migration because it is not ready to be migrated."""
-        return False
+        # A node that failed to parse keeps its last good attrs, so it can still be
+        # in a migration. Hold it there instead of dropping it from the graph, so
+        # it shows as a bot error and keeps the migration from closing without it.
+        parsing_error = bool(attrs.get("parsing_error", False))
+        if parsing_error:
+            logger.debug("%s: parsing error", attrs.get("name", ""))
+        return parsing_error
 
     def filter_node_migrated(
         self, attrs: "AttrsTypedDict", not_bad_str_start: str = ""
