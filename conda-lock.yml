@@ -415,7 +415,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    cachecontrol: 0.15.0
+    cachecontrol: ==0.15.0
     filelock: '>=3.8.0'
     python: '>=3.11'
   url: https://conda.anaconda.org/conda-forge/noarch/cachecontrol-with-filecache-0.15.0-pyhc367140_0.conda
@@ -503,16 +503,16 @@ package:
   category: main
   optional: false
 - name: certifi
-  version: 2026.10.23
+  version: 2026.11.20
   manager: conda
   platform: linux-64
   dependencies:
-    ca-certificates: '>=2026.10.23'
+    ca-certificates: '>=2026.11.20'
     python: '>=3.10'
-  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.10.23-pyhd8ed1ab_3.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.11.20-pyhd8ed1ab_0.conda
   hash:
-    md5: 6e761a5c8fd92be3a9fec46ade31b481
-    sha256: e17d21d2f133cae8eede0eef5a8acfa076b1999d00f11e714e1d18c2c8fd02c6
+    md5: b2f5cabdd5426f1f88a3efe00cde8909
+    sha256: 60d65913b729133a61c3dd0497155703d7549ee0032e845757629f7c364d28fd
   category: main
   optional: false
 - name: cffi
@@ -1677,7 +1677,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libffi: ''
     libgcc: '>=15'
-    libglib: 2.90.1
+    libglib: ==2.90.1
   url: https://conda.anaconda.org/conda-forge/linux-64/glib-tools-2.90.1-h876c321_3.conda
   hash:
     md5: f68c210114fbae3b35e07a9f1a230972
@@ -1881,7 +1881,7 @@ package:
   platform: linux-64
   dependencies:
     anyio: ''
-    httpcore2: 2.12.0
+    httpcore2: ==2.12.0
     idna: '>=3.18'
     python: '>=3.10'
     truststore: '>=0.10'
@@ -2749,8 +2749,8 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=14'
-    libmamba: 2.8.1,>=2.8.1,<2.9.0a0
-    libmamba-spdlog: 2.8.1
+    libmamba: ==2.8.1,>=2.8.1,<2.9.0a0
+    libmamba-spdlog: ==2.8.1
     libstdcxx: '>=14'
     nlohmann_json-abi: 3.12.0
     openssl: '>=3.5.6,<4.0a0'
@@ -2864,7 +2864,7 @@ package:
     libglib: '>=2.90.0,<3.0a0'
     libharfbuzz: '>=14.6.0'
     libharfbuzz-devel: ''
-    libpango: 1.58.2
+    libpango: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/libpango-devel-1.58.2-h317d9d0_3.conda
   hash:
     md5: 8f2e0739636fe033c7324130121ab11c
@@ -3242,7 +3242,7 @@ package:
   platform: linux-64
   dependencies:
     __glibc: '>=2.17,<3.0.a0'
-    libmamba: 2.8.1,>=2.8.1,<2.9.0a0
+    libmamba: ==2.8.1,>=2.8.1,<2.9.0a0
     reproc: '>=14.2,<15.0a0'
     reproc-cpp: '>=14.2,<15.0a0'
     zstd: '>=1.5.7,<1.6.0a0'
@@ -3540,7 +3540,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libpango-devel: 1.58.2
+    libpango-devel: ==1.58.2
   url: https://conda.anaconda.org/conda-forge/linux-64/pango-1.58.2-h2f58602_3.conda
   hash:
     md5: 4a1bbf999cdcdcf3ca1bfd819259f795
@@ -3785,7 +3785,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     fmt: '>=12.1.0,<12.2.0a0'
     libgcc: '>=15'
-    liblief: 1.0.0,>=1.0.0,<1.1.0a0
+    liblief: ==1.0.0,>=1.0.0,<1.1.0a0
     libstdcxx: '>=15'
     python: ''
     python_abi: 3.14.*
@@ -3814,7 +3814,7 @@ package:
   category: main
   optional: false
 - name: py-rattler-build
-  version: 0.73.0
+  version: 0.81.0
   manager: conda
   platform: linux-64
   dependencies:
@@ -3822,12 +3822,12 @@ package:
     _python_abi3_support: 1.*
     cpython: '>=3.11'
     libgcc: '>=15'
-    openssl: '>=3.5.8,<4.0a0'
+    openssl: '>=3.5.9,<4.0a0'
     python: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-build-0.73.0-py311h30674b1_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/py-rattler-build-0.81.0-py311h30674b1_0.conda
   hash:
-    md5: 22094f8dc5212ee1269d7f8bf499d8ea
-    sha256: 20d345d91f4b8c22444a5e0cf1f748b6c43ff790537337806f599e5c311b3b7a
+    md5: ef785e1eabcddb52193b94fd1977df10
+    sha256: c6673d165667ab5e248981b58c939ce23efb0d0ffe09d0eda2164d0261a1b1f0
   category: main
   optional: false
 - name: pybind11-abi
@@ -4516,7 +4516,7 @@ package:
     __glibc: '>=2.17,<3.0.a0'
     libgcc: '>=15'
     libstdcxx: '>=15'
-    reproc: 14.2.8.post0,>=14.2.8.post0,<14.3.0a0
+    reproc: ==14.2.8.post0,>=14.2.8.post0,<14.3.0a0
   url: https://conda.anaconda.org/conda-forge/linux-64/reproc-cpp-14.2.8.post0-h1c70be6_0.conda
   hash:
     md5: 04afaf7b13f8ac3c947230a24d835c94
@@ -4739,7 +4739,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    setuptools-scm: 10.3.4
+    setuptools-scm: ==10.3.4
   url: https://conda.anaconda.org/conda-forge/noarch/setuptools_scm-10.3.4-hc3fbee1_0.conda
   hash:
     md5: ff9dcd413b3af5336ba346987270535f
@@ -5038,7 +5038,7 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    typing_extensions: 4.16.0
+    typing_extensions: ==4.16.0
   url: https://conda.anaconda.org/conda-forge/noarch/typing-extensions-4.16.0-h69aa097_0.conda
   hash:
     md5: c680b5747e8c4c8f23dca0bb7042a8fc
