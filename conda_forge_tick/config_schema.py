@@ -205,7 +205,7 @@ class BotConfig(BaseModel):
     )
 
     inspection: BotConfigInspectionChoice | None = Field(
-        default="hint",
+        default="disabled",
         description="Method for generating hints or updating recipe",
     )
 
