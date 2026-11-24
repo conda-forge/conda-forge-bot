@@ -96,4 +96,7 @@ def test_stdlib(feedstock, new_ver, expect_cbc, tmp_path, atr):
     if expect_cbc:
         with open(cbc_pth) as fp:
             lines = fp.readlines()
-        assert any(re.match(r"c_stdlib_version:\s+\#\s\[linux\]", x) for x in lines)
+        assert any(
+            re.match(r"c_stdlib_version:\s+\#\s\[linux and not riscv64\]", x)
+            for x in lines
+        )

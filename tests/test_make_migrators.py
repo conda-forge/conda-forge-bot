@@ -135,6 +135,32 @@ class TestCreateMigrationYamlCreator:
         assert len(migrator.effective_graph) == 1
         assert "conda-forge-pinning" in migrator.effective_graph
 
+    @pytest.mark.parametrize(
+        "prepared_graph", [["conda-forge-pinning", "aws-c-io"]], indirect=True
+    )
+    def test_pin_spec_without_self_outputs_lut_entry(
+        self,
+        prepared_graph: nx.DiGraph,
+        inject_conda_build_config,
+        enable_containers: bool,
+        request: FixtureRequest,
+    ):
+        if enable_containers:
+            request.getfixturevalue("use_containers")
+
+        # the deployed outputs_lut drops entries that map to themselves
+        outputs_lut = prepared_graph.graph["outputs_lut"]
+        prepared_graph.graph["outputs_lut"] = {
+            k: v for k, v in outputs_lut.items() if set(v) != {k}
+        }
+        assert "aws-c-io" not in prepared_graph.graph["outputs_lut"]
+
+        migrators: list[MigrationYamlCreator] = []
+        create_migration_yaml_creator(migrators, prepared_graph)
+
+        assert len(migrators) == 1
+        assert migrators[0].pin_spec == "x.x.x"
+
 
 def test_add_rebuild_migration_yaml_replacements():
     """Migration yamls can declare replacement mini migrators declaratively via

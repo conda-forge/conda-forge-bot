@@ -103,6 +103,7 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             azure_settings = cfg.get("azure", {})
             gha_settings = cfg.get("github_actions", {})
             azure_settings_linux = azure_settings.get("settings_linux", {})
+            azure_settings_osx = azure_settings.get("settings_osx", {})
             azure_settings_win = azure_settings.get("settings_win", {})
             azure_variables_linux = azure_settings_linux.get("variables", {})
             azure_variables_win = azure_settings_win.get("variables", {})
@@ -155,6 +156,21 @@ class CondaForgeYAMLCleanup(MiniMigrator):
             ) is not None and "run_args" not in cfg.get("docker", {}):
                 cfg.setdefault("docker", {})["run_args"] = docker_run_args
 
+            had_vm_image = "vm_image" in cfg.get("workflow_settings", {})
+            for os_name, settings in {
+                "linux": azure_settings_linux,
+                "osx": azure_settings_osx,
+                "win": azure_settings_win,
+            }.items():
+                pool = settings.get("pool", {})
+                vm_image = pool.pop("vmImage", None)
+                if not had_vm_image and vm_image is not None:
+                    cfg.setdefault("workflow_settings", {}).setdefault(
+                        "vm_image", []
+                    ).append({"provider": "azure", "os": os_name, "value": vm_image})
+                if not pool:
+                    settings.pop("pool", None)
+
             # Remove leftover empty dicts.
             if not azure_variables_win:
                 azure_settings_win.pop("variables", None)
@@ -162,6 +178,8 @@ class CondaForgeYAMLCleanup(MiniMigrator):
                 azure_settings_linux.pop("variables", None)
             if not azure_settings_win:
                 azure_settings.pop("settings_win", None)
+            if not azure_settings_osx:
+                azure_settings.pop("settings_osx", None)
             if not azure_settings_linux:
                 azure_settings.pop("settings_linux", None)
             if not azure_settings:

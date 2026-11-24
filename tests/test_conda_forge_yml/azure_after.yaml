@@ -14,5 +14,15 @@ workflow_settings:
     - provider: azure
       os: win
       value: D:\miniforge3
+  vm_image:
+    - provider: azure
+      os: linux
+      value: ubuntu-22.04
+    - provider: azure
+      os: osx
+      value: macos-14
+    - provider: azure
+      os: win
+      value: windows-latest
 docker:
   run_args: --cap-add SYS_ADMIN

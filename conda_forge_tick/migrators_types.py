@@ -124,12 +124,22 @@ class PRedElementTypedDict(TypedDict, total=False):
     PR: PR_TD
 
 
+class CondaForgeYamlSettingsPool(TypedDict, total=False):
+    vmImage: str
+
+
 class CondaForgeYamlSettingsLinux(TypedDict, total=False):
+    pool: CondaForgeYamlSettingsPool
     swapfile_size: str
     variables: dict[str, str]
 
 
+class CondaForgeYamlSettingsOsx(TypedDict, total=False):
+    pool: CondaForgeYamlSettingsPool
+
+
 class CondaForgeYamlSettingsWin(TypedDict, total=False):
+    pool: CondaForgeYamlSettingsPool
     variables: dict[str, str]
 
 
@@ -137,6 +147,7 @@ class CondaForgeYamlAzure(TypedDict, total=False):
     store_build_artifacts: bool
     free_disk_space: bool | list[str]
     settings_linux: CondaForgeYamlSettingsLinux
+    settings_osx: CondaForgeYamlSettingsOsx
     settings_win: CondaForgeYamlSettingsWin
 
 
@@ -163,6 +174,7 @@ class CondaForgeYamlWorkflowSettings(TypedDict, total=False):
     build_workspace_dir: list[CondaForgeYamlWorkflowSetting] | str
     tools_install_dir: list[CondaForgeYamlWorkflowSetting] | str
     resize_partitions: list[CondaForgeYamlWorkflowSetting] | bool
+    vm_image: list[CondaForgeYamlWorkflowSetting]
 
 
 class CondaForgeYamlContents(TypedDict, total=False):
