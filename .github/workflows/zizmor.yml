@@ -14,6 +14,7 @@ concurrency:
 
 jobs:
   zizmor:
+    name: zizmor 🌈
     runs-on: ubuntu-latest
     permissions:
       security-events: write  # needed to write data to github advanced security
