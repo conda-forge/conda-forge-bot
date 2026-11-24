@@ -233,7 +233,7 @@
           "type": "null"
         }
       ],
-      "default": "hint",
+      "default": "disabled",
       "description": "Method for generating hints or updating recipe"
     },
     "abi_migration_branches": {

@@ -10,12 +10,10 @@ import tempfile
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 import wurlitzer
 from conda_forge_feedstock_ops.recipe_parser import CONDA_SELECTOR, CondaMetaYAML
-from grayskull.config import Configuration
-from grayskull.utils import generate_recipe
 from ruamel.yaml import YAML
 from souschef.recipe import Recipe
 
@@ -25,11 +23,6 @@ from conda_forge_tick.utils import (
     get_recipe_schema_version,
     version_specs_are_equiv,
 )
-
-try:
-    from grayskull.main import create_python_recipe
-except ImportError:
-    from grayskull.__main__ import create_python_recipe
 
 logger = logging.getLogger(__name__)
 
@@ -85,11 +78,11 @@ def get_dep_updates_and_hints(
     ValueError
         If the update kind is not supported.
     """
-    if update_deps == "disabled":
-        # no dependency updates or hinting
-        return {}, ""
+    # if update_deps == "disabled":
+    # no dependency updates or hinting
+    return {}, ""
 
-    if update_deps in [
+    if update_deps in [  # type: ignore[unreachable]
         "hint",
         "hint-grayskull",
         "update-grayskull",
@@ -188,6 +181,11 @@ def make_grayskull_recipe(attrs, version_key="version"):
     recipe : str
         The generated grayskull recipe as a string.
     """
+    try:
+        from grayskull.main import create_python_recipe
+    except ImportError:
+        from grayskull.__main__ import create_python_recipe
+
     if version_key not in attrs:
         pkg_version = attrs.get("version_pr_info", {}).get(version_key)
     else:
@@ -235,7 +233,9 @@ def make_grayskull_recipe(attrs, version_key="version"):
     return out
 
 
-def _generate_grayskull_recipe_v1(recipe: Recipe, configuration: Configuration) -> str:
+def _generate_grayskull_recipe_v1(recipe: Recipe, configuration: Any) -> str:
+    from grayskull.utils import generate_recipe
+
     with tempfile.TemporaryDirectory() as temp_dir:
         generate_recipe(
             recipe=recipe,
@@ -262,6 +262,12 @@ def _validate_grayskull_recipe_v1(recipe: Recipe):
 def _make_grayskull_recipe_v1(
     package_name: str, package_version: str, package_is_noarch: bool
 ) -> str:
+
+    try:
+        from grayskull.main import create_python_recipe
+    except ImportError:
+        from grayskull.__main__ import create_python_recipe
+
     recipe, config = create_python_recipe(
         pkg_name=package_name,
         version=package_version,
