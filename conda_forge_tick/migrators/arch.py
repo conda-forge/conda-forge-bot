@@ -37,7 +37,7 @@ from .migration_yaml import all_noarch
 def _filter_excluded_deps(graph, excluded_dependencies):
     """Filter out excluded dependencies from the graph.
 
-    This function removes any node that descends from an excluded dependency
+    This function removes any ancestors of an excluded dependency
     (if not needed elsewhere in the graph!) in addition to removing the
     excluded dependencies themselves.
 
