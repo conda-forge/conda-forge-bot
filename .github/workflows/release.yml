@@ -27,7 +27,7 @@ jobs:
       run:
         shell: bash -leo pipefail {0}
     permissions:
-      contents: write
+      contents: write  # needed to make the github release
 
     steps:
       - name: free disk space
