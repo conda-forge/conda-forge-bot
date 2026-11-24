@@ -662,8 +662,6 @@ class LinuxRISCV64(_CrossCompileRebuild):
         "intel_repack",
         # NVIDIA binary repacks: no riscv64 redist exists. They only enter the
         # graph via the linux_64 requirements fallback for CUDA variants.
-        "cf-nvidia-tools",
-        "cuda-arch",
         "cuda-cccl",
         "cuda-cudart",
         "cuda-cuobjdump",
@@ -675,7 +673,6 @@ class LinuxRISCV64(_CrossCompileRebuild):
         "cuda-nvrtc",
         "cuda-nvtx",
         "cuda-profiler-api",
-        "cuda-version",
         "cudnn",
         "libcublas",
         "libcufft",
@@ -685,13 +682,10 @@ class LinuxRISCV64(_CrossCompileRebuild):
         "libnvjitlink",
         "libnvjpeg",
         "nccl",
-        "nvidia-virtual-packages",
         "nvtx-c",
         "tensorrt",
         # NVIDIA Performance Libraries are aarch64-only
-        "libnvpl",
         "libnvpl-blas",
-        "libnvpl-common",
         "libnvpl-fft",
         "libnvpl-lapack",
         "libnvpl-rand",
