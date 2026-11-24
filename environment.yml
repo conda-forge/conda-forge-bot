@@ -17,7 +17,7 @@ dependencies:
   - conda-forge-metadata >=2026.9.5
   - conda-forge-pinning
   - conda-libmamba-solver
-  - conda-lock
+  - conda-lock >=4
   - conda-package-handling
   - conda-recipe-manager >=0.10.6
   - conda-smithy >=2026.5.29

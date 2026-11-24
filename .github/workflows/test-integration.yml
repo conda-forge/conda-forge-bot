@@ -20,6 +20,8 @@ defaults:
   run:
     shell: bash -leo pipefail {0}
 
+permissions: {}
+
 jobs:
   integration-tests:
     name: Run Integration Tests

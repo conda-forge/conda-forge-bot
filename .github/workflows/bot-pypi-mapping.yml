@@ -7,6 +7,8 @@ on:
 
 concurrency: bot-pypi-mapping
 
+permissions: {}
+
 jobs:
   pypi-mapping:
     name: pypi-mapping
@@ -14,6 +16,8 @@ jobs:
     defaults:
       run:
         shell: bash -leo pipefail {0}
+    permissions:
+      contents: read
 
     steps:
       - name: free disk space

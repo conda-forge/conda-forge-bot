@@ -180,8 +180,14 @@ def make_grayskull_recipe(attrs, version_key="version"):
     -------
     recipe : str
         The generated grayskull recipe as a string.
+
+    Raises
+    ------
+    RuntimeError
+        grayskull is disabled.
     """
-    try:
+    raise RuntimeError("grayskull use is disabled!")
+    try:  # type: ignore[unreachable]
         from grayskull.main import create_python_recipe
     except ImportError:
         from grayskull.__main__ import create_python_recipe

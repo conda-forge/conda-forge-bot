@@ -7,6 +7,8 @@ on:
 
 concurrency: bot-make-migrators
 
+permissions: {}
+
 jobs:
   list-migrators:
     name: list-migrators
@@ -14,6 +16,8 @@ jobs:
     defaults:
       run:
         shell: bash -leo pipefail {0}
+    permissions:
+      contents: read
 
     steps:
       - name: free disk space
@@ -103,6 +107,8 @@ jobs:
     strategy:
       matrix:
         job_number: [1, 2, 3, 4, 5]
+    permissions:
+      contents: read
 
     steps:
       - name: free disk space
@@ -203,6 +209,8 @@ jobs:
     defaults:
       run:
         shell: bash -leo pipefail {0}
+    permissions:
+      contents: read
 
     steps:
       - name: free disk space

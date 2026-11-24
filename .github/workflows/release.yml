@@ -17,6 +17,8 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+permissions: {}
+
 jobs:
   release:
     name: release
@@ -24,6 +26,8 @@ jobs:
     defaults:
       run:
         shell: bash -leo pipefail {0}
+    permissions:
+      contents: write  # needed to make the github release
 
     steps:
       - name: free disk space
