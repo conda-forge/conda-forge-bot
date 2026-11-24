@@ -14,9 +14,10 @@ concurrency:
 
 jobs:
   zizmor:
+    name: zizmor
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
+      security-events: write  # needed to write data to github advanced security
       contents: read # only needed for private repos
       actions: read # only needed for private repos
     steps:
