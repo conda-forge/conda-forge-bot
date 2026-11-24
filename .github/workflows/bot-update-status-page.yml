@@ -7,6 +7,8 @@ on:
 
 concurrency: update-status-page
 
+permissions: {}
+
 jobs:
   update_status_page:
     name: update-status-page
@@ -14,6 +16,9 @@ jobs:
     defaults:
       run:
         shell: bash -leo pipefail {0}
+    permissions:
+      contents: read
+
     steps:
       - name: free disk space
         uses: endersonmenezes/free-disk-space@8b8cd4e2277836962939a8f3b4ea0ee4bc006156 # v4.0.1

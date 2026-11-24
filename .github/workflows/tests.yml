@@ -16,6 +16,8 @@ env:
   IMAGE_NAME: conda-forge-tick
   PYTHONUNBUFFERED: "1"
 
+permissions: {}
+
 jobs:
   check:
     name: check if we can skip the merge queue

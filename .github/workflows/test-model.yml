@@ -14,6 +14,8 @@ env:
   PY_COLORS: "1"
   PYTHONUNBUFFERED: "1"
 
+permissions: {}
+
 jobs:
   test-model:
     name: test-model

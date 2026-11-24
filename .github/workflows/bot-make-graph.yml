@@ -7,6 +7,8 @@ on:
 
 concurrency: bot-make-graph
 
+permissions: {}
+
 jobs:
   make-graph:
     name: make-graph
@@ -14,6 +16,8 @@ jobs:
     defaults:
       run:
         shell: bash -leo pipefail {0}
+    permissions:
+      contents: read
 
     steps:
       - name: free disk space
