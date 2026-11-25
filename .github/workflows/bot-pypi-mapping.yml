@@ -41,6 +41,7 @@ jobs:
         with:
           ref: ${{ steps.latest_release.outputs.tag_name }}
           path: conda-forge-bot
+          persist-credentials: false
 
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
