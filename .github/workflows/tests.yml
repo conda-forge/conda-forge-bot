@@ -267,7 +267,7 @@ jobs:
           python -m pip install -v --no-deps --no-build-isolation -e .
 
       - name: start MongoDB
-        uses: supercharge/mongodb-github-action@315db7fe45ac2880b7758f1933e6e5d59afd5e94 # v1.12.1
+        uses: supercharge/mongodb-github-action@315db7fe45ac2880b7758f1933e6e5d59afd5e94 # 1.12.1
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           mongodb-version: "latest"
