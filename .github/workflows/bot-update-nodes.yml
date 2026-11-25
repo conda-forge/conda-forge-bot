@@ -130,13 +130,13 @@ jobs:
             export SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1
           fi
 
-          source conda-forge-bot/autotick-bot/install_bot_code.sh \
-            ${{ case(github.event_name == 'pull_request', '--no-pull-container', '') }}
+          source conda-forge-bot/autotick-bot/install_bot_code.sh ${INSTALL_FLAGS}
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           GH_EVENT_NAME: ${{ github.event_name }}
+          INSTALL_FLAGS: ${{ case(github.event_name == 'pull_request', '--no-pull-container', '') }}
 
       - name: update nodes
         if: success() && ! env.CI_SKIP
@@ -250,13 +250,14 @@ jobs:
             export SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1
           fi
 
-          source conda-forge-bot/autotick-bot/install_bot_code.sh \
-            ${{ case(github.event_name == 'pull_request', '--no-pull-container', '') }}
+          source conda-forge-bot/autotick-bot/install_bot_code.sh ${INSTALL_FLAGS}
         env:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           GH_EVENT_NAME: ${{ github.event_name }}
+          INSTALL_FLAGS: ${{ case(github.event_name == 'pull_request', '--no-pull-container', '') }}
+
 
       - name: update nodes
         if: success() && ! env.CI_SKIP
