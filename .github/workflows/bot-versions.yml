@@ -6,7 +6,7 @@ on:
   workflow_dispatch: null
 
 concurrency:
-  group: versions
+  group: bot-versions
   cancel-in-progress: false
 
 permissions: {}
