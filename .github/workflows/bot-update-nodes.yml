@@ -126,7 +126,7 @@ jobs:
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "${GH_EVENT_NAME}" == "pull_request" ]]; then
             export SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1
           fi
 
@@ -136,11 +136,12 @@ jobs:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
+          GH_EVENT_NAME: ${{ github.event_name }}
 
       - name: update nodes
         if: success() && ! env.CI_SKIP
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "${GH_EVENT_NAME}" == "pull_request" ]]; then
             export CF_FEEDSTOCK_OPS_CONTAINER_TAG=test-update-nodes
           fi
 
@@ -158,6 +159,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
+          GH_EVENT_NAME: ${{ github.event_name }}
 
       - name: deploy
         if: (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') && always() && ! env.CI_SKIP
@@ -244,7 +246,7 @@ jobs:
       - name: install bot code
         if: success() && ! env.CI_SKIP
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "${GH_EVENT_NAME}" == "pull_request" ]]; then
             export SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1
           fi
 
@@ -254,11 +256,12 @@ jobs:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
+          GH_EVENT_NAME: ${{ github.event_name }}
 
       - name: update nodes
         if: success() && ! env.CI_SKIP
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "${GH_EVENT_NAME}" == "pull_request" ]]; then
             export CF_FEEDSTOCK_OPS_CONTAINER_TAG=test-update-nodes
           fi
 
@@ -277,6 +280,7 @@ jobs:
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           RUN_ID: ${{ github.run_id }}
+          GH_EVENT_NAME: ${{ github.event_name }}
 
       - name: deploy
         if: (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') && always() && ! env.CI_SKIP

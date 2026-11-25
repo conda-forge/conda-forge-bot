@@ -90,6 +90,7 @@ jobs:
       - name: tag and release
         if: ${{ (! env.CI_SKIP) && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
         run: |
-          python autotick-bot/release.py "${{ steps.version.outputs.NEXT }}"
+          python autotick-bot/release.py "${NEXT_VERSION}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT_VERSION: ${{ steps.version.outputs.NEXT }}
