@@ -3495,15 +3495,15 @@ package:
   category: main
   optional: false
 - name: packaging
-  version: '26.3'
+  version: '26.4'
   manager: conda
   platform: linux-64
   dependencies:
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/packaging-26.3-pyhc364b38_0.conda
+    python: '>=3.10'
+  url: https://conda.anaconda.org/conda-forge/noarch/packaging-26.4-pyhc364b38_0.conda
   hash:
-    md5: 936687ed80f295a1f5dbcf8bd34c252c
-    sha256: c432626b16768b8dab228bfb706f7060c2d462a21c516d240f68f2f902b5a044
+    md5: df83250ef4f2a8c4ed3a3fea9f13f96f
+    sha256: 168392f26ecbcf0156efa425ac730d19466ccffad55b15cb90b7f19683b18a31
   category: main
   optional: false
 - name: pango
