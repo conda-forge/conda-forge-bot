@@ -5,7 +5,9 @@ on:
     - cron: '12-59/15 * * * *'
   workflow_dispatch: null
 
-concurrency: versions
+concurrency:
+  group: versions
+  cancel-in-progress: false
 
 permissions: {}
 

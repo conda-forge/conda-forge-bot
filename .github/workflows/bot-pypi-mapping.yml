@@ -5,7 +5,9 @@ on:
     - cron: '42 * * * *'
   workflow_dispatch: null
 
-concurrency: bot-pypi-mapping
+concurrency:
+  group: bot-pypi-mapping
+  cancel-in-progress: false
 
 permissions: {}
 

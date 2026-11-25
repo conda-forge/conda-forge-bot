@@ -5,7 +5,9 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
-concurrency: bot-v2
+concurrency:
+  group: bot-v2
+  cancel-in-progress: false
 
 permissions: {}
 
