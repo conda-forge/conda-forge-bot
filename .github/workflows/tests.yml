@@ -150,8 +150,10 @@ jobs:
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         run: |
           if [[ -f .test_durations ]]; then
-            cp .test_durations .test_durations.${{ matrix.group }}
+            cp .test_durations ".test_durations.${MATRIX_GROUP}"
           fi
+        env:
+          MATRIX_GROUP: ${{ matrix.group }}
 
       - name: run pytest
         if: ${{ needs.check.outputs.skip-check != 'true' }}
@@ -160,9 +162,9 @@ jobs:
           pytest \
             -v \
             -n 3 \
-            --splits ${NUM_SPLITS} --group ${{ matrix.group }} \
+            --splits ${NUM_SPLITS} --group "${MATRIX_GROUP}" \
             --store-durations \
-            --durations-path=.test_durations.${{ matrix.group }} \
+            --durations-path=".test_durations.${MATRIX_GROUP}" \
             --splitting-algorithm least_duration \
             --clean-durations \
             --cov=conda_forge_tick \
@@ -180,6 +182,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
+          MATRIX_GROUP: ${{ matrix.group }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -303,11 +306,11 @@ jobs:
           # note: we do not use pytest-xdist (-n auto) here for now because they interfere with hiding the
           # MONGODB_CONNECTION_STRING sensitive environment variable
           if [[ -f .test_durations ]]; then
-            cp .test_durations .test_durations.${{ matrix.group }}
+            cp .test_durations ".test_durations.${MATRIX_GROUP}"
           fi
           pytest \
             -vvvs \
-            --splits 1 --group ${{ matrix.group }} \
+            --splits 1 --group "${MATRIX_GROUP}" \
             --store-durations \
             --durations-path=.test_durations.mongodb \
             --splitting-algorithm least_duration \
@@ -326,6 +329,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
+          MATRIX_GROUP: ${{ matrix.group }}
 
       - name: upload test durations
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
