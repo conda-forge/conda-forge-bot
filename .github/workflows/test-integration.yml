@@ -56,6 +56,7 @@ jobs:
         with:
           path: conda-forge-bot
           submodules: 'true'
+          persist-credentials: false
 
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
