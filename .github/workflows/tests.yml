@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Check if we can skip the merge queue
         id: merge-queue-ci-skipper
-        uses: cariad-tech/merge-queue-ci-skipper@cf80db21fc70244e36487acc531b3f1118889b0a
+        uses: cariad-tech/merge-queue-ci-skipper@3a6ae351834f1ec690fa6f2e1ed1f8fdd4e64d3c # v1
         with:
             secret: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
 
@@ -64,6 +64,7 @@ jobs:
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           repository: "conda-forge/conda-forge-bot"
+          persist-credentials: false
 
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         if: ${{ needs.check.outputs.skip-check != 'true' }}
@@ -231,6 +232,7 @@ jobs:
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           repository: "conda-forge/conda-forge-bot"
+          persist-credentials: false
 
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         if: ${{ needs.check.outputs.skip-check != 'true' }}
@@ -362,6 +364,7 @@ jobs:
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           repository: "conda-forge/conda-forge-bot"
+          persist-credentials: false
 
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         if: ${{ needs.check.outputs.skip-check != 'true' }}
