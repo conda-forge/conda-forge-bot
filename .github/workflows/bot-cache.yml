@@ -5,7 +5,9 @@ on:
   schedule:
     - cron: '*/15 * * * *'
 
-concurrency: bot-cache
+concurrency:
+  group: bot-cache
+  cancel-in-progress: false
 
 permissions: {}
 

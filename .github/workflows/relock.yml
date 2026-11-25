@@ -6,7 +6,9 @@ on:
   schedule:
     - cron: '14-59/15 * * * *'
 
-concurrency: relock
+concurrency:
+  group: relock
+  cancel-in-progress: false
 
 permissions: {}
 

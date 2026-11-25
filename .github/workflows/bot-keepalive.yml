@@ -5,7 +5,9 @@ on:
   schedule:
     - cron: '0-59/15 * * * *'
 
-concurrency: bot-keepalive
+concurrency:
+  group: bot-keepalive
+  cancel-in-progress: false
 
 permissions: {}
 

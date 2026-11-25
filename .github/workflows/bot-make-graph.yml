@@ -5,7 +5,9 @@ on:
   schedule:
     - cron: '2-59/15 * * * *'
 
-concurrency: bot-make-graph
+concurrency:
+  group: bot-make-graph
+  cancel-in-progress: false
 
 permissions: {}
 

@@ -5,7 +5,9 @@ on:
   schedule:
     - cron: '4-59/15 * * * *'
 
-concurrency: bot-make-migrators
+concurrency:
+  group: bot-make-migrators
+  cancel-in-progress: false
 
 permissions: {}
 
