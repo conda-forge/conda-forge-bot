@@ -427,6 +427,7 @@ jobs:
 
   # this little bit follows the same pattern from conda-build
   status:
+    name: status
     needs:
       - tests
       - tests-mongodb

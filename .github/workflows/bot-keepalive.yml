@@ -29,7 +29,9 @@ jobs:
         continue-on-error: true
 
       - name: debug outcome
-        run: echo "outcome - ""${{ steps.turnstyle.outcome }}"
+        run: echo "outcome - ${OUTCOME}"
+        env:
+          OUTCOME: ${{ steps.turnstyle.outcome }}
 
       - name: set CI_SKIP success
         if: steps.turnstyle.outcome == 'success'
