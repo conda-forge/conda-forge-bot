@@ -53,7 +53,7 @@ jobs:
     steps:
       - name: free disk space
         if: ${{ needs.check.outputs.skip-check != 'true' }}
-        uses: endersonmenezes/free-disk-space@8b8cd4e2277836962939a8f3b4ea0ee4bc006156 # v4.0.1
+        uses: endersonmenezes/free-disk-space@8ffcdf1b35c974f0b10496711e9a22bcb0ff3790 # v4.0.2
         with:
           remove_android: true
           remove_dotnet: true
@@ -186,7 +186,7 @@ jobs:
           MATRIX_GROUP: ${{ matrix.group }}
 
       - name: upload test durations
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           name: test-durations-${{ matrix.group }}
@@ -194,7 +194,7 @@ jobs:
           include-hidden-files: true
 
       - name: upload coverage
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           name: coverage-${{ matrix.group }}
@@ -221,7 +221,7 @@ jobs:
     steps:
       - name: free disk space
         if: ${{ needs.check.outputs.skip-check != 'true' }}
-        uses: endersonmenezes/free-disk-space@8b8cd4e2277836962939a8f3b4ea0ee4bc006156 # v4.0.1
+        uses: endersonmenezes/free-disk-space@8ffcdf1b35c974f0b10496711e9a22bcb0ff3790 # v4.0.2
         with:
           remove_android: true
           remove_dotnet: true
@@ -334,7 +334,7 @@ jobs:
           MATRIX_GROUP: ${{ matrix.group }}
 
       - name: upload test durations
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           name: test-durations-mongodb
@@ -342,7 +342,7 @@ jobs:
           include-hidden-files: true
 
       - name: upload coverage
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           name: coverage-mongodb
@@ -418,7 +418,7 @@ jobs:
           jq 'reduce inputs as $i (.; . + $i)' test-durations-*/.test_durations.* > .test_durations
 
       - name: upload test durations
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
           name: test-durations
