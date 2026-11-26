@@ -92,7 +92,6 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           BOT_JOB: ${{ matrix.job_num }}
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
-          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
 
       - name: deploy
         if: (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') && always() && ! env.CI_SKIP

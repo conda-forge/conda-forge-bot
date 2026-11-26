@@ -28,9 +28,6 @@ pytest -v -n 3
 # Run a single test
 pytest -v tests/test_file.py::test_function
 
-# Skip MongoDB tests
-pytest -v -m "not mongodb"
-
 # To enable container-based tests, first build the test image:
 docker build -t conda-forge-tick:test .
 ```
@@ -99,7 +96,6 @@ Pydantic models in `conda_forge_tick/models/` document the schema.
 Data is loaded lazily via `LazyJson` class. Backends configured via `CF_TICK_GRAPH_DATA_BACKENDS`:
 - `file`: Local filesystem (default, requires `conda-forge-bot-data` clone)
 - `github`: Read-only from GitHub raw URLs (good for debugging)
-- `mongodb`: MongoDB database
 
 ### Recipe Parsing
 
@@ -113,7 +109,6 @@ Data is loaded lazily via `LazyJson` class. Backends configured via `CF_TICK_GRA
 See `conda_forge_tick/settings.py` for full list. Key ones:
 - `CF_TICK_GRAPH_DATA_BACKENDS`: Colon-separated backend list
 - `CF_TICK_GRAPH_DATA_USE_FILE_CACHE`: Enable/disable local caching
-- `MONGODB_CONNECTION_STRING`: MongoDB connection string
 - `BOT_TOKEN`: GitHub token for bot operations
 - `CF_FEEDSTOCK_OPS_IN_CONTAINER`: Set to "true" when running in container
 

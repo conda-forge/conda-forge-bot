@@ -43,7 +43,6 @@ from conda_forge_tick.git_utils import (
 from conda_forge_tick.lazy_json_backends import (
     LazyJson,
     get_all_keys_for_hashmap,
-    lazy_json_transaction,
     remove_key_for_hashmap,
     sync_lazy_json_object,
 )
@@ -1380,7 +1379,7 @@ def _remove_closed_pr_json():
             file=sys.stdout,
         ):
             lzj_pri = LazyJson(f"{name}/{node}.json")
-            with lazy_json_transaction(), lzj_pri as pri:
+            with lzj_pri as pri:
                 for pr_ind in range(len(pri.get("PRed", []))):
                     pr = pri["PRed"][pr_ind].get("PR", None)
                     if pr is not None and isinstance(pr, LazyJson):

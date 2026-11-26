@@ -176,7 +176,7 @@ jobs:
             --durations=10 \
             --retries=5 \
             --retry-delay=10 \
-            -m "not mongodb" \
+            -m "not serial" \
             tests
         env:
           RUN_URL: ""
@@ -201,8 +201,8 @@ jobs:
           path: .coverage
           include-hidden-files: true
 
-  tests-mongodb:
-    name: tests-mongodb
+  tests-serial:
+    name: tests-serial
     runs-on: "ubuntu-latest"
     needs: check
     permissions:
@@ -271,19 +271,6 @@ jobs:
 
           python -m pip install -v --no-deps --no-build-isolation -e .
 
-      - name: start MongoDB
-        uses: supercharge/mongodb-github-action@315db7fe45ac2880b7758f1933e6e5d59afd5e94 # 1.12.1
-        if: ${{ needs.check.outputs.skip-check != 'true' }}
-        with:
-          mongodb-version: "latest"
-
-      - name: test mongodb is OK
-        if: ${{ needs.check.outputs.skip-check != 'true' }}
-        run: |
-          python -c "from pymongo import MongoClient; import os; print(MongoClient(os.environ['MONGODB_CONNECTION_STRING']))"
-        env:
-          MONGODB_CONNECTION_STRING: "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"
-
       - name: restore test durations
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         if: ${{ needs.check.outputs.skip-check != 'true' }}
@@ -298,15 +285,13 @@ jobs:
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         run: |
           if [[ -f .test_durations ]]; then
-            cp .test_durations .test_durations.mongodb
+            cp .test_durations .test_durations.serial
           fi
 
       - name: run pytest
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         run: |
           export TEST_BOT_TOKEN_VAL=unpassword
-          # note: we do not use pytest-xdist (-n auto) here for now because they interfere with hiding the
-          # MONGODB_CONNECTION_STRING sensitive environment variable
           if [[ -f .test_durations ]]; then
             cp .test_durations ".test_durations.${MATRIX_GROUP}"
           fi
@@ -314,7 +299,7 @@ jobs:
             -vvvs \
             --splits 1 --group "${MATRIX_GROUP}" \
             --store-durations \
-            --durations-path=.test_durations.mongodb \
+            --durations-path=.test_durations.serial \
             --splitting-algorithm least_duration \
             --clean-durations \
             --cov=conda_forge_tick \
@@ -323,10 +308,9 @@ jobs:
             --cov-report=term-missing \
             --cov-report=xml \
             --durations=10 \
-            -m "mongodb" \
+            -m "serial" \
             tests
         env:
-          MONGODB_CONNECTION_STRING: "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000"
           RUN_URL: ""
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
@@ -337,15 +321,15 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
-          name: test-durations-mongodb
-          path: .test_durations.mongodb
+          name: test-durations-serial
+          path: .test_durations.serial
           include-hidden-files: true
 
       - name: upload coverage
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ needs.check.outputs.skip-check != 'true' }}
         with:
-          name: coverage-mongodb
+          name: coverage-serial
           path: .coverage
           include-hidden-files: true
 
@@ -353,7 +337,7 @@ jobs:
     name: test-coverage-and-durations
     needs:
       - tests
-      - tests-mongodb
+      - tests-serial
       - check
     runs-on: ubuntu-slim
     defaults:
@@ -430,7 +414,7 @@ jobs:
     name: status
     needs:
       - tests
-      - tests-mongodb
+      - tests-serial
       - test-coverage-and-durations
       - check
     if: '!cancelled()'

@@ -247,7 +247,6 @@ If your migrator needs special configuration, you should write a new factory fun
 
 - `CF_TICK_GRAPH_DATA_BACKENDS`: See [`LazyJson` Data Structures and Backends](#lazyjson-data-structures-and-backends) below.
 - `CF_TICK_GRAPH_DATA_USE_FILE_CACHE`: See [`LazyJson` Data Structures and Backends](#lazyjson-data-structures-and-backends) below.
-- `MONGODB_CONNECTION_STRING`: See [`LazyJson` Data Structures and Backends](#lazyjson-data-structures-and-backends) below.
 - `CF_FEEDSTOCK_OPS_IN_CONTAINER`: set to `true` to indicate that the bot is running in a container, prevents container in container issues
 - `TIMEOUT`: set to the number of seconds to wait before timing out the bot
 - `RUN_URL`: set to the URL of the CI build (now set to a GHA run URL)
@@ -444,10 +443,9 @@ The bot relies on a lazily-loaded JSON class called `LazyJson` to store and mani
 abstraction that allows the bot to store its data in a variety of places. This system is home-grown and certainly not
 ideal.
 
-The backend(s) can be set by using the `CF_TICK_GRAPH_DATA_BACKENDS` environment variable to a colon-separated list of backends (e.g., `export CF_TICK_GRAPH_DATA_BACKENDS=file:mongodb`). The possible backends are:
+The backend(s) can be set by using the `CF_TICK_GRAPH_DATA_BACKENDS` environment variable to a colon-separated list of backends (e.g., `export CF_TICK_GRAPH_DATA_BACKENDS=file:github`). The possible backends are:
 
 - `file` (default): Use the local file system to store data. In order to properly use this backend, you must clone the `conda-forge/conda-forge-bot-data` repository and run the bot from `conda-forge/conda-forge-bot-data`'s root directory. You can use the `deploy` command from the bot CLI to commit any changes and push them to the remote repository.
-- `mongodb`: Use a MongoDB database to store data. In order to use this backend, you need to set the `MONGODB_CONNECTION_STRING` environment variable to the connection string of the MongoDB database you want to use. **WARNING: The bot will typically read almost all of its data in the backend during its runs, so be careful when using this backend without a pre-cached local copy of the data.**
 - `github`: Read-only backend that uses the `conda-forge/conda-forge-bot-data` repository as a data source. This backend reads data on-the-fly using GitHub's "raw" URLs (e.g, `https://raw.githubusercontent.com/conda-forge/conda-forge-bot-data/main/all_feedstocks.json`). This backend is ideal for debugging when you only want to touch a fraction of the data.
 
 The bot uses the first backend in the list as the primary backend and syncs any changed data to the other backends as needed. The bot will also cache data to disk upon first use to speed up subsequent reads. To turn off this caching, set the `CF_TICK_GRAPH_DATA_USE_FILE_CACHE` environment variable to `false`.

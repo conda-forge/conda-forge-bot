@@ -1911,7 +1911,7 @@ def test_lazy_update_pr_json_closed_by_unavailable(get_mock: MagicMock):
     not conda_forge_tick.global_sensitive_env.classified_info.get("BOT_TOKEN", None),
     reason="No token for live tests.",
 )
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_git_utils_push_and_delete_file_via_gh_api():
     uid = uuid.uuid4().hex
     node = f"test_file_h{uid}"
@@ -1995,7 +1995,7 @@ def test_git_utils_push_and_delete_file_via_gh_api():
     ),
     reason="Bot app ID and private key not in env.",
 )
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_git_utils_bot_app_token():
     gh = github_client(with_app_token=True)
     assert gh is not None

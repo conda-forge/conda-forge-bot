@@ -10,7 +10,6 @@ class SensitiveEnv:
         "GITHUB_TOKEN",
         "GH_TOKEN",
         "BOT_TOKEN",
-        "MONGODB_CONNECTION_STRING",
         "BOT_APP_ID",
         "BOT_PRIVATE_KEY",
     ]
