@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import signal
 import subprocess
 import tempfile
 from types import TracebackType
@@ -156,7 +157,7 @@ def test_graph():
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",
-        "mongodb: mark tests that run with mongodb",
+        "serial: mark tests that run in serial",
     )
 
 
@@ -168,3 +169,14 @@ def temporary_environment():
     finally:
         os.environ.clear()
         os.environ.update(old_env)
+
+
+# code from gemini to ensure tests data gets removed from repos even
+# with sigterm
+def handle_sigterm(signum, frame):
+    raise KeyboardInterrupt("SIGTERM received")
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_sessionstart(session):
+    signal.signal(signal.SIGTERM, handle_sigterm)

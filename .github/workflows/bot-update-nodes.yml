@@ -155,7 +155,6 @@ jobs:
             --n-jobs=${NUM_BOT_JOBS}
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
-          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
           BOT_JOB: ${{ matrix.job_num }}
           RUN_ID: ${{ github.run_id }}
           BOT_TOKEN: ${{ secrets.AUTOTICK_BOT_GH_TOKEN }}
@@ -277,7 +276,6 @@ jobs:
             --schema-migration-only
         env:
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
-          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
           BOT_JOB: ${{ matrix.job_num }}
           BOT_APP_ID: ${{ secrets.CF_BOT_DATA_MANAGER_APP_ID }}
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}

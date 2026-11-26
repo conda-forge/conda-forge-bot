@@ -9,14 +9,11 @@ from conda_forge_tick.cli_context import CliContext
 
 commands = (
     "auto-tick",
-    "backup-lazy-json",
-    "cache-lazy-json-to-disk",
     "deploy-to-github",
     "gather-all-feedstocks",
     "make-graph",
     "make-mappings",
     "make-status-report",
-    "sync-lazy-json-across-backends",
     "update-prs",
     "update-upstream-versions",
 )
@@ -77,9 +74,6 @@ takes_context_commands = (
     "update-upstream-versions",
     "auto-tick",
     "update-prs",
-    "backup-lazy-json",
-    "sync-lazy-json-across-backends",
-    "cache-lazy-json-to-disk",
     "make-migrators",
 )
 
@@ -100,15 +94,6 @@ takes_context_commands = (
         ("update-prs", "conda_forge_tick.update_prs.main"),
         ("make-mappings", "conda_forge_tick.mappings.main"),
         ("deploy-to-github", "conda_forge_tick.deploy.deploy"),
-        ("backup-lazy-json", "conda_forge_tick.lazy_json_backups.main_backup"),
-        (
-            "sync-lazy-json-across-backends",
-            "conda_forge_tick.lazy_json_backends.main_sync",
-        ),
-        (
-            "cache-lazy-json-to-disk",
-            "conda_forge_tick.lazy_json_backends.main_cache",
-        ),
         ("make-migrators", "conda_forge_tick.make_migrators.main"),
     ],
 )

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import base64
 import contextlib
-import functools
 import glob
 import hashlib
 import logging
@@ -23,7 +22,6 @@ from collections.abc import (
 from typing import (
     IO,
     Any,
-    Self,
 )
 
 import github
@@ -31,7 +29,6 @@ import networkx as nx
 import orjson
 import requests
 
-from .cli_context import CliContext
 from .executors import lock_git_operation
 from .settings import SPLIT_GITHUB_BACKEND_REPOS, settings
 
@@ -133,16 +130,6 @@ def get_sharded_path_and_trim_hashmap_name_if_needed(name, key):
 
 
 class LazyJsonBackend(ABC):
-    @contextlib.contextmanager
-    @abstractmethod
-    def transaction_context(self) -> Iterator[Self]:
-        pass
-
-    @contextlib.contextmanager
-    @abstractmethod
-    def snapshot_context(self) -> Iterator[Self]:
-        pass
-
     @abstractmethod
     def hexists(self, name: str, key: str) -> bool:
         pass
@@ -190,14 +177,6 @@ class PrimaryLazyJsonBackend(LazyJsonBackend):
     def _backend(self):
         return LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND]()
 
-    @contextlib.contextmanager
-    def transaction_context(self) -> Iterator[Self]:
-        yield from self._backend.transaction_context()
-
-    @contextlib.contextmanager
-    def snapshot_context(self) -> Iterator[Self]:
-        yield from self._backend.snapshot_context()
-
     def hexists(self, name: str, key: str) -> bool:
         return self._backend.hexists(name, key)
 
@@ -227,16 +206,6 @@ class PrimaryLazyJsonBackend(LazyJsonBackend):
 
 
 class FileLazyJsonBackend(LazyJsonBackend):
-    @contextlib.contextmanager
-    def transaction_context(self) -> Iterator[Self]:
-        # context not required
-        yield self
-
-    @contextlib.contextmanager
-    def snapshot_context(self) -> Iterator[Self]:
-        # context not required
-        yield self
-
     def hexists(self, name: str, key: str) -> bool:
         return os.path.exists(get_sharded_path(f"{name}/{key}.json"))
 
@@ -367,16 +336,6 @@ class GithubLazyJsonBackend(LazyJsonBackend):
                 "is not recommended.",
             )
 
-    @contextlib.contextmanager
-    def transaction_context(self) -> Iterator[Self]:
-        # context not required
-        yield self
-
-    @contextlib.contextmanager
-    def snapshot_context(self) -> Iterator[Self]:
-        # context not required
-        yield self
-
     def hexists(self, name: str, key: str) -> bool:
         pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
         self._inform_web_request()
@@ -473,16 +432,6 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
             return getattr(self, f"_{name}_repo")
         else:
             return self._graph_repo
-
-    @contextlib.contextmanager
-    def transaction_context(self) -> Iterator[Self]:
-        # context not required
-        yield self
-
-    @contextlib.contextmanager
-    def snapshot_context(self) -> Iterator[Self]:
-        # context not required
-        yield self
 
     def hexists(self, name: str, key: str) -> bool:
         pth = get_sharded_path_and_trim_hashmap_name_if_needed(name, key)
@@ -694,165 +643,9 @@ class GithubAPILazyJsonBackend(LazyJsonBackend):
         assert False, "There is at least one try, so this cannot be reached."
 
 
-@functools.lru_cache(maxsize=128)
-def _get_graph_data_mongodb_client_cached(pid):
-    import pymongo
-    from pymongo import MongoClient
-
-    from . import sensitive_env
-
-    with sensitive_env() as env:
-        client = MongoClient(env.get("MONGODB_CONNECTION_STRING", ""))
-
-    db = client["cf_graph"]
-    for hashmap in CF_TICK_GRAPH_DATA_HASHMAPS + ["lazy_json"]:
-        if hashmap not in db.list_collection_names():
-            coll = db.create_collection(hashmap)
-            coll.create_index(
-                [("node", pymongo.ASCENDING)],
-                background=True,
-                unique=True,
-            )
-
-    return client
-
-
-def get_graph_data_mongodb_client():
-    return _get_graph_data_mongodb_client_cached(str(os.getpid()))
-
-
-class MongoDBLazyJsonBackend(LazyJsonBackend):
-    _session: Any = None
-    _snapshot_session: Any = None
-
-    @contextlib.contextmanager
-    def transaction_context(self) -> Iterator[Self]:
-        try:
-            if self.__class__._session is None:
-                client = get_graph_data_mongodb_client()
-                with client.start_session() as session:
-                    with session.start_transaction():
-                        self.__class__._session = session
-                        yield self
-                        self.__class__._session = None
-            else:
-                yield self
-        finally:
-            self.__class__._session = None
-
-    @contextlib.contextmanager
-    def snapshot_context(self) -> Iterator[Self]:
-        try:
-            if self.__class__._snapshot_session is None:
-                client = get_graph_data_mongodb_client()
-                if "Single" not in client.topology_description.topology_type_name:
-                    with client.start_session(snapshot=True) as session:
-                        self.__class__._snapshot_session = session
-                        yield self
-                        self.__class__._snapshot_session = None
-                else:
-                    yield self
-            else:
-                yield self
-        finally:
-            self.__class__._snapshot_session = None
-
-    def hgetall(self, name, hashval=False):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        if hashval:
-            curr = coll.find(
-                {},
-                {"node": 1, "sha256": 1},
-                session=self.__class__._snapshot_session,
-            )
-            return {d["node"]: d["sha256"] for d in curr}
-        else:
-            curr = coll.find({}, session=self.__class__._snapshot_session)
-            return {d["node"]: dumps(d["value"]) for d in curr}
-
-    def _get_collection(self, name):
-        return get_graph_data_mongodb_client()["cf_graph"][name]
-
-    def hexists(self, name, key):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        num = coll.count_documents({"node": key}, session=self.__class__._session)
-        return num == 1
-
-    def hset(self, name, key, value):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        coll.update_one(
-            {"node": key},
-            {
-                "$set": {
-                    "node": key,
-                    "value": orjson.loads(value),
-                    "sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
-                },
-            },
-            upsert=True,
-            session=self.__class__._session,
-        )
-
-    def hmset(self, name, mapping):
-        from pymongo import UpdateOne
-
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        coll.bulk_write(
-            [
-                UpdateOne(
-                    {"node": key},
-                    {
-                        "$set": {
-                            "node": key,
-                            "value": orjson.loads(value),
-                            "sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
-                        },
-                    },
-                    upsert=True,
-                )
-                for key, value in mapping.items()
-            ],
-            session=self.__class__._session,
-        )
-
-    def hmget(self, name, keys):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        cur = coll.find(
-            {"node": {"$in": list(keys)}},
-            session=self.__class__._session,
-        )
-        odata = {d["node"]: dumps(d["value"]) for d in cur}
-        return [odata[k] for k in keys]
-
-    def hdel(self, name, keys):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        for key in keys:
-            coll.delete_one({"node": key}, session=self.__class__._session)
-
-    def hkeys(self, name):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        curr = coll.find({}, {"node": 1}, session=self.__class__._session)
-        return [doc["node"] for doc in curr]
-
-    def hget(self, name, key):
-        assert name in CF_TICK_GRAPH_DATA_HASHMAPS or name == "lazy_json"
-        coll = self._get_collection(name)
-        data = coll.find_one({"node": key}, session=self.__class__._session)
-        assert data is not None
-        return dumps(data["value"])
-
-
 LAZY_JSON_BACKENDS: dict[str, type[LazyJsonBackend]] = {
     "file": FileLazyJsonBackend,
     "file-read-only": ReadOnlyFileLazyJsonBackend,
-    "mongodb": MongoDBLazyJsonBackend,
     "github": GithubLazyJsonBackend,
     "github_api": GithubAPILazyJsonBackend,
 }
@@ -948,68 +741,6 @@ def sync_lazy_json_hashmap(
                 )
 
 
-def sync_lazy_json_across_backends(batch_size=5000, keys_to_sync=None):
-    """Sync data from the primary backend to the secondary ones.
-
-    If there is only one backend, this is a no-op.
-    """
-    if len(CF_TICK_GRAPH_DATA_BACKENDS) > 1:
-        # pulling in this order helps us ensure we get a consistent view
-        # of the backend data even if we did not sync from a snapshot
-        all_collections = set(CF_TICK_GRAPH_DATA_HASHMAPS + ["lazy_json"])
-        ordered_collections = [
-            "lazy_json",
-            "node_attrs",
-            "pr_info",
-            "version_pr_info",
-            "pr_json",
-            "versions",
-        ]
-        rest_of_the_collections = list(all_collections - set(ordered_collections))
-
-        def _write_and_flush(x):
-            print(x, flush=True)
-
-        for hashmap in ordered_collections + rest_of_the_collections:
-            print("SYNCING %s" % hashmap, flush=True)
-            sync_lazy_json_hashmap(
-                hashmap,
-                CF_TICK_GRAPH_DATA_PRIMARY_BACKEND,
-                CF_TICK_GRAPH_DATA_BACKENDS[1:],
-                writer=_write_and_flush,
-                keys_to_sync=keys_to_sync,
-            )
-
-        # if mongodb has better performance we do this
-        # only certain collections need to be updated in a single transaction
-        # all_collections = set(CF_TICK_GRAPH_DATA_HASHMAPS + ["lazy_json"])
-        # pr_collections = {"pr_info", "pr_json", "version_pr_info"}
-        # node_collections = {"node_attrs", "lazy_json"}
-        # parallel_collections = all_collections - pr_collections - node_collections
-
-        # for collection_set in [pr_collections, node_collections]:
-        #     with primary_backend.snapshot_context():
-        #         with tqdm.tqdm(
-        #             collection_set,
-        #             ncols=80,
-        #             desc="syncing %r" % collection_set,
-        #         ) as pbar:
-        #             for hashmap in pbar:
-        #                 tqdm.tqdm.write("SYNCING %s" % hashmap)
-        #                 _flush_it()
-        #                 _sync_hashmap(hashmap, batch_size, primary_backend)
-
-        # with tqdm.tqdm(
-        #     parallel_collections,
-        #     ncols=80,
-        #     desc="syncing %r" % parallel_collections,
-        # ) as pbar:
-        #     for hashmap in pbar:
-        #         tqdm.tqdm.write("SYNCING %s" % hashmap)
-        #         _flush_it()
-        #         _sync_hashmap(hashmap, batch_size, primary_backend)
-
-
 def remove_key_for_hashmap(name, node):
     """Remove the key node for hashmap name."""
     for backend_name in CF_TICK_GRAPH_DATA_BACKENDS:
@@ -1024,29 +755,8 @@ def get_all_keys_for_hashmap(name):
 
 
 @contextlib.contextmanager
-def lazy_json_transaction():
-    try:
-        backend = LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND]()
-        with backend.transaction_context():
-            yield None
-    finally:
-        pass
-
-
-@contextlib.contextmanager
-def lazy_json_snapshot():
-    try:
-        backend = LAZY_JSON_BACKENDS[CF_TICK_GRAPH_DATA_PRIMARY_BACKEND]()
-        with backend.snapshot_context():
-            yield None
-    finally:
-        pass
-
-
-@contextlib.contextmanager
 def lazy_json_override_backends(
     new_backends,
-    hashmaps_to_sync=None,
     use_file_cache=None,
     keys_to_sync=None,
 ):
@@ -1063,21 +773,6 @@ def lazy_json_override_backends(
             CF_TICK_GRAPH_DATA_USE_FILE_CACHE = use_file_cache
         yield
     finally:
-        if hashmaps_to_sync is not None:
-            sync_backends = list(set(old_backends) - set(new_backends))
-            if sync_backends:
-                for hashmap in hashmaps_to_sync:
-                    print(
-                        f"SYNCING {hashmap} from {new_backends[0]} to {sync_backends}",
-                        flush=True,
-                    )
-                    sync_lazy_json_hashmap(
-                        hashmap,
-                        new_backends[0],
-                        sync_backends,
-                        keys_to_sync=keys_to_sync,
-                    )
-
         CF_TICK_GRAPH_DATA_BACKENDS = old_backends
         CF_TICK_GRAPH_DATA_PRIMARY_BACKEND = old_backends[0]
         CF_TICK_GRAPH_DATA_USE_FILE_CACHE = old_cache
@@ -1383,26 +1078,6 @@ def load(
 ) -> dict:
     """Load a file object as JSON, with appropriate object hooks."""
     return loads(fp.read())
-
-
-def main_sync(ctx: CliContext):
-    if not ctx.dry_run:
-        sync_lazy_json_across_backends()
-
-
-def main_cache(ctx: CliContext):
-    global CF_TICK_GRAPH_DATA_BACKENDS
-
-    if not ctx.dry_run and len(CF_TICK_GRAPH_DATA_BACKENDS) > 1:
-        OLD_CF_TICK_GRAPH_DATA_BACKENDS = CF_TICK_GRAPH_DATA_BACKENDS
-        try:
-            CF_TICK_GRAPH_DATA_BACKENDS = (
-                CF_TICK_GRAPH_DATA_PRIMARY_BACKEND,
-                "file",
-            )
-            sync_lazy_json_across_backends()
-        finally:
-            CF_TICK_GRAPH_DATA_BACKENDS = OLD_CF_TICK_GRAPH_DATA_BACKENDS
 
 
 def touch_all_lazy_json_refs(data, _seen=None):

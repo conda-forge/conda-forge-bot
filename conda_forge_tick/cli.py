@@ -257,30 +257,6 @@ def deploy_to_github(
     )
 
 
-@main.command(name="backup-lazy-json")
-@pass_context
-def backup_lazy_json(ctx: CliContext) -> None:
-    from . import lazy_json_backups
-
-    lazy_json_backups.main_backup(ctx)
-
-
-@main.command(name="sync-lazy-json-across-backends")
-@pass_context
-def sync_lazy_json_across_backends(ctx: CliContext) -> None:
-    from . import lazy_json_backends
-
-    lazy_json_backends.main_sync(ctx)
-
-
-@main.command(name="cache-lazy-json-to-disk")
-@pass_context
-def cache_lazy_json_to_disk(ctx: CliContext) -> None:
-    from . import lazy_json_backends
-
-    lazy_json_backends.main_cache(ctx)
-
-
 @main.command(name="make-import-to-package-mapping")
 @click.option(
     "--max-artifacts",

@@ -64,7 +64,7 @@ def test_generate_dep_hint():
 
 # @pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_make_grayskull_recipe():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
@@ -78,7 +78,7 @@ def test_make_grayskull_recipe():
 
 # @pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_make_grayskull_recipe_github_url():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "ngmix.json"),
@@ -92,7 +92,7 @@ def test_make_grayskull_recipe_github_url():
 
 # @pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_get_grayskull_comparison():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
@@ -114,7 +114,7 @@ def test_get_grayskull_comparison():
 
 # @pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_update_run_deps():
     with open(
         os.path.join(os.path.dirname(__file__), "test_yaml", "interpax.json"),
@@ -195,7 +195,7 @@ extra:
 
 # @pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_get_dep_updates_and_hints_praw():
     attrs = {
         "name": "praw",
@@ -301,7 +301,7 @@ extra:
     ],
 )
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_update_deps_version(caplog, tmp_path, update_kind):
     caplog.set_level(
         logging.DEBUG,
@@ -470,7 +470,7 @@ extra:
 
 # @pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_update_deps_version_pyquil(caplog, tmp_path):
     caplog.set_level(
         logging.DEBUG,
@@ -806,7 +806,7 @@ def _read_interpax():
     ids=["depfinder", "interpax"],
 )
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_get_grayskull_comparison_full(
     attrs: dict, expected_dep_comparison: DepComparison
 ):
@@ -976,7 +976,7 @@ extra:
     ],
 )
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_update_deps_version_v1(
     update_kind: UpdateKind,
     original_recipe: str,
@@ -1028,7 +1028,7 @@ def test_jsii_package_name_resolution():
 
 # @pytest.mark.xfail(raises=requests.exceptions.HTTPError)
 @pytest.mark.xfail(reason="grayskull is disabled")
-@pytest.mark.mongodb
+@pytest.mark.serial
 def test_get_grayskull_comparison_v1_python_min_mismatch():
     """Test that get_grayskull_comparison works for v1 recipes using python_min.
 

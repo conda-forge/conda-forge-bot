@@ -247,7 +247,6 @@ If your migrator needs special configuration, you should write a new factory fun
 
 - `CF_TICK_GRAPH_DATA_BACKENDS`: See [`LazyJson` Data Structures and Backends](#lazyjson-data-structures-and-backends) below.
 - `CF_TICK_GRAPH_DATA_USE_FILE_CACHE`: See [`LazyJson` Data Structures and Backends](#lazyjson-data-structures-and-backends) below.
-- `MONGODB_CONNECTION_STRING`: See [`LazyJson` Data Structures and Backends](#lazyjson-data-structures-and-backends) below.
 - `CF_FEEDSTOCK_OPS_IN_CONTAINER`: set to `true` to indicate that the bot is running in a container, prevents container in container issues
 - `TIMEOUT`: set to the number of seconds to wait before timing out the bot
 - `RUN_URL`: set to the URL of the CI build (now set to a GHA run URL)
@@ -334,7 +333,7 @@ See [tests_integration/README.md](tests_integration/README.md).
 
 The bot started mostly as a single script, in `xonsh`, that was run in a cron-like job that would do all tasks. Further, given the small size of the bot's metadata at the time, the initial bot code assumed that all data was present on disk locally, could be loaded into memory efficiently, and that all parts of the code could modify almost any part of the data. Given the small size of `conda-forge` at the time, this model was workable, had the advantage of simplicity, and had the advantage of ensuring strong consistency between the different parts of the bot's data.
 
-As `conda-forge` grew, the "single job + global data access" model became increasingly unmanageable. Thus, over time, the bot has been split into separate jobs that run in parallel. This gradual refactoring has maintained the bot's performance despite `conda-forge`'s extreme growth. The cost has been increased complexity, the need to more carefully manage data access/updates, and the loss of strong consistency between the different parts of the bot's data. As of 2024, the bot is a collection of cron jobs, run in parallel, combined with a carefully separated data model based on eventual consistency.
+As `conda-forge` grew, the "single job + global data access" model became increasingly unmanageable. Thus, over time, the bot has been split into separate jobs that run in parallel. This gradual refactoring has maintained the bot's performance despite `conda-forge`'s extreme growth. The cost has been increased complexity, the need to more carefully manage data access/updates, and the loss of strong consistency between the different parts of the bot's data. As of 2026, the bot is a collection of cron jobs, run in parallel, combined with a carefully separated data model based on eventual consistency. The data is now split across multiple GitHub repos to increased performance.
 
 #### Current Bot Jobs and Structure
 
@@ -357,8 +356,6 @@ In this section, we list the collection of jobs that comprise the bot. Each job 
 **make-migrators** / `bot-make-migrators.yml`: Builds the migrations the bot will run, writing them as JSON to `conda-forge-bot-data/migrators`.
 
 **update-status-page** / `bot-update-status-page.yml`: Updates the status page at `conda-forge.org/status` with the latest migration information. The status data is written to `conda-forge-bot-data/status`.
-
-**[NOT CURRENTLY USED] cache** / `bot-cache.yml`: Caches the data in `conda-forge-bot-data` to GitHub Actions.
 
 **keepalive** / `bot-keepalive.yml`: This job runs every 15 minutes and ensures that the bot is still running. If the bot is not running, it will restart it.
 
@@ -444,10 +441,10 @@ The bot relies on a lazily-loaded JSON class called `LazyJson` to store and mani
 abstraction that allows the bot to store its data in a variety of places. This system is home-grown and certainly not
 ideal.
 
-The backend(s) can be set by using the `CF_TICK_GRAPH_DATA_BACKENDS` environment variable to a colon-separated list of backends (e.g., `export CF_TICK_GRAPH_DATA_BACKENDS=file:mongodb`). The possible backends are:
+The backend(s) can be set by using the `CF_TICK_GRAPH_DATA_BACKENDS` environment variable to a colon-separated list of backends (e.g., `export CF_TICK_GRAPH_DATA_BACKENDS=file:github`). The possible backends are:
 
-- `file` (default): Use the local file system to store data. In order to properly use this backend, you must clone the `conda-forge/conda-forge-bot-data` repository and run the bot from `conda-forge/conda-forge-bot-data`'s root directory. You can use the `deploy` command from the bot CLI to commit any changes and push them to the remote repository.
-- `mongodb`: Use a MongoDB database to store data. In order to use this backend, you need to set the `MONGODB_CONNECTION_STRING` environment variable to the connection string of the MongoDB database you want to use. **WARNING: The bot will typically read almost all of its data in the backend during its runs, so be careful when using this backend without a pre-cached local copy of the data.**
+- `file` (default): Use the local file system to store data. In order to properly use this backend, you must clone the `conda-forge/conda-forge-bot-data` repository, the other bot data repos for various hashmaps, and then run the bot from `conda-forge/conda-forge-bot-data`'s root directory. You can use the `deploy` command from the bot CLI to commit any changes and push them to the remote repository.
 - `github`: Read-only backend that uses the `conda-forge/conda-forge-bot-data` repository as a data source. This backend reads data on-the-fly using GitHub's "raw" URLs (e.g, `https://raw.githubusercontent.com/conda-forge/conda-forge-bot-data/main/all_feedstocks.json`). This backend is ideal for debugging when you only want to touch a fraction of the data.
+- `github_api`: Backend that reads and writes files using the GitHub API. This backend cannot list all files in a hashmap.
 
 The bot uses the first backend in the list as the primary backend and syncs any changed data to the other backends as needed. The bot will also cache data to disk upon first use to speed up subsequent reads. To turn off this caching, set the `CF_TICK_GRAPH_DATA_USE_FILE_CACHE` environment variable to `false`.

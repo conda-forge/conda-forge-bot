@@ -20,8 +20,6 @@ from conda_forge_tick.lazy_json_backends import (
     LazyJsonStub,
     get_lazy_json_backends,
     get_sharded_path,
-    lazy_json_override_backends,
-    lazy_json_transaction,
 )
 
 from .all_feedstocks import get_all_feedstocks, get_archived_feedstocks
@@ -163,18 +161,15 @@ def get_attrs(name: str, mark_not_archived=False) -> LazyJson:
 
 def _migrate_schema(name, sub_graph):
     # schema migrations and fixes go here
-    with lazy_json_transaction():
-        _add_required_lazy_json_refs(sub_graph, name)
+    _add_required_lazy_json_refs(sub_graph, name)
 
     if "last_updated" in sub_graph:
-        with lazy_json_transaction():
-            sub_graph.pop("last_updated")
+        sub_graph.pop("last_updated")
 
     if "ci_support_migrations" in sub_graph and isinstance(
         sub_graph["ci_support_migrations"], list
     ):
-        with lazy_json_transaction():
-            sub_graph.pop("ci_support_migrations")
+        sub_graph.pop("ci_support_migrations")
 
     vpri_move_keys = [
         "new_version_attempts",
@@ -182,38 +177,34 @@ def _migrate_schema(name, sub_graph):
         "new_version_attempt_ts",
     ]
     if any(key in sub_graph for key in vpri_move_keys):
-        with lazy_json_transaction():
-            with sub_graph["version_pr_info"] as vpri:
-                for key in vpri_move_keys:
-                    if key in sub_graph:
-                        vpri[key].update(sub_graph.pop(key))
+        with sub_graph["version_pr_info"] as vpri:
+            for key in vpri_move_keys:
+                if key in sub_graph:
+                    vpri[key].update(sub_graph.pop(key))
 
     if "new_version" in sub_graph:
-        with lazy_json_transaction():
-            with sub_graph["version_pr_info"] as vpri:
-                vpri["new_version"] = sub_graph.pop("new_version")
+        with sub_graph["version_pr_info"] as vpri:
+            vpri["new_version"] = sub_graph.pop("new_version")
 
     pre_key = "pre_pr_migrator_status"
     pre_key_att = "pre_pr_migrator_attempts"
     pre_key_att_ts = "pre_pr_migrator_attempt_ts"
     pri_move_keys = [pre_key, pre_key_att, pre_key_att_ts]
     if any(key in sub_graph for key in pri_move_keys):
-        with lazy_json_transaction():
-            with sub_graph["pr_info"] as pri:
-                for key in pri_move_keys:
-                    if key in sub_graph:
-                        pri[key].update(sub_graph.pop(key))
-
-    with lazy_json_transaction():
         with sub_graph["pr_info"] as pri:
-            for mn in pri[pre_key].keys():
-                if mn not in pri[pre_key_att]:
-                    pri[pre_key_att][mn] = 1
-                if mn not in pri[pre_key_att_ts]:
-                    # set the attempt to one hour ago per try
-                    pri[pre_key_att_ts][mn] = int(
-                        int(time.time()) - pri[pre_key_att][mn] * 3600.0
-                    )
+            for key in pri_move_keys:
+                if key in sub_graph:
+                    pri[key].update(sub_graph.pop(key))
+
+    with sub_graph["pr_info"] as pri:
+        for mn in pri[pre_key].keys():
+            if mn not in pri[pre_key_att]:
+                pri[pre_key_att][mn] = 1
+            if mn not in pri[pre_key_att_ts]:
+                # set the attempt to one hour ago per try
+                pri[pre_key_att_ts][mn] = int(
+                    int(time.time()) - pri[pre_key_att][mn] * 3600.0
+                )
 
         with sub_graph["version_pr_info"] as vpri:
             for mn in vpri["new_version_errors"].keys():
@@ -232,17 +223,15 @@ def _migrate_schema(name, sub_graph):
         "bad",
     ]
     if any(key in sub_graph for key in keys_to_move):
-        with lazy_json_transaction():
-            with sub_graph["pr_info"] as pri:
-                for key in keys_to_move:
-                    if key in sub_graph:
-                        pri[key] = sub_graph.pop(key)
-                        if key == "bad":
-                            pri["bad"] = False
+        with sub_graph["pr_info"] as pri:
+            for key in keys_to_move:
+                if key in sub_graph:
+                    pri[key] = sub_graph.pop(key)
+                    if key == "bad":
+                        pri["bad"] = False
 
     if "parsing_error" not in sub_graph:
-        with lazy_json_transaction():
-            sub_graph["parsing_error"] = "make_graph: missing parsing_error key"
+        sub_graph["parsing_error"] = "make_graph: missing parsing_error key"
 
 
 def _build_graph_process_pool(
@@ -501,29 +490,24 @@ def main(
     else:
         new_names = {name for name in names if name not in gx.nodes}
 
-        with lazy_json_override_backends(
-            ["file"],
-            hashmaps_to_sync=["node_attrs"],
-            keys_to_sync=set(tot_names_for_this_job),
-        ):
-            if schema_migration_only:
-                # we skip new nodes since their data may not be pulled down locally
-                # we will get them eventually once the make graph job has run
-                _migrate_schemas(
-                    [
-                        nm
-                        for nm in tot_names_for_this_job
-                        if os.path.exists(get_sharded_path(f"node_attrs/{nm}.json"))
-                    ]
-                )
-            else:
-                _update_graph_nodes(
-                    names_for_this_job,
-                    gx,
-                    mark_not_archived=True,
-                    debug=ctx.debug,
-                )
+        if schema_migration_only:
+            # we skip new nodes since their data may not be pulled down locally
+            # we will get them eventually once the make graph job has run
+            _migrate_schemas(
+                [
+                    nm
+                    for nm in tot_names_for_this_job
+                    if os.path.exists(get_sharded_path(f"node_attrs/{nm}.json"))
+                ]
+            )
+        else:
+            _update_graph_nodes(
+                names_for_this_job,
+                gx,
+                mark_not_archived=True,
+                debug=ctx.debug,
+            )
 
-                _update_nodes_with_archived(
-                    archived_names_for_this_job,
-                )
+            _update_nodes_with_archived(
+                archived_names_for_this_job,
+            )

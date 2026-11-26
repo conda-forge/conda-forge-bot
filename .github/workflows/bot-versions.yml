@@ -85,7 +85,6 @@ jobs:
           BOT_PRIVATE_KEY: ${{ secrets.CF_BOT_DATA_MANAGER_PRIVATE_KEY }}
           RUN_ID: ${{ github.run_id }}
           CF_TICK_GRAPH_DATA_BACKENDS: "${{ vars.CF_TICK_GRAPH_DATA_BACKENDS }}"
-          MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
 
       - name: deploy
         if: github.ref == 'refs/heads/main' && ! cancelled() && ! env.CI_SKIP
