@@ -29,7 +29,6 @@ import networkx as nx
 import orjson
 import requests
 
-from .cli_context import CliContext
 from .executors import lock_git_operation
 from .settings import SPLIT_GITHUB_BACKEND_REPOS, settings
 
@@ -742,38 +741,6 @@ def sync_lazy_json_hashmap(
                 )
 
 
-def sync_lazy_json_across_backends(batch_size=5000, keys_to_sync=None):
-    """Sync data from the primary backend to the secondary ones.
-
-    If there is only one backend, this is a no-op.
-    """
-    if len(CF_TICK_GRAPH_DATA_BACKENDS) > 1:
-        # pulling in this order helps us ensure we get a consistent view
-        all_collections = set(CF_TICK_GRAPH_DATA_HASHMAPS + ["lazy_json"])
-        ordered_collections = [
-            "lazy_json",
-            "node_attrs",
-            "pr_info",
-            "version_pr_info",
-            "pr_json",
-            "versions",
-        ]
-        rest_of_the_collections = list(all_collections - set(ordered_collections))
-
-        def _write_and_flush(x):
-            print(x, flush=True)
-
-        for hashmap in ordered_collections + rest_of_the_collections:
-            print("SYNCING %s" % hashmap, flush=True)
-            sync_lazy_json_hashmap(
-                hashmap,
-                CF_TICK_GRAPH_DATA_PRIMARY_BACKEND,
-                CF_TICK_GRAPH_DATA_BACKENDS[1:],
-                writer=_write_and_flush,
-                keys_to_sync=keys_to_sync,
-            )
-
-
 def remove_key_for_hashmap(name, node):
     """Remove the key node for hashmap name."""
     for backend_name in CF_TICK_GRAPH_DATA_BACKENDS:
@@ -1111,26 +1078,6 @@ def load(
 ) -> dict:
     """Load a file object as JSON, with appropriate object hooks."""
     return loads(fp.read())
-
-
-def main_sync(ctx: CliContext):
-    if not ctx.dry_run:
-        sync_lazy_json_across_backends()
-
-
-def main_cache(ctx: CliContext):
-    global CF_TICK_GRAPH_DATA_BACKENDS
-
-    if not ctx.dry_run and len(CF_TICK_GRAPH_DATA_BACKENDS) > 1:
-        OLD_CF_TICK_GRAPH_DATA_BACKENDS = CF_TICK_GRAPH_DATA_BACKENDS
-        try:
-            CF_TICK_GRAPH_DATA_BACKENDS = (
-                CF_TICK_GRAPH_DATA_PRIMARY_BACKEND,
-                "file",
-            )
-            sync_lazy_json_across_backends()
-        finally:
-            CF_TICK_GRAPH_DATA_BACKENDS = OLD_CF_TICK_GRAPH_DATA_BACKENDS
 
 
 def touch_all_lazy_json_refs(data, _seen=None):

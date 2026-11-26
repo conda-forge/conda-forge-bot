@@ -31,7 +31,6 @@ from conda_forge_tick.lazy_json_backends import (
     loads,
     make_lazy_json_retry_sequence,
     remove_key_for_hashmap,
-    sync_lazy_json_across_backends,
     touch_all_lazy_json_refs,
 )
 from conda_forge_tick.os_utils import override_env, pushd
@@ -165,61 +164,6 @@ def test_lazy_json_override_backends_global_nocache(tmpdir):
                     be = LAZY_JSON_BACKENDS[bename]()
                     if be.hexists("lazy_json", key):
                         be.hdel("lazy_json", [key])
-
-            conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS = (
-                old_backend
-            )
-            conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_PRIMARY_BACKEND = (
-                old_backend[0]
-            )
-
-
-@pytest.mark.skipif(
-    not conda_forge_tick.global_sensitive_env.classified_info.get("BOT_TOKEN", None),
-    reason="No token for live tests.",
-)
-@pytest.mark.parametrize(
-    "backends",
-    [
-        ("file", "github_api"),
-        ("github_api", "file"),
-    ],
-)
-@pytest.mark.serial
-def test_lazy_json_backends_sync(backends, tmpdir):
-    uid = uuid.uuid4().hex
-    node_name = f"test_node_{uid}"
-    node_name_ne = f"blah_{uid}"
-
-    old_backend = conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
-    with pushd(tmpdir):
-        try:
-            conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS = backends
-            conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_PRIMARY_BACKEND = (
-                backends[0]
-            )
-
-            pbe = LAZY_JSON_BACKENDS[backends[0]]()
-            be = LAZY_JSON_BACKENDS[backends[1]]()
-
-            be.hset("lazy_json", node_name_ne, dumps({}))
-
-            for hashmap in ["lazy_json", "node_attrs"]:
-                for i in range(2):
-                    pbe.hset(hashmap, f"{node_name}_{i}", dumps({f"a{i}": i}))
-
-            sync_lazy_json_across_backends()
-
-            for hashmap in ["lazy_json", "node_attrs"]:
-                for i in range(2):
-                    be.hget(hashmap, f"{node_name}_{i}") == dumps({f"a{i}": i})
-
-            assert not be.hexists("lazy_json", node_name_ne)
-        finally:
-            be = LAZY_JSON_BACKENDS["github_api"]()
-            for hashmap in ["lazy_json", "node_attrs"]:
-                for i in range(2):
-                    be.hdel(hashmap, [f"{node_name}_{i}"])
 
             conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS = (
                 old_backend
