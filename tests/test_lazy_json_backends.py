@@ -96,43 +96,6 @@ def test_lazy_json_override_backends_global(tmpdir):
                 "file",
             )
             assert get_lazy_json_primary_backend() == "github_api"
-
-            with lazy_json_override_backends(["file"], hashmaps_to_sync=["lazy_json"]):
-                assert (
-                    conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
-                    == ("file",)
-                )
-                assert (
-                    conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_PRIMARY_BACKEND
-                    == "file"
-                )
-                assert get_lazy_json_backends() == ("file",)
-                assert get_lazy_json_primary_backend() == "file"
-                with lzj as attrs:
-                    attrs["hello"] = "me again"
-
-            assert be.hget("lazy_json", node_name) == pbe.hget("lazy_json", node_name)
-            assert be.hget("lazy_json", node_name) == dumps({"hello": "me again"})
-
-            with lazy_json_override_backends(
-                ["file"], hashmaps_to_sync=["lazy_json"], keys_to_sync=set()
-            ):
-                assert (
-                    conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
-                    == ("file",)
-                )
-                assert (
-                    conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_PRIMARY_BACKEND
-                    == "file"
-                )
-                assert get_lazy_json_backends() == ("file",)
-                assert get_lazy_json_primary_backend() == "file"
-                with lzj as attrs:
-                    attrs["hello"] = "me again again"
-
-            assert be.hget("lazy_json", node_name) != pbe.hget("lazy_json", node_name)
-            assert be.hget("lazy_json", node_name) == dumps({"hello": "me again again"})
-
         finally:
             be = LAZY_JSON_BACKENDS["github_api"]()
             be.hdel("lazy_json", [node_name])

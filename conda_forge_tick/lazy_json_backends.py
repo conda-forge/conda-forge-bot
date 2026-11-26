@@ -790,7 +790,6 @@ def get_all_keys_for_hashmap(name):
 @contextlib.contextmanager
 def lazy_json_override_backends(
     new_backends,
-    hashmaps_to_sync=None,
     use_file_cache=None,
     keys_to_sync=None,
 ):
@@ -807,21 +806,6 @@ def lazy_json_override_backends(
             CF_TICK_GRAPH_DATA_USE_FILE_CACHE = use_file_cache
         yield
     finally:
-        if hashmaps_to_sync is not None:
-            sync_backends = list(set(old_backends) - set(new_backends))
-            if sync_backends:
-                for hashmap in hashmaps_to_sync:
-                    print(
-                        f"SYNCING {hashmap} from {new_backends[0]} to {sync_backends}",
-                        flush=True,
-                    )
-                    sync_lazy_json_hashmap(
-                        hashmap,
-                        new_backends[0],
-                        sync_backends,
-                        keys_to_sync=keys_to_sync,
-                    )
-
         CF_TICK_GRAPH_DATA_BACKENDS = old_backends
         CF_TICK_GRAPH_DATA_PRIMARY_BACKEND = old_backends[0]
         CF_TICK_GRAPH_DATA_USE_FILE_CACHE = old_cache

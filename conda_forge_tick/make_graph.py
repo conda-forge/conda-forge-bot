@@ -20,7 +20,6 @@ from conda_forge_tick.lazy_json_backends import (
     LazyJsonStub,
     get_lazy_json_backends,
     get_sharded_path,
-    lazy_json_override_backends,
 )
 
 from .all_feedstocks import get_all_feedstocks, get_archived_feedstocks
@@ -491,29 +490,24 @@ def main(
     else:
         new_names = {name for name in names if name not in gx.nodes}
 
-        with lazy_json_override_backends(
-            ["file"],
-            hashmaps_to_sync=["node_attrs"],
-            keys_to_sync=set(tot_names_for_this_job),
-        ):
-            if schema_migration_only:
-                # we skip new nodes since their data may not be pulled down locally
-                # we will get them eventually once the make graph job has run
-                _migrate_schemas(
-                    [
-                        nm
-                        for nm in tot_names_for_this_job
-                        if os.path.exists(get_sharded_path(f"node_attrs/{nm}.json"))
-                    ]
-                )
-            else:
-                _update_graph_nodes(
-                    names_for_this_job,
-                    gx,
-                    mark_not_archived=True,
-                    debug=ctx.debug,
-                )
+        if schema_migration_only:
+            # we skip new nodes since their data may not be pulled down locally
+            # we will get them eventually once the make graph job has run
+            _migrate_schemas(
+                [
+                    nm
+                    for nm in tot_names_for_this_job
+                    if os.path.exists(get_sharded_path(f"node_attrs/{nm}.json"))
+                ]
+            )
+        else:
+            _update_graph_nodes(
+                names_for_this_job,
+                gx,
+                mark_not_archived=True,
+                debug=ctx.debug,
+            )
 
-                _update_nodes_with_archived(
-                    archived_names_for_this_job,
-                )
+            _update_nodes_with_archived(
+                archived_names_for_this_job,
+            )
