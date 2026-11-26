@@ -13,7 +13,6 @@
 [![bot-make-graph](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-make-graph.yml/badge.svg)](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-make-graph.yml)
 [![bot-update-nodes](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-update-nodes.yml/badge.svg)](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-update-nodes.yml)
 [![bot-make-migrators](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-make-migrators.yml/badge.svg)](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-make-migrators.yml)
-[![bot-cache](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-cache.yml/badge.svg)](https://github.com/conda-forge/conda-forge-bot/actions/workflows/bot-cache.yml)
 [![test-model](https://github.com/conda-forge/conda-forge-bot/actions/workflows/test-model.yml/badge.svg)](https://github.com/conda-forge/conda-forge-bot/actions/workflows/test-model.yml)
 
 
