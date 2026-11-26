@@ -43,7 +43,7 @@ from conda_forge_tick.os_utils import override_env, pushd
 @pytest.mark.serial
 def test_lazy_json_override_backends_global(tmpdir):
     uid = uuid.uuid4().hex
-    node_name = f"blah_{uid}"
+    node_name = f"test_lazy_json_override_backends_global_{uid}"
 
     old_backend = conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
     with pushd(tmpdir):
@@ -97,7 +97,8 @@ def test_lazy_json_override_backends_global(tmpdir):
             assert get_lazy_json_primary_backend() == "github_api"
         finally:
             be = LAZY_JSON_BACKENDS["github_api"]()
-            be.hdel("lazy_json", [node_name])
+            if be.hexists("lazy_json", node_name):
+                be.hdel("lazy_json", [node_name])
 
             conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS = (
                 old_backend
@@ -114,8 +115,8 @@ def test_lazy_json_override_backends_global(tmpdir):
 @pytest.mark.serial
 def test_lazy_json_override_backends_global_nocache(tmpdir):
     uid = uuid.uuid4().hex
-    node_name = f"blah_{uid}"
-    node_name_2 = f"blah2_{uid}"
+    node_name = f"test_lazy_json_override_backends_global_nocache_{uid}"
+    node_name_2 = f"test_lazy_json_override_backends_global_nocache_{uid}"
     old_backend = conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
     with pushd(tmpdir):
         try:
@@ -748,7 +749,7 @@ def test_lazy_json_eq():
 )
 def test_lazy_json_backends_github_api():
     uid = uuid.uuid4().hex
-    node = f"test_file_h{uid}"
+    node = f"test_lazy_json_backends_github_api_h{uid}"
     fname = node + ".json"
 
     # to make the i/o nice for -s
@@ -798,7 +799,7 @@ def test_lazy_json_backends_github_api():
 )
 def test_lazy_json_backends_github_api_nopush():
     uid = uuid.uuid4().hex
-    node = f"test_file_h{uid}"
+    node = f"test_lazy_json_backends_github_api_nopush_h{uid}"
     fname = node + ".json"
 
     # to make the i/o nice for -s

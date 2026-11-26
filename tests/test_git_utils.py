@@ -1914,7 +1914,7 @@ def test_lazy_update_pr_json_closed_by_unavailable(get_mock: MagicMock):
 @pytest.mark.serial
 def test_git_utils_push_and_delete_file_via_gh_api():
     uid = uuid.uuid4().hex
-    node = f"test_file_h{uid}"
+    node = f"test_git_utils_push_and_delete_file_via_gh_api_h{uid}"
     fname = node + ".json"
 
     repo_name = "conda-forge/conda-forge-bot-data"
