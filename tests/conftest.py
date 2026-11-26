@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import signal
 import subprocess
 import tempfile
 from types import TracebackType
@@ -168,3 +169,14 @@ def temporary_environment():
     finally:
         os.environ.clear()
         os.environ.update(old_env)
+
+
+# code from gemini to ensure tests data gets removed from repos even
+# with sigterm
+def handle_sigterm(signum, frame):
+    raise KeyboardInterrupt("SIGTERM received")
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_sessionstart(session):
+    signal.signal(signal.SIGTERM, handle_sigterm)
