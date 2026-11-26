@@ -37,15 +37,16 @@ from .migration_yaml import all_noarch
 def _filter_excluded_deps(graph, excluded_dependencies):
     """Filter out excluded dependencies from the graph.
 
-    This function removes any node that descends from an excluded dependency
-    in addition to removing the excluded dependency itself.
+    This function removes any ancestors of an excluded dependency
+    (if not needed elsewhere in the graph!) in addition to removing the
+    excluded dependencies themselves.
 
     **operates in place**
     """
     nodes_to_remove = set(excluded_dependencies)
-    for excluded_dep in excluded_dependencies:
-        if excluded_dep in graph.nodes:
-            nodes_to_remove |= set(nx.descendants(graph, excluded_dep))
+    # prune cuts off ancestors that aren't needed elsewhere,
+    # but does not yet remove the nodes
+    prune(graph, nodes_to_remove)
     for node in nodes_to_remove:
         pluck(graph, node)
     # post-plucking cleanup
