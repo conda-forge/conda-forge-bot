@@ -116,7 +116,7 @@ def test_lazy_json_override_backends_global(tmpdir):
 def test_lazy_json_override_backends_global_nocache(tmpdir):
     uid = uuid.uuid4().hex
     node_name = f"test_lazy_json_override_backends_global_nocache_{uid}"
-    node_name_2 = f"test_lazy_json_override_backends_global_nocache_{uid}"
+    node_name_2 = f"test_lazy_json_override_backends_global_nocache_2_{uid}"
     old_backend = conda_forge_tick.lazy_json_backends.CF_TICK_GRAPH_DATA_BACKENDS
     with pushd(tmpdir):
         try:
