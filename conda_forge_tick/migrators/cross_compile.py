@@ -596,3 +596,49 @@ class CrossCompilationForARMAndPower(MiniMigrator):
                 return
             with open("build.sh", "w") as f:
                 f.write("".join(lines))
+
+
+class CudaWinArm64Migrator(MiniMigrator):
+    """Copy the CUDA on Windows on ARM migration into feedstocks that use CUDA.
+
+    The migration yaml lives in conda-forge-pinning. This piggybacks on
+    the win-arm64 migration so that CUDA feedstocks get both in one PR.
+
+    This is a no-op if the installed conda-forge-pinning does not have the
+    migration yet (e.g., before the bot's lockfile is relocked, or in the
+    integration tests, which install a fixed conda-forge-pinning version).
+    """
+
+    allowed_schema_versions = {0, 1}
+    migration_name = "cuda134_winarm64"
+
+    @property
+    def migration_yaml(self) -> str:
+        return os.path.join(
+            os.environ["CONDA_PREFIX"],
+            "share",
+            "conda-forge",
+            "migrations",
+            f"{self.migration_name}.yaml",
+        )
+
+    def filter(self, attrs: "AttrsTypedDict", not_bad_str_start: str = "") -> bool:
+        # This migrator only runs as a piggyback to a WinArm64 PR, so which feedstocks get
+        # migrated is up to that migrator; we only check whether it uses CUDA on any platform.
+        build_reqs = attrs.get("requirements", {}).get("build", set())
+        if super().filter(attrs) or "cuda_compiler_stub" not in build_reqs:
+            return True
+        if not os.path.exists(self.migration_yaml):
+            logger.warning("could not find migration %s", self.migration_yaml)
+            return True
+        return False
+
+    def migrate(self, recipe_dir: str, attrs: "AttrsTypedDict", **kwargs: Any) -> None:
+        with open(self.migration_yaml) as f:
+            yaml_contents = f.read()
+        migrations_dir = os.path.join(recipe_dir, "..", ".ci_support", "migrations")
+        os.makedirs(migrations_dir, exist_ok=True)
+        with open(
+            os.path.join(migrations_dir, f"{self.migration_name}.yaml"), "w"
+        ) as f:
+            f.write(yaml_contents)
