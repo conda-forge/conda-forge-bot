@@ -833,6 +833,8 @@ def _parse_recipes(
             "git_url": source[0].get("git"),
             "git_rev": source[0].get("tag"),
         }
+    else:
+        source_data = None
 
     requirements_data = (
         None
