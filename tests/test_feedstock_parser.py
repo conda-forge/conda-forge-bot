@@ -1,13 +1,17 @@
 import pprint
+import tempfile
 from pathlib import Path
 
 import pytest
+from conftest import HAVE_CONTAINERS_AND_TEST_IMAGE
 
 from conda_forge_tick.feedstock_parser import (
     _get_feedstock_commit_hash_and_timestamp,
     _get_requirements,
+    load_feedstock_containerized,
     load_feedstock_local,
 )
+from conda_forge_tick.os_utils import pushd
 from conda_forge_tick.utils import parse_meta_yaml, parse_recipe_yaml
 
 
@@ -102,17 +106,6 @@ def test_get_requirements():
     assert _get_requirements(meta_yaml, host=False) == {"1", "2", "5", "6"}
 
 
-def test_feedstock_parser_load_feedstock_local_semi_ate_stdf():
-    attrs = load_feedstock_local(
-        "semi-ate-stdf",
-        {},
-    )
-    assert attrs["feedstock_name"] == "semi-ate-stdf"
-    assert "parsing_error" in attrs
-    assert attrs["parsing_error"] is False
-    assert isinstance(attrs["ci_support_migrations"], dict)
-
-
 def test_feedstock_parser_load_feedstock_local_fenics_basix_version():
     attrs = load_feedstock_local(
         "fenics-basix",
@@ -136,21 +129,56 @@ def test_get_feedstock_commit_hash_and_timestamp():
     assert ts is not None
 
 
-def test_feedstock_parser_load_feedstock_local_pyobjc_framework_quartz():
-    attrs = load_feedstock_local(
+@pytest.mark.parametrize(
+    "feedstock",
+    [
         "pyobjc-framework-quartz",
-        {},
-    )
-    assert attrs["feedstock_name"] == "pyobjc-framework-quartz"
-    assert attrs["parsing_error"] is False
-    assert isinstance(attrs["ci_support_migrations"], dict)
-
-
-def test_feedstock_parser_load_feedstock_local_nemo_relay():
-    attrs = load_feedstock_local(
         "nemo-relay",
+        "clangdev",
+        pytest.param(
+            "scikit-image",
+            marks=pytest.mark.xfail(reason="scikit-image recipe does not render"),
+        ),
+        "semi-ate-stdf",
+    ],
+)
+def test_feedstock_parser_load_feedstock_local_succeeds(feedstock):
+    attrs = load_feedstock_local(
+        feedstock,
         {},
     )
-    assert attrs["feedstock_name"] == "nemo-relay"
+    assert attrs["feedstock_name"] == feedstock
     assert attrs["parsing_error"] is False
     assert isinstance(attrs["ci_support_migrations"], dict)
+
+
+@pytest.mark.skipif(
+    not HAVE_CONTAINERS_AND_TEST_IMAGE, reason="containers not available"
+)
+@pytest.mark.parametrize(
+    "feedstock",
+    [
+        "pyobjc-framework-quartz",
+        "nemo-relay",
+        "clangdev",
+        pytest.param(
+            "scikit-image",
+            marks=pytest.mark.xfail(reason="scikit-image recipe does not render"),
+        ),
+        "semi-ate-stdf",
+    ],
+)
+def test_feedstock_parser_load_feedstock_containerized_succeeds(
+    use_containers, feedstock
+):
+    with (
+        tempfile.TemporaryDirectory() as tmpdir,
+        pushd(tmpdir),
+    ):
+        attrs = load_feedstock_containerized(
+            feedstock,
+            {},
+        )
+        assert attrs["feedstock_name"] == feedstock
+        assert attrs["parsing_error"] is False
+        assert isinstance(attrs["ci_support_migrations"], dict)
