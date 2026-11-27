@@ -135,6 +135,7 @@ def test_get_feedstock_commit_hash_and_timestamp():
         "pyobjc-framework-quartz",
         "nemo-relay",
         "clangdev",
+        "microarch-level",
         pytest.param(
             "scikit-image",
             marks=pytest.mark.xfail(reason="scikit-image recipe does not render"),
@@ -161,6 +162,7 @@ def test_feedstock_parser_load_feedstock_local_succeeds(feedstock):
         "pyobjc-framework-quartz",
         "nemo-relay",
         "clangdev",
+        "microarch-level",
         pytest.param(
             "scikit-image",
             marks=pytest.mark.xfail(reason="scikit-image recipe does not render"),
