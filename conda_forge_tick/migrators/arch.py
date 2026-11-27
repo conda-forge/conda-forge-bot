@@ -660,6 +660,38 @@ class LinuxRISCV64(_CrossCompileRebuild):
         # intel packages will not be built for riscv
         "intel-compiler-repack",
         "intel_repack",
+        # NVIDIA binary repacks: no riscv64 redist exists. They only enter the
+        # graph via the linux_64 requirements fallback for CUDA variants.
+        "cuda-cccl",
+        "cuda-cudart",
+        "cuda-cuobjdump",
+        "cuda-cupti",
+        "cuda-nvcc",
+        "cuda-nvcc-impl",
+        "cuda-nvdisasm",
+        "cuda-nvml-dev",
+        "cuda-nvrtc",
+        "cuda-nvtx",
+        "cuda-profiler-api",
+        "cudnn",
+        "libcublas",
+        "libcufft",
+        "libcurand",
+        "libcusolver",
+        "libcusparse",
+        "libnvjitlink",
+        "libnvjpeg",
+        "nccl",
+        "nvtx-c",
+        "tensorrt",
+        # NVIDIA Performance Libraries are aarch64-only
+        "libnvpl-blas",
+        "libnvpl-fft",
+        "libnvpl-lapack",
+        "libnvpl-rand",
+        "libnvpl-scalapack",
+        "libnvpl-sparse",
+        "libnvpl-tensor",
     }
 
     def __init__(self, *args, **kwargs):
