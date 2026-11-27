@@ -342,6 +342,7 @@ def parse_recipe_yaml(
     for_pinning: bool = False,
     platform_arch: str | None = None,
     cbc_path: Path | str | None = None,
+    orig_cbc_path: Path | str | None = None,
     use_container: bool | None = None,
 ) -> "RecipeTypedDict":
     """Parse the recipe.yaml.
@@ -356,6 +357,8 @@ def parse_recipe_yaml(
         The platform and arch (e.g., 'linux-64', 'osx-arm64', 'win-64').
     cbc_path : Path | str, optional
         The value of or path to global pinning file.
+    orig_cbc_path : Path | str, optional
+        The value of or path to the original global pinning file.
     use_container
         Whether to use a container to run the parsing.
         If None, the function will use a container if the environment
@@ -374,6 +377,7 @@ def parse_recipe_yaml(
             for_pinning=for_pinning,
             platform_arch=platform_arch,
             cbc_path=cbc_path,
+            orig_cbc_path=orig_cbc_path,
         )
     else:
         return parse_recipe_yaml_local(
@@ -381,6 +385,7 @@ def parse_recipe_yaml(
             for_pinning=for_pinning,
             platform_arch=platform_arch,
             cbc_path=cbc_path,
+            orig_cbc_path=orig_cbc_path,
         )
 
 
@@ -389,6 +394,7 @@ def parse_recipe_yaml_containerized(
     for_pinning: bool = False,
     platform_arch: str | None = None,
     cbc_path: Path | str | None = None,
+    orig_cbc_path: Path | str | None = None,
 ) -> "RecipeTypedDict":
     """Parse the recipe.yaml.
 
@@ -404,6 +410,8 @@ def parse_recipe_yaml_containerized(
         The platform and arch (e.g., 'linux-64', 'osx-arm64', 'win-64').
     cbc_path : Path | str, optional
         The value of or path to global pinning file.
+    orig_cbc_path : Path | str, optional
+        The value of or path to the original global pinning file.
 
     Returns
     -------
@@ -434,21 +442,35 @@ def parse_recipe_yaml_containerized(
     if for_pinning:
         args += ["--for-pinning"]
 
-    if cbc_path is not None:
+    if cbc_path is not None or orig_cbc_path is not None:
         with tempfile.TemporaryDirectory() as tmpdir:
             os.chmod(tmpdir, 0o755)
 
-            tmp_cbc_path = os.path.join(tmpdir, "cbc_path.yaml")
-            if os.path.exists(cbc_path):
-                with open(cbc_path) as fp_r:
-                    cbc_data = fp_r.read()
-            else:
-                cbc_data = str(cbc_path)
+            if cbc_path is not None:
+                tmp_cbc_path = os.path.join(tmpdir, "cbc_path.yaml")
+                if os.path.exists(cbc_path):
+                    with open(cbc_path) as fp_r:
+                        cbc_data = fp_r.read()
+                else:
+                    cbc_data = str(cbc_path)
 
-            with open(tmp_cbc_path, "w") as fp:
-                fp.write(cbc_data)
+                with open(tmp_cbc_path, "w") as fp:
+                    fp.write(cbc_data)
 
-            args += ["--cbc-path", "/cf_feedstock_ops_dir/cbc_path.yaml"]
+                args += ["--cbc-path", "/cf_feedstock_ops_dir/cbc_path.yaml"]
+
+            if orig_cbc_path is not None:
+                tmp_orig_cbc_path = os.path.join(tmpdir, "orig_cbc_path.yaml")
+                if os.path.exists(orig_cbc_path):
+                    with open(orig_cbc_path) as fp_r:
+                        orig_cbc_data = fp_r.read()
+                else:
+                    orig_cbc_data = str(orig_cbc_path)
+
+                with open(tmp_orig_cbc_path, "w") as fp:
+                    fp.write(orig_cbc_data)
+
+                args += ["--orig-cbc-path", "/cf_feedstock_ops_dir/orig_cbc_path.yaml"]
 
             data = _run(args, tmpdir)
     else:
@@ -518,6 +540,7 @@ def parse_recipe_yaml_local(
     for_pinning: bool = False,
     platform_arch: str | None = None,
     cbc_path: Path | str | None = None,
+    orig_cbc_path: Path | str | None = None,
 ) -> "RecipeTypedDict":
     """Parse the recipe.yaml.
 
@@ -531,6 +554,8 @@ def parse_recipe_yaml_local(
         The platform and arch (e.g., 'linux-64', 'osx-arm64', 'win-64').
     cbc_path : Path | str, optional
         The value of or path to global pinning file.
+    orig_cbc_path : Path | str, optional
+        The value of or path to the original global pinning file.
 
     Returns
     -------
@@ -544,7 +569,10 @@ def parse_recipe_yaml_local(
         If the recipe YAML rendering fails or no output recipes are found.
     """
     rendered_recipes = _render_recipe_yaml(
-        text, cbc_path=cbc_path, platform_arch=platform_arch
+        text,
+        cbc_path=cbc_path,
+        platform_arch=platform_arch,
+        orig_cbc_path=orig_cbc_path,
     )
     if not rendered_recipes:
         raise RuntimeError("Failed to render recipe YAML! No output recipes found!")
@@ -593,6 +621,7 @@ def _render_recipe_yaml(
     text: str,
     platform_arch: str | None = None,
     cbc_path: str | Path | None = None,
+    orig_cbc_path: Path | str | None = None,
 ) -> list[dict[str, Any]]:
     """
     Render the given recipe YAML text using the `rattler-build` command-line tool.
@@ -605,6 +634,8 @@ def _render_recipe_yaml(
         The platform-arch (e.g., 'linux-64').
     cbc_path : str | Path, optional
         The value of or path to global pinning file.
+    orig_cbc_path : Path | str, optional
+        The value of or path to the original global pinning file.
 
     Returns
     -------
@@ -618,7 +649,7 @@ def _render_recipe_yaml(
     """
     with tempfile.TemporaryDirectory() as tmpdir:
         if cbc_path is not None and not os.path.exists(str(cbc_path)):
-            _cbc_path = os.path.join(tmpdir, "conda_build_config.yaml")
+            _cbc_path = os.path.join(tmpdir, "ci_support.yaml")
             with open(_cbc_path, "w") as fp:
                 fp.write(str(cbc_path))
 
@@ -632,6 +663,24 @@ def _render_recipe_yaml(
             if platform_arch is None or platform_arch == "noarch"
             else ["--target-platform", platform_arch]
         )
+
+        if orig_cbc_path is not None:
+            _orig_cbc_path = os.path.join(tmpdir, "conda_build_config.yaml")
+            if not os.path.exists(str(orig_cbc_path)):
+                with open(_orig_cbc_path, "w") as fp:
+                    fp.write(str(orig_cbc_path))
+            else:
+                with open(orig_cbc_path) as fp:
+                    orig_cbc_data = fp.read()
+                with open(_orig_cbc_path, "w") as fp:
+                    fp.write(orig_cbc_data)
+
+            # we insert the orig cbc file files so that the ci_support variants
+            # override it
+            variant_config_flags = [
+                "--variant-config",
+                _orig_cbc_path,
+            ] + variant_config_flags
 
         stubbed_text = replace_compiler_with_stub(text)
         # rattler-build --render-only drops staging outputs and does not
@@ -648,6 +697,7 @@ def _render_recipe_yaml(
             text=True,
             input=prepared_text,
             check=False,
+            cwd=tmpdir,
         )
         if res.stdout:
             outputs = [output["recipe"] for output in orjson.loads(res.stdout)]

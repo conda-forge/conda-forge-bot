@@ -393,6 +393,10 @@ def populate_feedstock_attributes(
                 with open(str(ci_support_files[0])) as fp:
                     saved_cbc_value = fp.read()
 
+            orig_cbc_path = os.path.join(
+                str(recipe_dir),
+                "conda_build_config.yaml",
+            )
             variant_yamls = []
             plat_archs = []
             for cbc_path in ci_support_files:
@@ -407,10 +411,7 @@ def populate_feedstock_attributes(
                             platform=plat,
                             arch=arch,
                             cbc_path=cbc_path,
-                            orig_cbc_path=os.path.join(
-                                recipe_dir,
-                                "conda_build_config.yaml",
-                            ),
+                            orig_cbc_path=orig_cbc_path,
                             use_container=use_container,
                         ),
                     )
@@ -426,6 +427,9 @@ def populate_feedstock_attributes(
                             recipe_yaml,
                             platform_arch=platform_arch,
                             cbc_path=cbc_path,
+                            orig_cbc_path=orig_cbc_path
+                            if os.path.exists(orig_cbc_path)
+                            else None,
                             use_container=use_container,
                         ),
                     )
