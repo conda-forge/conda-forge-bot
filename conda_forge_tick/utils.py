@@ -675,6 +675,8 @@ def _render_recipe_yaml(
                 with open(_orig_cbc_path, "w") as fp:
                     fp.write(orig_cbc_data)
 
+            # we insert the orig cbc file files so that the ci_support variants
+            # override it
             variant_config_flags = [
                 "--variant-config",
                 _orig_cbc_path,
