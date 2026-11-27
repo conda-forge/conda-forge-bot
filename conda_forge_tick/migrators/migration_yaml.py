@@ -372,6 +372,13 @@ class MigrationYaml(GraphMigrator):
         )
         return number_matches and ts_matches
 
+    def filter_node_migrated(self, attrs, not_bad_str_start=""):
+        # Use the same checks that we use for a predecessor to determine if this node has
+        # also already been migrated.
+        return self.predecessor_already_migrated(attrs) or super().filter_node_migrated(
+            attrs, not_bad_str_start
+        )
+
     def filter_not_in_migration(self, attrs, not_bad_str_start=""):
         if super().filter_not_in_migration(attrs, not_bad_str_start):
             return True
